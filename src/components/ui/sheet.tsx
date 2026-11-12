@@ -46,13 +46,21 @@ const sheetVariants = cva(
         top: "inset-x-0 top-0 border-b pt-[max(1.5rem,env(safe-area-inset-top))] data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top",
         bottom:
           "inset-x-0 bottom-0 border-t pb-[max(1.5rem,env(safe-area-inset-bottom))] data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
+        // `start` / `end` suivent le sens d'écriture (bord, filet et glissement) : le
+        // panneau latéral par défaut s'ouvre côté FIN, à droite en français et à gauche
+        // en arabe. À préférer à `left` / `right`.
+        start:
+          "inset-y-0 start-0 h-full w-3/4 max-w-[min(20rem,85vw)] border-e data-[state=closed]:slide-out-to-start data-[state=open]:slide-in-from-start sm:max-w-sm",
+        end: "inset-y-0 end-0 h-full w-3/4 max-w-[min(20rem,85vw)] border-s data-[state=closed]:slide-out-to-end data-[state=open]:slide-in-from-end sm:max-w-sm",
+        // rtl-ok: `left` / `right` sont des côtés PHYSIQUES demandés tels quels par l'appelant.
         left: "inset-y-0 left-0 h-full w-3/4 max-w-[min(20rem,85vw)] border-r data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-sm",
+        // rtl-ok: côté physique, voir ci-dessus.
         right:
           "inset-y-0 right-0 h-full w-3/4 max-w-[min(20rem,85vw)] border-l data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:max-w-sm",
       },
     },
     defaultVariants: {
-      side: "right",
+      side: "end",
     },
   },
 );
@@ -65,11 +73,11 @@ interface SheetContentProps
 const SheetContent = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Content>,
   SheetContentProps
->(({ side = "right", className, children, ...props }, ref) => (
+>(({ side = "end", className, children, ...props }, ref) => (
   <SheetPortal>
     <SheetOverlay />
     <SheetPrimitive.Content ref={ref} className={cn(sheetVariants({ side }), className)} {...props}>
-      <SheetPrimitive.Close className="absolute right-2 top-2 flex h-11 w-11 items-center justify-center rounded-sm opacity-70 ring-offset-background cursor-pointer transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
+      <SheetPrimitive.Close className="absolute end-2 top-2 flex h-11 w-11 items-center justify-center rounded-sm opacity-70 ring-offset-background cursor-pointer transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
         <X className="h-4 w-4" />
         <CloseLabel />
       </SheetPrimitive.Close>
@@ -80,7 +88,7 @@ const SheetContent = React.forwardRef<
 SheetContent.displayName = SheetPrimitive.Content.displayName;
 
 const SheetHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn("flex flex-col space-y-2 text-center sm:text-left", className)} {...props} />
+  <div className={cn("flex flex-col space-y-2 text-center sm:text-start", className)} {...props} />
 );
 SheetHeader.displayName = "SheetHeader";
 

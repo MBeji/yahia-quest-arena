@@ -21,7 +21,7 @@ import {
 import { useI18n } from "@/lib/i18n";
 import { useParentT } from "@/lib/i18n/parent";
 import { useEntrance } from "@/shared/lib/motion";
-import { isolateLtrRuns } from "@/shared/lib/bidi";
+import { isolateLtrRuns, signedNumber } from "@/shared/lib/bidi";
 import { buildWeeklyAdvice, type ReportData } from "../report-share";
 import type { TutorParentCounters } from "../parent-report.server";
 import type { ParcoursComparison, StudentExamSummary } from "../parent-report.schemas";
@@ -372,8 +372,7 @@ export function ReportContent({
                   : "text-muted-foreground"
             }
           >
-            {summary.scoreTrend > 0 ? "+" : ""}
-            {summary.scoreTrend}%
+            {signedNumber(summary.scoreTrend)}%
           </span>{" "}
           {t.parentReport.trendSuffix}
         </span>
@@ -636,8 +635,7 @@ function WeekCompareCell({
         ) : (
           <Minus className="h-3.5 w-3.5" />
         )}
-        {delta > 0 ? "+" : ""}
-        {delta}
+        {signedNumber(delta)}
         {suffix}
       </div>
     </div>

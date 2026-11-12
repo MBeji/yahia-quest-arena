@@ -1099,6 +1099,19 @@ export type TranslationKeys = {
       account: string;
     };
     footer: { tagline: string; rights: string; legalLink: string };
+    /**
+     * Attributs de héros des matières (« Force », « Sagesse »…) : la valeur vient du
+     * contenu, en français ; `attributeLabel` la traduit quand elle est connue ici.
+     */
+    attributes: {
+      label: string;
+      force: string;
+      esprit: string;
+      sagesse: string;
+      agilite: string;
+      observation: string;
+      logique: string;
+    };
     /** Titres d'onglet des pages publiques (`pageTitle`, `src/lib/i18n/head.ts`) — le français est celui que lisent les robots. */
     titles: { programme: string; extras: string; suivi: string; auth: string };
     landing: {

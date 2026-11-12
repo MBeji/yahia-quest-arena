@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { useParentT } from "@/lib/i18n/parent";
 import { LoadingState } from "@/components/ui/loading-state";
-import { isolateLtrRuns } from "@/shared/lib/bidi";
+import { isolateLtrRuns, signedNumber } from "@/shared/lib/bidi";
 import { getStudentDailyReport, getStudentDailyReportByCode } from "../parent-report.server";
 import { reportSourceKey, type ReportSource } from "../report-source";
 import {
@@ -255,7 +255,7 @@ function FourQuestions({
           kpis.scoreDelta === null
             ? t.parentDaily.noComparison
             : t.parentDaily.q3Answer
-                .replace("{delta}", `${kpis.scoreDelta > 0 ? "+" : ""}${kpis.scoreDelta}`)
+                .replace("{delta}", signedNumber(kpis.scoreDelta))
                 .replace("{score}", String(report.totals.avgScore))
         }
         good={kpis.scoreDelta !== null && kpis.scoreDelta >= 0}
@@ -308,7 +308,7 @@ function DaySummary({ report }: { report: DailyReport }) {
   return (
     <SectionCard
       title={singleDay ? t.parentDaily.summaryTitleDay : t.parentDaily.summaryTitlePeriod}
-      subtitle={`${report.range.from} → ${report.range.to}`}
+      subtitle={`${report.range.from} – ${report.range.to}`}
       icon={<CalendarDays className="h-5 w-5 text-gold" />}
     >
       <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">

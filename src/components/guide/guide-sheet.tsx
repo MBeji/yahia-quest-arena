@@ -39,14 +39,14 @@ export function GuideSheet({
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
-        side={dir === "rtl" ? "left" : "right"}
+        side="end"
         dir={dir}
         data-testid="guide-sheet"
         className="w-full overflow-y-auto sm:max-w-md"
       >
-        {/* La croix de fermeture est posée en absolu dans le coin DROIT (physique) :
-            côté fin en français, côté début en arabe. */}
-        <SheetHeader className="pe-10 text-start rtl:ps-10">
+        {/* La croix de fermeture est côté FIN dans les deux sens (`sheet.tsx`) : le
+            titre lui laisse la place de ce côté-là. */}
+        <SheetHeader className="pe-10 text-start">
           <SheetTitle className="font-display text-xl">{t.guide.sheetTitle}</SheetTitle>
           <SheetDescription>{t.guide.sheetSubtitle}</SheetDescription>
         </SheetHeader>

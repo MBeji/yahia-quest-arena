@@ -32,7 +32,10 @@ export function QuestResultActions({
       </button>
       {nextExerciseId && (
         <Link to="/quest/$exerciseId" params={{ exerciseId: nextExerciseId }} className={PRIMARY}>
-          {t.quest.nextQuest} →
+          {t.quest.nextQuest}{" "}
+          <span aria-hidden="true" className="inline-block rtl:-scale-x-100">
+            →
+          </span>
         </Link>
       )}
     </div>

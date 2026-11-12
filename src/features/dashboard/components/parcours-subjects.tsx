@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { ArrowRight, BookOpen, ChevronRight, Clock } from "lucide-react";
 import { BackLink } from "@/components/ui/back-link";
 import { useI18n, useT } from "@/lib/i18n";
+import { attributeLabel } from "@/lib/i18n/attributes";
 import { isRtlText } from "@/shared/lib/utils";
 import { parcoursName } from "@/shared/lib/parcours-locale";
 import type { OfficialSubject } from "@/shared/constants/programme-officiel";
@@ -116,7 +117,7 @@ export function ParcoursSubjects({
                   </span>
                   {s.attribute && (
                     <span className="block truncate text-xs text-muted-foreground">
-                      {s.attribute}
+                      {attributeLabel(t, s.attribute)}
                     </span>
                   )}
                 </span>

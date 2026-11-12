@@ -181,7 +181,7 @@ function PrivacyPage() {
           <p>
             Le mode IA est <strong>éteint par défaut</strong> pour tout le monde, et l'application
             est complète sans lui. Il ne s'allume que si un membre de la famille branche sa propre
-            clé d'API, dans <strong>Paramétrage → Mode IA</strong>, puis l'active explicitement pour
+            clé d'API, dans <strong>Paramétrage › Mode IA</strong>, puis l'active explicitement pour
             un élève donné. Nous ne facturons rien&nbsp;: la relation commerciale reste entre la
             famille et son fournisseur.
           </p>

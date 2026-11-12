@@ -49,6 +49,15 @@ describe("lexique — arabe", () => {
   it("un seul nom pour le code du tunnel parent : « رمز التحالف »", () => {
     expect(offenders("ar", /^رمز التلميذ$/)).toEqual([]);
   });
+
+  it("un signe devant un nombre interpolé porte sa marque gauche-à-droite", () => {
+    // Sans U+200E, « +{xp} » s'affiche « 50+ » dans une page arabe (bidi.ts, `plus`).
+    expect(offenders("ar", /(?<!\\u200E)[+−]\{/)).toEqual([]);
+  });
+
+  it("une flèche « retour » en tête de libellé pointe à droite", () => {
+    expect(offenders("ar", /^←/)).toEqual([]);
+  });
 });
 
 describe("lexique — français", () => {

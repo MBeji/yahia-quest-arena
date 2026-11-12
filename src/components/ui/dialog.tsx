@@ -48,13 +48,16 @@ const DialogContent = React.forwardRef<
         // landscape / iPhone-SE viewports (dvh tracks the real mobile viewport).
         // w-[calc(100%-2rem)] keeps a 1rem side gutter (rounded corners stay visible)
         // on phones instead of spanning edge-to-edge — multi-device audit (modal).
+        // rtl-ok: `left-[50%]` + `translate-x-[-50%]` centre dans les deux sens.
         "fixed left-[50%] top-[50%] z-50 grid max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 overflow-y-auto rounded-lg border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
         className,
       )}
       {...props}
     >
       {children}
-      <DialogPrimitive.Close className="absolute right-2 top-2 flex h-11 w-11 items-center justify-center rounded-sm opacity-70 ring-offset-background cursor-pointer transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+      {/* Croix côté FIN (`end-2`) : à droite en français, à gauche en arabe — en
+          `right-2` elle tombait côté début en RTL, sur le titre (issue #1228). */}
+      <DialogPrimitive.Close className="absolute end-2 top-2 flex h-11 w-11 items-center justify-center rounded-sm opacity-70 ring-offset-background cursor-pointer transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
         <X className="h-4 w-4" />
         <CloseLabel />
       </DialogPrimitive.Close>
@@ -64,7 +67,10 @@ const DialogContent = React.forwardRef<
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 
 const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn("flex flex-col space-y-1.5 text-center sm:text-left", className)} {...props} />
+  <div
+    className={cn("flex flex-col space-y-1.5 text-center sm:text-start", className)}
+    {...props}
+  />
 );
 DialogHeader.displayName = "DialogHeader";
 

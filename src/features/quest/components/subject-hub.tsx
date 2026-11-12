@@ -32,6 +32,7 @@ import { LockedMissionRow } from "./locked-mission-row";
 import { ManuelEleveCard } from "./manuel-eleve-card";
 import { SubjectSeals } from "./subject-seals";
 import { BackLink } from "@/components/ui/back-link";
+import { plus } from "@/shared/lib/bidi";
 
 export type SubjectHubSubject = {
   name_fr: string;
@@ -167,6 +168,9 @@ export function SubjectHub({
   const guideT = useGuideT();
   const { locale } = useI18n();
   const isRtl = subject.content_language === "ar";
+  // Langue du CONTENU (titres de chapitres, de missions, nom de la matière), posée
+  // sur ces seuls nœuds : la coquille reste dans la langue de l'interface (WCAG 3.1.2).
+  const contentLang = subject.content_language ?? undefined;
   const exerciseTo = exerciseRouteFor(isAuthenticated);
 
   // Le grand livre, lu UNE fois. `null` = anonyme (ou RPC en échec) : tout ce qui
@@ -352,6 +356,7 @@ export function SubjectHub({
           </span>
           <span
             className="min-w-0 flex-1 truncate font-display text-base font-bold"
+            lang={contentLang}
             dir={isRtlText(c.title) ? "rtl" : "ltr"}
           >
             {c.title}
@@ -367,6 +372,7 @@ export function SubjectHub({
             {c.description && (
               <p
                 className="mt-2 text-sm text-muted-foreground"
+                lang={contentLang}
                 dir={isRtlText(c.description) ? "rtl" : "ltr"}
               >
                 {c.description}
@@ -415,6 +421,7 @@ export function SubjectHub({
                   const title = (
                     <span
                       className="min-w-0 flex-1 truncate"
+                      lang={contentLang}
                       dir={isRtlText(ex.title) ? "rtl" : "ltr"}
                     >
                       {isQuiz ? "🧠 " : ""}
@@ -482,7 +489,8 @@ export function SubjectHub({
                               </span>
                             ) : done ? null : isAuthenticated ? (
                               <span className="flex items-center gap-0.5 font-semibold text-primary">
-                                <Zap className="h-3 w-3" />+{ex.xp_reward} XP
+                                <Zap className="h-3 w-3" />
+                                {plus(ex.xp_reward)} XP
                               </span>
                             ) : null}
                           </span>
@@ -536,6 +544,7 @@ export function SubjectHub({
         )}
         <h1
           className="mt-1 font-display text-3xl font-bold leading-tight sm:text-4xl"
+          lang={contentLang}
           dir={isRtlText(subject.name_fr) ? "rtl" : "ltr"}
         >
           {subject.name_fr}
@@ -569,6 +578,7 @@ export function SubjectHub({
             <span className="block text-sm font-bold">{t.public.subject.resumeHere}</span>
             <span
               className="block truncate text-xs text-muted-foreground"
+              lang={contentLang}
               dir={isRtlText(resume.chapter.title) ? "rtl" : "ltr"}
             >
               {resume.chapter.title} ·{" "}

@@ -47,6 +47,7 @@ import { DifficultyStars } from "@/components/game/difficulty-stars";
 import { questionSlide, useEntrance } from "@/shared/lib/motion";
 import { useSound, encouragementFor, type Encouragement } from "@/lib/sound";
 import { pageTitle } from "@/lib/i18n/head";
+import { plus } from "@/shared/lib/bidi";
 
 export const Route = createFileRoute("/_authenticated/dungeon")({
   head: () => ({ meta: [{ title: pageTitle((t) => t.dungeon.title) }] }),
@@ -460,12 +461,12 @@ function DungeonPage() {
               <StatTile icon={Layers} value={floorsCleared} label={t.dungeon.floors} />
               <StatTile
                 icon={Zap}
-                value={`+${runResult?.xpEarned ?? "..."}`}
+                value={plus(runResult?.xpEarned ?? "...")}
                 label={t.dungeon.xp}
               />
               <StatTile
                 icon={Sparkles}
-                value={`+${runResult?.coinsEarned ?? "..."}`}
+                value={plus(runResult?.coinsEarned ?? "...")}
                 label={t.dungeon.coins}
               />
               <StatTile
