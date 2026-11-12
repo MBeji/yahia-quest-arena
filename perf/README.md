@@ -80,15 +80,42 @@ STAGE=spike  k6 run perf/k6/dungeon.js         # launch surge (0→800 in 30s)
 - Capture `EXPLAIN (ANALYZE, BUFFERS)` on the slow RPCs (`scripts/perf/explain.sql`
   if added) to confirm the planner is using `idx_profiles_role_xp` etc.
 
+## Budget runtime — ce qu'une page fait attendre à un téléphone
+
+Le reste de ce dossier charge la **base**. `perf/runtime/` mesure l'autre bout : ce qu'une
+page publique fait télécharger et attendre à un téléphone bridé.
+
+| Fichier                     | Rôle                                                                                                                                                                                 |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `runtime/measure-pages.mjs` | La sonde : TTFB, FCP, LCP (et son élément), octets transférés, requêtes, HTML/JS/CSS/polices — médiane de N chargements à cache froid, profil « slow 4G » + CPU ÷ 4                  |
+| `runtime/check-budget.mjs`  | Le gate (`npm run perf:budget`) : sert `dist/` en local (SSR + brotli), mesure `/` et `/programme`, échoue au-delà des plafonds. Hermétique : aucun secret, aucun tiers, pas de base |
+| `runtime/budget.mjs`        | Les plafonds, leur mesure d'origine, et la règle (on ne relève pas : on sort du premier rendu)                                                                                       |
+
+```bash
+npm run perf:budget                  # construit dist/ (env factice) puis mesure
+npm run perf:budget -- --no-build    # dist/ déjà construit
+
+# Mesurer la PRODUCTION (lecture seule, peu de pages, peu de passes — c'est un site réel) :
+node perf/runtime/measure-pages.mjs --base https://www.na9ranal3ab.tn \
+  --page accueil=/ --page cours=/chapitre/<id> --runs 3 [--detail] [--no-throttle]
+```
+
+`PERF_CHROMIUM_PATH=/opt/pw-browsers/chromium` dans un conteneur cloud dont le Chromium ne
+correspond pas au Playwright du dépôt. **Lire les temps avec leur trajet** : depuis un
+conteneur, la sonde traverse un proxy sortant et un PoP américain — les **poids**, les
+**requêtes** et l'**élément LCP** sont fiables partout, les **millisecondes** ne se comparent
+qu'entre deux mesures prises du même endroit.
+
 ## CI integration
 
 The harness is wired into the automated suites at three levels:
 
-| Where                                          | What runs                                                                                                                                                      | Needs secrets?  |
-| ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
-| **Every PR** (`ci.yml` → `npm run perf:check`) | `scripts/perf/check-harness.mjs`: every scenario parses + harness constants still mirror the product hot paths (`LEADERBOARD_LIMIT`, submit rate-limit budget) | No              |
-| **Nightly** (`nightly.yml` → `perf.yml`)       | `validate` (`k6 inspect` every scenario) + `load` at `STAGE=smoke` against the load-test project; rolled into the nightly tracking issue                       | `load` job only |
-| **On demand** (`perf.yml` workflow_dispatch)   | Pick any `STAGE` (smoke→spike) for a real campaign                                                                                                             | `load` job only |
+| Where                                           | What runs                                                                                                                                                      | Needs secrets?  |
+| ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
+| **Every PR** (`ci.yml` → `npm run perf:check`)  | `scripts/perf/check-harness.mjs`: every scenario parses + harness constants still mirror the product hot paths (`LEADERBOARD_LIMIT`, submit rate-limit budget) | No              |
+| **Every PR** (`ci.yml` → `npm run perf:budget`) | `perf/runtime/check-budget.mjs`: the production bundle in a throttled Chromium, against the runtime budgets (requests, transferred bytes, JS, LCP)             | No              |
+| **Nightly** (`nightly.yml` → `perf.yml`)        | `validate` (`k6 inspect` every scenario) + `load` at `STAGE=smoke` against the load-test project; rolled into the nightly tracking issue                       | `load` job only |
+| **On demand** (`perf.yml` workflow_dispatch)    | Pick any `STAGE` (smoke→spike) for a real campaign                                                                                                             | `load` job only |
 
 The `load` job **skips gracefully (green)** when the `LOAD_SUPABASE_*` secrets are
 absent, so it never blocks contributors. k6's thresholds fail the job on a

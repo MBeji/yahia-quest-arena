@@ -59,6 +59,7 @@
     "content:figures:preview": "node scripts/content/svg/preview.mjs",
     "content:figures:import": "node scripts/content/svg/import.mjs",
     "perf:check": "node scripts/perf/check-harness.mjs",
+    "perf:budget": "node perf/runtime/check-budget.mjs",
     "actions:census": "node scripts/ci/actions-census.mjs",
     "reports:export": "node scripts/reports/export-reports.mjs",
     "reports:ai-pilot": "node scripts/reports/export-ai-pilot.mjs",
