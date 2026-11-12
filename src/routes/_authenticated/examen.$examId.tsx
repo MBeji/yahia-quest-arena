@@ -203,12 +203,13 @@ function ExamRunner({ examId, kind }: { examId: string; kind: "ranked" | "practi
       <PageShell width="narrow" className="py-12">
         <EmptyState
           icon={ShieldAlert}
+          tone="error"
           title={startQuery.error instanceof Error ? startQuery.error.message : t.exam.notFound}
           action={
             <button
               type="button"
               onClick={() => navigate({ to: "/examens" })}
-              className="rounded-lg border border-border bg-surface-2 px-4 py-2 text-sm font-medium hover:bg-surface-3"
+              className="inline-flex min-h-11 items-center rounded-lg border border-border bg-surface-2 px-4 text-sm font-medium hover:bg-surface-3"
             >
               {t.exam.back}
             </button>

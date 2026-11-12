@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useId, type KeyboardEvent, type ReactNode } from "react";
 import { Moon, Music, Sun, Volume2 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -29,7 +29,15 @@ export const LOCALES: { code: Locale; label: string; short: string }[] = [
   { code: "ar", label: "العربية", short: "AR" },
 ];
 
-/** Un bouton d'un choix segmenté — actif = plein, sinon discret. */
+/**
+ * Un bouton d'un choix segmenté — actif = plein, sinon discret.
+ *
+ * C'est un `radio` dans un `radiogroup`, pas un `menuitemradio` : ces contrôles
+ * vivent aussi sur la page `/parametrage`, hors de tout menu, où un
+ * `menuitemradio` est un rôle orphelin (axe `aria-required-parent`). Le groupe
+ * porte donc tout le contrat du motif : un seul arrêt de tabulation (le choix
+ * actif), et les flèches déplacent le choix.
+ */
 function Choice({
   active,
   onClick,
@@ -44,9 +52,10 @@ function Choice({
   return (
     <button
       type="button"
-      role="menuitemradio"
+      role="radio"
       aria-checked={active}
       aria-label={label}
+      tabIndex={active ? 0 : -1}
       onClick={onClick}
       className={`flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-bold transition ${
         active
@@ -59,12 +68,48 @@ function Choice({
   );
 }
 
-/** Intitulé + rangée de choix. */
+const NEXT_KEYS = ["ArrowRight", "ArrowDown"];
+const PREVIOUS_KEYS = ["ArrowLeft", "ArrowUp"];
+
+/** Les flèches d'un `radiogroup` : elles déplacent le focus ET le choix, en boucle.
+ * En arabe la rangée est en miroir, donc gauche/droite s'inversent ; haut/bas non. */
+function onRadioGroupKeyDown(event: KeyboardEvent<HTMLDivElement>) {
+  const radios = Array.from(
+    event.currentTarget.querySelectorAll<HTMLButtonElement>('[role="radio"]'),
+  );
+  const current = radios.indexOf(document.activeElement as HTMLButtonElement);
+  if (current === -1) return;
+  const rtl = getComputedStyle(event.currentTarget).direction === "rtl";
+  const key =
+    rtl && event.key === "ArrowLeft"
+      ? "ArrowRight"
+      : rtl && event.key === "ArrowRight"
+        ? "ArrowLeft"
+        : event.key;
+  const step = NEXT_KEYS.includes(key) ? 1 : PREVIOUS_KEYS.includes(key) ? -1 : 0;
+  if (step === 0) return;
+  event.preventDefault();
+  const next = radios[(current + step + radios.length) % radios.length];
+  next.focus();
+  next.click();
+}
+
+/** Intitulé + rangée de choix. L'intitulé visible nomme le groupe. */
 function Field({ label, children }: { label: string; children: ReactNode }) {
+  const labelId = useId();
   return (
     <div className="py-1.5">
-      <div className="mb-1 text-xs text-muted-foreground">{label}</div>
-      <div className="flex gap-1">{children}</div>
+      <div id={labelId} className="mb-1 text-xs text-muted-foreground">
+        {label}
+      </div>
+      <div
+        role="radiogroup"
+        aria-labelledby={labelId}
+        onKeyDown={onRadioGroupKeyDown}
+        className="flex gap-1"
+      >
+        {children}
+      </div>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi } from "vitest";
 import React from "react";
@@ -39,9 +39,48 @@ describe("SettingsMenu — le point d'entrée unique des réglages", () => {
     renderMenu();
     await open();
     // Thème (2 choix) + langue (3 choix) — ex-ThemeSwitcher et ex-LanguageSwitcher.
-    expect(screen.getAllByRole("menuitemradio")).toHaveLength(5);
+    expect(screen.getAllByRole("radio")).toHaveLength(5);
     // Son : effets + musique — ex-SoundSwitcher.
     expect(screen.getAllByRole("switch")).toHaveLength(2);
+  });
+
+  // Audit d'affichage (#1228) : `menuitemradio` dans un `role="menu"` qui contenait
+  // aussi des interrupteurs et un lien — contrat ARIA rompu dans le panneau, rôle
+  // orphelin sur `/parametrage` où les mêmes contrôles vivent hors de tout menu.
+  it("est un panneau nommé, pas un menu : deux groupes de choix nommés par leur intitulé", async () => {
+    renderMenu();
+    await open();
+    expect(screen.queryByRole("menu")).toBeNull();
+    expect(screen.getByTestId("settings-menu")).toHaveAttribute("role", "group");
+    expect(screen.getByTestId("settings-trigger")).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByTestId("settings-trigger")).not.toHaveAttribute("aria-haspopup");
+
+    const groups = screen.getAllByRole("radiogroup");
+    expect(groups).toHaveLength(2);
+    for (const group of groups) expect(group).toHaveAccessibleName();
+  });
+
+  it("chaque groupe n'offre qu'un arrêt de tabulation, et les flèches déplacent le choix", async () => {
+    renderMenu();
+    await open();
+    const [, localeGroup] = screen.getAllByRole("radiogroup");
+    const radios = Array.from(localeGroup.querySelectorAll<HTMLElement>('[role="radio"]'));
+    expect(radios.filter((r) => r.tabIndex === 0)).toHaveLength(1);
+
+    const start = radios.findIndex((r) => r.getAttribute("aria-checked") === "true");
+    radios[start].focus();
+    // Bas/haut : indépendants du sens d'écriture (gauche/droite s'inversent en arabe).
+    await userEvent.keyboard("{ArrowDown}");
+    const next = (start + 1) % radios.length;
+    const current = () => Array.from(localeGroup.querySelectorAll<HTMLElement>('[role="radio"]'));
+    // Changer de langue charge un catalogue : le choix se pose au rendu suivant.
+    await waitFor(() => expect(current()[next]).toHaveAttribute("aria-checked", "true"));
+    expect(current()[next]).toHaveFocus();
+    expect(current().filter((r) => r.tabIndex === 0)).toHaveLength(1);
+
+    // …et dans l'autre sens : on revient au point de départ (et à la langue de départ).
+    await userEvent.keyboard("{ArrowUp}");
+    await waitFor(() => expect(current()[start]).toHaveAttribute("aria-checked", "true"));
   });
 
   it("sans onSignOut (coquille publique), aucun bloc compte", async () => {

@@ -51,14 +51,14 @@ export class NavBar {
   /** Ouvre le menu, choisit une locale par son libellé natif, referme. */
   async changeLanguage(label: LocaleLabel): Promise<void> {
     await this.openSettings();
-    await this.settingsMenu.getByRole("menuitemradio", { name: label }).click();
+    await this.settingsMenu.getByRole("radio", { name: label }).click();
     await this.closeSettings();
   }
 
   /** Vérifie que le CONTRÔLE reflète la locale active, pas seulement le document. */
   async expectActiveLanguage(label: LocaleLabel): Promise<void> {
     await this.openSettings();
-    await expect(this.settingsMenu.getByRole("menuitemradio", { name: label })).toHaveAttribute(
+    await expect(this.settingsMenu.getByRole("radio", { name: label })).toHaveAttribute(
       "aria-checked",
       "true",
     );
