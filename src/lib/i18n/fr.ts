@@ -984,6 +984,9 @@ export const fr: TranslationKeys = {
     // é31 lot 6 (US-9, R-19) — l'accueil se termine sur une VICTOIRE, pas sur un menu.
     welcomeCoins: "+{coins} pièces de bienvenue",
     welcomeFirstQuestCta: "Commencer ma première quête",
+    quickPickTitle: "Ce chapitre est en {parcours} — c'est ta classe ?",
+    quickPickCta: "Choisir",
+    quickPickLater: "Plus tard",
   },
   cycles: {
     primaire: "Primaire",
