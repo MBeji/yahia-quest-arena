@@ -60,11 +60,13 @@ export function QuestProgressHeader({
   return (
     <>
       {subjectId ? (
-        <BackLink to="/matiere/$subjectId" params={{ subjectId }}>
+        <BackLink to="/matiere/$subjectId" params={{ subjectId }} className="mb-2 sm:mb-6">
           {t.quest.leaveQuest}
         </BackLink>
       ) : (
-        <BackLink to={homeTo}>{t.quest.leaveQuest}</BackLink>
+        <BackLink to={homeTo} className="mb-2 sm:mb-6">
+          {t.quest.leaveQuest}
+        </BackLink>
       )}
 
       {isRecall && (
@@ -89,18 +91,22 @@ export function QuestProgressHeader({
         />
       )}
 
-      <div className="mb-6">
+      <div className="mb-4 sm:mb-6">
         <div className="mb-2 flex items-center justify-between text-xs uppercase tracking-widest text-muted-foreground">
           <span>{position}</span>
           {!bossMode && <span className="text-gold">{title}</span>}
         </div>
-        <div className="mb-2 flex justify-end">
-          <QuestSaveStatus
-            status={saveStatus}
-            pendingLabel={t.quest.savePending}
-            doneLabel={t.quest.saveDone}
-          />
-        </div>
+        {/* La rangée n'existe que s'il y a quelque chose à dire : vide, elle coûtait 8 px
+            au-dessus de chaque question. */}
+        {saveStatus !== "idle" && (
+          <div className="mb-2 flex justify-end">
+            <QuestSaveStatus
+              status={saveStatus}
+              pendingLabel={t.quest.savePending}
+              doneLabel={t.quest.saveDone}
+            />
+          </div>
+        )}
         {bossMode ? (
           <div className="h-2 overflow-hidden rounded-full bg-secondary">
             <motion.div
