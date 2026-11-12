@@ -295,6 +295,36 @@ faire merger.
 ⚠️ Et **ne pas fermer/rouvrir la PR** pour forcer un événement : ça désarme l'auto-merge, et
 l'événement `reopened` subira le même retard que les autres.
 
+## Vercel : 100 déploiements par jour, et la production en fait partie
+
+Le projet est sur le plan gratuit de Vercel : **100 déploiements créés par 24 heures, tous
+environnements confondus**. Passé ce plafond, Vercel refuse tout — aperçus ET production — avec
+le statut de commit « Deployment rate limited — retry in 24 hours ». Les PR continuent de
+fusionner (ce statut n'est pas un contrôle requis), les migrations continuent de s'appliquer à la
+base, mais **le code ne part plus en production** : la prod reste figée sur le dernier
+déploiement réussi.
+
+Vécu le 2026-11-12 : onze sessions en parallèle ont épuisé le plafond en une heure. Chaque push
+créait un aperçu, chaque fusion sur `main` remettait à jour toutes les PR armées (un aperçu de
+plus par PR), et le dépôt est relié à **deux** projets Vercel (`na9ranal3ab`, qui sert la
+production, et `yahia-quest-arena`) — chaque événement comptait double.
+
+Ce qui en découle :
+
+- **Les branches d'agents ne créent plus d'aperçu** (`vercel.json`, `git.deploymentEnabled` :
+  `claude/**`, `codex/**`, `copilot/**`, `dependabot/**`, `wip/**`, `draft/**`, `rescue/**`).
+  Personne ne les ouvrait : une PR fusionne en cinq minutes, et la CI ne teste jamais un aperçu
+  Vercel. `main` n'est dans aucune règle, donc déploie toujours ; une branche `humain/**` garde
+  son aperçu. Il reste deux déploiements par fusion (un par projet) : ~50 fusions par jour.
+- **Constater avant de croire** : `vercel-diagnose.yml` (dispatch, lecture seule) imprime le
+  dernier déploiement `READY` de production et son commit. « Fusionné » ne veut pas dire « en
+  ligne ».
+- **Pendant un gel du déploiement, une migration ne doit rien changer que le code en ligne
+  appelle** : la base avance, le code non. Objets neufs seulement ; toute modification d'une
+  fonction, d'un droit ou d'une table existante attend la reprise.
+- Lever le plafond (plan payant) ou supprimer le projet Vercel en double est un geste du
+  propriétaire.
+
 ## When the chain ships something broken (rollback)
 
 The same automation that makes shipping free makes an outage self-perpetuating: a rollback
