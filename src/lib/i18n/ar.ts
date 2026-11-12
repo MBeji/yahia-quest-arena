@@ -292,8 +292,7 @@ export const ar: TranslationKeys = {
     bossSpeedBonus: "⚡ مكافأة السرعة: +{pct}٪ من نقاط الخبرة",
     bossRankHint: "المؤقّت يحدّد قوة الضربة، ولا يحدّد أبدًا صحّة الإجابة.",
     questionOf: "سؤال {current} / {total}",
-    feedbackMsg:
-      "اختر إجابتك — يمكنك تغييرها — ثم اضغط على تحقّق. يظهر التصحيح المفصّل في نهاية المهمة.",
+    feedbackMsg: "اختر إجابتك — يمكنك تغييرها — ثم اضغط على تحقّق.",
     selectedAnswer: "الإجابة المختارة",
     nextQuestion: "تحقّق",
     finishQuest: "إنهاء المهمة",

@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { ChevronRight, Loader2, Users } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -38,6 +39,19 @@ const OPTION_BASE =
 const OPTION_IDLE = "border-border bg-card hover:border-primary/60";
 const OPTION_ON = "border-primary bg-primary/10 text-primary";
 
+/**
+ * Amène à l'écran l'étape que le choix vient d'ouvrir. La liste des classes fait près de deux
+ * écrans de téléphone : la matière apparaissait 1 200 px sous le doigt, et rien de visible ne
+ * changeait (relevé « première visite » du 2026-11-12, C-5). Sans animation pour qui l'a demandé.
+ */
+function reveal(el: HTMLElement | null, block: ScrollLogicalPosition) {
+  if (!el || typeof el.scrollIntoView !== "function") return;
+  const reduced =
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  el.scrollIntoView({ block, behavior: reduced ? "auto" : "smooth" });
+}
+
 export function PlacementPicker({
   grades,
   gradesLoading,
@@ -69,6 +83,17 @@ export function PlacementPicker({
   onStart: () => void;
 }) {
   const t = usePlacementT();
+  // Seul un CHOIX fait défiler : une classe pré-remplie par l'adresse ou par la carte du Hall
+  // laisse le visiteur en haut de page, là où il lit la promesse.
+  const pickedRef = useRef<"grade" | "subject" | null>(null);
+  const subjectSectionRef = useRef<HTMLElement>(null);
+  const startRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const picked = pickedRef.current;
+    pickedRef.current = null;
+    if (picked === "grade") reveal(subjectSectionRef.current, "start");
+    if (picked === "subject") reveal(startRef.current, "nearest");
+  }, [selectedParcoursId, selectedSubjectId]);
   const cycleLabel = (cycle: PickerGrade["cycle"]) =>
     cycle === "primaire"
       ? t.cycles.primaire
@@ -126,7 +151,10 @@ export function PlacementPicker({
                           type="button"
                           role="radio"
                           aria-checked={on}
-                          onClick={() => onSelectParcours(g.parcoursId)}
+                          onClick={() => {
+                            pickedRef.current = "grade";
+                            onSelectParcours(g.parcoursId);
+                          }}
                           className={`${OPTION_BASE} ${on ? OPTION_ON : OPTION_IDLE}`}
                           dir={isRtlText(g.label) ? "rtl" : undefined}
                         >
@@ -145,7 +173,11 @@ export function PlacementPicker({
 
       {/* 2. La matière — seulement celles qui ont de quoi composer un test (R-1). */}
       {selectedParcoursId && (
-        <section aria-labelledby="placement-pick-subject">
+        <section
+          ref={subjectSectionRef}
+          aria-labelledby="placement-pick-subject"
+          className="scroll-mt-44"
+        >
           <h2 id="placement-pick-subject" className="font-display text-lg font-bold">
             {t.placement.entry.pickSubject}
           </h2>
@@ -177,7 +209,10 @@ export function PlacementPicker({
                     role="radio"
                     aria-checked={on}
                     data-testid={`placement-subject-${s.id}`}
-                    onClick={() => onSelectSubject(s.id)}
+                    onClick={() => {
+                      pickedRef.current = "subject";
+                      onSelectSubject(s.id);
+                    }}
                     className={`${OPTION_BASE} ${on ? OPTION_ON : OPTION_IDLE}`}
                     dir={s.contentLanguage === "ar" || isRtlText(s.nameFr) ? "rtl" : undefined}
                   >
@@ -237,25 +272,27 @@ export function PlacementPicker({
         </p>
       )}
 
-      <Button
-        type="button"
-        size="lg"
-        className="min-h-12 w-full gap-2 text-base sm:w-auto"
-        disabled={!selectedSubjectId || starting}
-        onClick={onStart}
-        data-testid="placement-start"
-      >
-        {starting ? (
-          <>
-            <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> {t.placement.entry.starting}
-          </>
-        ) : (
-          <>
-            {t.placement.entry.start}{" "}
-            <ChevronRight className="h-5 w-5 rtl:-scale-x-100" aria-hidden />
-          </>
-        )}
-      </Button>
+      <div ref={startRef} className="scroll-mb-6">
+        <Button
+          type="button"
+          size="lg"
+          className="min-h-12 w-full gap-2 text-base sm:w-auto"
+          disabled={!selectedSubjectId || starting}
+          onClick={onStart}
+          data-testid="placement-start"
+        >
+          {starting ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> {t.placement.entry.starting}
+            </>
+          ) : (
+            <>
+              {t.placement.entry.start}{" "}
+              <ChevronRight className="h-5 w-5 rtl:-scale-x-100" aria-hidden />
+            </>
+          )}
+        </Button>
+      </div>
     </div>
   );
 }

@@ -315,8 +315,7 @@ export const fr: TranslationKeys = {
     bossSpeedBonus: "⚡ Prime de rapidité : +{pct} % d'XP",
     bossRankHint: "Le chronomètre décide des dégâts, jamais de la correction.",
     questionOf: "Question {current} / {total}",
-    feedbackMsg:
-      "Choisis ta réponse — tu peux en changer — puis clique sur Valider. La correction détaillée apparaît à la fin de la quête.",
+    feedbackMsg: "Choisis ta réponse — tu peux en changer — puis touche Valider.",
     selectedAnswer: "Réponse sélectionnée",
     nextQuestion: "Valider",
     finishQuest: "Terminer la quête",
