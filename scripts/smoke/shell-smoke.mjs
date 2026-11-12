@@ -77,6 +77,7 @@ const MIME = {
   ".jpg": "image/jpeg",
   ".webmanifest": "application/manifest+json",
   ".json": "application/json",
+  ".html": "text/html; charset=utf-8",
 };
 
 function buildProdBundle() {
@@ -99,11 +100,22 @@ function buildProdBundle() {
   }
 }
 
+/**
+ * Le service worker que le serveur rend à la place de `dist/client/sw.js`, quand il
+ * est posé — c'est ainsi que `probeNetwork` joue une MISE À JOUR : l'ancien worker
+ * d'abord, le vrai ensuite, comme chez un visiteur qui revient après un déploiement.
+ */
+let swOverride = null;
+
 function startServer(worker) {
   return new Promise((resolveStarted) => {
     const server = http.createServer(async (req, res) => {
       const url = new URL(req.url, ORIGIN);
       try {
+        if (url.pathname === "/sw.js" && swOverride !== null) {
+          res.writeHead(200, { "content-type": MIME[".js"], "cache-control": "no-store" });
+          return res.end(swOverride);
+        }
         if (url.pathname.startsWith("/assets/") || extname(url.pathname)) {
           try {
             const body = await readFile(join(CLIENT_DIR, url.pathname));
@@ -212,6 +224,146 @@ async function probePage(browser, path, marker) {
   return failures;
 }
 
+/**
+ * LE RÉSEAU SE VOIT (étude 38, lot 4) — et c'est ici, pas ailleurs, que cela se prouve.
+ *
+ * Le service worker ne s'enregistre qu'en production (`import.meta.env.PROD`), et le
+ * serveur de dev recharge ses modules à chaque navigation : seul CE étage exécute le
+ * vrai worker sur le vrai bundle. Quatre temps, dans l'ordre où un élève les vit :
+ *
+ *  1. LA MISE À JOUR — un visiteur a l'ancien worker (`v1`) et son ancienne page de
+ *     repli en cache ; le nouveau se déploie. Il doit prendre la main sans rechargement
+ *     ni geste, purger l'ancien cache, et tenir la nouvelle page.
+ *  2. LE BANDEAU — le réseau tombe : la coquille le dit.
+ *  3. L'ATTENTE — une page dont la lecture ne peut pas partir dit « en attente du
+ *     réseau » ; au retour, cet état s'efface sans rechargement. (Backend factice : le
+ *     contenu, lui, n'arrivera pas — c'est l'état d'attente qu'on regarde partir.)
+ *  4. LA PAGE DE REPLI — une navigation complète sans réseau rend `offline.html` :
+ *     trois langues, zéro script.
+ */
+async function probeNetwork(browser) {
+  const failures = [];
+  const context = await browser.newContext();
+  const page = await context.newPage();
+  page.on("pageerror", (error) => failures.push(`pageerror: ${error.stack ?? error.message}`));
+
+  const cacheKeys = () => page.evaluate(() => caches.keys());
+  const waitForCaches = async (predicate, what) => {
+    const deadline = Date.now() + 20_000;
+    for (;;) {
+      const keys = await cacheKeys();
+      if (predicate(keys)) return keys;
+      if (Date.now() > deadline) {
+        failures.push(`${what} — caches: ${JSON.stringify(keys)}`);
+        return keys;
+      }
+      await page.waitForTimeout(250);
+    }
+  };
+
+  try {
+    // --- 1. La mise à jour v1 → v2 --------------------------------------------
+    const currentSw = await readFile(join(CLIENT_DIR, "sw.js"), "utf8");
+    const version = currentSw.match(/const VERSION = "([^"]+)";/)?.[1];
+    if (version !== "v2") failures.push(`sw.js VERSION is "${version}", expected "v2"`);
+    swOverride = currentSw.replace(/const VERSION = "[^"]+";/, 'const VERSION = "v1";');
+
+    await page.goto(ORIGIN + "/", { waitUntil: "load", timeout: 30_000 });
+    await page.evaluate(() => navigator.serviceWorker.ready.then(() => undefined));
+    await waitForCaches((keys) => keys.includes("xp-offline-v1"), "old worker never installed");
+
+    swOverride = null;
+    // Un rechargement efface ce marqueur ; une navigation client le garde. (L'événement
+    // `framenavigated` ne les distingue pas : il part aussi sur un simple `pushState`.)
+    const stillSameDocument = () => page.evaluate(() => window.__smokeDocument === true);
+    await page.evaluate(() => {
+      window.__smokeDocument = true;
+    });
+    await page.evaluate(() =>
+      navigator.serviceWorker.getRegistration().then((registration) => registration?.update()),
+    );
+    await waitForCaches(
+      (keys) => keys.includes("xp-offline-v2") && !keys.some((key) => key.endsWith("v1")),
+      "new worker did not take over and purge the v1 caches",
+    );
+    if (!(await stillSameDocument())) failures.push("the worker update reloaded the page");
+
+    const cachedFallback = await page.evaluate(async () => {
+      const cache = await caches.open("xp-offline-v2");
+      const hit = await cache.match("/offline.html");
+      return hit ? hit.text() : null;
+    });
+    if (cachedFallback === null) failures.push("offline.html is not in the v2 cache");
+
+    // --- 2. Le bandeau ---------------------------------------------------------
+    // Le code de /programme entre en mémoire tant que le réseau est là (clic = navigation
+    // client), puis retour à l'accueil : c'est la page « déjà connue » du temps 3.
+    const banner = page.getByTestId("network-banner").first();
+    await page.locator('header a[href="/programme"]').first().click();
+    await page.waitForURL("**/programme", { timeout: 15_000 });
+    await page.goBack();
+    await page.waitForURL(ORIGIN + "/", { timeout: 15_000 });
+
+    if ((await banner.innerText()).trim() !== "")
+      failures.push("the network banner speaks while online");
+    await context.setOffline(true);
+    await banner
+      .locator("div")
+      .waitFor({ timeout: 5_000 })
+      .catch(() => failures.push("offline: no network banner in the public shell"));
+
+    // --- 3. L'attente, puis le retour -----------------------------------------
+    await page.locator('header a[href="/programme"]').first().click();
+    const waiting = page.getByTestId("waiting-for-network");
+    await waiting
+      .waitFor({ timeout: 10_000 })
+      .catch(() => failures.push('offline: /programme does not say "waiting for the network"'));
+
+    await context.setOffline(false);
+    await waiting
+      .waitFor({ state: "detached", timeout: 15_000 })
+      .catch(() => failures.push("back online: the waiting state did not clear by itself"));
+    await banner
+      .locator("div")
+      .waitFor({ state: "detached", timeout: 5_000 })
+      .catch(() => failures.push("back online: the network banner stayed"));
+    if (!(await stillSameDocument())) failures.push("coming back online reloaded the page");
+
+    // --- 4. La page de repli ---------------------------------------------------
+    await context.setOffline(true);
+    await page.goto(ORIGIN + "/extras", { waitUntil: "load", timeout: 15_000 }).catch(() => {});
+    const fallback = await page
+      .evaluate(() => ({
+        languages: [...document.querySelectorAll("section[lang]")].map(
+          (section) => `${section.lang}:${section.dir}`,
+        ),
+        scripts: document.querySelectorAll("script").length,
+        handlers: [...document.querySelectorAll("*")].filter((element) =>
+          [...element.attributes].some((attribute) => attribute.name.startsWith("on")),
+        ).length,
+        retryLinks: document.querySelectorAll('a[href=""]').length,
+      }))
+      .catch(() => null);
+    if (!fallback) failures.push("offline navigation: no fallback page rendered");
+    else {
+      if (fallback.languages.join(" ") !== "fr:ltr en:ltr ar:rtl")
+        failures.push(
+          `offline.html languages are [${fallback.languages}], expected fr, en, ar(rtl)`,
+        );
+      if (fallback.scripts + fallback.handlers > 0)
+        failures.push("offline.html carries a script or an inline handler");
+      if (fallback.retryLinks !== 3)
+        failures.push("offline.html: one retry link per language expected");
+    }
+  } catch (error) {
+    failures.push(`network probe crashed: ${error.stack ?? error.message}`);
+  }
+
+  swOverride = null;
+  await context.close();
+  return failures;
+}
+
 buildProdBundle();
 Object.assign(process.env, DUMMY_ENV);
 const worker = (await import(pathToFileURL(SERVER_ENTRY).href)).default;
@@ -226,6 +378,19 @@ for (const [path, marker] of Object.entries(PAGES)) {
   } else {
     failed = true;
     console.error(`✖ ${path} FAILED:`);
+    for (const failure of failures) console.error(`    ${failure.split("\n").join("\n    ")}`);
+  }
+}
+
+{
+  const failures = await probeNetwork(browser);
+  if (failures.length === 0) {
+    console.log(
+      "✔ network: worker v1 → v2 without reload, offline banner, waiting state, trilingual fallback",
+    );
+  } else {
+    failed = true;
+    console.error("✖ network (service worker + offline) FAILED:");
     for (const failure of failures) console.error(`    ${failure.split("\n").join("\n    ")}`);
   }
 }

@@ -1,6 +1,7 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { PublicHeader } from "@/components/public/public-header";
 import { PublicFooter } from "@/components/public/public-footer";
+import { NetworkBanner } from "@/components/ui/network-banner";
 import { PrintMark } from "@/components/public/print-mark";
 import { CanonicalLink } from "@/components/public/canonical-link";
 import { usePublicContentProtection } from "@/shared/lib/content-protection";
@@ -31,6 +32,8 @@ function PublicLayout() {
       {/* Hoisted into <head> by React 19 — the indexable origin, stated outright. */}
       <CanonicalLink />
       <PublicHeader />
+      {/* é38 lot 4 — collé sous l'en-tête collant, dont la hauteur est mesurée. */}
+      <NetworkBanner className="sticky top-[var(--public-header-h,0px)] z-20" />
       <main className="flex-1">
         <Outlet />
       </main>

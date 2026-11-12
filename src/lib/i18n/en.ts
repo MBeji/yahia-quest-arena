@@ -30,6 +30,15 @@ export const en: TranslationKeys = {
     extrasLoadFailed: "Couldn't load the extras.",
     sessionStartFailed: "Couldn't start the session.",
     sessionExpired: "Your session has expired. Sign in again to save your progress.",
+    offline: "No network — try again when it's back.",
+    rateLimited: "Too many tries — wait a minute.",
+  },
+  offline: {
+    banner: "Offline — waiting for the network.",
+    pendingOne: "1 mission waiting to be sent",
+    pendingMany: "{n} missions waiting to be sent",
+    waiting: "Waiting for the network",
+    waitingDesc: "The content shows up as soon as it's back.",
   },
   auth: {
     titleSignup: "Create your account",
