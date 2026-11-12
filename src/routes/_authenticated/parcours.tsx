@@ -2,6 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { getDashboard } from "@/features/dashboard";
+import { useT } from "@/lib/i18n";
+import { BackLink } from "@/components/ui/back-link";
+import { LoadError } from "@/components/ui/load-error";
 import { JourneyMap, JourneySkeleton, buildSubjectNodes } from "@/features/parcours";
 import { pageTitle } from "@/lib/i18n/head";
 
@@ -17,11 +20,23 @@ type ProfileRow = {
 };
 
 function ParcoursPage() {
+  const t = useT();
   const fetchDashboard = useServerFn(getDashboard);
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["dashboard"],
     queryFn: () => fetchDashboard(),
   });
+
+  // Un échec n'est pas un chargement : le squelette restait affiché sans fin.
+  if (isError) {
+    return (
+      <LoadError title={t.dashboard.failedLoad} onRetry={() => refetch()}>
+        <BackLink to="/dashboard" className="mb-0">
+          {t.common.backToHall}
+        </BackLink>
+      </LoadError>
+    );
+  }
 
   if (isLoading || !data) {
     return <JourneySkeleton />;

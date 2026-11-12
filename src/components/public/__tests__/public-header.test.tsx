@@ -208,6 +208,36 @@ describe("PublicHeader — aucun libellé ne devine le compte (é38 lot 1, R-6)"
     expect(screen.queryByTestId("account-hud")).toBeNull();
   });
 
+  // Audit « première visite » (2026-11-12) : l'arrivée de « Créer mon compte » décalait
+  // toute la page (CLS 0,11 à 360 px). Le bloc neutre réserve donc la place — sans rien
+  // dire de l'état du compte à qui que ce soit.
+  it("le bloc neutre RÉSERVE la place des entrées du compte, invisible et hors de l'arbre d'accessibilité", () => {
+    renderHeader();
+
+    const placeholder = screen.getByTestId("header-account-placeholder");
+    expect(placeholder).toHaveAttribute("aria-hidden", "true");
+    expect(placeholder.className).toContain("invisible");
+    expect(placeholder.querySelector("a")).toBeNull();
+    // Même gabarit que le vrai bouton : c'est ce qui rend la réserve exacte.
+    expect(placeholder.lastElementChild?.className).toContain("bg-primary");
+  });
+
+  it("la réserve cède sa place au vrai lien une fois la session lue", () => {
+    const { container, rerender } = renderHeader();
+    expect(screen.getByTestId("header-account-placeholder")).toBeInTheDocument();
+
+    mockUseAuth.mockReturnValue({ user: null, session: null, loading: false });
+    rerender(
+      <I18nProvider>
+        <PublicHeader />
+      </I18nProvider>,
+    );
+    // Le gabarit identique (même constante de classes) est mesuré au navigateur :
+    // `e2e/public/a11y.spec.ts` exige un décalage de mise en page quasi nul.
+    expect(screen.queryByTestId("header-account-placeholder")).toBeNull();
+    expect(container.querySelector('a[href="/signup"]')).not.toBeNull();
+  });
+
   it("le bloc neutre garde l'essentiel : réglages, aide, catalogue, et la marque vers l'accueil", () => {
     const { container } = renderHeader();
 

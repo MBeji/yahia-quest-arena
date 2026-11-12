@@ -689,7 +689,7 @@ function DungeonPage() {
                 data-testid="dungeon-validate"
                 disabled={!canValidate || answerMutation.isPending}
                 onClick={validate}
-                className="inline-flex items-center gap-2 rounded-lg bg-[image:var(--gradient-gold)] px-6 py-2.5 text-sm font-bold text-primary-foreground shadow-gold transition disabled:opacity-40"
+                className="inline-flex items-center gap-2 rounded-lg bg-[image:var(--gradient-gold)] px-6 py-2.5 text-sm font-bold text-primary-foreground shadow-gold transition disabled:opacity-40 [@media(pointer:coarse)]:min-h-11"
               >
                 {answerMutation.isPending && <Loader2 className="h-4 w-4 animate-spin" />}
                 {t.dungeon.validate}

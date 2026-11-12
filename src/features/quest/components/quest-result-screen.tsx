@@ -278,7 +278,7 @@ export function QuestResultScreen({
                 <Link
                   to="/chapitre/$chapterId"
                   params={{ chapterId }}
-                  className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-[image:var(--gradient-gold)] px-4 py-2 text-xs font-bold text-primary-foreground shadow-gold hover:scale-105"
+                  className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-[image:var(--gradient-gold)] px-4 py-2 text-xs font-bold text-primary-foreground shadow-gold hover:scale-105 [@media(pointer:coarse)]:min-h-11"
                 >
                   <BookOpen className="h-4 w-4" /> {QL.review}
                 </Link>
@@ -366,7 +366,7 @@ export function QuestResultScreen({
                 to="/quest/$exerciseId"
                 params={{ exerciseId }}
                 search={{ variant: "recall" }}
-                className="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-[image:var(--gradient-gold)] px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-gold transition hover:scale-105"
+                className="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-[image:var(--gradient-gold)] px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-gold transition hover:scale-105 [@media(pointer:coarse)]:min-h-11"
               >
                 {t.quest.recallPlay}
               </Link>
