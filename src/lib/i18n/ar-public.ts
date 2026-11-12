@@ -2,7 +2,6 @@ import type { TranslationKeys } from "./types";
 
 export const arPublic: TranslationKeys["public"] = {
   header: {
-    homeAria: "نقرا نلعب — الرئيسية",
     navAria: "الفهرس",
     programme: "البرنامج",
     extras: "إضافات",
