@@ -32,7 +32,8 @@ import { captureProductEvent } from "@/shared/lib/product-analytics";
 /**
  * La liste fermée des événements produit (é31 §3.6), amendée par écrit : deux par é34 (la
  * progression), trois par é38 lot 0 (le tunnel sans compte → compte), quatre par é39 (le test de niveau), un par
- * é38 lot 5 (le retour du visiteur). Rien d'autre ne part.
+ * é38 lot 5 (le retour du visiteur), deux par le relevé « première visite » du 2026-11-12 (la
+ * première réponse, la porte du quiz). Rien d'autre ne part.
  */
 export type ProductEventName =
   | "signup"
@@ -71,7 +72,15 @@ export type ProductEventName =
   // « Reprendre ». Il dit d'où (accueil ou programme) et depuis combien de jours l'appareil n'avait
   // pas lu — `days_since >= 1` est un RETOUR, la chose que ce lot existe pour produire. Ni le
   // chapitre ni rien de la personne : la mémoire reste sur l'appareil, seul le clic se compte.
-  | "resume_card_clicked";
+  | "resume_card_clicked"
+  // Relevé « première visite » du 2026-11-12 (docs/audit-premiere-visite-2026-11-12.md, §7) —
+  // l'entonnoir sans compte était aveugle entre la page vue et la FIN d'un entraînement : un
+  // visiteur qui répondait à deux questions puis partait n'avait jamais existé, et rien ne disait
+  // combien butaient sur la porte du quiz (85 % des pages d'exercice publiées). Deux événements,
+  // pas un de plus. Consommateur daté : la fiche D-1 du relevé (« essai d'une mission scolaire
+  // avant le quiz »), que `public_gate_shown` rapproché de `public_practice_started` tranche.
+  | "public_practice_started"
+  | "public_gate_shown";
 
 export type ProductEventEntry = {
   readonly name: ProductEventName;
@@ -166,6 +175,18 @@ export const PRODUCT_EVENT_CATALOGUE: readonly ProductEventEntry[] = [
     name: "resume_card_clicked",
     fires:
       "Clic sur la carte « Reprendre » d'un visiteur sans compte : accueil ou programme, et le nombre de jours depuis sa dernière lecture (étude 38 lot 5)",
+    live: true,
+  },
+  {
+    name: "public_practice_started",
+    fires:
+      "Première réponse validée d'un entraînement SANS compte, mission ou quiz (relevé « première visite » du 2026-11-12)",
+    live: true,
+  },
+  {
+    name: "public_gate_shown",
+    fires:
+      "La porte du quiz s'affiche à un visiteur sans compte qui ouvre une mission scolaire (relevé « première visite » du 2026-11-12)",
     live: true,
   },
 ] as const;

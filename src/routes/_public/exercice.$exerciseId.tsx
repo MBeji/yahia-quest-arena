@@ -105,17 +105,28 @@ function ExercicePage() {
       },
       quizExerciseTo: "/exercice/$exerciseId",
       homeTo: "/",
-      startSession: async ({ quizGated, chapterId, mode }): Promise<StartOutcome> => {
+      startSession: async ({
+        exerciseId: exId0,
+        quizGated,
+        chapterId,
+        mode,
+      }): Promise<StartOutcome> => {
         // The quiz itself is always playable; only a gated non-quiz exercise locks
         // until this device has passed the chapter's comprehension quiz.
         if (
           mode !== "quiz" &&
           isQuizGateLocked({ quizGated, quizPassed: hasPassedChapterQuiz(chapterId) })
         ) {
+          // La porte vue par un visiteur sans compte : la mesure qui dit combien d'arrivées
+          // butent dessus (fiche D-1 du relevé « première visite »). Un identifiant de catalogue.
+          if (!isAuthenticated) trackProductEvent("public_gate_shown", { exercise_id: exId0 });
           return { ok: false, kind: "quiz" };
         }
         return { ok: true, sessionId: "anon" };
       },
+      // La première réponse validée : sans elle, un visiteur parti à la question 3 n'existait pas.
+      onFirstAnswer: ({ exerciseId: exId, isQuiz }) =>
+        trackProductEvent("public_practice_started", { exercise_id: exId, is_quiz: isQuiz }),
       submit: async ({
         exerciseId: exId,
         chapterId,

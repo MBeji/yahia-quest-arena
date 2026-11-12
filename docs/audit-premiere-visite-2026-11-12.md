@@ -203,12 +203,29 @@ qui ne l'a pas été. Les mesures « avant » de ce relevé ont toutes été pri
 Non corrigé, et pourquoi : C-2 change une règle (§6) ; la tenue de la porte d'un onglet à l'autre
 est le lot 5 de l'étude 38 (#1268) ; le décalage de 4 s tient à l'en-tête public (hors périmètre, relayé à l'axe Accessibilité) ; C-7 (page matière) touche `subject-hub.tsx`, que le lot 5 de l'étude 38 modifie au même moment (#1268, « Reprendre ici » sans compte) : laissé pour ne pas se marcher dessus ; C-8 (lettres dans la correction, français de droite à gauche sur un résultat en arabe) est cosmétique et touche des écrans du registre connecté : noté, non traité.
 
-Relevé en corrigeant, non traité : la « mission suivante » suit `display_order`
-(`next-exercise.ts`), qui n'est pas l'ordre affiché par la page matière — après « ⭐ Quiz :
-Histoire » vient « ⚔️ Boss ⭐⭐⭐ », alors que la matière liste « ⭐⭐ Révision » entre les deux. Le
-registre connecté a le même écart. Et en développement, React signale un écart d'hydratation sur le
-HTML d'un cours (`lesson-reader.tsx`, contenu assaini différemment au serveur et au navigateur) —
-antérieur à ce lot, non observé comme défaut visible.
+**Lot 3** — « la page matière commence par ses chapitres », et la mesure. Mesuré en local contre le
+catalogue réel.
+
+| Constat             | Correction                                                                                                                                                                 | Fichier                                                                | Avant                                                                                     | Après (local)                                                                                      | Après (production)  |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- | ------------------- |
+| C-7 — décalage      | La carte « Première visite » passe **sous** la liste des chapitres : montée après lecture du stockage de l'appareil, elle n'a plus rien à pousser                          | `subject-hub.tsx`                                                      | CLS **0,57** (670 px insérés au-dessus du contenu)                                        | CLS **0,12** — il ne reste que celui de l'en-tête public                                           | à re-mesurer        |
+| C-7 — premier geste | Le manuel officiel suit les chapitres au lieu de les précéder                                                                                                              | `subject-hub.tsx`                                                      | « Lire le cours » à 1 780 px, quiz à 1 853 px (2,4 écrans) ; la liste commence à 1 485 px | cours à **960 px**, quiz à **1 033 px** (1,3 écran) ; la liste commence à **665 px**, dans l'écran | à re-mesurer        |
+| §7 — mesure         | `public_practice_started` (première réponse validée sans compte) et `public_gate_shown` (la porte du quiz vue par un visiteur) rejoignent la liste fermée et son catalogue | `product-events.ts`, `exercise-player.tsx`, `exercice.$exerciseId.tsx` | l'entonnoir ne voyait que la fin d'un entraînement                                        | les deux faits partent ; identifiant de catalogue et booléen seulement                             | à lire dans PostHog |
+
+Les sceaux restent au-dessus des chapitres : pour un élève connecté c'est sa progression, et les
+déplacer selon l'état du compte ferait sauter la page au moment où la session se lit.
+
+### C-9 — « Mission suivante » ne suit pas l'ordre affiché (constat à part, non corrigé)
+
+La suite proposée après une mission suit `display_order` (`src/features/quest/next-exercise.ts`),
+alors que la page matière range les missions par **difficulté puis ordre**
+(`subject-hub.tsx`, tri R-13). Constaté sur « Culture générale — Histoire » : après « ⭐ Quiz :
+Histoire » vient « ⚔️ Boss ⭐⭐⭐ », quand la matière liste « ⭐⭐ Révision » entre les deux. Le
+registre connecté a le même écart ; il touche la progression, il n'est donc pas corrigé ici.
+
+Relevé aussi, sans suite : en développement, React signale un écart d'hydratation sur le HTML d'un
+cours (`lesson-reader.tsx`, contenu assaini différemment au serveur et au navigateur) — antérieur à
+ces lots, non observé comme défaut visible.
 
 ## 6. Décisions préparées — elles changent une règle, elles reviennent au propriétaire
 
@@ -291,8 +308,9 @@ la liste fermée (`src/shared/lib/product-events.ts`) en dit aujourd'hui, par na
 | compte                   | `account_invite_clicked{surface}` → `signup{from_content}`                             | ✅                                                                                                                                                                                    |
 | test de niveau           | `placement_started` → `placement_completed` → `placement_shared` / `placement_claimed` | ✅ complet                                                                                                                                                                            |
 
-**Deux événements manquent.** Proposition d'amendement (la liste est fermée et amendée par écrit ;
-zéro donnée personnelle — identifiants de catalogue et booléens seulement) :
+**Deux événements manquaient ; ils sont ajoutés au lot 3** (amendement écrit de la liste fermée,
+sur accord de la session orchestratrice ; zéro donnée personnelle — identifiants de catalogue et
+booléens seulement) :
 
 - **`public_practice_started`** `{ exercise_id, is_quiz }` — à la **première réponse validée** d'une
   partie sans compte. Consommateur : le taux « page d'exercice vue → première réponse » et le taux
