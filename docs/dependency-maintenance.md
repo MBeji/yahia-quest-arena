@@ -220,12 +220,18 @@ monter dans son range) est signalé dans la PR, pour être retiré.
 
 État au 2026-11-11, chiffres pris sur `main` :
 
-| paquet                               | ce qui le retient                                                                                  |
-| ------------------------------------ | -------------------------------------------------------------------------------------------------- |
-| `@cloudflare/vite-plugin` ≥ 1.49.1   | dépend de `miniflare 5` (alpha puis bêta). 1.49.0 est la dernière version sur `miniflare 4`        |
-| `vite` 8.3                           | `rolldown` ≥ 1.2.16 : son binding wasm32-wasi (optionnel) dépend de `@emnapi/core 2.0.0-beta.2`    |
-| `react` 19.3 (et `react-dom`, types) | `react-dom-client` grossit en amont (536 → 625 kB) : chunk d'entrée 454,53 → 482,54 kB, budget 456 |
-| `lucide-react` 1.72                  | `vendor-icons` 30,78 → 37,42 kB, budget 32, à imports inchangés                                    |
+| paquet                             | ce qui le retient                                                                               |
+| ---------------------------------- | ----------------------------------------------------------------------------------------------- |
+| `@cloudflare/vite-plugin` ≥ 1.49.1 | dépend de `miniflare 5` (alpha puis bêta). 1.49.0 est la dernière version sur `miniflare 4`     |
+| `vite` 8.3                         | `rolldown` ≥ 1.2.16 : son binding wasm32-wasi (optionnel) dépend de `@emnapi/core 2.0.0-beta.2` |
+| `lucide-react` 1.72                | `vendor-icons` 30,78 → 37,42 kB, budget 32, à imports inchangés                                 |
+
+**Écart levé le 2026-11-12 : `react` 19.3** (avec `react-dom` et leurs types). Il était retenu par
+le budget du chunk d'entrée — `react-dom-client` grossit en amont (536 → 625 kB), et l'entrée
+passait de 454,53 à 482,54 kB pour un plafond de 456. Sa condition de levée, « le chunk d'entrée
+est découpé », est remplie : trois sorties (#1251, #1253, #1254) ont ramené l'entrée à 413,02 kB,
+et `react` 19.3.1 y a été mesuré à **440,95 kB** (issue #1250). Le prochain lot patch/minor le
+monte ; c'est son gate qui juge la montée, pas cette levée.
 
 **Une préversion ne passe plus par accident.** Le script rejoue la règle A1 sur le lot qu'il vient
 d'appliquer ; si une préversion entre, il remonte le lockfile jusqu'au paquet du lot qui la **tire**

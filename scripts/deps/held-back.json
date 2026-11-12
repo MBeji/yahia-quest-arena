@@ -14,12 +14,6 @@
       "liftWhen": "une PR dédiée assume la préversion dans son titre (`[allow-prerelease]`), ou @emnapi 2 sort en version stable"
     },
     {
-      "packages": ["react", "react-dom", "@types/react", "@types/react-dom"],
-      "since": "2026-11-11",
-      "reason": "react-dom 19.3 grossit en amont (react-dom-client.production.js : 536 → 625 kB) ; le chunk d'entrée passe de 454,53 à 482,54 kB pour un budget de 456 (build:check)",
-      "liftWhen": "le chunk d'entrée est découpé — voir l'entrée `index-` de scripts/check-bundle-budget.mjs, qui le prescrit avant tout relèvement"
-    },
-    {
       "packages": ["lucide-react"],
       "since": "2026-11-11",
       "reason": "lucide-react 1.72 fait passer vendor-icons de 30,78 à 37,42 kB pour un budget de 32 (build:check), à imports inchangés",
