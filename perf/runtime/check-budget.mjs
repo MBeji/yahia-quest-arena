@@ -150,6 +150,27 @@ if (!existsSync(SERVER_ENTRY)) {
   process.exit(1);
 }
 Object.assign(process.env, DUMMY_ENV);
+
+// « Pas de base » doit vouloir dire RÉPONSE IMMÉDIATE, pas « attendre ». Une page dont le
+// rendu serveur lit la base (`/programme` depuis #1266) attend sinon que l'hôte factice
+// échoue — et `postgrest-js` rejoue trois fois une panne réseau (1 s, 2 s, 4 s) : mesuré,
+// 7 s de TTFB qui ne disent rien de la page. La base factice répond donc tout de suite une
+// erreur HTTP (500 : ni 503 ni 520, les deux statuts que le client rejoue), et la page
+// retombe sur son rendu sans donnée. Ce que ce détour a montré de la PRODUCTION est noté
+// à docs/performance-audit.md §0-quater (rt-09) : base injoignable = 7 s d'attente.
+const realFetch = globalThis.fetch;
+globalThis.fetch = (input, init) => {
+  const url = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
+  if (url.startsWith(DUMMY_ENV.SUPABASE_URL)) {
+    return Promise.resolve(
+      Response.json(
+        { message: "perf:budget : aucune base en face", code: "PERF_BUDGET_NO_DB" },
+        { status: 500 },
+      ),
+    );
+  }
+  return realFetch(input, init);
+};
 const worker = (await import(pathToFileURL(SERVER_ENTRY).href)).default;
 const server = await startServer(worker);
 const browser = await launchChromium();
@@ -175,6 +196,9 @@ try {
     console.log(
       `\n${path}   LCP par passe : ${runs.map((r) => Math.round(r.lcp)).join(" / ")} ms — ${median.lcpElement}`,
     );
+    // Non budgétés, mais c'est par eux qu'on lit un LCP qui dérape : serveur (TTFB),
+    // feuille de style (FCP), ou contenu posé après coup (LCP loin du FCP).
+    console.log(`  · TTFB ${Math.round(median.ttfb)} ms · FCP ${Math.round(median.fcp)} ms`);
     for (const [key, label, read, unit] of METRICS) {
       const value = read(median);
       const max = budget[key];
