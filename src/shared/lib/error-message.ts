@@ -1,4 +1,6 @@
+import { onlineManager } from "@tanstack/react-query";
 import { isSessionRefusalError } from "@/shared/integrations/supabase/auth-rejection";
+import { RATE_LIMITED_CODE } from "@/shared/lib/client-error-codes";
 
 // =============================================================================
 // CE QU'ON MONTRE À L'ÉLÈVE quand un appel a échoué.
@@ -13,17 +15,42 @@ import { isSessionRefusalError } from "@/shared/integrations/supabase/auth-rejec
 // chose pour l'élève (sa session ne produit plus de jeton), et sa formulation
 // anglaise n'avait rien à faire à l'écran.
 //
+// Deux autres causes ont rejoint la session morte le 2026-11-12 (étude 38, R-15),
+// parce que l'élève peut quelque chose à chacune et que ce n'est pas le même geste :
+// le RÉSEAU manque (attendre qu'il revienne), ou le serveur a refusé pour trop
+// d'appels (code stable `RATE_LIMITED` — patienter une minute). Avant, la première
+// s'affichait « Failed to fetch » et la seconde en français, dans les trois langues.
+//
 // Le reste continue de passer tel quel, à dessein : ces messages-là viennent de
 // nos propres server fns (« Exercise not found », les refus de gate), et les
 // aplatir en « une erreur est survenue » ferait perdre à l'élève ET au
 // développeur la seule information utile de l'écran.
 // =============================================================================
 
-/** Les deux libellés nécessaires — la forme de `t.errors`, sans le reste. */
+/** Les libellés nécessaires — la forme de `t.errors`, sans le reste. */
 export type ErrorLabels = {
   sessionExpired: string;
   errorFallback: string;
+  offline: string;
+  rateLimited: string;
 };
+
+/**
+ * Ce que `fetch` lève quand la requête n'a pas atteint le serveur — un libellé par
+ * moteur (Chromium, WebKit, Gecko). Un navigateur peut échouer ainsi AVANT d'avoir
+ * annoncé `offline` : un réseau mobile qui décroche ne prévient pas.
+ */
+const FETCH_FAILURES = [
+  "Failed to fetch",
+  "Load failed",
+  "NetworkError when attempting to fetch resource.",
+];
+
+/** L'appel a-t-il échoué faute de réseau ? */
+export function isNetworkFailure(error: unknown): boolean {
+  if (!onlineManager.isOnline()) return true;
+  return error instanceof TypeError && FETCH_FAILURES.includes(error.message);
+}
 
 /**
  * Le message à afficher pour cet échec.
@@ -36,5 +63,7 @@ export type ErrorLabels = {
  */
 export function userFacingError(error: unknown, labels: ErrorLabels): string {
   if (isSessionRefusalError(error)) return labels.sessionExpired;
+  if (error instanceof Error && error.message === RATE_LIMITED_CODE) return labels.rateLimited;
+  if (isNetworkFailure(error)) return labels.offline;
   return error instanceof Error ? error.message : labels.errorFallback;
 }
