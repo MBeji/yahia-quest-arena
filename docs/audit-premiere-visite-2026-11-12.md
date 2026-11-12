@@ -103,7 +103,7 @@ questions, une minute), et sa phrase suppose un échec : « Reviens réviser le 
 premier verdict, contre 2 touchers et 7,3 s sur une mission non scolaire.
 
 Et la porte ne tient pas : ouverte dans l'onglet, **refermée au premier nouvel onglet** et le
-lendemain (`anon-quiz-gate.ts`, `sessionStorage`). C'est le lot 5 de l'étude 38, tenu par une autre
+lendemain (`anon-quiz-gate.ts`, `sessionStorage`). C'est le lot 5 de l'étude 38 (#1268, portes gardées 30 jours), tenu par une autre
 session — non corrigé ici.
 
 ![Le verrou d'une mission scolaire](./audit-premiere-visite-2026-11-12/avant-verrou-mission-scolaire.png)
@@ -180,15 +180,28 @@ après fusion** (dernière colonne).
 
 | Constat         | Correction                                                                                                                                                                | Fichier                                                                   | Avant                                                        | Après (local)                                                                     | Après (production) |
 | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------ | --------------------------------------------------------------------------------- | ------------------ |
-| C-1             | L'écran de porte nomme la mission demandée, dit ce qui l'ouvre et ce que ça coûte (« quelques questions sur le cours »), ne dit plus « réessaie ». La règle ne change pas | `quiz-lock-screen.tsx`, `quest-start-gate.tsx`, `quest-labels.ts`         | cadenas anonyme, « Exercice verrouillé… réessaie »           | titre de la mission + « D'abord le quiz du chapitre » ; quiz toujours à 1 toucher | _à re-mesurer_     |
-| C-3             | Après une mission réussie sans compte : « Quête suivante », premier bouton de l'écran de résultat                                                                         | `exercice.$exerciseId.tsx`                                                | 0 suite ; 2 touchers + la liste de la matière à re-parcourir | **1 toucher** jusqu'à la question 1 de la mission suivante                        | _à re-mesurer_     |
-| C-4             | Le lien vers l'entraînement (ou le quiz, si la porte est fermée) est aussi en haut du cours                                                                               | `lesson-reader.tsx`                                                       | lien à 6 088 px : 7,8 écrans                                 | lien à **378 px** : visible sans défiler                                          | _à re-mesurer_     |
-| C-5             | Choisir sa classe amène les matières à l'écran ; choisir sa matière amène « Commencer »                                                                                   | `placement-picker.tsx`                                                    | matières 1 216 px sous le doigt, rien ne bouge               | matières sous l'en-tête ; « Commencer » visible et actif                          | _à re-mesurer_     |
-| C-6 (consignes) | La consigne d'une mission ne promet plus une correction « à la fin » ; celle du quiz ne dit plus « réponse enregistrée » avant toute réponse                              | `i18n/{fr,en,ar}.ts` (`quest.feedbackMsg`, raccourcie), `quest-labels.ts` | deux phrases fausses                                         | une phrase vraie chacune                                                          | _à re-mesurer_     |
+| C-1             | L'écran de porte nomme la mission demandée, dit ce qui l'ouvre et ce que ça coûte (« quelques questions sur le cours »), ne dit plus « réessaie ». La règle ne change pas | `quiz-lock-screen.tsx`, `quest-start-gate.tsx`, `quest-labels.ts`         | cadenas anonyme, « Exercice verrouillé… réessaie »           | titre de la mission + « D'abord le quiz du chapitre » ; quiz toujours à 1 toucher | à re-mesurer       |
+| C-3             | Après une mission réussie sans compte : « Quête suivante », premier bouton de l'écran de résultat                                                                         | `exercice.$exerciseId.tsx`                                                | 0 suite ; 2 touchers + la liste de la matière à re-parcourir | **1 toucher** jusqu'à la question 1 de la mission suivante                        | à re-mesurer       |
+| C-4             | Le lien vers l'entraînement (ou le quiz, si la porte est fermée) est aussi en haut du cours                                                                               | `lesson-reader.tsx`                                                       | lien à 6 088 px : 7,8 écrans                                 | lien à **378 px** : visible sans défiler                                          | à re-mesurer       |
+| C-5             | Choisir sa classe amène les matières à l'écran ; choisir sa matière amène « Commencer »                                                                                   | `placement-picker.tsx`                                                    | matières 1 216 px sous le doigt, rien ne bouge               | matières sous l'en-tête ; « Commencer » visible et actif                          | à re-mesurer       |
+| C-6 (consignes) | La consigne d'une mission ne promet plus une correction « à la fin » ; celle du quiz ne dit plus « réponse enregistrée » avant toute réponse                              | `i18n/{fr,en,ar}.ts` (`quest.feedbackMsg`, raccourcie), `quest-labels.ts` | deux phrases fausses                                         | une phrase vraie chacune                                                          | à re-mesurer       |
 
-Non corrigé dans ce lot, et pourquoi : C-2 change une règle (§6) ; la tenue de la porte d'un onglet à
-l'autre est le lot 5 de l'étude 38 ; Valider sous la ligne de flottaison et le décalage de 4 s
-tiennent d'abord à l'en-tête public (hors périmètre) ; C-7 et C-8 suivent.
+**État au 2026-11-12, 14 h 30 UTC.** Le lot 1 est fusionné (#1272, 09 h 18 UTC) mais **n'est pas en
+production** : Vercel refuse tout déploiement depuis ~09 h (plafond de 100 par jour du plan
+gratuit), la production est figée sur l'état d'avant #1266. Constaté à 14 h 27 : la page
+`/exercice/37aad97c-…` y affiche toujours l'ancien « exercice verrouillé ». La colonne
+« production » reste donc à remplir à la reprise des déploiements — rien n'y est écrit « vérifié »
+qui ne l'a pas été. Les mesures « avant » de ce relevé ont toutes été prises sur cet état figé.
+
+**Lot 2** — « Valider tient dans l'écran ». Mesuré en local contre le catalogue réel.
+
+| Constat              | Correction                                                                                                                                                       | Fichier                                            | Avant                                                                                   | Après (local)                                                                     | Après (production) |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- | --------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ------------------ |
+| C-6                  | Sur téléphone l'écran de jeu se resserre (marges, cadre de la question, consigne en petit corps) ; les marges d'origine reviennent dès 640 px                    | `exercise-player.tsx`, `quest-progress-header.tsx` | bas du bouton Valider à **839–843 px** sur un écran de 780 : un défilement par question | **745–753 px** : visible sans défiler, quiz comme mission                         | à re-mesurer       |
+| relevé en corrigeant | La pastille « Travail enregistré » s'affichait à un visiteur sans compte dès qu'il rejouait ou passait à la mission suivante — rien n'est enregistré sans compte | `exercise-player.tsx`                              | une phrase fausse                                                                       | la pastille est réservée au registre connecté (test qui échoue sur l'ancien code) | à re-mesurer       |
+
+Non corrigé, et pourquoi : C-2 change une règle (§6) ; la tenue de la porte d'un onglet à l'autre
+est le lot 5 de l'étude 38 (#1268) ; le décalage de 4 s tient à l'en-tête public (hors périmètre, relayé à l'axe Accessibilité) ; C-7 (page matière) touche `subject-hub.tsx`, que le lot 5 de l'étude 38 modifie au même moment (#1268, « Reprendre ici » sans compte) : laissé pour ne pas se marcher dessus ; C-8 (lettres dans la correction, français de droite à gauche sur un résultat en arabe) est cosmétique et touche des écrans du registre connecté : noté, non traité.
 
 Relevé en corrigeant, non traité : la « mission suivante » suit `display_order`
 (`next-exercise.ts`), qui n'est pas l'ordre affiché par la page matière — après « ⭐ Quiz :
@@ -197,15 +210,100 @@ registre connecté a le même écart. Et en développement, React signale un éc
 HTML d'un cours (`lesson-reader.tsx`, contenu assaini différemment au serveur et au navigateur) —
 antérieur à ce lot, non observé comme défaut visible.
 
-## 6. Décisions préparées (elles changent une règle : au propriétaire)
+## 6. Décisions préparées — elles changent une règle, elles reviennent au propriétaire
 
-Voir le bilan de session ; résumé tenu à jour ici.
+Aucune n'est prise ici. Pour chacune : le fait mesuré, les options, ce que chacune coûte, une
+recommandation.
 
-- **D-1 — Laisser un visiteur essayer une mission scolaire avant le quiz.** Fait : C-1.
-- **D-2 — Rendre quelque chose après un quiz raté.** Fait : C-2.
-- **D-3 — La langue du premier affichage.** Fait : §3, un visiteur arabophone arrive en français.
+### D-1 — Laisser un visiteur essayer une mission scolaire avant le quiz ?
+
+**Fait.** 4 657 des 5 477 pages d'exercice publiées au sitemap s'ouvrent sur la porte du quiz. Le
+premier verdict y coûte **14 touchers et 40 s au mieux** (quiz réussi du premier coup), contre
+**2 touchers et 7 s** sur une mission non scolaire. La porte du visiteur sans compte est tenue par
+le navigateur seul (`anon-quiz-gate.ts`) : l'ouvrir ne touche ni au serveur ni à la règle du
+connecté.
+
+| Option                                                                                   | Ce que vit le visiteur                                                                                                              | Coût                                                                                                                                                               |
+| ---------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **A — statu quo** (avec l'écran de porte du lot 1)                                       | une porte expliquée, le quiz à 1 toucher                                                                                            | nul ; 85 % des pages d'exercice restent une porte                                                                                                                  |
+| **B — la première mission du chapitre est ouverte sans compte**                          | ~1 150 pages donnent une question tout de suite ; les autres gardent la porte, qui peut dire « essaie d'abord la première mission » | ~20 lignes côté navigateur. Incohérence assumée : le même élève, une fois inscrit, retrouve cette mission fermée tant que le quiz n'est pas réussi (porte serveur) |
+| **C — un aperçu : les deux premières questions de la mission, corrigées, puis la porte** | **toutes** les 4 657 pages donnent un verdict en 2 touchers ; la mission entière reste derrière le quiz                             | un lot (mode « aperçu » du lecteur, sans compte seulement). Aucune clé de plus n'est exposée : `check_answers` corrige déjà publiquement ces questions             |
+| **D — ne plus publier les missions scolaires au sitemap**                                | Google mène au cours ou au quiz, jamais à une porte                                                                                 | 4 657 pages de longue traîne en moins (décision de l'axe SEO)                                                                                                      |
+
+**Recommandation : C.** C'est la seule option qui donne une première réponse corrigée sur chaque
+page que Google peut montrer, sans défaire la règle cours → quiz → missions : la mission ne se
+joue toujours pas avant le quiz, on en voit deux questions.
+
+### D-2 — Rendre quelque chose après un quiz raté ?
+
+**Fait.** Un quiz raté rend une note (« 2 / 5 ») et rien d'autre : ni les questions justes, ni les
+fausses. C'est la porte obligée de 85 % des missions, et le seul parcours où répondre n'apprend
+rien. `scoreQuizPublic` ne renvoie qu'un agrégat, par choix (la clé reste secrète).
+
+| Option                                                               | Ce que vit le visiteur                                               | Coût                                                                                                                                                                                      |
+| -------------------------------------------------------------------- | -------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **A — statu quo**                                                    | une note, « Réviser le cours »                                       | nul                                                                                                                                                                                       |
+| **B — dire lesquelles étaient justes, sans donner la bonne réponse** | « questions 1 et 4 : justes · 2, 3, 5 : à revoir », puis Recommencer | la fonction serveur du quiz change de contrat (axe Sécurité) ; la porte devient un peu plus facile à forcer par élimination — elle l'est déjà, les essais sont illimités et la note guide |
+| **C — renvoyer au résumé du chapitre plutôt qu'au cours entier**     | une page courte à relire, puis le quiz                               | faible (un paramètre d'onglet sur `/chapitre`) ; n'apprend toujours pas ce qui était faux                                                                                                 |
+
+**Recommandation : B, pour les deux registres**, et C en complément : c'est le premier retour
+qu'un visiteur reçoit du produit, et aujourd'hui c'est un chiffre.
+
+### D-3 — La langue du premier affichage
+
+**Fait.** Tout premier visiteur arrive en français, quelle que soit la langue de son téléphone et
+celle de la page (un cours de mathématiques de 7ᵉ est en arabe sous une interface française).
+Changer de langue demande 2 touchers, derrière une roue dentée. Décision en vigueur : GAP-010,
+« français d'abord ».
+
+| Option                                                      | Coût                                                                                                     |
+| ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **A — statu quo**                                           | nul                                                                                                      |
+| **B — suivre la langue du navigateur à la première visite** | le rendu serveur doit lire `Accept-Language` (et le cache varier dessus) ; risque d'écarts d'hydratation |
+| **C — suivre la langue du contenu de la page d'arrivée**    | idem, plus une règle à expliquer (« pourquoi le site a changé de langue ? »)                             |
+
+**Recommandation : A, tant que ce n'est pas mesuré.** PostHog connaît déjà la langue du navigateur
+de chaque visite (`$browser_language`) : lire d'abord la part des visites en `ar`, décider ensuite.
+Je n'ai pas constaté de visiteur perdu par la langue — seulement que le cas existe.
+
+### D-4 — Demander un compte plus tôt ou plus tard ?
+
+**Fait.** Aucun mur de connexion sur les dix parcours. Le compte est proposé à trois endroits :
+l'en-tête (toujours), le bas d'un cours, l'écran de résultat (« Avec un compte, cette mission vaut
+jusqu'à 50 XP »). Rien n'est demandé avant la première correction.
+
+**Recommandation : ne rien changer** avant d'avoir lu l'entonnoir du §7. Demander plus tôt à un
+visiteur qu'on ne peut pas relancer, c'est risquer la seule visite qu'on aura.
 
 ## 7. Comment on saura si ça marche
 
-Voir le bilan ; l'entonnoir « première visite → première réponse → première réussite → compte » et
-ce que la liste fermée (`src/shared/lib/product-events.ts`) permet d'en lire.
+L'entonnoir à lire : **première visite → première réponse → première réussite → compte**. Ce que
+la liste fermée (`src/shared/lib/product-events.ts`) en dit aujourd'hui, par navigateur
+(`distinct_id` local, sans profil de personne) :
+
+| Étape                    | Événement                                                                              | Verdict                                                                                                                                                                               |
+| ------------------------ | -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| première visite          | `$pageview` (adresse d'arrivée)                                                        | ✅ lisible : `/exercice/…`, `/chapitre/…`                                                                                                                                             |
+| **la porte du quiz vue** | —                                                                                      | ❌ **invisible**. 85 % des pages d'exercice commencent par elle ; on ne sait ni combien la voient ni combien touchent « passer le quiz »                                              |
+| **première réponse**     | —                                                                                      | ❌ **invisible**. `public_practice_completed` ne part qu'à la **fin** d'une mission (6 questions) ou d'un quiz : un visiteur qui répond à deux questions et s'en va n'a jamais existé |
+| première réussite        | `public_practice_completed{passed}`                                                    | ✅                                                                                                                                                                                    |
+| la suite prise           | `$pageview` suivant                                                                    | 🟠 déductible, pas nommé                                                                                                                                                              |
+| compte                   | `account_invite_clicked{surface}` → `signup{from_content}`                             | ✅                                                                                                                                                                                    |
+| test de niveau           | `placement_started` → `placement_completed` → `placement_shared` / `placement_claimed` | ✅ complet                                                                                                                                                                            |
+
+**Deux événements manquent.** Proposition d'amendement (la liste est fermée et amendée par écrit ;
+zéro donnée personnelle — identifiants de catalogue et booléens seulement) :
+
+- **`public_practice_started`** `{ exercise_id, is_quiz }` — à la **première réponse validée** d'une
+  partie sans compte. Consommateur : le taux « page d'exercice vue → première réponse » et le taux
+  d'abandon en cours de mission (`started` sans `completed`).
+- **`public_gate_shown`** `{ exercise_id }` — quand la porte du quiz s'affiche à un visiteur sans
+  compte. Consommateur : la part des arrivées qui butent sur la porte, et — rapproché du
+  `public_practice_started{is_quiz: true}` qui suit — la part qui la franchit. C'est la mesure qui
+  tranche D-1.
+
+Lecture attendue du lot 1, sans événement nouveau : sur les navigateurs arrivés par `/exercice/…`,
+la part qui émet `public_practice_completed` ; sur ceux qui l'émettent avec `passed: true`, la part
+qui ouvre ensuite une autre page `/exercice/…` (la « Quête suivante »). À relever quatre semaines,
+comme le KPI-1 de l'étude 38 — avec 3 à 5 élèves par semaine, toute valeur d'aujourd'hui est du
+bruit.
