@@ -1,18 +1,38 @@
 // @vitest-environment node
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { errorMessage, failWithClientError } from "@/shared/lib/safe-error";
+import {
+  errorMessage,
+  failWithClientError,
+  isRateLimitedError,
+  RATE_LIMITED_FR,
+} from "@/shared/lib/safe-error";
 
 const mockLoggerError = vi.fn();
+const mockLoggerWarn = vi.fn();
 
 vi.mock("@/shared/lib/logger", () => ({
   logger: {
     error: (...args: unknown[]) => mockLoggerError(...args),
+    warn: (...args: unknown[]) => mockLoggerWarn(...args),
   },
 }));
 
 describe("failWithClientError", () => {
   beforeEach(() => {
     mockLoggerError.mockClear();
+    mockLoggerWarn.mockClear();
+  });
+
+  // La borne durable des RPC (audit S-1) lève SQLSTATE PT429. Traduit en erreur
+  // générique, l'élève lisait « impossible de corriger » et réessayait aussitôt.
+  it("turns a durable rate-limit refusal into « trop de requêtes », not the generic message", () => {
+    const refusal = { code: "PT429", message: "RATE_LIMITED", details: null, hint: null };
+    expect(() =>
+      failWithClientError("quest.checkAnswersPublic", refusal, "Impossible de corriger."),
+    ).toThrowError(RATE_LIMITED_FR);
+    // Un refus de cadence n'est pas une erreur serveur : il ne nourrit pas l'alerte.
+    expect(mockLoggerError).not.toHaveBeenCalled();
+    expect(mockLoggerWarn).toHaveBeenCalledWith("quest.checkAnswersPublic: rate limited");
   });
 
   it("logs the Error message and throws the client message", () => {
@@ -63,5 +83,19 @@ describe("errorMessage", () => {
 
   it("stringifies null/undefined safely", () => {
     expect(errorMessage(null)).toBe("null");
+  });
+});
+
+describe("isRateLimitedError", () => {
+  it("recognises the SQLSTATE and the raised message", () => {
+    expect(isRateLimitedError({ code: "PT429", message: "whatever" })).toBe(true);
+    expect(isRateLimitedError({ message: "RATE_LIMITED" })).toBe(true);
+  });
+
+  it("ignores every other failure", () => {
+    expect(isRateLimitedError({ code: "42501", message: "permission denied" })).toBe(false);
+    expect(isRateLimitedError(new Error("db down"))).toBe(false);
+    expect(isRateLimitedError(null)).toBe(false);
+    expect(isRateLimitedError("RATE_LIMITED")).toBe(false);
   });
 });

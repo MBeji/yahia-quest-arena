@@ -287,4 +287,48 @@ describe("getDashboard — profondeur du chemin critique", () => {
     expect(res.nextAction).toEqual({ kind: "retry", exerciseId: "e1" });
     expect(mockRpc).not.toHaveBeenCalledWith("get_remediation_path", expect.anything());
   });
+
+  // rt-10 : `parcours`, `grades` et `subjects` ne dépendent pas l'une de l'autre.
+  // En série, `/programme` payait trois allers-retours ; le test échoue dès
+  // qu'une des trois attend une autre.
+  it("getParcours émet ses trois lectures dans la MÊME vague", async () => {
+    const tables: Record<string, unknown> = {
+      parcours: [
+        {
+          id: "p6",
+          name_fr: "6e",
+          theme_id: "t-school",
+          grade_id: "g6",
+          is_premium: false,
+          status: "available",
+        },
+      ],
+      grades: [{ id: "g6", slug: "6e", cycle: "primaire", display_order: 6, is_selectable: true }],
+      subjects: [
+        { theme_id: "t-school", grade_id: "g6" },
+        { theme_id: "t-school", grade_id: "g6" },
+      ],
+    };
+    mockFrom.mockImplementation((table: string) => lazyQuery(table, tables[table] ?? []));
+
+    const { getParcours } = await import("@/features/dashboard");
+    const out = await getParcours();
+
+    expect(starts.map((s) => s.name).sort()).toEqual([
+      "from:grades",
+      "from:parcours",
+      "from:subjects",
+    ]);
+    expect(new Set(starts.map((s) => s.at))).toEqual(new Set([0]));
+    // …et l'assemblage est celui d'avant.
+    expect(out.parcours).toEqual([
+      expect.objectContaining({
+        id: "p6",
+        grade_cycle: "primaire",
+        grade_slug: "6e",
+        subjects_count: 2,
+        hasEntitlement: true,
+      }),
+    ]);
+  });
 });
