@@ -62,18 +62,10 @@ const recapSchema = z.object({
 
 export type WeeklyRecap = z.infer<typeof recapSchema>;
 
-/** `get_weekly_recap` est postérieure aux types générés — contrat étroit, comme ses voisines. */
-type WeeklyRecapClient = {
-  rpc: (
-    fn: "get_weekly_recap",
-  ) => PromiseLike<{ data: unknown; error: { message: string } | null }>;
-};
-
 export const getWeeklyRecap = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<WeeklyRecap> => {
-    const client = context.supabase as unknown as WeeklyRecapClient;
-    const { data, error } = await client.rpc("get_weekly_recap");
+    const { data, error } = await context.supabase.rpc("get_weekly_recap");
     if (error) failWithClientError("dashboard.getWeeklyRecap", error, LOAD_ERROR_FR);
 
     const parsed = recapSchema.safeParse(data);

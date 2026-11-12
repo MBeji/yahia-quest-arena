@@ -400,7 +400,7 @@ async function concludeSuccess(
   const actual = settledCostMicros({ model: result.model, ...result.usage });
 
   await Promise.all([
-    logAiUsage(supabaseAdmin as unknown as Parameters<typeof logAiUsage>[0], {
+    logAiUsage(supabaseAdmin, {
       userId: request.studentUserId,
       payer: ticket.payer,
       credentialOwner: ticket.ownerUserId,
@@ -458,7 +458,7 @@ async function concludeFailure(
       )
     : releasePlatformReservation(request.studentUserId, ticket.estimate, ticket.energyCost));
 
-  await logAiUsage(supabaseAdmin as unknown as Parameters<typeof logAiUsage>[0], {
+  await logAiUsage(supabaseAdmin, {
     userId: request.studentUserId,
     payer: ticket.payer,
     credentialOwner: ticket.ownerUserId,
