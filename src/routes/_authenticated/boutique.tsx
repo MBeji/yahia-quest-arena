@@ -13,6 +13,7 @@ import { LoadError } from "@/components/ui/load-error";
 import { useT } from "@/lib/i18n";
 import { useSound } from "@/lib/sound";
 import { trackProductEvent } from "@/shared/lib/product-events";
+import { pageTitle } from "@/lib/i18n/head";
 
 // Radar + inventory and the badges/shop grids are lazy — heavy (recharts / many
 // cards). They used to live at the very bottom of the dashboard; étude 15 lot 6
@@ -29,7 +30,7 @@ const DashboardBadgesShop = lazy(() =>
 );
 
 export const Route = createFileRoute("/_authenticated/boutique")({
-  head: () => ({ meta: [{ title: "Boutique · Na9ra Nal3ab" }] }),
+  head: () => ({ meta: [{ title: pageTitle((t) => t.dashboard.shopTitle) }] }),
   component: BoutiquePage,
 });
 

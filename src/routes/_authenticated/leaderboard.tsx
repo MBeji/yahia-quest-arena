@@ -19,9 +19,10 @@ import { GRADE_TAB_DEFAULT_MIN_RANKED } from "@/shared/constants/gamification";
 import { isRtlText } from "@/shared/lib/utils";
 import { entrance } from "@/shared/lib/motion";
 import { useT } from "@/lib/i18n";
+import { pageTitle } from "@/lib/i18n/head";
 
 export const Route = createFileRoute("/_authenticated/leaderboard")({
-  head: () => ({ meta: [{ title: "Classement · Na9ra Nal3ab" }] }),
+  head: () => ({ meta: [{ title: pageTitle((t) => t.common.leaderboard) }] }),
   component: LeaderboardPage,
 });
 

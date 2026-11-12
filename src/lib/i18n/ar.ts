@@ -12,7 +12,7 @@ export const ar: TranslationKeys = {
     close: "إغلاق",
     continue: "متابعة",
     completed: "مكتمل",
-    leaderboard: "لوحة المتصدرين",
+    leaderboard: "الترتيب",
     signIn: "تسجيل الدخول",
     signUp: "إنشاء حساب",
   },
@@ -559,7 +559,7 @@ export const ar: TranslationKeys = {
     keyIssueTitle: "الأستاذ لا يستطيع الإجابة",
     keyIssueBody: "مفتاح الذكاء الاصطناعي في عائلتك يحتاج إلى ضبط. أخبر والديك.",
     lockedSession: "أنهِ مهمّتك أوّلًا — ثمّ نتحدّث",
-    lockedDungeon: "ليس أثناء الزنزانة! نتحدّث عند الخروج",
+    lockedDungeon: "ليس داخل القبو! نتحدّث عند الخروج",
     lockedDuel: "ليس أثناء المبارزة! نتحدّث بعدها",
     lockedNotAttempted: "أجب أوّلًا، ثمّ أشرح لك",
     coach: {

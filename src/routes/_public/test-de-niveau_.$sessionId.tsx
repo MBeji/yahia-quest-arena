@@ -24,6 +24,7 @@ import { PlacementSummary } from "@/features/placement/components/placement-summ
 import { usePlacementT } from "@/lib/i18n/placement";
 import { trackProductEvent } from "@/shared/lib/product-events";
 import { rememberCurrentPage } from "@/shared/lib/return-to";
+import { pageTitle } from "@/lib/i18n/head";
 
 /**
  * UN TEST (étude 39) — la passation puis le bilan, une route, deux états.
@@ -37,7 +38,7 @@ import { rememberCurrentPage } from "@/shared/lib/return-to";
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export const Route = createFileRoute("/_public/test-de-niveau_/$sessionId")({
-  head: () => ({ meta: [{ title: "Test de niveau · Na9ra Nal3ab" }] }),
+  head: () => ({ meta: [{ title: pageTitle((t) => t.public.header.placement) }] }),
   component: PlacementSessionPage,
 });
 

@@ -1099,6 +1099,8 @@ export type TranslationKeys = {
       account: string;
     };
     footer: { tagline: string; rights: string; legalLink: string };
+    /** Titres d'onglet des pages publiques (`pageTitle`, `src/lib/i18n/head.ts`) — le français est celui que lisent les robots. */
+    titles: { programme: string; extras: string; suivi: string; auth: string };
     landing: {
       freeBadge: string;
       heroTitle: string;

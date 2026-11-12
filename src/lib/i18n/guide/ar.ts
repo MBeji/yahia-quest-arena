@@ -137,7 +137,7 @@ export const arGuide: GuideTranslations = {
           },
           {
             icon: "🏆",
-            label: "لوحة المتصدرين",
+            label: "الترتيب",
             text: "مكانك بين التلاميذ، حسب نقاط خبرتك.",
           },
         ],

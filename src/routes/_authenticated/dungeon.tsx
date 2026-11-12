@@ -46,9 +46,10 @@ import { StatTile } from "@/components/game/stat-tile";
 import { DifficultyStars } from "@/components/game/difficulty-stars";
 import { questionSlide, useEntrance } from "@/shared/lib/motion";
 import { useSound, encouragementFor, type Encouragement } from "@/lib/sound";
+import { pageTitle } from "@/lib/i18n/head";
 
 export const Route = createFileRoute("/_authenticated/dungeon")({
-  head: () => ({ meta: [{ title: "Donjon · Na9ra Nal3ab" }] }),
+  head: () => ({ meta: [{ title: pageTitle((t) => t.dungeon.title) }] }),
   component: DungeonPage,
 });
 

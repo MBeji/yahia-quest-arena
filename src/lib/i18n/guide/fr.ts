@@ -53,7 +53,7 @@ export const frGuide: GuideTranslations = {
       lessonPracticeCta:
         "Le quiz est déjà réussi : ce bouton t'emmène directement aux missions pour t'entraîner.",
       parentLink:
-        "Le code se trouve dans le compte de votre enfant : engrenage ⚙️ › « Tous les paramètres » › « Mon compte » › « Code Alliance ». Il le copie et vous le donne.",
+        "Le code se trouve dans le compte de votre enfant : engrenage ⚙️ › « Tous les paramètres » › « Mon compte » › « Code alliance ». Il le copie et vous le donne.",
     },
     intro: {
       badge: "Première visite",
@@ -231,11 +231,11 @@ export const frGuide: GuideTranslations = {
           {
             icon: "1️⃣",
             label: "Demander le code de votre enfant",
-            text: "Dans son compte : engrenage ⚙️ › « Tous les paramètres » › « Mon compte » › « Code Alliance ».",
+            text: "Dans son compte : engrenage ⚙️ › « Tous les paramètres » › « Mon compte » › « Code alliance ».",
           },
           {
             icon: "2️⃣",
-            label: "« Associer un élève via Alliance Code »",
+            label: "« Associer un élève avec son code alliance »",
             text: "Tapez le code dans la case, puis touchez le bouton doré.",
           },
           {
@@ -257,7 +257,7 @@ export const frGuide: GuideTranslations = {
           {
             icon: "🔑",
             label: "Le code de votre enfant",
-            text: "Dans son compte : engrenage ⚙️ › « Tous les paramètres » › « Mon compte » › « Code Alliance ».",
+            text: "Dans son compte : engrenage ⚙️ › « Tous les paramètres » › « Mon compte » › « Code alliance ».",
           },
           {
             icon: "⌨️",
@@ -277,7 +277,7 @@ export const frGuide: GuideTranslations = {
         items: [
           {
             icon: "🔑",
-            label: "« Code Alliance »",
+            label: "« Code alliance »",
             text: "Le code à donner à ton parent pour qu'il suive tes progrès. Touche « Copier ».",
           },
           {

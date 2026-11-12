@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { useT } from "@/lib/i18n";
 import { useEntrance } from "@/shared/lib/motion";
+import { pageTitle } from "@/lib/i18n/head";
 
 /**
  * Password-reset landing (`/auth/reset`, étude 15 lot 9 — US-8). The emailed
@@ -18,7 +19,7 @@ import { useEntrance } from "@/shared/lib/motion";
  * state (R-2). Un-nested from `/auth` (no shared layout) via the `auth_` segment.
  */
 export const Route = createFileRoute("/auth_/reset")({
-  head: () => ({ meta: [{ title: "Nouveau mot de passe · Na9ra Nal3ab" }] }),
+  head: () => ({ meta: [{ title: pageTitle((t) => t.auth.resetTitle) }] }),
   component: ResetPasswordPage,
 });
 

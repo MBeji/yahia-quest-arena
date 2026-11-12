@@ -61,6 +61,7 @@ import { useI18n, useT } from "@/lib/i18n";
 import { parcoursName } from "@/shared/lib/parcours-locale";
 import { supabase } from "@/shared/integrations/supabase/client";
 import { DailyGoalChoice } from "@/features/dashboard/components/daily-goal-choice";
+import { pageTitle } from "@/lib/i18n/head";
 
 /**
  * Paramétrage — le pôle unique des réglages.
@@ -76,7 +77,7 @@ import { DailyGoalChoice } from "@/features/dashboard/components/daily-goal-choi
  * lot 5) : une page-pôle légère qui maille des surfaces qui s'ignoraient.
  */
 export const Route = createFileRoute("/_authenticated/parametrage")({
-  head: () => ({ meta: [{ title: "Paramétrage · Na9ra Nal3ab" }] }),
+  head: () => ({ meta: [{ title: pageTitle((t) => t.settings.title) }] }),
   component: ParametragePage,
 });
 

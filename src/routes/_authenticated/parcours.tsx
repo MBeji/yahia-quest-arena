@@ -6,10 +6,11 @@ import { useT } from "@/lib/i18n";
 import { BackLink } from "@/components/ui/back-link";
 import { LoadError } from "@/components/ui/load-error";
 import { JourneyMap, JourneySkeleton, buildSubjectNodes } from "@/features/parcours";
+import { pageTitle } from "@/lib/i18n/head";
 import { WaitingForNetwork, isWaitingForNetwork } from "@/components/ui/query-wait-state";
 
 export const Route = createFileRoute("/_authenticated/parcours")({
-  head: () => ({ meta: [{ title: "Parcours · Na9ra Nal3ab" }] }),
+  head: () => ({ meta: [{ title: pageTitle((t) => t.layout.parcours) }] }),
   component: ParcoursPage,
 });
 
