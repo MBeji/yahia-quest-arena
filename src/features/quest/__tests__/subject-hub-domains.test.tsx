@@ -38,6 +38,20 @@ describe("SubjectHub — domaines de programme", () => {
     { id: "c3", title: "Les fractions", description: null, domain: "Algèbre" },
   ];
 
+  // WCAG 3.1.2 : les titres de chapitres sont du CONTENU, annoncé dans sa langue.
+  it("déclare la langue du contenu sur le nom de la matière et les titres de chapitres", () => {
+    render(
+      <SubjectHub
+        subject={{ ...subject, content_language: "ar" }}
+        chapters={sectioned}
+        exercises={[]}
+        isAuthenticated={false}
+      />,
+    );
+    expect(screen.getByRole("heading", { level: 1 }).getAttribute("lang")).toBe("ar");
+    expect(screen.getByText("Thalès").getAttribute("lang")).toBe("ar");
+  });
+
   it("pose un en-tête par domaine, dans l'ordre du programme", () => {
     render(
       <SubjectHub subject={subject} chapters={sectioned} exercises={[]} isAuthenticated={false} />,

@@ -330,7 +330,7 @@ function ParentReport() {
           ))}
 
           {pagination && pagination.total > pagination.pageSize && (
-            <div className="ml-auto flex items-center gap-2">
+            <div className="ms-auto flex items-center gap-2">
               <button
                 type="button"
                 onClick={() => setAdminPage((p) => Math.max(1, p - 1))}

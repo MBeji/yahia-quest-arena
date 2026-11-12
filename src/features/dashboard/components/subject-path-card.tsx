@@ -13,6 +13,7 @@ import {
   Lock,
 } from "lucide-react";
 import { useT } from "@/lib/i18n";
+import { attributeLabel } from "@/lib/i18n/attributes";
 import type { SubjectStarSummary } from "@/shared/lib/progress-stars";
 import { nextSealOf } from "@/shared/lib/progress-stars";
 
@@ -100,7 +101,7 @@ export function SubjectPathCard(props: {
       <div className="relative mt-4 min-w-0">
         <div className="truncate font-display text-lg font-bold">{subject.name_fr}</div>
         <div className="truncate text-xs uppercase tracking-wider text-muted-foreground">
-          Attribute · {subject.attribute}
+          {t.public.attributes.label} · {attributeLabel(t, subject.attribute)}
         </div>
       </div>
       <div className="relative mt-4 flex items-center justify-between text-xs">

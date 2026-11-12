@@ -749,7 +749,11 @@ html.reference *:focus-visible {
   padding: 0.75rem 1rem;
   margin: 1rem 0;
   background: color-mix(in oklab, var(--neon-violet) 8%, transparent);
-  border-radius: 0 0.75rem 0.75rem 0;
+  /* Coins arrondis côté FIN seulement, le filet étant côté début : en propriétés
+     logiques, sinon l'arrondi restait à droite en arabe, du côté du filet. */
+  border-radius: 0;
+  border-start-end-radius: 0.75rem;
+  border-end-end-radius: 0.75rem;
   font-style: italic;
 }
 .lesson-content .lesson-hr {
@@ -994,7 +998,11 @@ html:not(.reference) .lesson-figure__plate {
 .lesson-content .lesson-blk--insight {
   border: none;
   border-inline-start: 3px solid var(--primary);
-  border-radius: 0 0.75rem 0.75rem 0;
+  /* Coins arrondis côté FIN seulement, le filet étant côté début : en propriétés
+     logiques, sinon l'arrondi restait à droite en arabe, du côté du filet. */
+  border-radius: 0;
+  border-start-end-radius: 0.75rem;
+  border-end-end-radius: 0.75rem;
   background: color-mix(in oklab, var(--primary) 5%, transparent);
   padding-inline-start: 1rem;
 }
@@ -1218,7 +1226,7 @@ html:not(.reference) .lesson-figure__plate {
      le défaut — alignerait la cellule de notation à gauche et sa voisine arabe à droite,
      dans la même colonne. On fixe le bord : une colonne d'un tableau arabe s'aligne à
      droite, que la cellule porte de la prose ou une formule. */
-  text-align: right;
+  text-align: right; /* rtl-ok: règle propre à [dir="rtl"], le bord physique est voulu. */
 }
 
 /* =====================================================
@@ -1419,8 +1427,7 @@ html:not(.reference) .lesson-figure__plate {
     display: block !important;
     position: fixed;
     bottom: 0;
-    left: 0;
-    right: 0;
+    inset-inline: 0;
     padding: 6px 12px;
     font-size: 9px;
     text-align: center;

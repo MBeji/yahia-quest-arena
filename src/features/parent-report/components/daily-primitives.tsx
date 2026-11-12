@@ -2,6 +2,7 @@ import { Minus, TrendingDown, TrendingUp } from "lucide-react";
 import { useParentT } from "@/lib/i18n/parent";
 import type { IndexBand } from "../insights";
 import { BAND_STYLES, useBandLabel } from "./daily-band";
+import { signedNumber } from "@/shared/lib/bidi";
 
 /**
  * Les briques visuelles du tableau de bord quotidien.
@@ -97,8 +98,7 @@ export function DeltaChip({
   return (
     <span className={`inline-flex items-center gap-1 text-xs font-semibold ${tone}`}>
       <Icon className="h-3.5 w-3.5" />
-      {value > 0 ? "+" : ""}
-      {value}
+      {signedNumber(value)}
       {suffix}
     </span>
   );

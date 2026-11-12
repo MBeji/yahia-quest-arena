@@ -3,6 +3,7 @@ import { Zap, Sparkles, Flame } from "lucide-react";
 import { useT } from "@/lib/i18n";
 import { ExplainHint } from "@/components/ui/explain-hint";
 import { StatTile } from "@/components/game/stat-tile";
+import { plus } from "@/shared/lib/bidi";
 
 interface QuestRewardGridProps {
   xpEarned: number;
@@ -29,11 +30,11 @@ export function QuestRewardGrid({ xpEarned, coinsEarned, level, streak }: QuestR
         label={t.quest.xpLabel}
         value={
           <ExplainHint text={t.explain.questResultXp} label={t.quest.xpLabel}>
-            <span>+{xpEarned}</span>
+            <span>{plus(xpEarned)}</span>
           </ExplainHint>
         }
       />
-      <StatTile icon={Sparkles} tone="gold" label={t.quest.coinsLabel} value={`+${coinsEarned}`} />
+      <StatTile icon={Sparkles} tone="gold" label={t.quest.coinsLabel} value={plus(coinsEarned)} />
       <StatTile icon={Sparkles} tone="gold" label={t.quest.levelLabel} value={level} />
       <StatTile
         icon={Flame}

@@ -11,6 +11,7 @@ import { BackLink } from "@/components/ui/back-link";
 import { LoadingState } from "@/components/ui/loading-state";
 import { LoadError } from "@/components/ui/load-error";
 import { useT } from "@/lib/i18n";
+import { attributeLabel } from "@/lib/i18n/attributes";
 import { useSound } from "@/lib/sound";
 import { trackProductEvent } from "@/shared/lib/product-events";
 import { pageTitle } from "@/lib/i18n/head";
@@ -110,7 +111,7 @@ function BoutiquePage() {
 
   const { profile, subjects, stats } = data;
   const radarData = subjects.map((s) => ({
-    subject: s.attribute,
+    subject: attributeLabel(t, s.attribute),
     value: Math.round(stats[s.id]?.avg ?? 0),
   }));
   const badgeCollection = secondary?.badgeCollection ?? [];

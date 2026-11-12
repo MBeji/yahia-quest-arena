@@ -15,6 +15,7 @@ import {
 import { ParcoursInterestButton } from "./parcours-interest-button";
 import type { ParcoursInterestState } from "../use-parcours-interest";
 import { useI18n, useT } from "@/lib/i18n";
+import { forwardArrow } from "@/shared/lib/bidi";
 import { parcoursName } from "@/shared/lib/parcours-locale";
 import {
   buildLyceeYears,
@@ -179,7 +180,7 @@ function LyceeYearRow({ group }: { group: LyceeYearGroup }) {
 
 export function ProgrammeCatalogue({ parcours }: { parcours: CatalogueParcours[] }) {
   const t = useT();
-  const { locale } = useI18n();
+  const { locale, dir } = useI18n();
   const school = buildPrograms(parcours).find((p) => p.kind === "school");
   const cycles = school?.cycles ?? [];
 
@@ -218,7 +219,7 @@ export function ProgrammeCatalogue({ parcours }: { parcours: CatalogueParcours[]
               <div className="mb-3 flex items-baseline justify-between gap-3">
                 <h2 className="font-display text-xl font-bold">{cycleLabel[c.cycle] ?? c.cycle}</h2>
                 <span className="text-xs font-semibold text-muted-foreground">
-                  → {cycleConcours[c.cycle] ?? ""}
+                  {`${forwardArrow(dir)} ${cycleConcours[c.cycle] ?? ""}`}
                 </span>
               </div>
               {c.cycle === "secondaire" ? (

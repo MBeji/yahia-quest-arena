@@ -2,6 +2,7 @@ import { CalendarCheck } from "lucide-react";
 
 import { useT } from "@/lib/i18n";
 import type { WeeklyRecap } from "../weekly-recap.server";
+import { signedNumber } from "@/shared/lib/bidi";
 
 /**
  * « Ta semaine » (étude 31 lot 5 — US-8, R-18).
@@ -35,7 +36,7 @@ export function WeeklyRecapCard({ recap }: { recap: WeeklyRecap }) {
     );
   }
 
-  const signed = (n: number): string => (n > 0 ? `+${n}` : String(n));
+  const signed = signedNumber;
 
   const facts: { label: string; value: string; delta: string | null }[] = [
     {

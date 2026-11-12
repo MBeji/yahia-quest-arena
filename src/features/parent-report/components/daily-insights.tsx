@@ -10,7 +10,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { useParentT, type ParentTranslationKeys } from "@/lib/i18n/parent";
-import { isolateLtrRuns } from "@/shared/lib/bidi";
+import { isolateLtrRuns, plus, signedNumber } from "@/shared/lib/bidi";
 import {
   analyzeSubjects,
   chapterGapRows,
@@ -188,7 +188,7 @@ function factorLabel(key: string, t: T): string {
  */
 function factorReadout(factor: AnyFactor, t: T): string {
   const d = factor.detail;
-  const signed = (n: number) => `${n > 0 ? "+" : ""}${n}`;
+  const signed = signedNumber;
 
   switch (factor.key) {
     case "regularity":
@@ -335,7 +335,7 @@ export function SubjectsSection({ report }: { report: DailyReport }) {
             />
             <SubjectTagList
               label={t.parentDaily.subjectsImproving}
-              names={analysis.mostImproved.map((s) => `${s.name} (+${s.scoreDelta}%)`)}
+              names={analysis.mostImproved.map((s) => `${s.name} (${plus(s.scoreDelta ?? 0)}%)`)}
               tone="good"
             />
           </div>

@@ -165,6 +165,29 @@ describe("LessonReader", () => {
     expect(container.querySelector('.lesson-content[dir="rtl"]')).not.toBeNull();
   });
 
+  // WCAG 3.1.2 : le cours porte la langue de son CONTENU, pas celle de l'interface
+  // (ici française) — un lecteur d'écran doit annoncer un cours d'arabe en arabe.
+  it("déclare la langue du contenu sur le corps du cours et son titre", () => {
+    const arabic = render(
+      <LessonReader
+        chapterId="c1"
+        chapter={{
+          ...chapter,
+          lesson_content: "## مقدمة\nالنص العربي.",
+          summary: null,
+          subjects: { name_fr: "العربية", content_language: "ar" },
+        }}
+        allChapters={siblings}
+      />,
+    );
+    expect(arabic.container.querySelector(".lesson-content")?.getAttribute("lang")).toBe("ar");
+    expect(arabic.container.querySelector("h1")?.getAttribute("lang")).toBe("ar");
+    arabic.unmount();
+
+    const french = render(<LessonReader chapterId="c1" chapter={chapter} allChapters={siblings} />);
+    expect(french.container.querySelector(".lesson-content")?.getAttribute("lang")).toBe("fr");
+  });
+
   it("shows a practise CTA to the chapter exercise — anon → free practice", () => {
     const { container } = render(
       <LessonReader

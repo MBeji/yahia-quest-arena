@@ -147,6 +147,41 @@ const LEADING_SIGN_LETTER =
 const PRIMED_LETTER = /(?<![A-Za-z])[A-Za-z][′″']+(?![A-Za-z])/u;
 
 /**
+ * U+200E, la marque gauche-à-droite. Devant un nombre signé, elle rattache le signe
+ * à ses chiffres dans une page arabe.
+ *
+ * Le « + » et le « - » sont des séparateurs FAIBLES pour l'algorithme bidi : collés à
+ * un nombre sans lettre latine avant eux, ils prennent le sens du paragraphe. En
+ * arabe, « +50 XP » s'affichait donc « 50 XP+ » et « -3 » devenait « 3- » — le signe
+ * passait à droite des chiffres (issue #1228, `rtl-signed-numbers`). La marque est un
+ * caractère fort et invisible : après elle, signe et chiffres forment un seul run
+ * gauche-à-droite. Elle ne change rien dans une page française ou anglaise.
+ */
+const LTR_MARK = "\u200E";
+
+/**
+ * La flèche « vers la suite » dans le sens de lecture : → en français et en anglais,
+ * ← en arabe. Une flèche écrite en dur ne se retourne pas (le bidi ne met pas les
+ * flèches en miroir) et pointait à rebours dans une page arabe (issue #1228,
+ * `rtl-literal-arrows`). Pour une flèche seule dans son élément, la classe
+ * `rtl:-scale-x-100` fait la même chose sans JavaScript.
+ */
+export function forwardArrow(dir: "ltr" | "rtl"): "→" | "←" {
+  return dir === "rtl" ? "←" : "→";
+}
+
+/** « +{valeur} », signe solidaire des chiffres dans les deux sens d'écriture. */
+export function plus(value: number | string): string {
+  return `${LTR_MARK}+${value}`;
+}
+
+/** Un écart signé : « +5 », « -3 », « 0 » — signe solidaire des chiffres en RTL. */
+export function signedNumber(value: number): string {
+  if (value > 0) return plus(value);
+  return value < 0 ? `${LTR_MARK}${value}` : String(value);
+}
+
+/**
  * Wrap every non-Arabic run that carries a bidi-flipping glyph (see
  * {@link BIDI_FLIP_SIGNAL}) or a tight signed number (see {@link SIGNED_NUMBER})
  * in `text` with LTR isolates — and, inside any other run, each number with a

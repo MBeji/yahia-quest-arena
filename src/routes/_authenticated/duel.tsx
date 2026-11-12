@@ -21,6 +21,7 @@ import { DUEL_REWARDS } from "@/shared/constants/gamification";
 import { useT } from "@/lib/i18n";
 import { toast } from "sonner";
 import { pageTitle } from "@/lib/i18n/head";
+import { plus } from "@/shared/lib/bidi";
 
 export const Route = createFileRoute("/_authenticated/duel")({
   head: () => ({ meta: [{ title: pageTitle((t) => t.duel.title) }] }),
@@ -149,7 +150,7 @@ function DuelHubPage() {
               key={tier.key}
               className="inline-flex items-center gap-1.5 rounded-full border border-gold/30 px-3 py-1 text-xs font-semibold text-gold"
             >
-              {tier.label} · +{tier.xp} XP
+              {tier.label} · {plus(tier.xp)} XP
             </span>
           ))}
         </div>

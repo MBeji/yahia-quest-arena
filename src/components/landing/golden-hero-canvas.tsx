@@ -71,7 +71,7 @@ const fragmentShader = /* glsl */ `
 
     // Base gold gradient driven by surface noise.
     vec3 col = mix(deepGold, gold, smoothstep(-0.5, 0.6, vNoise));
-    // Fresnel rim → champagne highlight.
+    // Fresnel rim -> champagne highlight.
     col = mix(col, champagne, fres * 0.9);
     // Moving specular band for a liquid-metal sheen.
     float band = sin(vNoise * 6.0 + uTime * 1.2);
