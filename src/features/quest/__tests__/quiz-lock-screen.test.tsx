@@ -33,6 +33,32 @@ describe("QuizLockScreen", () => {
     expect(container.querySelector('a[href="/matiere/$subjectId"]')).not.toBeNull();
     // No RTL direction unless requested.
     expect(container.querySelector('[dir="rtl"]')).toBeNull();
+    // Sans titre de mission, pas de surtitre.
+    expect(container.querySelector('[data-testid="lock-mission-title"]')).toBeNull();
+  });
+
+  it("names the mission the visitor asked for, above the reason (relevé première visite, C-1)", () => {
+    const { container } = render(
+      <QuizLockScreen
+        missionTitle="⭐ تمرين: الأعداد الأوّليّة"
+        title="D'abord le quiz"
+        body="Cette mission s'ouvre dès que…"
+        takeQuizLabel="Passer le quiz"
+        reviewLabel="Lire le cours"
+        backLabel="Retour"
+        quizId="qz1"
+        chapterId="c1"
+        subjectId="s1"
+        rtl={false}
+        quizExerciseTo="/exercice/$exerciseId"
+      />,
+    );
+    const overline = container.querySelector('[data-testid="lock-mission-title"]');
+    expect(overline?.textContent).toBe("⭐ تمرين: الأعداد الأوّليّة");
+    // Le titre arabe d'une matière arabe se lit dans son sens, quelle que soit l'interface.
+    expect(overline?.getAttribute("dir")).toBe("auto");
+    // Le quiz reste à un toucher, dans le registre sans compte.
+    expect(container.querySelector('a[href="/exercice/$exerciseId"]')).not.toBeNull();
   });
 
   it("omits the take-quiz link when no quiz id, the review link without a chapter, back without a subject, and honors rtl", () => {
