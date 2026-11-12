@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, isNotFound, notFound } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useCallback, useEffect, useState } from "react";
@@ -20,7 +20,8 @@ import { TutorChatPanel } from "@/features/tutor/components/tutor-chat-panel";
 import { PageShell } from "@/components/ui/page-shell";
 import { LessonReader } from "@/features/quest/components/lesson-reader";
 import { SITE_URL } from "@/shared/constants/site";
-import { publicPageHead, seedOnServer } from "@/shared/lib/public-page-seo";
+import { isUuid, publicPageHead, seedOnServer } from "@/shared/lib/public-page-seo";
+import { CatalogueNotFound } from "./-catalogue-not-found";
 
 /**
  * Public course reader route — « Référence » register (chantier C8). Thin: fetches
@@ -45,10 +46,18 @@ export const Route = createFileRoute("/_public/chapitre/$chapterId")({
   loader: ({ params }) => (import.meta.env.SSR ? seedChapitre(params.chapterId) : null),
   head: ({ loaderData }) => loaderData?.head ?? { meta: [{ title: "Cours · Na9ra Nal3ab" }] },
   component: ChapitrePage,
+  // Un chapitre qui n'existe pas : HTTP 404 dans la coquille publique (voir
+  // `seedChapitre`), pas un écran d'erreur servi en 200.
+  notFoundComponent: () => <CatalogueNotFound />,
 });
 
 /** SSR seulement : la leçon anonyme et le <head> qui la décrit (titre, description, JSON-LD). */
 async function seedChapitre(chapterId: string) {
+  // Deux « introuvable », un seul 404 : l'adresse n'a pas la forme d'un uuid (aucune
+  // lecture), ou la lecture a réussi sans rien rendre (`getChapterLesson` lève
+  // `notFound()`, que `seedOnServer` laisse passer). Une lecture en ÉCHEC, elle,
+  // rend `null` : la page reste un 200 que le client recharge.
+  if (!isUuid(chapterId)) throw notFound();
   const data = await seedOnServer("chapitre", async () => {
     const server = await import("@/features/quest/quest.lesson.server");
     return server.getChapterLesson({ data: { chapterId } });
@@ -101,10 +110,13 @@ function ChapitrePage() {
   const fetchLesson = useServerFn(getChapterLesson);
   const t = useT();
   const seed = Route.useLoaderData();
-  const { data, isLoading, isError, refetch } = useQuery({
+  const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["lesson", chapterId],
     queryFn: () => fetchLesson({ data: { chapterId } }),
     placeholderData: seed?.data,
+    // Trois nouveaux essais ne feront pas exister un chapitre : « introuvable »
+    // s'affiche tout de suite (les pannes gardent les essais par défaut).
+    retry: (failures, err) => !isNotFound(err) && failures < 3,
   });
 
   // Anonymous pass state lives in sessionStorage (anon-quiz-gate) — read it
@@ -113,6 +125,10 @@ function ChapitrePage() {
   useEffect(() => {
     if (!user && data?.quizGated) setAnonQuizPassed(hasPassedChapterQuiz(chapterId));
   }, [user, data?.quizGated, chapterId]);
+
+  // Navigation client vers un chapitre disparu : la fonction serveur a répondu
+  // « introuvable » — proposer « réessayer » ne mènerait nulle part.
+  if (isError && isNotFound(error)) return <CatalogueNotFound />;
 
   if (isError) {
     return (

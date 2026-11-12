@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useRef } from "react";
 import { Dumbbell, RotateCcw, Sparkles, Zap } from "lucide-react";
@@ -23,7 +23,8 @@ import { useAuth } from "@/features/auth";
 import { useT } from "@/lib/i18n";
 import { trackProductEvent } from "@/shared/lib/product-events";
 import { rememberCurrentPage } from "@/shared/lib/return-to";
-import { publicPageHead, seedOnServer } from "@/shared/lib/public-page-seo";
+import { isUuid, publicPageHead, seedOnServer } from "@/shared/lib/public-page-seo";
+import { CatalogueNotFound } from "./-catalogue-not-found";
 
 /**
  * Public « entraînement » register — login-free. Thin: builds the anonymous
@@ -44,15 +45,24 @@ export const Route = createFileRoute("/_public/exercice/$exerciseId")({
   head: ({ loaderData }) =>
     loaderData?.head ?? { meta: [{ title: "Entraînement · Na9ra Nal3ab" }] },
   component: ExercicePage,
+  // Un exercice qui n'existe pas (ou n'est pas public) : HTTP 404 dans la coquille
+  // publique (voir `seedExercice`), pas un lecteur en erreur servi en 200.
+  notFoundComponent: () => <CatalogueNotFound />,
 });
 
 /** SSR seulement : le <head> d'une page d'entraînement (titre, description, carte de partage). */
 async function seedExercice(exerciseId: string) {
-  const meta = await seedOnServer("exercice", async () => {
+  if (!isUuid(exerciseId)) throw notFound();
+  // Trois issues, enveloppées pour ne pas confondre les deux `null` : `seedOnServer`
+  // rend `null` quand la lecture a ÉCHOUÉ (200, le lecteur charge côté client),
+  // `getExerciseMeta` rend `null` quand elle a réussi sans rien trouver (404).
+  const found = await seedOnServer("exercice", async () => {
     const server = await import("@/features/quest/quest.practice.server");
-    return server.getExerciseMeta({ data: { exerciseId } });
+    return { meta: await server.getExerciseMeta({ data: { exerciseId } }) };
   });
-  if (!meta) return null;
+  if (!found) return null;
+  const { meta } = found;
+  if (!meta) throw notFound();
   const where = [meta.chapterTitle, meta.subjectName].filter(Boolean).join(" · ");
   const kind = meta.mode === "quiz" ? "Quiz de compréhension" : "Exercice corrigé";
   const head = publicPageHead({

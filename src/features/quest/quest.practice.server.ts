@@ -9,7 +9,6 @@ import { getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { optionalSupabaseAuth } from "@/shared/integrations/supabase/optional-auth-middleware";
 import { isRateLimited, isRateLimitedLocal } from "@/shared/lib/rate-limit";
-import { logger } from "@/shared/lib/logger";
 import { failWithClientError } from "@/shared/lib/safe-error";
 import { MAX_CHOICE_LENGTH } from "@/shared/lib/answer-formats";
 import { assertAnswerFormats } from "@/features/quest/answer-format-guard";
@@ -186,8 +185,14 @@ export type ExerciseMeta = {
  *
  * Volontairement PAS `getExercise` : celle-ci lit aussi les questions, l'inventaire
  * et la porte du quiz, que le lecteur recharge de toute façon avec la session de
- * l'élève. Ici une seule lecture, trois chaînes, aucune question. `null` quand
- * l'exercice n'existe pas ou n'est pas lisible : la page garde son titre générique.
+ * l'élève. Ici une seule lecture, trois chaînes, aucune question.
+ *
+ * Deux issues à ne pas confondre (la page en fait deux réponses HTTP) :
+ *  - `null` — la lecture a RÉUSSI et n'a rien rendu : l'exercice n'existe pas, ou
+ *    n'est pas public (RLS : l'anonyme ne lit que `source = 'admin'`). La page
+ *    répond 404.
+ *  - une erreur levée — la lecture a ÉCHOUÉ : panne passagère, la page garde son
+ *    titre générique et le lecteur charge côté client.
  */
 export const getExerciseMeta = createServerFn({ method: "GET" })
   .middleware([optionalSupabaseAuth])
@@ -199,8 +204,7 @@ export const getExerciseMeta = createServerFn({ method: "GET" })
       .eq("id", data.exerciseId)
       .maybeSingle();
     if (error) {
-      logger.warn("quest.getExerciseMeta: lookup failed", { error: error.message });
-      return null;
+      failWithClientError("quest.getExerciseMeta", error, "Impossible de charger l'exercice.");
     }
     if (!row) return null;
     return {

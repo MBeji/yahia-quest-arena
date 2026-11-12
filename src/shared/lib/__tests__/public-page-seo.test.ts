@@ -1,7 +1,9 @@
 // @vitest-environment node
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { notFound } from "@tanstack/react-router";
 import {
   META_DESCRIPTION_MAX,
+  isUuid,
   SITE_TITLE_SUFFIX,
   plainExcerpt,
   publicPageHead,
@@ -46,6 +48,36 @@ describe("seedOnServer", () => {
       expect.stringContaining("SSR seed failed"),
       expect.objectContaining({ label: "matiere" }),
     );
+  });
+});
+
+describe("seedOnServer — « introuvable » n'est pas une panne", () => {
+  // Le faux 404 du 2026-11-12 : avalé comme une panne, un `notFound()` laissait
+  // `/chapitre/<id inconnu>` répondre HTTP 200. Il doit atteindre le routeur.
+  it("lets a notFound() through, without logging a failure", async () => {
+    vi.stubEnv("SSR", true);
+    const missing = notFound();
+    await expect(
+      seedOnServer("chapitre", async () => {
+        throw missing;
+      }),
+    ).rejects.toBe(missing);
+    expect(logger.warn).not.toHaveBeenCalled();
+  });
+});
+
+describe("isUuid", () => {
+  it("accepts a uuid, whatever its case", () => {
+    expect(isUuid("6e7219be-5c5a-586e-bedd-318a6262ec8f")).toBe(true);
+    expect(isUuid("6E7219BE-5C5A-586E-BEDD-318A6262EC8F")).toBe(true);
+    expect(isUuid("00000000-0000-0000-0000-000000000000")).toBe(true);
+  });
+
+  it("refuses anything that cannot name a chapter or an exercise", () => {
+    expect(isUuid("pas-un-uuid")).toBe(false);
+    expect(isUuid("")).toBe(false);
+    expect(isUuid("6e7219be-5c5a-586e-bedd-318a6262ec8f/x")).toBe(false);
+    expect(isUuid("------------------------------------")).toBe(false);
   });
 });
 
