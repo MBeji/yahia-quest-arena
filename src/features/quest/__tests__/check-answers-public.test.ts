@@ -1,4 +1,5 @@
 // @vitest-environment node
+import { RATE_LIMITED_CODE } from "@/shared/lib/client-error-codes";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 const { mockRpc, mockFrom, mockIsRateLimited, mockIsRateLimitedLocal, mockGetRequest } = vi.hoisted(
@@ -181,7 +182,7 @@ describe("quest.checkAnswersPublic", () => {
     mockIsRateLimitedLocal.mockReturnValue(true);
     await expect(
       call({ exerciseId: EX, answers: [{ questionId: Q1, choice: "a" }] }),
-    ).rejects.toThrow("Trop de requêtes");
+    ).rejects.toThrow(RATE_LIMITED_CODE);
     expect(mockRpc).not.toHaveBeenCalled();
   });
 

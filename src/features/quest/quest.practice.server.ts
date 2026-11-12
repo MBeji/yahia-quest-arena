@@ -10,6 +10,7 @@ import { z } from "zod";
 import { optionalSupabaseAuth } from "@/shared/integrations/supabase/optional-auth-middleware";
 import { isRateLimited, isRateLimitedLocal } from "@/shared/lib/rate-limit";
 import { failWithClientError } from "@/shared/lib/safe-error";
+import { RATE_LIMITED_CODE } from "@/shared/lib/client-error-codes";
 import { MAX_CHOICE_LENGTH } from "@/shared/lib/answer-formats";
 import { assertAnswerFormats } from "@/features/quest/answer-format-guard";
 
@@ -65,7 +66,9 @@ export const checkAnswersPublic = createServerFn({ method: "POST" })
       ? await isRateLimited(supabase, `check_answers_${userId}`, 30, 60_000)
       : isRateLimitedLocal(`check_answers_ip_${clientIpKey()}`, 30, 60_000);
     if (limited) {
-      throw new Error("Trop de requêtes. Réessaie dans un instant.");
+      // Un code stable, que le client traduit (étude 38, R-15) — jamais une phrase
+      // en français dans un `throw` : l'élève lit peut-être l'arabe.
+      failWithClientError("quest.checkAnswersPublic", "rate limited", RATE_LIMITED_CODE);
     }
 
     await assertAnswerFormats(supabase, "quest.checkAnswersPublic", data.exerciseId, data.answers);
@@ -146,7 +149,9 @@ export const scoreQuizPublic = createServerFn({ method: "POST" })
       ? await isRateLimited(supabase, `score_quiz_${userId}`, 30, 60_000)
       : isRateLimitedLocal(`score_quiz_ip_${clientIpKey()}`, 30, 60_000);
     if (limited) {
-      throw new Error("Trop de requêtes. Réessaie dans un instant.");
+      // Un code stable, que le client traduit (étude 38, R-15) — jamais une phrase
+      // en français dans un `throw` : l'élève lit peut-être l'arabe.
+      failWithClientError("quest.scoreQuizPublic", "rate limited", RATE_LIMITED_CODE);
     }
 
     await assertAnswerFormats(supabase, "quest.scoreQuizPublic", data.exerciseId, data.answers);

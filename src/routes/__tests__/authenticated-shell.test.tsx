@@ -73,6 +73,9 @@ vi.mock("@/shared/integrations/supabase/client", () => ({
 }));
 vi.mock("sonner", () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
 vi.mock("@/components/ui/settings-menu", () => ({ SettingsMenu: () => null }));
+// Le bandeau réseau lit `onlineManager`, que le mock de react-query ci-dessus ne porte pas :
+// il a ses propres tests (`network-banner.test.tsx`), ce fichier teste le mur de connexion.
+vi.mock("@/components/ui/network-banner", () => ({ NetworkBanner: () => null }));
 vi.mock("@/components/visual/gold-ambient", () => ({ GoldAmbient: () => null }));
 vi.mock("@/components/account-hud", () => ({ AccountHud: () => null }));
 vi.mock("@/lib/i18n", () => ({
