@@ -188,8 +188,47 @@ export function renderSitemap(paths: string[]): string {
  * absente : Google apprend à ignorer le `lastmod` d'un site qui se trompe. Pour en
  * émettre un, il faut une colonne `updated_at` tenue par un trigger (migration).
  */
-export async function generateSitemap(): Promise<string> {
+async function buildSitemap(): Promise<string> {
   const supabase = createPublicSupabaseClient();
   const paths = await collectSitemapPaths(supabase);
   return renderSitemap(paths);
 }
+
+/** Durée pendant laquelle une instance ressert le document qu'elle vient de construire. */
+export const SITEMAP_TTL_MS = 10 * 60_000;
+
+/**
+ * Mémoire d'un document coûteux : une construction par fenêtre, et UNE SEULE à la fois.
+ *
+ * Constat du 2026-11-12 (revue de sécurité) : `/sitemap.xml` est servi AVANT le garde
+ * anti-robots (un moteur doit toujours l'obtenir) et ne tenait que par le cache du CDN, dont
+ * la clé inclut la chaîne de requête. `/sitemap.xml?x=<aléatoire>` forçait donc, à chaque
+ * appel et sans aucune limite, sept lectures paginées du catalogue. Avec cette mémoire, la
+ * chaîne de requête ne change plus rien : une instance interroge la base au plus une fois
+ * par fenêtre, quel que soit le nombre d'appels.
+ *
+ *  - des appels simultanés partagent la construction en cours (pas de ruée) ;
+ *  - un échec n'est pas retenu : l'appel suivant réessaie.
+ */
+export function createDocumentCache(
+  build: () => Promise<string>,
+  ttlMs: number,
+  now: () => number = Date.now,
+): () => Promise<string> {
+  let cached: { value: string; expiresAt: number } | null = null;
+  let inFlight: Promise<string> | null = null;
+  return () => {
+    if (cached && now() < cached.expiresAt) return Promise.resolve(cached.value);
+    inFlight ??= build()
+      .then((value) => {
+        cached = { value, expiresAt: now() + ttlMs };
+        return value;
+      })
+      .finally(() => {
+        inFlight = null;
+      });
+    return inFlight;
+  };
+}
+
+export const generateSitemap = createDocumentCache(buildSitemap, SITEMAP_TTL_MS);
