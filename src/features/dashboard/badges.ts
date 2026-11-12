@@ -9,21 +9,6 @@ import type { BadgeCatalogueRow, BadgeCollectionEntry } from "@/shared/types/gam
  */
 
 /**
- * Contrat étroit pour la lecture du catalogue : `badges.family` est arrivée avec
- * é31 lot 2, après la dernière génération des types Supabase (qui ne peuvent pas
- * être régénérés sans accès DB). Même patron que les RPC de `economy.server.ts`
- * et `progression.server.ts` — à supprimer à la prochaine régénération.
- */
-export type BadgeCatalogueClient = {
-  from: (table: "badges") => {
-    select: (columns: string) => PromiseLike<{
-      data: BadgeCatalogueRow[] | null;
-      error: { message: string } | null;
-    }>;
-  };
-};
-
-/**
  * Le catalogue entier, marqué de ce que l'élève a obtenu. L'ORDRE n'est pas
  * décidé ici : le serveur rend des faits, le client groupe par famille.
  */

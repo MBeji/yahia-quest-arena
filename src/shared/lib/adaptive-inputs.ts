@@ -36,7 +36,16 @@
  * serveur : pas d'aller-retour supplémentaire sur le chemin SSR — la latence que
  * le lot 3 avait justement évitée n'est pas réintroduite.
  */
-import type { CompetencyExercise, LearningStateRow } from "@/shared/types/competency";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import { z } from "zod";
+
+import {
+  competencyExerciseSchema,
+  learningStateRowSchema,
+  parseRpcRows,
+} from "@/shared/integrations/supabase/rpc-rows";
+import type { Database } from "@/shared/integrations/supabase/types";
+import type { LearningStateRow } from "@/shared/types/competency";
 import { logger } from "./logger";
 
 /** Une étape du chemin de remontée (`get_remediation_path`, étude 07/30). */
@@ -48,27 +57,26 @@ export type RemediationPathRow = {
 };
 
 /**
- * Le strict minimum que ce module appelle. Les trois RPC sont postérieures aux
- * types Supabase générés (qui ne se régénèrent pas sans accès base) : leur
- * contrat est figé ici, même patron que `progression.server.ts`.
- *
- * Le périmètre est `auth.uid()` EN DUR côté SQL — aucune de ces fonctions ne
- * prend d'identifiant d'élève.
+ * `is_root_cause` est `sc.competency_id = (SELECT … FROM root)` côté SQL : quand
+ * tout le chemin est maîtrisé, `root` est vide et la comparaison rend NULL, pas
+ * `false`. NULL y veut donc dire « pas la racine » — c'est un état normal, pas
+ * une dérive, et le schéma le replie.
  */
-export type AdaptiveRpcClient = {
-  rpc: ((
-    fn: "get_learning_state",
-    args: { p_family: string | null },
-  ) => PromiseLike<{ data: LearningStateRow[] | null; error: { message: string } | null }>) &
-    ((
-      fn: "get_remediation_path",
-      args: { p_competency: string },
-    ) => PromiseLike<{ data: RemediationPathRow[] | null; error: { message: string } | null }>) &
-    ((
-      fn: "get_exercises_for_competency",
-      args: { p_competency: string },
-    ) => PromiseLike<{ data: CompetencyExercise[] | null; error: { message: string } | null }>);
-};
+const remediationPathRowSchema = z.object({
+  slug: z.string(),
+  entry_exercise_id: z.string().nullable(),
+  is_root_cause: z
+    .boolean()
+    .nullable()
+    .transform((v) => v === true),
+  depth: z.number(),
+}) satisfies z.ZodType<RemediationPathRow, unknown>;
+
+/**
+ * Le client Supabase authentifié. Le périmètre est `auth.uid()` EN DUR côté SQL —
+ * aucune des trois RPC de ce module ne prend d'identifiant d'élève.
+ */
+type Supabase = SupabaseClient<Database>;
 
 /** Ce que les rangs 2 et 4 de `resolveNextAction` attendent. */
 export type AdaptiveInputs = {
@@ -142,17 +150,19 @@ export function pickRacine(path: RemediationPathRow[]): RemediationPathRow | nul
  * @param family la famille de compétences de la matière courante, ou `null`
  */
 export async function readLearningState(
-  client: AdaptiveRpcClient,
+  client: Supabase,
   family: string | null,
 ): Promise<LearningStateRow[]> {
-  const etat = await client.rpc("get_learning_state", { p_family: family });
+  // `?? undefined` : la signature est `p_family TEXT DEFAULT NULL`, omettre
+  // l'argument EST demander toutes les familles.
+  const etat = await client.rpc("get_learning_state", { p_family: family ?? undefined });
   if (etat.error) {
     logger.warn("adaptive: get_learning_state failed, ranks 2/4 stay dormant", {
       error: etat.error.message,
     });
     return [];
   }
-  return etat.data ?? [];
+  return parseRpcRows(learningStateRowSchema, etat.data, "adaptive.learningState");
 }
 
 /**
@@ -168,7 +178,7 @@ export async function readLearningState(
  * @param rows l'état de croyance, tel que `readLearningState` l'a rendu
  */
 export async function resolveAdaptiveInputs(
-  client: AdaptiveRpcClient,
+  client: Supabase,
   rows: LearningStateRow[],
 ): Promise<AdaptiveInputs> {
   // Matière non taggée : R-6 parle, ce n'est pas une erreur — et on s'arrête ici,
@@ -183,7 +193,7 @@ export async function resolveAdaptiveInputs(
 }
 
 async function resolveRemediation(
-  client: AdaptiveRpcClient,
+  client: Supabase,
   lacune: LearningStateRow | null,
 ): Promise<AdaptiveInputs["remediation"]> {
   if (!lacune) return null;
@@ -194,7 +204,9 @@ async function resolveRemediation(
     });
     return null;
   }
-  const racine = pickRacine(res.data ?? []);
+  const racine = pickRacine(
+    parseRpcRows(remediationPathRowSchema, res.data, "adaptive.remediationPath"),
+  );
   if (!racine?.entry_exercise_id) return null;
   // Le slug qui voyage est celui de la RACINE, pas celui de la lacune observée :
   // R-14 veut la raison en langage élève, et la raison est le prérequis manquant.
@@ -202,7 +214,7 @@ async function resolveRemediation(
 }
 
 async function resolveStrengthen(
-  client: AdaptiveRpcClient,
+  client: Supabase,
   aConsolider: LearningStateRow | null,
 ): Promise<AdaptiveInputs["strengthen"]> {
   if (!aConsolider) return null;
@@ -217,7 +229,12 @@ async function resolveStrengthen(
   }
   // Le plus facile d'abord : consolider n'est pas éprouver. À égalité, l'id
   // départage — même raison de stabilité que ci-dessus.
-  const exercice = [...(res.data ?? [])].sort(
+  const exercices = parseRpcRows(
+    competencyExerciseSchema,
+    res.data,
+    "adaptive.exercisesForCompetency",
+  );
+  const exercice = [...exercices].sort(
     (a, b) => a.difficulty - b.difficulty || a.exercise_id.localeCompare(b.exercise_id),
   )[0];
   if (!exercice) return null;
