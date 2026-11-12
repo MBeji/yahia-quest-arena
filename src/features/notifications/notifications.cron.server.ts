@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { supabaseAdmin } from "@/shared/integrations/supabase/client.server";
 import { logger } from "@/shared/lib/logger";
 // Le TRANSPORT push vit dans `shared/` depuis l'étude 29 lot 3 : les alertes de
@@ -6,12 +7,14 @@ import { logger } from "@/shared/lib/logger";
 import { configureVapid, sendPushToUsers, type SendStats } from "@/shared/lib/push-sender.server";
 import {
   appLocalDate,
+  enrichedParentDigestPayload,
   groupPushPlan,
   isParentDigestDay,
   parentDigestPayload,
   payloadFor,
   resolveDailyPushPlan,
   safeLocale,
+  type DigestChild,
   type PushCandidate,
   type PushTag,
 } from "./push-audience";
@@ -107,12 +110,108 @@ async function dispatchStudentPush(
 }
 
 /**
+ * Étude 08 lot 2 — le résumé rendu par `get_parent_digest_summary`, relu avant
+ * d'entrer dans un texte : une forme inattendue vaut « pas de résumé », donc le
+ * générique, jamais un « undefined missions » sur l'écran d'un parent.
+ */
+const digestChildSchema = z.object({
+  displayName: z.string().nullable().catch(null),
+  learningMinutes: z.number().int().min(0).catch(0),
+  missions: z.number().int().min(0).catch(0),
+  streak: z.number().int().min(0).catch(0),
+  weakChapter: z.string().nullable().catch(null),
+});
+const digestSummarySchema = z.array(digestChildSchema);
+
+/** Ce que le dimanche a envoyé, par nature — la mesure du lot (étude §1, KPI-4). */
+export type ParentDigestBreakdown = {
+  /** Parents ayant demandé le digest enrichi (et toujours liés). */
+  optedIn: number;
+  /** Parents dont le résumé a été composé et confié au transport. */
+  enriched: number;
+  /** Opt-in retombés sur le générique (résumé illisible ou vide). */
+  fallback: number;
+};
+
+const NO_BREAKDOWN: ParentDigestBreakdown = { optedIn: 0, enriched: 0, fallback: 0 };
+
+/**
+ * Qui a DEMANDÉ le digest enrichi (R-7 : opt-in, désactivé par défaut).
+ *
+ * Une panne ici ne doit pas priver les parents du bilan : elle rend « personne »,
+ * et tout le monde reçoit le générique — qui reste vrai.
+ */
+async function loadEnrichedOptIns(parentIds: string[]): Promise<Set<string>> {
+  try {
+    const { data, error } = await supabaseAdmin
+      .from("parent_digest_prefs")
+      .select("parent_user_id")
+      .eq("enriched_digest", true);
+    if (error) {
+      logger.warn("Push cron: digest prefs unreadable — generic digest for all", { error });
+      return new Set();
+    }
+    const linked = new Set(parentIds);
+    return new Set((data ?? []).map((row) => row.parent_user_id).filter((id) => linked.has(id)));
+  } catch (err) {
+    logger.warn("Push cron: digest prefs unreadable — generic digest for all", { error: err });
+    return new Set();
+  }
+}
+
+/** Le résumé d'UN parent — `null` dès qu'il n'est pas sûr (panne, forme, vide). */
+async function loadDigestSummary(parentId: string): Promise<DigestChild[] | null> {
+  try {
+    const { data, error } = await supabaseAdmin.rpc("get_parent_digest_summary", {
+      p_parent: parentId,
+    });
+    if (error) {
+      logger.warn("Push cron: digest summary failed — generic fallback", { error });
+      return null;
+    }
+    const parsed = digestSummarySchema.safeParse(data);
+    return parsed.success && parsed.data.length > 0 ? parsed.data : null;
+  } catch (err) {
+    logger.warn("Push cron: digest summary failed — generic fallback", { error: err });
+    return null;
+  }
+}
+
+/**
+ * Date le PREMIER envoi enrichi réellement parti — c'est ce qui rend lisible le
+ * « taux de coupure après le premier envoi ». Best-effort : la mesure ne fait
+ * jamais échouer l'envoi.
+ */
+async function stampFirstEnrichedSend(parentIds: string[], now: Date): Promise<void> {
+  if (parentIds.length === 0) return;
+  try {
+    const { error } = await supabaseAdmin
+      .from("parent_digest_prefs")
+      .update({ first_enriched_sent_at: now.toISOString() })
+      .in("parent_user_id", parentIds)
+      .is("first_enriched_sent_at", null);
+    if (error) logger.warn("Push cron: could not stamp first enriched digest", { error });
+  } catch (err) {
+    logger.warn("Push cron: could not stamp first enriched digest", { error: err });
+  }
+}
+
+/** Les résumés se lisent par petits paquets : un RPC par parent, jamais cent d'un coup. */
+const DIGEST_SUMMARY_CONCURRENCY = 8;
+
+/**
  * Weekly family digest — every parent with at least one active student link gets
- * a "your weekly report is ready" push on Sunday evening (see PARENT_DIGEST_WEEKDAY).
+ * a push on Sunday evening (see PARENT_DIGEST_WEEKDAY).
  * Les parents ne concourent pas avec les élèves : ils reçoivent leur propre canal,
  * et le pipeline de priorité ne les concerne pas.
+ *
+ * Étude 08 lot 2 : le parent qui a DEMANDÉ le digest enrichi reçoit le résumé
+ * chiffré de la semaine à la place du générique « le bilan est prêt ». Jamais les
+ * deux, et jamais le résumé sans l'avoir demandé.
  */
-async function dispatchParentDigest(): Promise<SendStats> {
+async function dispatchParentDigest(
+  now: Date,
+): Promise<{ stats: SendStats; breakdown: ParentDigestBreakdown }> {
   const { data: links, error: linksError } = await supabaseAdmin
     .from("parent_student_links")
     .select("parent_user_id")
@@ -123,7 +222,7 @@ async function dispatchParentDigest(): Promise<SendStats> {
   }
 
   const parentIds = [...new Set((links ?? []).map((l) => l.parent_user_id))];
-  if (parentIds.length === 0) return EMPTY;
+  if (parentIds.length === 0) return { stats: EMPTY, breakdown: NO_BREAKDOWN };
 
   // é31 R-17 — le bilan part dans la langue du parent, comme le reste.
   // ⚠️ `locale` est postérieure aux types Supabase générés (régénération
@@ -138,20 +237,56 @@ async function dispatchParentDigest(): Promise<SendStats> {
     logger.error("Push cron: failed to load parent locales", { error: profilesError });
     throw new Error("parent_links");
   }
-
-  const byLocale = new Map<string, string[]>();
   const known = new Map((profiles ?? []).map((p) => [p.id, safeLocale(p.locale)]));
+  const localeOf = (id: string) => known.get(id) ?? "fr";
+
+  // 1) Les parents qui ont demandé le résumé — un payload par parent.
+  const optIns = [...(await loadEnrichedOptIns(parentIds))];
+  const enrichedSends: Promise<SendStats>[] = [];
+  const enrichedIds: string[] = [];
+  const stamped: string[] = [];
+  for (let i = 0; i < optIns.length; i += DIGEST_SUMMARY_CONCURRENCY) {
+    const batch = optIns.slice(i, i + DIGEST_SUMMARY_CONCURRENCY);
+    const summaries = await Promise.all(batch.map((id) => loadDigestSummary(id)));
+    batch.forEach((id, index) => {
+      const summary = summaries[index];
+      const payload = summary ? enrichedParentDigestPayload(localeOf(id), summary) : null;
+      if (!payload) return;
+      enrichedIds.push(id);
+      enrichedSends.push(
+        sendPushToUsers([id], payload).then((stats) => {
+          if (stats.sent > 0) stamped.push(id);
+          return stats;
+        }),
+      );
+    });
+  }
+
+  // 2) Tous les autres — y compris les opt-in sans résumé sûr — le générique.
+  const enrichedSet = new Set(enrichedIds);
+  const byLocale = new Map<string, string[]>();
   for (const id of parentIds) {
-    const locale = known.get(id) ?? "fr";
+    if (enrichedSet.has(id)) continue;
+    const locale = localeOf(id);
     byLocale.set(locale, [...(byLocale.get(locale) ?? []), id]);
   }
 
-  const results = await Promise.all(
-    [...byLocale.entries()].map(([locale, ids]) =>
+  const results = await Promise.all([
+    ...enrichedSends,
+    ...[...byLocale.entries()].map(([locale, ids]) =>
       sendPushToUsers(ids, parentDigestPayload(safeLocale(locale))),
     ),
-  );
-  return results.reduce(addStats, EMPTY);
+  ]);
+  await stampFirstEnrichedSend(stamped, now);
+
+  return {
+    stats: results.reduce(addStats, EMPTY),
+    breakdown: {
+      optedIn: optIns.length,
+      enriched: enrichedIds.length,
+      fallback: optIns.length - enrichedIds.length,
+    },
+  };
 }
 
 /**
@@ -186,9 +321,12 @@ export async function handlePushCron(request: Request, now: Date = new Date()): 
   }
 
   let parentDigest: SendStats | null = null;
+  let parentDigestKinds: ParentDigestBreakdown | null = null;
   if (isParentDigestDay(now)) {
     try {
-      parentDigest = await dispatchParentDigest();
+      const digest = await dispatchParentDigest(now);
+      parentDigest = digest.stats;
+      parentDigestKinds = digest.breakdown;
     } catch (err) {
       return jsonResponse({ error: err instanceof Error ? err.message : "parent_digest" }, 500);
     }
@@ -196,6 +334,14 @@ export async function handlePushCron(request: Request, now: Date = new Date()): 
 
   // Journal par TAG (§3.7) : sans lui, « 12 envoyés » ne dit pas si le canal
   // sert à relancer les absents ou à féliciter ceux qui sont déjà là.
-  logger.info("Push cron complete", { students, byTag, parentDigest });
-  return jsonResponse({ ...students, byTag, parentDigest });
+  // `parentDigestKinds` est le compteur du digest enrichi (é08 KPI-4) : combien
+  // l'ont demandé, combien l'ont reçu, combien sont retombés sur le générique.
+  logger.info("Push cron complete", { students, byTag, parentDigest, parentDigestKinds });
+  // La clé n'existe que le dimanche : la réponse des six autres jours ne bouge pas.
+  return jsonResponse({
+    ...students,
+    byTag,
+    parentDigest,
+    ...(parentDigestKinds ? { parentDigestKinds } : {}),
+  });
 }

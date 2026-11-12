@@ -331,3 +331,277 @@ describe("le bilan famille du dimanche", () => {
     expect((await res.json()).parentDigest).toBeNull();
   });
 });
+
+/**
+ * Étude 08 lot 2 (US-7, R-7) — le digest ENRICHI, opt-in.
+ *
+ * Le décor : p1 a demandé le résumé, p2 non. Les assertions du bloc précédent ne
+ * bougent pas — leur décor ne connaît pas `parent_digest_prefs`, et c'est déjà
+ * un test : une table de préférences illisible rend le générique à tout le monde.
+ */
+describe("le digest enrichi du dimanche (étude 08 lot 2)", () => {
+  type Summary = unknown;
+  const AMINE = {
+    displayName: "Amine",
+    learningMinutes: 80,
+    missions: 12,
+    activeDays: 5,
+    streak: 4,
+    weakChapter: "Les fractions",
+  };
+
+  function decor(opts: {
+    parents: { id: string; locale: string }[];
+    optIns: string[];
+    summaries?: Record<string, Summary>;
+    summaryError?: boolean;
+    prefsError?: boolean;
+  }) {
+    const stamp = vi.fn().mockResolvedValue({ error: null });
+    const sentTo: string[][] = [];
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "parent_student_links")
+        return {
+          select: () => ({
+            eq: () =>
+              Promise.resolve({
+                data: opts.parents.map((p) => ({ parent_user_id: p.id })),
+                error: null,
+              }),
+          }),
+        };
+      if (table === "profiles")
+        return {
+          select: () => ({ in: () => Promise.resolve({ data: opts.parents, error: null }) }),
+        };
+      if (table === "parent_digest_prefs")
+        return {
+          select: () => ({
+            eq: () =>
+              Promise.resolve(
+                opts.prefsError
+                  ? { data: null, error: { message: "boom" } }
+                  : { data: opts.optIns.map((id) => ({ parent_user_id: id })), error: null },
+              ),
+          }),
+          update: (patch: unknown) => ({
+            in: (_col: string, ids: string[]) => ({ is: () => stamp(patch, ids) }),
+          }),
+        };
+      if (table === "push_subscriptions")
+        return {
+          select: () => ({
+            in: (_col: string, ids: string[]) => {
+              sentTo.push(ids);
+              return Promise.resolve({
+                data: ids.map((id, i) => ({ ...SUB(i), endpoint: `https://push/${id}` })),
+                error: null,
+              });
+            },
+          }),
+          delete: () => ({ in: vi.fn().mockResolvedValue({ error: null }) }),
+        };
+      throw new Error(`unexpected table ${table}`);
+    });
+    mockRpc.mockImplementation((async (fn: string, args: { p_parent?: string }) => {
+      if (fn !== "get_parent_digest_summary") return { data: [], error: null };
+      if (opts.summaryError) return { data: null, error: { message: "rpc down" } };
+      return { data: opts.summaries?.[args.p_parent ?? ""] ?? [], error: null };
+    }) as unknown as typeof mockRpc);
+    return { stamp, sentTo };
+  }
+
+  /** Le payload reçu par l'abonnement d'un parent donné. */
+  function payloadOf(parentId: string) {
+    const call = mockSend.mock.calls.find(
+      (c) => (c[0] as { endpoint: string }).endpoint === `https://push/${parentId}`,
+    );
+    return call
+      ? (JSON.parse(call[1] as string) as { title: string; body: string; url: string; tag: string })
+      : null;
+  }
+
+  const TWO = [
+    { id: "p1", locale: "fr" },
+    { id: "p2", locale: "fr" },
+  ];
+
+  it("⭐ l'opt-in est respecté : le résumé pour qui l'a demandé, le générique pour les autres", async () => {
+    decor({ parents: TWO, optIns: ["p1"], summaries: { p1: [AMINE] } });
+    mockSend.mockResolvedValue(undefined);
+
+    const handle = await loadHandler();
+    const res = await handle(cronRequest("Bearer secret"), SUNDAY);
+    const body = (await res.json()) as {
+      parentDigest: { audience: number; sent: number };
+      parentDigestKinds: { optedIn: number; enriched: number; fallback: number };
+    };
+
+    expect(body.parentDigest).toMatchObject({ audience: 2, sent: 2 });
+    expect(body.parentDigestKinds).toEqual({ optedIn: 1, enriched: 1, fallback: 0 });
+    expect(payloadOf("p1")?.title).toBe("📋 La semaine de Amine");
+    expect(payloadOf("p2")?.title).toBe("📋 Le bilan famille de la semaine est prêt");
+    // Jamais les deux : un seul push par parent.
+    expect(mockSend).toHaveBeenCalledTimes(2);
+  });
+
+  it("⭐ le message porte les chiffres de la semaine, et rien dans l'URL", async () => {
+    decor({ parents: [TWO[0]], optIns: ["p1"], summaries: { p1: [AMINE] } });
+    mockSend.mockResolvedValue(undefined);
+
+    const handle = await loadHandler();
+    await handle(cronRequest("Bearer secret"), SUNDAY);
+
+    const sent = payloadOf("p1");
+    expect(sent?.body).toBe(
+      "1 h 20 · 12 missions · série de 4 jours. À revoir ensemble : Les fractions.",
+    );
+    expect(sent?.url).toBe("/parent-report");
+    expect(sent?.tag).toBe("weekly-family-report");
+  });
+
+  it("le résumé part dans la langue du parent", async () => {
+    decor({ parents: [{ id: "p1", locale: "ar" }], optIns: ["p1"], summaries: { p1: [AMINE] } });
+    mockSend.mockResolvedValue(undefined);
+
+    const handle = await loadHandler();
+    await handle(cronRequest("Bearer secret"), SUNDAY);
+
+    expect(payloadOf("p1")?.title).toBe("📋 أسبوع Amine");
+    expect(payloadOf("p1")?.body).toContain("للمراجعة معا: Les fractions.");
+  });
+
+  it("le résumé est demandé pour le parent opt-in, et pour lui seul", async () => {
+    decor({ parents: TWO, optIns: ["p1"], summaries: { p1: [AMINE] } });
+    mockSend.mockResolvedValue(undefined);
+
+    const handle = await loadHandler();
+    await handle(cronRequest("Bearer secret"), SUNDAY);
+
+    const summaryCalls = mockRpc.mock.calls.filter(
+      (c) => (c as unknown[])[0] === "get_parent_digest_summary",
+    );
+    expect(summaryCalls).toEqual([["get_parent_digest_summary", { p_parent: "p1" }]]);
+  });
+
+  it("un opt-in dont le lien a disparu ne reçoit rien et ne coûte aucune lecture", async () => {
+    decor({ parents: [TWO[1]], optIns: ["p1"], summaries: { p1: [AMINE] } });
+    mockSend.mockResolvedValue(undefined);
+
+    const handle = await loadHandler();
+    const res = await handle(cronRequest("Bearer secret"), SUNDAY);
+
+    expect((await res.json()).parentDigestKinds).toEqual({ optedIn: 0, enriched: 0, fallback: 0 });
+    expect(payloadOf("p1")).toBeNull();
+  });
+
+  it("⭐ repli sur le générique quand le résumé est en panne — le dimanche reste servi", async () => {
+    decor({ parents: TWO, optIns: ["p1"], summaryError: true });
+    mockSend.mockResolvedValue(undefined);
+
+    const handle = await loadHandler();
+    const res = await handle(cronRequest("Bearer secret"), SUNDAY);
+    const body = (await res.json()) as {
+      parentDigest: { sent: number };
+      parentDigestKinds: { enriched: number; fallback: number };
+    };
+
+    expect(res.status).toBe(200);
+    expect(body.parentDigest.sent).toBe(2);
+    expect(body.parentDigestKinds).toMatchObject({ enriched: 0, fallback: 1 });
+    expect(payloadOf("p1")?.title).toBe("📋 Le bilan famille de la semaine est prêt");
+  });
+
+  it("repli sur le générique quand le résumé a une forme inattendue ou est vide", async () => {
+    decor({
+      parents: TWO,
+      optIns: ["p1", "p2"],
+      summaries: { p1: { nope: true }, p2: [] },
+    });
+    mockSend.mockResolvedValue(undefined);
+
+    const handle = await loadHandler();
+    const res = await handle(cronRequest("Bearer secret"), SUNDAY);
+
+    expect((await res.json()).parentDigestKinds).toEqual({ optedIn: 2, enriched: 0, fallback: 2 });
+    expect(payloadOf("p1")?.title).toBe("📋 Le bilan famille de la semaine est prêt");
+    expect(payloadOf("p2")?.title).toBe("📋 Le bilan famille de la semaine est prêt");
+  });
+
+  it("repli sur le générique pour TOUS quand les préférences sont illisibles", async () => {
+    decor({ parents: TWO, optIns: ["p1"], prefsError: true, summaries: { p1: [AMINE] } });
+    mockSend.mockResolvedValue(undefined);
+
+    const handle = await loadHandler();
+    const res = await handle(cronRequest("Bearer secret"), SUNDAY);
+
+    expect(res.status).toBe(200);
+    expect((await res.json()).parentDigest.sent).toBe(2);
+    expect(payloadOf("p1")?.title).toBe("📋 Le bilan famille de la semaine est prêt");
+  });
+
+  it("un enfant sans activité : un constat et une invitation, jamais un reproche", async () => {
+    decor({
+      parents: [TWO[0]],
+      optIns: ["p1"],
+      summaries: {
+        p1: [{ ...AMINE, learningMinutes: 0, missions: 0, streak: 0, weakChapter: null }],
+      },
+    });
+    mockSend.mockResolvedValue(undefined);
+
+    const handle = await loadHandler();
+    await handle(cronRequest("Bearer secret"), SUNDAY);
+
+    expect(payloadOf("p1")?.body).toBe(
+      "Pas d'activité mesurée cette semaine. Dix minutes ensemble suffisent pour repartir.",
+    );
+  });
+
+  it("la mesure : le premier envoi enrichi RÉEL est daté, pour ce parent seulement", async () => {
+    const { stamp } = decor({ parents: TWO, optIns: ["p1"], summaries: { p1: [AMINE] } });
+    mockSend.mockResolvedValue(undefined);
+
+    const handle = await loadHandler();
+    await handle(cronRequest("Bearer secret"), SUNDAY);
+
+    expect(stamp).toHaveBeenCalledTimes(1);
+    expect(stamp).toHaveBeenCalledWith({ first_enriched_sent_at: SUNDAY.toISOString() }, ["p1"]);
+  });
+
+  it("la mesure ne date rien quand le push n'est pas parti", async () => {
+    const { stamp } = decor({ parents: [TWO[0]], optIns: ["p1"], summaries: { p1: [AMINE] } });
+    mockSend.mockRejectedValue(new Error("network"));
+
+    const handle = await loadHandler();
+    const res = await handle(cronRequest("Bearer secret"), SUNDAY);
+
+    expect(res.status).toBe(200);
+    expect(stamp).not.toHaveBeenCalled();
+  });
+
+  it("VAPID absent : 500, et aucune donnée d'élève n'est lue", async () => {
+    decor({ parents: TWO, optIns: ["p1"], summaries: { p1: [AMINE] } });
+    delete process.env.VAPID_PRIVATE_KEY;
+
+    const handle = await loadHandler();
+    const res = await handle(cronRequest("Bearer secret"), SUNDAY);
+
+    expect(res.status).toBe(500);
+    expect(mockRpc).not.toHaveBeenCalled();
+    expect(mockFrom).not.toHaveBeenCalled();
+    expect(mockSend).not.toHaveBeenCalled();
+  });
+
+  it("le mercredi, aucune préférence ni aucun résumé n'est lu", async () => {
+    decor({ parents: TWO, optIns: ["p1"], summaries: { p1: [AMINE] } });
+
+    const handle = await loadHandler();
+    await handle(cronRequest("Bearer secret"), WEDNESDAY);
+
+    expect(mockFrom).not.toHaveBeenCalledWith("parent_digest_prefs");
+    expect(
+      mockRpc.mock.calls.some((c) => (c as unknown[])[0] === "get_parent_digest_summary"),
+    ).toBe(false);
+  });
+});
