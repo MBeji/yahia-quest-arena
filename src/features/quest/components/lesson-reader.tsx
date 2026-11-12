@@ -325,6 +325,22 @@ export function LessonReader({
         </button>
       </div>
 
+      {/* L'entraînement dès le haut de la page. Le seul lien vers la pratique était en bas du
+          cours, à près de huit écrans de téléphone (relevé « première visite » du 2026-11-12,
+          C-4) : qui arrive par un moteur de recherche ne savait pas qu'on s'entraîne ici. Même
+          destination et même libellé que le bouton du bas — la porte du quiz ne change pas. */}
+      {(quizCta || practiceExerciseId) && (
+        <Link
+          to={exerciseRouteFor(isAuthenticated)}
+          params={{ exerciseId: quizCta ? quizCta.exerciseId : (practiceExerciseId as string) }}
+          data-testid="lesson-practice-top"
+          className="-mt-4 mb-8 flex items-center justify-center gap-2 rounded-xl border border-primary/30 bg-primary/[0.04] px-4 py-2.5 text-sm font-semibold text-primary transition hover:bg-primary/10 print:hidden [@media(pointer:coarse)]:min-h-11"
+        >
+          {quizCta ? <Brain className="h-4 w-4" /> : <Dumbbell className="h-4 w-4" />}
+          {quizCta ? t.public.reader.quizFirstCta : t.public.reader.practiceCta}
+        </Link>
+      )}
+
       {/* Sommaire — construit en React à partir des sections retournées par le renderer,
           jamais dans la chaîne HTML injectée : aucun href n'entre donc dans le HTML
           assaini (étude 18, D-3). */}

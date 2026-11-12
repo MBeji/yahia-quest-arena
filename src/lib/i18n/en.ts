@@ -293,8 +293,7 @@ export const en: TranslationKeys = {
     bossSpeedBonus: "⚡ Speed bonus: +{pct}% XP",
     bossRankHint: "The clock sets the damage, never the marking.",
     questionOf: "Question {current} / {total}",
-    feedbackMsg:
-      "Pick your answer — you can change it — then click Validate. The detailed correction appears at the end of the quest.",
+    feedbackMsg: "Pick your answer — you can change it — then tap Validate.",
     selectedAnswer: "Selected answer",
     nextQuestion: "Validate",
     finishQuest: "Finish quest",
