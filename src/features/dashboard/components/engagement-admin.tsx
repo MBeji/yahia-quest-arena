@@ -80,7 +80,17 @@ function starBucketTotal(d: StarsDistribution): number {
   return d.s0 + d.s1 + d.s2 + d.s3 + d.s4;
 }
 
-export function EngagementAdmin({ data }: { data: EngagementOverview }) {
+export function EngagementAdmin({
+  data,
+  returnBlock,
+}: {
+  data: EngagementOverview;
+  /**
+   * Étude 40 lot 0 — le bloc « Le retour », rendu APRÈS la métrique de garde (R-1) et la
+   * rétention. Il arrive tout fait : il a sa propre lecture, donc ses propres états.
+   */
+  returnBlock?: React.ReactNode;
+}) {
   const { curr, cohorts, activity, streaks, push, learning, notes } = data;
 
   // KPI-A publiable : la dernière semaine dont la CURR est calculable.
@@ -230,6 +240,8 @@ export function EngagementAdmin({ data }: { data: EngagementOverview }) {
           </div>
         )}
       </Card>
+
+      {returnBlock}
 
       <Card
         title="Activité"
