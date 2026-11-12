@@ -10,7 +10,8 @@ export {
   musicEnabledFromStored,
   type SoundContextValue,
 } from "./context";
-export { playSound, playCombo, unlockAudio, getAudioContext, type SoundName } from "./engine";
+export type { SoundName } from "./engine";
+export { playSound } from "./facade";
 export { vibrate, vibrateFor } from "./haptics";
 export { encouragementFor, type Encouragement, type EncouragementTier } from "./encouragement";
-export { startMusic, stopMusic, setMusicMood, isMusicPlaying, type MusicMood } from "./music";
+export type { MusicMood } from "./music";

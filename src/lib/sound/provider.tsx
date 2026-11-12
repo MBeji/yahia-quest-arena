@@ -8,9 +8,10 @@ import {
   musicEnabledFromStored,
   soundEnabledFromStored,
 } from "./context";
-import { playCombo, playSound, unlockAudio, type SoundName } from "./engine";
+import type { SoundName } from "./engine";
 import { vibrateFor } from "./haptics";
-import { setMusicMood as engineSetMusicMood, startMusic, stopMusic, type MusicMood } from "./music";
+import { LATE_SOUND_MAX_MS, audioIfLoaded, withAudio } from "./lazy";
+import type { MusicMood } from "./music";
 
 function readPref(key: string, parse: (v: string | null) => boolean, fallback: boolean): boolean {
   if (typeof window === "undefined") return fallback;
@@ -36,22 +37,47 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
 
   // Browsers start the AudioContext suspended until a user gesture. Prime it on
   // the first interaction so the earliest in-game effect is actually audible.
+  //
+  // Le moteur n'est pas dans le bundle d'entrée (`lazy.ts`) : le PREMIER geste le fait
+  // venir et le déverrouille à son arrivée — Chromium et Firefox l'acceptent tant que
+  // l'activation du geste court encore. Safari exige que `resume()` parte DANS le
+  // geste : l'écouteur reste donc posé jusqu'au premier geste où le moteur est déjà
+  // là, et c'est celui-là qui le retire.
   useEffect(() => {
     if (!enabled && !musicEnabled) return;
-    const unlock = () => unlockAudio();
-    window.addEventListener("pointerdown", unlock, { once: true });
-    window.addEventListener("keydown", unlock, { once: true });
-    return () => {
+    const stop = () => {
       window.removeEventListener("pointerdown", unlock);
       window.removeEventListener("keydown", unlock);
     };
+    function unlock() {
+      const audio = audioIfLoaded();
+      if (!audio) {
+        withAudio((loaded) => loaded.unlockAudio());
+        return;
+      }
+      audio.unlockAudio();
+      stop();
+    }
+    window.addEventListener("pointerdown", unlock);
+    window.addEventListener("keydown", unlock);
+    return stop;
   }, [enabled, musicEnabled]);
 
   // Start/stop the ambient loop as the music preference changes. Stopped on unmount.
+  // Musique éteinte (le défaut) : rien à arrêter tant que le moteur n'est pas chargé.
   useEffect(() => {
-    if (musicEnabled) startMusic();
-    else stopMusic();
-    return () => stopMusic();
+    if (!musicEnabled) {
+      audioIfLoaded()?.stopMusic();
+      return;
+    }
+    let cancelled = false;
+    withAudio((audio) => {
+      if (!cancelled) audio.startMusic();
+    });
+    return () => {
+      cancelled = true;
+      audioIfLoaded()?.stopMusic();
+    };
   }, [musicEnabled]);
 
   const setEnabled = useCallback((next: boolean) => {
@@ -61,7 +87,7 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
     } catch {
       // Private-mode / disabled storage: keep the in-memory preference.
     }
-    if (next) unlockAudio();
+    if (next) withAudio((audio) => audio.unlockAudio());
   }, []);
 
   const setMusicEnabled = useCallback((next: boolean) => {
@@ -71,13 +97,13 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
     } catch {
       // Private-mode / disabled storage.
     }
-    if (next) unlockAudio();
+    if (next) withAudio((audio) => audio.unlockAudio());
   }, []);
 
   const play = useCallback(
     (name: SoundName) => {
       if (!enabled) return;
-      playSound(name);
+      withAudio((audio) => audio.playSound(name), LATE_SOUND_MAX_MS);
       vibrateFor(name);
     },
     [enabled],
@@ -86,14 +112,14 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
   const combo = useCallback(
     (step: number) => {
       if (!enabled) return;
-      playCombo(step);
+      withAudio((audio) => audio.playCombo(step), LATE_SOUND_MAX_MS);
     },
     [enabled],
   );
 
   const setMusicMood = useCallback(
     (mood: MusicMood) => {
-      if (musicEnabled) engineSetMusicMood(mood);
+      if (musicEnabled) withAudio((audio) => audio.setMusicMood(mood));
     },
     [musicEnabled],
   );
