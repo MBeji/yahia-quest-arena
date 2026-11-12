@@ -16,30 +16,6 @@ import { failWithClientError } from "@/shared/lib/safe-error";
  * l'appelant est le seul à être identifiable, par `is_me`.
  */
 
-/**
- * Ligne du classement de cohorte — étude 22 R-23. Même contrat que `get_global_leaderboard`.
- * `get_grade_leaderboard` (migration `20260720210000`) manque aux types Supabase générés pour
- * la même raison que la RPC de progression ci-dessus : `supabase gen types` exige un accès DB
- * et le fichier est généré. Le contrat est figé par la migration, pas par ce type.
- */
-type GradeLeaderboardRow = {
-  rank: number;
-  display_name: string;
-  hero_class: string;
-  level: number;
-  xp: number;
-  current_streak: number;
-  avatar_tier: number;
-  is_me: boolean;
-};
-
-type GradeLeaderboardRpcClient = {
-  rpc: (
-    fn: "get_grade_leaderboard",
-    args: { p_limit: number },
-  ) => PromiseLike<{ data: GradeLeaderboardRow[] | null; error: { message: string } | null }>;
-};
-
 /** Taille du tableau — la ligne de l'appelant s'y ajoute même hors du top. */
 const LEADERBOARD_LIMIT = 50;
 
@@ -113,10 +89,9 @@ export const getGradeLeaderboard = createServerFn({ method: "GET" })
       return { leaderboard: [], myRank: null, hasCohort: false, rankedCount: 0 };
     }
 
-    const { data: rows, error } = await (supabase as unknown as GradeLeaderboardRpcClient).rpc(
-      "get_grade_leaderboard",
-      { p_limit: LEADERBOARD_LIMIT },
-    );
+    const { data: rows, error } = await supabase.rpc("get_grade_leaderboard", {
+      p_limit: LEADERBOARD_LIMIT,
+    });
     if (error) failWithClientError("getGradeLeaderboard", error, DASHBOARD_ERROR_FR);
 
     const mapped = (rows ?? []).map((r) => ({
@@ -229,37 +204,12 @@ export const getSubjectLeaderboard = createServerFn({ method: "GET" })
  * jamais un compte de juin. C'est l'anti-« fresh start » exact, et il décourage
  * précisément celui qui vient d'arriver. La semaine ISO redonne à chacun une
  * course où il peut exister — le cumulatif reste, en second onglet.
- *
- * ⚠️ `get_weekly_leaderboard` est postérieure aux types générés : contrat étroit,
- * comme les autres RPC récentes.
  */
-type WeeklyLeaderboardClient = {
-  rpc: (
-    fn: "get_weekly_leaderboard",
-    args: { p_scope: string; p_limit: number },
-  ) => PromiseLike<{
-    data:
-      | {
-          rank: number;
-          display_name: string;
-          hero_class: string;
-          level: number;
-          xp: number;
-          current_streak: number;
-          avatar_tier: number;
-          is_me: boolean;
-        }[]
-      | null;
-    error: { message: string } | null;
-  }>;
-};
-
 export const getWeeklyLeaderboard = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .validator((d: unknown) => z.object({ scope: z.string().min(1).max(64) }).parse(d))
   .handler(async ({ context, data }) => {
-    const client = context.supabase as unknown as WeeklyLeaderboardClient;
-    const { data: rows, error } = await client.rpc("get_weekly_leaderboard", {
+    const { data: rows, error } = await context.supabase.rpc("get_weekly_leaderboard", {
       p_scope: data.scope,
       p_limit: LEADERBOARD_LIMIT,
     });
