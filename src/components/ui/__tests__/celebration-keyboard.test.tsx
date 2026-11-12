@@ -35,6 +35,13 @@ describe("LevelUpCelebration — clavier et mouvement réduit", () => {
     expect(dialog).toHaveFocus();
   });
 
+  it("la couronne prend l'encre du jeton, pas du noir en dur (tuile teal en thème clair)", () => {
+    const { dialog } = mount();
+    const crown = dialog.querySelector("svg.lucide-crown");
+    expect(crown?.getAttribute("class")).toContain("text-primary-foreground");
+    expect(crown?.getAttribute("class")).not.toContain("text-black");
+  });
+
   it.each(["Escape", "Enter", " "])("la touche « %s » ferme", (key) => {
     const { onComplete } = mount();
     fireEvent.keyDown(window, { key });

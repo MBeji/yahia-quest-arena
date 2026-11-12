@@ -512,7 +512,7 @@ export function LessonReader({
               rememberCurrentPage();
               trackProductEvent("account_invite_clicked", { surface: "reader" });
             }}
-            className="mt-4 inline-flex items-center justify-center rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
+            className="mt-4 inline-flex items-center justify-center rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition hover:opacity-90 [@media(pointer:coarse)]:min-h-11"
           >
             {t.public.reader.inviteCta}
           </Link>

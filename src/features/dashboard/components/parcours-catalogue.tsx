@@ -1,6 +1,5 @@
 import { Link } from "@tanstack/react-router";
 import {
-  ArrowLeft,
   Award,
   Brain,
   ChevronRight,
@@ -24,6 +23,7 @@ import {
   type LyceeYearGroup,
   type ProgramParcours,
 } from "../program-families";
+import { BackLink } from "@/components/ui/back-link";
 
 /**
  * Public parcours catalogue — « Référence » register (chantier C8, L1.3). Two
@@ -308,12 +308,7 @@ export function LyceeYearSections({
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
-      <Link
-        to="/programme"
-        className="mb-6 inline-flex min-h-11 items-center gap-1.5 text-sm text-muted-foreground transition hover:text-foreground"
-      >
-        <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> {t.public.niveau.backProgramme}
-      </Link>
+      <BackLink to="/programme">{t.public.niveau.backProgramme}</BackLink>
       <header className="mb-8">
         <div className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
           {t.public.cycles.lycee}

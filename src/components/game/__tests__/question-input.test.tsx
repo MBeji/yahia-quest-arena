@@ -106,6 +106,44 @@ describe("QuestionInput — numeric (native entry)", () => {
   });
 });
 
+// Audit d'affichage (#1228) — `numeric-input-name-and-live-error` et
+// `question-hints-contrast-aa`.
+describe("QuestionInput — numeric : nom, consigne et erreur annoncée", () => {
+  it("le champ porte la question pour nom et la consigne pour description", () => {
+    renderInput({ questionType: "numeric", options: [] });
+    const input = screen.getByRole("textbox", { name: "2+2 ?" });
+    expect(input).toHaveAccessibleDescription(labels.numericHint);
+  });
+
+  it("l'erreur de format remplace la consigne DANS une région vivante déjà montée", () => {
+    const { rerender } = renderInput({ questionType: "numeric", options: [] });
+    const region = screen.getByText(labels.numericHint);
+    expect(region).toHaveAttribute("aria-live", "polite");
+
+    rerender(
+      <QuestionInput
+        questionType="numeric"
+        prompt="2+2 ?"
+        options={[]}
+        value="abc"
+        onChange={vi.fn()}
+        labels={labels}
+        optionClassName={() => ""}
+      />,
+    );
+    // Même nœud : c'est son changement de texte que le lecteur d'écran annonce.
+    expect(region).toHaveTextContent(labels.numericInvalid);
+    expect(screen.getByRole("textbox")).toHaveAccessibleDescription(labels.numericInvalid);
+    expect(screen.getByRole("textbox")).toHaveAttribute("aria-invalid", "true");
+  });
+
+  it("la consigne est à l'encre pleine : plus d'opacité qui la passe sous le contraste AA", () => {
+    renderInput({ questionType: "numeric", options: [] });
+    // 3,27:1 mesuré à /70 en thème clair, 6,48:1 à l'encre pleine.
+    expect(screen.getByText(labels.numericHint).className).not.toMatch(/muted-foreground\/\d/);
+  });
+});
+
 describe("QuestionInput — multi (B3 checkbox list)", () => {
   const multiOptions = [
     { id: "a", text: "vrai 1", displayId: "A" },

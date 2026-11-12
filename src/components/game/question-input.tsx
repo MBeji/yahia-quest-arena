@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
 import { Check } from "lucide-react";
 import { isMathExpression, isRtlText } from "@/shared/lib/utils";
 import { isValidAnswerFormat, UNSUPPORTED_ANSWER_CHOICE } from "@/shared/lib/answer-formats";
@@ -138,9 +138,18 @@ function McqInput({
   );
 }
 
-function NumericInput({ value, onChange, onSubmit, disabled, rtl, labels }: QuestionInputProps) {
+function NumericInput({
+  prompt,
+  value,
+  onChange,
+  onSubmit,
+  disabled,
+  rtl,
+  labels,
+}: QuestionInputProps) {
   const raw = value ?? "";
   const invalid = raw.trim().length > 0 && !isValidAnswerFormat("numeric", raw);
+  const hintId = useId();
   return (
     <div className="mt-6">
       {/* Numbers are standard notation in every language (Western digits, LTR),
@@ -151,6 +160,10 @@ function NumericInput({ value, onChange, onSubmit, disabled, rtl, labels }: Ques
         autoComplete="off"
         dir="ltr"
         data-testid="numeric-answer-input"
+        // Le champ porte la QUESTION pour nom, comme le groupe d'options d'un QCM : il
+        // n'avait que son texte d'exemple, qui disparaît à la première frappe.
+        aria-label={prompt}
+        aria-describedby={hintId}
         aria-invalid={invalid || undefined}
         placeholder={labels.numericPlaceholder}
         value={raw}
@@ -164,8 +177,13 @@ function NumericInput({ value, onChange, onSubmit, disabled, rtl, labels }: Ques
         }}
         className="w-full rounded-xl border border-border bg-surface-2 px-4 py-3.5 text-center font-mono text-lg outline-none transition focus:border-(--gold) focus:bg-surface-3 disabled:opacity-50"
       />
+      {/* Région vivante TOUJOURS montée : c'est le changement de son texte qui est
+          annoncé — la consigne devient l'erreur sans que rien ne le dise autrement
+          qu'en couleur. `polite` : l'erreur de format n'interrompt pas la frappe. */}
       <p
-        className={`mt-2 text-xs ${invalid ? "font-semibold text-destructive" : "text-muted-foreground/60"}`}
+        id={hintId}
+        aria-live="polite"
+        className={`mt-2 text-xs ${invalid ? "font-semibold text-destructive" : "text-muted-foreground"}`}
         dir={rtl ? "rtl" : undefined}
       >
         {invalid ? labels.numericInvalid : labels.numericHint}
@@ -243,7 +261,7 @@ function FreeTextInput({
         value={raw}
         onChange={onChange}
       />
-      <p className="mt-2 text-xs text-muted-foreground/60" dir={rtl ? "rtl" : undefined}>
+      <p className="mt-2 text-xs text-muted-foreground" dir={rtl ? "rtl" : undefined}>
         {labels.recallHint}
       </p>
     </div>

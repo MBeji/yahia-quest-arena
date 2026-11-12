@@ -806,7 +806,7 @@ export function ExercisePlayer({
           )}
 
           {currentType === "mcq" && !isRecall && (
-            <div className="mt-3 text-center text-xs text-muted-foreground/60 hidden sm:block">
+            <div className="mt-3 text-center text-xs text-muted-foreground hidden sm:block">
               {t.quest.keyboardHint.replace("{keys1}", "1-4").replace("{keys2}", "A-D")}
             </div>
           )}
