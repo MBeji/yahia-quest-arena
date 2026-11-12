@@ -1,16 +1,28 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { ArrowLeft, Crown } from "lucide-react";
+import { toast } from "sonner";
 import {
   RECALL_LOCKED_MESSAGE,
   RECALL_NOT_ELIGIBLE_MESSAGE,
   checkQuestion,
+  getExerciseParcours,
   revealHint,
   startExerciseSession,
   getAttemptProgress,
   submitAttempt,
 } from "@/features/quest";
+// La ROUTE compose aussi l'accueil différé (étude 38, lot 2) : la carte de classe est
+// une primitive de présentation, et ce sont les fonctions serveur de l'assistant —
+// les mêmes, pas des copies — que la route lui passe.
+import { claimWelcomePack, setCurrentParcours, useMyRole } from "@/features/auth";
+import { ParcoursQuickPick } from "@/components/game/parcours-quick-pick";
+import { PageShell } from "@/components/ui/page-shell";
+import { parcoursName } from "@/shared/lib/parcours-locale";
+import { trackProductEvent } from "@/shared/lib/product-events";
+import { hasPostponedQuickPick, postponeQuickPick } from "@/shared/lib/quick-pick-later";
 import {
   ExercisePlayer,
   type ExercisePlayerStrategy,
@@ -23,7 +35,7 @@ import { QuestResultActions } from "@/features/quest/components/quest-result-act
 // importe pas une autre).
 import { TutorPanel } from "@/features/tutor";
 import { buildQuestLabels } from "@/shared/lib/quest-labels";
-import { useT } from "@/lib/i18n";
+import { useI18n, useT } from "@/lib/i18n";
 import { ReportErrorButton } from "@/features/content-report";
 import { SubscriptionPaywall } from "@/features/subscription";
 
@@ -160,5 +172,91 @@ function QuestPage() {
   // Plus de conteneur porteur de thème (levier 03) : le lecteur tire ses surfaces
   // des tokens `surface-*`, donc il rend identiquement dans les deux registres
   // sans qu'aucune classe ne doive lui repeindre le noir en blanc.
-  return <ExercisePlayer exerciseId={exerciseId} strategy={strategy} variant={variant} />;
+  return (
+    <>
+      <QuestParcoursCard exerciseId={exerciseId} />
+      <ExercisePlayer exerciseId={exerciseId} strategy={strategy} variant={variant} />
+    </>
+  );
+}
+
+/**
+ * L'accueil différé (étude 38, lot 2 — R-5, US-2). Un élève sans classe qui a demandé
+ * une quête la joue ; au-dessus du lecteur, cette carte lui propose la classe du
+ * chapitre en un geste.
+ *
+ * - Montée pour un `student` SANS parcours, et pour lui seul : un parent, un admin
+ *   ou un élève déjà inscrit ne déclenchent même pas la lecture du parcours.
+ * - « Choisir » fait exactement ce que fait l'assistant : `setCurrentParcours`, puis
+ *   le pack de bienvenue (`claimWelcomePack`, idempotent côté SQL — é31 R-19).
+ *   L'élève ne perd rien à ne pas être passé par l'assistant.
+ * - « Plus tard » ferme la carte pour la session de navigation.
+ * - Un parcours introuvable ou une lecture en échec : pas de carte. La quête, elle,
+ *   se joue toujours — la carte n'ouvre rien.
+ */
+function QuestParcoursCard({ exerciseId }: { exerciseId: string }) {
+  const t = useT();
+  const { locale } = useI18n();
+  const queryClient = useQueryClient();
+  const { role, currentParcoursId, hasProfile, isLoaded } = useMyRole();
+  const [closed, setClosed] = useState(() => hasPostponedQuickPick());
+
+  const eligible =
+    isLoaded && hasProfile && role === "student" && currentParcoursId == null && !closed;
+
+  const fetchParcours = useServerFn(getExerciseParcours);
+  const { data: parcours } = useQuery({
+    queryKey: ["exercise-parcours", exerciseId],
+    queryFn: () => fetchParcours({ data: { exerciseId } }),
+    enabled: eligible,
+    staleTime: Infinity,
+  });
+
+  const saveParcours = useServerFn(setCurrentParcours);
+  const claimWelcome = useServerFn(claimWelcomePack);
+  const choose = useMutation({
+    mutationFn: async (parcoursId: string) => {
+      await saveParcours({ data: { parcoursId } });
+      // Le pack est versé ICI, comme à la fin de l'assistant. Son échec ne défait pas
+      // le choix : l'élève a sa classe, c'est ce qui compte.
+      try {
+        return await claimWelcome();
+      } catch {
+        return null;
+      }
+    },
+    onSuccess: async (welcome) => {
+      setClosed(true);
+      trackProductEvent("onboarding_completed", { intent: "unknown", source: "quest_card" });
+      toast.success(
+        welcome?.granted
+          ? `${t.onboarding.celebrateTitle} ${t.onboarding.welcomeCoins.replace("{coins}", String(welcome.coins))}`
+          : t.onboarding.celebrateTitle,
+      );
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["dashboard"] }),
+        queryClient.invalidateQueries({ queryKey: ["me-role"] }),
+        queryClient.invalidateQueries({ queryKey: ["me-parcours"] }),
+      ]);
+    },
+    onError: () => {
+      toast.error(t.onboarding.saveError);
+    },
+  });
+
+  if (!eligible || !parcours) return null;
+
+  return (
+    <PageShell width="narrow" className="pb-0">
+      <ParcoursQuickPick
+        parcoursName={parcoursName(parcours, locale)}
+        isChoosing={choose.isPending}
+        onChoose={() => choose.mutate(parcours.id)}
+        onLater={() => {
+          postponeQuickPick();
+          setClosed(true);
+        }}
+      />
+    </PageShell>
+  );
 }
