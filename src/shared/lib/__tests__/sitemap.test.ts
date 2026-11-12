@@ -98,6 +98,9 @@ describe("collectSitemapPaths", () => {
     expect(paths).toEqual([
       "/",
       "/programme",
+      "/programme/lycee/2eme",
+      "/programme/lycee/3eme",
+      "/programme/lycee/bac",
       "/extras",
       "/confidentialite",
       "/conditions",
@@ -119,14 +122,75 @@ describe("collectSitemapPaths", () => {
         ...EMPTY,
         parcours: {
           data: [
-            { id: "ecole-1ere-base", status: "available" },
-            { id: "ecole-7eme-base", status: "coming_soon" },
+            { id: "ecole-1ere-base", status: "available", theme_id: "scolaire", grade_id: "g1" },
+            { id: "ecole-7eme-base", status: "coming_soon", theme_id: "scolaire", grade_id: "g7" },
+          ],
+        },
+        subjects: {
+          data: [
+            { id: "math-1ere", theme_id: "scolaire", grade_id: "g1" },
+            { id: "math-7eme", theme_id: "scolaire", grade_id: "g7" },
           ],
         },
       }),
     );
     expect(paths).toContain("/niveau/ecole-1ere-base");
     expect(paths).not.toContain("/niveau/ecole-7eme-base");
+  });
+
+  // Constat du 2026-11-12 : `/niveau/arabe` — « available », aucune matière, retiré
+  // exprès du menu des extras — figurait au sitemap. Une page vide n'y a pas sa place.
+  it("drops an available level that holds no subject", async () => {
+    const paths = await collectSitemapPaths(
+      mockClient({
+        ...EMPTY,
+        parcours: {
+          data: [
+            { id: "anglais", status: "available", theme_id: "anglais", grade_id: null },
+            { id: "arabe", status: "available", theme_id: "arabe", grade_id: null },
+            { id: "ecole-1ere-base", status: "available", theme_id: "scolaire", grade_id: "g1" },
+          ],
+        },
+        subjects: {
+          data: [
+            { id: "anglais-a1", theme_id: "anglais", grade_id: null },
+            // Même thème qu'un niveau scolaire, AUTRE classe : ne le peuple pas.
+            { id: "math-2eme", theme_id: "scolaire", grade_id: "g2" },
+          ],
+        },
+      }),
+    );
+    expect(paths).toContain("/niveau/anglais");
+    expect(paths).not.toContain("/niveau/arabe");
+    expect(paths).not.toContain("/niveau/ecole-1ere-base");
+  });
+
+  // On ne retire un niveau que sur une lecture RÉUSSIE des matières : une panne ne
+  // doit pas vider le sitemap de ses niveaux.
+  it("keeps every available level when the subjects read fails", async () => {
+    const paths = await collectSitemapPaths(
+      mockClient({
+        ...EMPTY,
+        subjects: { error: { message: "boom" } },
+        parcours: {
+          data: [{ id: "arabe", status: "available", theme_id: "arabe", grade_id: null }],
+        },
+      }),
+    );
+    expect(paths).toContain("/niveau/arabe");
+  });
+
+  // Pas de date de modification fiable en base : le sitemap n'en invente pas.
+  it("never emits a lastmod", () => {
+    expect(renderSitemap(["/", "/chapitre/abc"])).not.toContain("lastmod");
+  });
+
+  // Seuls des identifiants et des clés de rattachement voyagent — jamais un contenu.
+  it("reads only ids and level keys for levels and subjects", async () => {
+    const selects: Record<string, string[]> = {};
+    await collectSitemapPaths(mockClient(EMPTY, {}, selects));
+    expect(selects.parcours).toEqual(["id,status,theme_id,grade_id"]);
+    expect(selects.subjects).toEqual(["id,theme_id,grade_id"]);
   });
 
   it("includes every anon-visible subject", async () => {
