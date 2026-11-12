@@ -31,6 +31,8 @@ export const META_DESCRIPTION_MAX = 160;
  *   chargement d'avant ; à l'hydratation elle relit la valeur du serveur.
  * - **Panne** : `null` et une ligne de journal. Une page qui n'a pas pu être
  *   préchargée retombe sur le chargement client, elle ne casse jamais le rendu.
+ * - **Lenteur** : au-delà de {@link SEED_TIMEOUT_MS}, `null` aussi — le serveur
+ *   n'attend pas une base qui ne répond pas (rt-09).
  * - **Introuvable** : un `notFound()` levé par `load` TRAVERSE — ce n'est pas une
  *   panne, c'est une réponse. Le routeur en fait un HTTP 404 (constat du
  *   2026-11-12 : `/chapitre/<id inconnu>` répondait 200 avec un écran d'erreur,
@@ -47,14 +49,47 @@ export const META_DESCRIPTION_MAX = 160;
  * 2026-11-11 : quatre routes, +1,9 Ko sur `index-`, budget dépassé. Importée
  * dans la fonction SSR, elle disparaît du bundle client avec elle.
  */
-export async function seedOnServer<T>(label: string, load: () => Promise<T>): Promise<T | null> {
+/**
+ * Borne de l'attente du préchargement (rt-09). Base injoignable, `postgrest-js`
+ * rejoue une panne réseau trois fois (1 s, 2 s, 4 s) : le premier octet d'une
+ * page publique attendait 7 s. Au-delà de ce délai le serveur rend le squelette
+ * et le client charge — exactement le chemin d'une panne. Une lecture saine
+ * répond en quelques dizaines de millisecondes : 1,5 s ne coupe que le pathologique.
+ */
+export const SEED_TIMEOUT_MS = 1500;
+
+const SEED_TIMED_OUT = Symbol("seed-timed-out");
+
+export async function seedOnServer<T>(
+  label: string,
+  load: () => Promise<T>,
+  timeoutMs: number = SEED_TIMEOUT_MS,
+): Promise<T | null> {
   if (!import.meta.env.SSR) return null;
+  let timer: ReturnType<typeof setTimeout> | undefined;
   try {
-    return await load();
+    const loading = load();
+    // Si le délai gagne, la lecture continue seule : son éventuel rejet ne doit
+    // pas devenir un rejet non géré.
+    loading.catch(() => undefined);
+    const timedOut = new Promise<typeof SEED_TIMED_OUT>((resolve) => {
+      timer = setTimeout(() => resolve(SEED_TIMED_OUT), timeoutMs);
+    });
+    const result = await Promise.race([loading, timedOut]);
+    if (result === SEED_TIMED_OUT) {
+      logger.warn("public page SSR seed timed out — falling back to client fetch", {
+        label,
+        timeoutMs,
+      });
+      return null;
+    }
+    return result;
   } catch (error) {
     if (isNotFound(error)) throw error;
     logger.warn("public page SSR seed failed — falling back to client fetch", { label, error });
     return null;
+  } finally {
+    clearTimeout(timer);
   }
 }
 

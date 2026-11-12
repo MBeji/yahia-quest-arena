@@ -32,12 +32,22 @@ describe("request error middleware", () => {
     expect(consumeLastCapturedError()).toBe(error);
   });
 
-  it("answers any other throw with the branded 500 page", async () => {
+  it("answers any other throw with the branded 500 page, and logs it with its stack", async () => {
     const step = await errorMiddlewareStep();
     const consoleError = vi.spyOn(console, "error").mockImplementation(() => undefined);
 
     const response = await step({ next: () => Promise.reject(new Error("render blew up")) });
+    const line = JSON.parse(consoleError.mock.calls[0]?.[0] as string) as {
+      message: string;
+      error: { message: string; stack: string };
+    };
     consoleError.mockRestore();
+
+    // Une ligne STRUCTURÉE, qui porte la pile : c'est tout le diagnostic d'un
+    // 500 au rendu serveur.
+    expect(line.message).toBe("SSR request failed");
+    expect(line.error.message).toBe("render blew up");
+    expect(line.error.stack).toContain("start-error-middleware.test.ts");
 
     expect(response).toBeInstanceOf(Response);
     expect((response as Response).status).toBe(500);

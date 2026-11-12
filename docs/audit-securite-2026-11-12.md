@@ -63,9 +63,11 @@ SECURITY DEFINER.
 
 ## 4. Noté, non corrigé (pas d'exploitation réaliste, ou hors périmètre)
 
-- **`/sitemap.xml` est servi avant le garde anti-robots** et ne vit que du cache du CDN : une
-  chaîne de requête aléatoire (`?x=…`) force une régénération (lecture du catalogue) à chaque
-  appel. Remède : mémoriser le XML quelques minutes dans `generateSitemap`. → axe SEO.
+- **`/sitemap.xml` est servi avant le garde anti-robots** et ne vivait que du cache du CDN :
+  une chaîne de requête aléatoire (`?x=…`) forçait une régénération (sept lectures paginées du
+  catalogue) à chaque appel. **Corrigé le soir même** : `generateSitemap` mémorise le document
+  dix minutes par instance et partage une construction en cours (`createDocumentCache`,
+  `sitemap.test.ts`).
 - **Une RPC refusée par la borne rend `PT429`**, que les server fns traduisent en erreur
   générique. Un message « trop de requêtes » demanderait une ligne dans
   `quest.practice.server.ts`, `placement.server.ts`, `parent-report.server.ts`.
