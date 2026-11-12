@@ -4,6 +4,11 @@ import React from "react";
 
 // Same router shim as subject-hub.test.tsx: the hub only needs <Link> to render an <a>.
 vi.mock("@tanstack/react-router", () => ({
+  // `BackLink` se construit avec `createLink` : il rend l'ancre qu'on lui passe.
+  createLink:
+    (Comp: React.ElementType) =>
+    ({ to, params: _params, ...rest }: { to: string; params?: unknown }) =>
+      React.createElement(Comp, { ...rest, href: to }),
   Link: ({ children, to, ...rest }: { children: React.ReactNode; to: string }) =>
     React.createElement("a", { href: to, ...("data-testid" in rest ? rest : {}) }, children),
 }));

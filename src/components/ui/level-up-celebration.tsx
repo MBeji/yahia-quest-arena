@@ -101,7 +101,9 @@ export function LevelUpCelebration({
               animate={reduced ? undefined : { rotate: [0, -10, 10, -5, 5, 0], scale: [1, 1.1, 1] }}
               transition={{ duration: 0.8, delay: 0.5 }}
             >
-              <Crown className="h-10 w-10 text-black" />
+              {/* L'encre du jeton doré, pas du noir : en thème clair la tuile est teal, et
+                  une couronne noire y tombait à contre-emploi (design-surfaces.md). */}
+              <Crown className="h-10 w-10 text-primary-foreground" aria-hidden="true" />
             </motion.div>
 
             <motion.div

@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { ArrowLeft, BrainCircuit } from "lucide-react";
+import { BrainCircuit } from "lucide-react";
+import { BackLink } from "@/components/ui/back-link";
 import { toast } from "sonner";
 
 import { Switch } from "@/components/ui/switch";
@@ -71,13 +72,9 @@ function AdminAiPage() {
 
   return (
     <PageShell width="reading" className="py-8">
-      <Link
-        to="/console"
-        className="mb-4 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
-      >
-        <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" />
+      <BackLink to="/console" className="mb-4">
         {t.adminHub.title}
-      </Link>
+      </BackLink>
 
       <header className="mb-6">
         <h1 className="flex items-center gap-2 font-display text-3xl font-bold">

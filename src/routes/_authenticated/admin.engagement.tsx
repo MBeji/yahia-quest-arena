@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { ArrowLeft, Flame, Loader2 } from "lucide-react";
+import { Flame, Loader2 } from "lucide-react";
+import { BackLink } from "@/components/ui/back-link";
 
 import { useMyRole } from "@/features/auth";
 import { getEngagementOverview, EngagementAdmin } from "@/features/dashboard";
@@ -47,12 +48,7 @@ function AdminEngagementPage() {
 
   return (
     <div className="mx-auto max-w-4xl px-6 py-10">
-      <Link
-        to="/dashboard"
-        className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
-      >
-        <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> {t.common.backToHall}
-      </Link>
+      <BackLink to="/dashboard">{t.common.backToHall}</BackLink>
 
       <h1 className="flex items-center gap-2 font-display text-2xl font-bold">
         <Flame className="h-6 w-6 text-[color:var(--gold)]" aria-hidden="true" />

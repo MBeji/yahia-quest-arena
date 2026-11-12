@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { ArrowLeft, TrendingUp, Loader2 } from "lucide-react";
+import { TrendingUp, Loader2 } from "lucide-react";
+import { BackLink } from "@/components/ui/back-link";
 import { useMyRole } from "@/features/auth";
 import { getParcoursInterestCounts, ParcoursInterestAdmin } from "@/features/dashboard";
 import { useT } from "@/lib/i18n";
@@ -43,12 +44,7 @@ function AdminParcoursInterestPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-10">
-      <Link
-        to="/dashboard"
-        className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
-      >
-        <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> {t.common.backToHall}
-      </Link>
+      <BackLink to="/dashboard">{t.common.backToHall}</BackLink>
 
       <div className="mb-6 flex items-center gap-3">
         <div className="grid h-11 w-11 place-items-center rounded-xl bg-[image:var(--gradient-gold)] shadow-gold">

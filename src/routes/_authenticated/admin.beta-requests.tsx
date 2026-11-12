@@ -1,8 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft } from "lucide-react";
 import { useMyRole } from "@/features/auth";
 import { BetaRequestsAdmin } from "@/features/subscription";
 import { useT } from "@/lib/i18n";
+import { BackLink } from "@/components/ui/back-link";
 
 export const Route = createFileRoute("/_authenticated/admin/beta-requests")({
   head: () => ({ meta: [{ title: "Demandes bêta · Na9ra Nal3ab" }] }),
@@ -29,12 +29,7 @@ function AdminBetaRequestsPage() {
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-10">
-      <Link
-        to="/dashboard"
-        className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
-      >
-        <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> {t.common.backToHall}
-      </Link>
+      <BackLink to="/dashboard">{t.common.backToHall}</BackLink>
       {isAdmin && <BetaRequestsAdmin />}
     </div>
   );
