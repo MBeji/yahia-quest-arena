@@ -76,6 +76,12 @@ export const enParent: ParentTranslations = {
     namedErrorsImproving: "declining",
     namedErrorsWorsening: "rising",
     namedErrorsStable: "steady",
+    examsTitle: "Mock exams",
+    examsPoints: "{points} points",
+    examsPercentile: "Ahead of {pct}% of the {n} candidates.",
+    examsPending: "Ranking shown from {n} candidates.",
+    examsNone: "No mock exam handed in yet: some are open in their track.",
+    examsHint: "A mock exam is practice: every student moves at their own pace.",
     tutorHelpTitle: "Help from El Ostedh",
     tutorHelpSubtitle:
       "How often your child asked for help, and on which topics. What they actually said stays between them and El Ostedh.",
