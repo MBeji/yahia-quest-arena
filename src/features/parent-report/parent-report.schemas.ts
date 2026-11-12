@@ -224,3 +224,26 @@ export const examSummarySchema = z.object({
 });
 
 export type StudentExamSummary = z.infer<typeof examSummarySchema>;
+
+// Comparatif de parcours (`get_student_parcours_comparison`, étude 08 lot 3).
+// Sous le seuil (R-6) la base rend `masked` et des NULL : aucun chiffre n'arrive.
+const platformStatsSchema = z.object({
+  masked: z.boolean().catch(true),
+  students: nullableNumber,
+  avgScore: nullableNumber,
+  weeklyMinutes: nullableNumber,
+});
+
+export const parcoursComparisonSchema = z
+  .object({
+    parcours: z.object({
+      nameFr: z.string().catch(""),
+      nameEn: z.string().nullable().catch(null),
+      nameAr: z.string().nullable().catch(null),
+    }),
+    student: z.object({ avgScore: numberish, weeklyMinutes: numberish }).nullable().catch(null),
+    platform: platformStatsSchema,
+  })
+  .nullable();
+
+export type ParcoursComparison = z.infer<typeof parcoursComparisonSchema>;

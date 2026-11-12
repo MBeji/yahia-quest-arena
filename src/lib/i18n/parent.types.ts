@@ -98,6 +98,10 @@ export type ParentTranslations = {
      * un parent qui croit lire les échanges de son enfant les cherchera, et un
      * enfant qui croit être rapporté mot à mot se taira.
      */
+    compareTitle: string;
+    compareSource: string;
+    compareScore: string;
+    compareTime: string;
     examsTitle: string;
     examsPoints: string;
     examsPercentile: string;
@@ -129,7 +133,6 @@ export type ParentTranslations = {
     digestOn: string;
     digestOff: string;
     digestError: string;
-    digestNeedsPush: string;
     digestOtherDevice: string;
     digestNoChild: string;
     digestUnsupported: string;
