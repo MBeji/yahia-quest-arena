@@ -139,6 +139,10 @@ export default {
     // Public sitemap for search engines, generated from the anon-visible
     // catalogue and served as XML outside the SSR/router path. Edge-cached for an
     // hour so a crawler fetch doesn't re-query the catalogue every time.
+    // The CDN key includes the query string, so `?x=<random>` used to force a
+    // full regeneration per call, ahead of the bot guard: `generateSitemap` now
+    // memoizes the document per instance (`createDocumentCache`), whatever the
+    // query string says.
     if (new URL(request.url).pathname === "/sitemap.xml") {
       try {
         const xml = await generateSitemap();
