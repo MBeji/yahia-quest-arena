@@ -7,6 +7,7 @@ const {
   mockRenderErrorPage,
   mockConsumeLastCapturedError,
   mockLoggerError,
+  mockLoggerInfo,
   mockServerFetch,
   mockHandleHealthRequest,
   mockHandleDigestCron,
@@ -17,6 +18,7 @@ const {
   mockRenderErrorPage: vi.fn(() => "<html>fallback</html>"),
   mockConsumeLastCapturedError: vi.fn((): unknown => undefined),
   mockLoggerError: vi.fn(),
+  mockLoggerInfo: vi.fn(),
   mockServerFetch: vi.fn(),
   mockHandleHealthRequest: vi.fn(),
   mockHandleDigestCron: vi.fn(),
@@ -102,6 +104,7 @@ vi.mock("@/shared/lib/error-capture", () => ({
 vi.mock("@/shared/lib/logger", () => ({
   logger: {
     error: mockLoggerError,
+    info: mockLoggerInfo,
   },
 }));
 
@@ -110,6 +113,7 @@ describe("server fetch wrapper", () => {
     vi.resetModules();
     mockServerFetch.mockReset();
     mockLoggerError.mockReset();
+    mockLoggerInfo.mockReset();
     mockConsumeLastCapturedError.mockReset();
     mockRenderErrorPage.mockReset();
     mockRenderErrorPage.mockReturnValue("<html>fallback</html>");
@@ -331,6 +335,40 @@ describe("server fetch wrapper", () => {
       "SSR response normalized after swallowed catastrophic error",
       { status: 500, error: original },
     );
+  });
+
+  // Reproduit le 2026-11-12 sur le serveur réel : un POST coupé en plein corps
+  // (onglet fermé) fait lever « Error: aborted » (ECONNRESET) à Node, que le
+  // framework avale en ce même 500. Journalisé en erreur, chaque chargement
+  // abandonné remplissait le journal — et l'alerte qui le lit.
+  it("does not count a request the client abandoned as a catastrophic 500", async () => {
+    const upstream = new Response(
+      JSON.stringify({ status: 500, statusText: "", unhandled: true, message: "HTTPError" }),
+      { status: 500, headers: { "content-type": "application/json" } },
+    );
+    mockServerFetch.mockResolvedValue(upstream);
+    mockConsumeLastCapturedError.mockReturnValue(new Error("aborted"));
+    const controller = new AbortController();
+    const request = new Request("https://app.local/_serverFn/abc", {
+      method: "POST",
+      body: "{}",
+      signal: controller.signal,
+    });
+    controller.abort();
+
+    const server = (await import("@/server")).default;
+    const response = await server.fetch(request, {}, {});
+
+    expect(mockLoggerError).not.toHaveBeenCalled();
+    expect(mockLoggerInfo).toHaveBeenCalledWith("SSR request abandoned by the client", {
+      path: "/_serverFn/abc",
+    });
+    // Personne ne lira la réponse : inutile de rendre la page d'erreur.
+    expect(response).toBe(upstream);
+    expect(mockRenderErrorPage).not.toHaveBeenCalled();
+    // L'erreur capturée est consommée : elle ne doit pas être attribuée au
+    // prochain 500, qui serait celui d'une AUTRE requête.
+    expect(mockConsumeLastCapturedError).toHaveBeenCalledTimes(1);
   });
 
   it("keeps non-catastrophic responses unchanged", async () => {

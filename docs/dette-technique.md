@@ -1,6 +1,8 @@
 # Dette technique — ce qui reste vraiment ouvert
 
-> **Re-vérifié dans le code le 2026-08-26** (`main` à #884) — la passe précédente datait du
+> **Re-vérifié dans le code le 2026-11-12** (`main` à #1275 : section « Ouvert » relue ligne à
+> ligne, trois dettes soldées, une périmée retirée, deux défauts neufs trouvés et soldés).
+> **Passe précédente : 2026-08-26** (`main` à #884) — celle d'avant datait du
 > 2026-08-02 (#703), et l'écart entre les deux est la meilleure démonstration de la règle
 > ci-dessous : trois des quatre lignes « ouvertes » citaient un chiffre que le code avait
 > démenti. Ce fichier remplace le plan d'action
@@ -34,6 +36,23 @@
 | **N+1 sur `has_parcours_entitlement`** — un appel RPC par parcours. **Ne se déclenche pas aujourd'hui** : les deux sites d'appel court-circuitent sur `!p.is_premium`, et la phase gratuite met `is_premium = false` partout. À batcher **avant** tout dégel du premium (étude 01) | `src/features/dashboard/dashboard.server.ts:323, :769` |
 
 ## Soldé depuis l'audit (2026-06-30 → 2026-08-13)
+
+- **Une `Error` journalisée sortait vide, et un onglet fermé comptait pour une panne** — trouvé et
+  soldé le 2026-11-12, dans le sillage de la capture SSR ci-dessous. Deux défauts mesurés. **(1)**
+  `logger.error("…", { error })` — la convention de tout le serveur, 21 sites — écrivait
+  `"error":{}` : une `Error` n'a aucune propriété énumérable, `JSON.stringify` la vide. La ligne ne
+  portait ni message ni pile ; le diagnostic d'un 500 ne tenait qu'au monitoring, éteint sans DSN.
+  Le logger met désormais à plat les `Error` de premier niveau (`{ name, message, stack, cause }`,
+  pile bornée à 4 000 caractères, rédaction par clé conservée), et `src/start.ts` passe par lui au
+  lieu d'un `console.error` brut — l'erreur de rendu atteint enfin le monitoring. **(2)** Une requête
+  ABANDONNÉE par le client (POST coupé en plein corps : Node lève « Error: aborted », ECONNRESET, que
+  le framework avale en 500) était journalisée comme un 500 catastrophique — une ligne d'erreur par
+  chargement interrompu, reproduit sur le serveur réel. `server.ts` lit maintenant
+  `request.signal.aborted` : niveau info, pas de page d'erreur rendue pour personne. Remonté par le
+  journal e2e après #1256, qui avait rendu ces 500 de nouveau visibles. Tests : +5 logger, +1
+  serveur (vérifié rouge sans le correctif), 1 middleware durci. Reste hors périmètre : deux
+  `console.error` bruts dans `shared/integrations/supabase/client{,.server}.ts` (variable
+  d'environnement manquante au démarrage).
 
 - **Les vues d'ombre RPC de `dashboard/`, `progression/`, `quest/`, `adaptive-inputs` et
   `usage.server`** — soldé le 2026-11-12. Mesure sur le diff : **22 casts `as unknown as` retirés**
