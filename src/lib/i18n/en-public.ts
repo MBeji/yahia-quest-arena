@@ -16,6 +16,15 @@ export const enPublic: TranslationKeys["public"] = {
     rights: "All rights reserved",
     legalLink: "Legal notice",
   },
+  attributes: {
+    label: "Attribute",
+    force: "Strength",
+    esprit: "Mind",
+    sagesse: "Wisdom",
+    agilite: "Agility",
+    observation: "Observation",
+    logique: "Logic",
+  },
   titles: {
     programme: "Tunisian school curriculum",
     extras: "Extras · languages, general knowledge, logic",

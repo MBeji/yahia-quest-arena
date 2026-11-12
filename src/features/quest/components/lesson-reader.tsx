@@ -270,6 +270,7 @@ export function LessonReader({
           {chapter.domain && (
             <span
               className="truncate text-muted-foreground"
+              lang={lang}
               dir={isRtlText(chapter.domain) ? "rtl" : "ltr"}
               data-testid="reader-domain"
             >
@@ -284,6 +285,7 @@ export function LessonReader({
         </div>
         <h1
           className="mt-2 font-display text-3xl font-bold leading-tight sm:text-4xl"
+          lang={lang}
           dir={isRtlText(chapter.title) ? "rtl" : "ltr"}
         >
           {chapter.title}
@@ -319,7 +321,7 @@ export function LessonReader({
           type="button"
           data-testid="lesson-print"
           onClick={printWithAnswers}
-          className="ml-auto inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-muted-foreground transition hover:border-primary/40 hover:text-primary [@media(pointer:coarse)]:min-h-11"
+          className="ms-auto inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-muted-foreground transition hover:border-primary/40 hover:text-primary [@media(pointer:coarse)]:min-h-11"
         >
           <Printer className="h-4 w-4" /> {t.public.reader.print}
         </button>
@@ -388,6 +390,10 @@ export function LessonReader({
         <div
           ref={contentRef}
           className="lesson-content"
+          // La langue du CONTENU, pas celle de l'interface (WCAG 3.1.2) : un cours
+          // d'arabe lu dans une interface française doit être annoncé en arabe par
+          // un lecteur d'écran. `<html lang>` reste la langue de l'interface.
+          lang={lang}
           dir={isRtl ? "rtl" : "ltr"}
           dangerouslySetInnerHTML={{ __html: rendered.html }}
         />

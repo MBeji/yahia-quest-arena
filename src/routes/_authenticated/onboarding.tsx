@@ -455,7 +455,7 @@ function ParcoursStep({
           <ChevronLeft className="h-4 w-4" /> {t.common.back}
         </Button>
         {isSaving && (
-          <span className="ml-auto self-center text-sm text-muted-foreground">
+          <span className="ms-auto self-center text-sm text-muted-foreground">
             {t.onboarding.saving}
           </span>
         )}

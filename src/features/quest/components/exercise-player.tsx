@@ -780,34 +780,41 @@ export function ExercisePlayer({
           {...questionSlide(reduced)}
           className={`rounded-3xl border p-4 backdrop-blur-xl sm:p-8 ${bossMode ? "border-destructive/30 bg-destructive/5" : "border-border/50 bg-surface-3"}`}
         >
-          <RichField
-            raw={current.prompt}
-            as="h2"
-            className="font-display text-xl font-semibold sm:text-2xl"
-          />
+          {/* `lang` = langue du CONTENU (WCAG 3.1.2) : l'énoncé, puis les choix et leurs
+              libellés (`QL`, déjà dans la langue de la matière). `contents` : le
+              conteneur ne crée pas de boîte, la mise en page ne bouge pas. */}
+          <div lang={qlang} className="contents">
+            <RichField
+              raw={current.prompt}
+              as="h2"
+              className="font-display text-xl font-semibold sm:text-2xl"
+            />
+          </div>
           <p className="mt-1.5 text-xs text-muted-foreground sm:mt-2 sm:text-sm">
             {bossMode ? t.quest.bossStrike : isQuiz ? QL.quizRecorded : t.quest.feedbackMsg}
           </p>
-          <QuestionInput
-            questionType={currentType}
-            variant={variant}
-            prompt={current.prompt}
-            options={options}
-            value={selected}
-            onChange={handleSelect}
-            onSubmit={validate}
-            rtl={isRtlSubject}
-            labels={QL}
-            recallChars={RECALL_CHAR_BAR[qlang]}
-            recallKeypadRows={KEYPAD_BY_LANG[qlang]}
-            disabled={Boolean(feedback) || feedbackChecking}
-            optionClassName={(state: McqOptionRender) =>
-              optionClassNameFor(feedback, bossMode, state)
-            }
-            optionTrailing={(state: McqOptionRender) => (
-              <OptionVerdictMark feedback={feedback} state={state} labels={t.quest} />
-            )}
-          />
+          <div lang={qlang} className="contents">
+            <QuestionInput
+              questionType={currentType}
+              variant={variant}
+              prompt={current.prompt}
+              options={options}
+              value={selected}
+              onChange={handleSelect}
+              onSubmit={validate}
+              rtl={isRtlSubject}
+              labels={QL}
+              recallChars={RECALL_CHAR_BAR[qlang]}
+              recallKeypadRows={KEYPAD_BY_LANG[qlang]}
+              disabled={Boolean(feedback) || feedbackChecking}
+              optionClassName={(state: McqOptionRender) =>
+                optionClassNameFor(feedback, bossMode, state)
+              }
+              optionTrailing={(state: McqOptionRender) => (
+                <OptionVerdictMark feedback={feedback} state={state} labels={t.quest} />
+              )}
+            />
+          </div>
 
           {feedback && (
             <QuestionVerdictPanel
