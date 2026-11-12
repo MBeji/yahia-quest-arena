@@ -2,7 +2,13 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 const mockRpc = vi.fn();
-const mockSupabase = { rpc: mockRpc };
+const mockMaybeSingle = vi.fn();
+const mockEq = vi.fn(() => ({ maybeSingle: mockMaybeSingle }));
+const mockSelect = vi.fn(() => ({ eq: mockEq }));
+const mockFrom = vi.fn(() => ({ select: mockSelect }));
+const mockSupabase = { rpc: mockRpc, from: mockFrom };
+const mockRateLimited = vi.fn(async () => false);
+vi.mock("@/shared/lib/rate-limit", () => ({ isRateLimited: mockRateLimited }));
 
 vi.mock("@tanstack/react-start", () => ({
   createMiddleware: () => ({ server: (fn: unknown) => fn }),
@@ -44,6 +50,10 @@ const valid = { endpoint: "https://push.example/abc", p256dh: "key", auth: "auth
 beforeEach(() => {
   vi.resetModules();
   mockRpc.mockReset();
+  mockMaybeSingle.mockReset();
+  mockFrom.mockClear();
+  mockEq.mockClear();
+  mockRateLimited.mockReset().mockResolvedValue(false);
 });
 
 describe("notifications.server — savePushSubscription", () => {
@@ -95,5 +105,62 @@ describe("notifications.server — deletePushSubscription", () => {
     await expect(
       (deletePushSubscription as unknown as AnyFn)({ data: { endpoint: valid.endpoint } }),
     ).rejects.toThrow(/notification/i);
+  });
+});
+
+describe("notifications.server — le digest enrichi (étude 08 lot 2)", () => {
+  async function load() {
+    const mod = await import("../notifications.server");
+    return {
+      get: mod.getParentDigestPref as unknown as AnyFn,
+      set: mod.setParentDigestPref as unknown as AnyFn,
+    };
+  }
+
+  it("pas de ligne = pas demandé : désactivé par défaut (Q-1)", async () => {
+    mockMaybeSingle.mockResolvedValue({ data: null, error: null });
+    const { get } = await load();
+    expect(await get()).toEqual({ enriched: false });
+    expect(mockFrom).toHaveBeenCalledWith("parent_digest_prefs");
+    // La lecture est bornée à l'utilisateur de la session, jamais à un id reçu.
+    expect(mockEq).toHaveBeenCalledWith("parent_user_id", "user-1");
+  });
+
+  it("relit la préférence enregistrée", async () => {
+    mockMaybeSingle.mockResolvedValue({ data: { enriched_digest: true }, error: null });
+    const { get } = await load();
+    expect(await get()).toEqual({ enriched: true });
+  });
+
+  it("une lecture en panne échoue proprement", async () => {
+    mockMaybeSingle.mockResolvedValue({ data: null, error: { message: "boom" } });
+    const { get } = await load();
+    await expect(get()).rejects.toThrow();
+  });
+
+  it("enregistre par la RPC self-scopée — aucun identifiant ne voyage", async () => {
+    mockRpc.mockResolvedValue({ error: null });
+    const { set } = await load();
+    expect(await set({ data: { enabled: true } })).toEqual({ enriched: true });
+    expect(mockRpc).toHaveBeenCalledWith("set_parent_digest_pref", { p_enabled: true });
+  });
+
+  it("refuse une entrée qui n'est pas un booléen", async () => {
+    const { set } = await load();
+    await expect(set({ data: { enabled: "yes" } })).rejects.toThrow();
+    expect(mockRpc).not.toHaveBeenCalled();
+  });
+
+  it("est limité en fréquence, comme l'objectif famille", async () => {
+    mockRateLimited.mockResolvedValue(true);
+    const { set } = await load();
+    await expect(set({ data: { enabled: true } })).rejects.toThrow(/Too many/);
+    expect(mockRpc).not.toHaveBeenCalled();
+  });
+
+  it("une RPC en panne échoue proprement", async () => {
+    mockRpc.mockResolvedValue({ error: { message: "boom" } });
+    const { set } = await load();
+    await expect(set({ data: { enabled: false } })).rejects.toThrow();
   });
 });
