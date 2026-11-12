@@ -68,4 +68,28 @@ describe("logger", () => {
     expect(warnPayload.level).toBe("warn");
     expect(errorPayload.level).toBe("error");
   });
+  it("redacts nested sensitive keys and secret-shaped values, in the log line and for Sentry", async () => {
+    const monitoring = await import("@/shared/lib/monitoring");
+    const capture = vi.spyOn(monitoring, "captureException").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const jwt =
+      "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U";
+
+    logger.error(`provider refused ${jwt}`, {
+      request: { headers: { authorization: `Bearer ${jwt}` } },
+      reason: "Incorrect API key provided: sk-proj-AbCdEf0123456789AbCdEf",
+      cause: new Error(`upstream echoed ${jwt}`),
+    });
+
+    const line = errorSpy.mock.calls[0][0] as string;
+    expect(line).not.toContain(jwt);
+    expect(line).not.toContain("sk-proj-AbCdEf");
+    const payload = JSON.parse(line) as { cause: { name: string; message: string } };
+    // An Error used to serialize to `{}` and vanish from the line.
+    expect(payload.cause.name).toBe("Error");
+
+    const extra = capture.mock.calls[0][2]?.extra;
+    expect(JSON.stringify(extra)).not.toContain(jwt);
+    expect(JSON.stringify(extra)).not.toContain("sk-proj-AbCdEf");
+  });
 });
