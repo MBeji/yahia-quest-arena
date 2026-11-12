@@ -25,6 +25,25 @@ const BUDGETS = {
   // palier : la prochaine PR du chemin critique qui rougit ici devrait l'ouvrir plutôt
   // que relever encore. C'est écrit ici pour que ce soit visible AVANT d'y arriver, et
   // pas seulement dans le message de commit qui l'aura constaté.
+  //
+  // 2026-11-12 — LE DÉCOUPAGE EST FAIT (issue #1250) ; le plafond, lui, ne bouge pas.
+  // Le 2026-11-11 `main` était à 455,70 KB : 0,30 de marge, et `react` 19.3 (+28 KB,
+  // mesurés) restait écarté. Mesure par source map ce jour-là : 391 KB de bibliothèques
+  // dans l'entrée pour 44 KB de code de l'application. Trois sorties, aucune
+  // fonctionnalité retirée :
+  //   - les souches de fonctions serveur qu'un import en tête de route publique y
+  //     faisait entrer (#1251) — 455,70 → 454,42 ;
+  //   - la page de réinitialisation du mot de passe, qu'un `export` de son composant
+  //     empêchait de découper (#1253) — 454,46 → 445,90 ;
+  //   - `sonner` (32,8 KB), monté en dur à la racine pour des notifications qui
+  //     n'arrivent qu'après un geste : chargé après l'hydratation par
+  //     `components/ui/lazy-toaster.tsx` — 445,90 → 413,02.
+  // Ce qui reste est le socle : react-dom 171, le routeur TanStack ~93, query-core 32,
+  // tailwind-merge 27, seroval 25. Deux règles tiennent ce terrain, et l'outil signale
+  // la première à chaque build (« will not be code-split ») : un fichier de route
+  // n'exporte pas son composant ; un `loader` importe sa fonction serveur à la demande.
+  // Les 43 KB rendus ne sont pas un crédit à dépenser : une fois `react` 19.3 entré,
+  // ramener ce plafond près du réel est le geste suivant.
   "index-": 456 * 1024,
   // ---------------------------------------------------------------------------
   // Catalogues i18n. DEUX budgets depuis le 2026-08-26, parce que le catalogue
