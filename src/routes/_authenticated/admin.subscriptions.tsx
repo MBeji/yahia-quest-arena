@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { ArrowLeft, CreditCard } from "lucide-react";
+import { CreditCard } from "lucide-react";
+import { BackLink } from "@/components/ui/back-link";
 import { toast } from "sonner";
 import { useMyRole } from "@/features/auth";
 import {
@@ -105,12 +106,7 @@ function AdminSubscriptionsPage() {
     // Miroir du crochet ci-dessus : `adminSubscriptions.consolePanel` prouve à
     // `authorization.spec` que la console n'est pas rendue SOUS l'avis de refus.
     <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6" data-testid="admin-subscriptions-console">
-      <Link
-        to="/dashboard"
-        className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
-      >
-        <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> {t.common.backToHall}
-      </Link>
+      <BackLink to="/dashboard">{t.common.backToHall}</BackLink>
 
       <div className="mb-6 flex items-center gap-3">
         <div className="grid h-11 w-11 place-items-center rounded-xl bg-[image:var(--gradient-gold)] shadow-gold">

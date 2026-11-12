@@ -30,6 +30,11 @@ const h = vi.hoisted(() => ({
 }));
 
 vi.mock("@tanstack/react-router", () => ({
+  // `BackLink` se construit avec `createLink` : il rend l'ancre qu'on lui passe.
+  createLink:
+    (Comp: React.ElementType) =>
+    ({ to, params: _params, ...rest }: { to: string; params?: unknown }) =>
+      React.createElement(Comp, { ...rest, href: to }),
   createFileRoute: (path: string) => (opts: { component: React.ComponentType }) => {
     h.components[path] = opts.component;
     return { options: opts };

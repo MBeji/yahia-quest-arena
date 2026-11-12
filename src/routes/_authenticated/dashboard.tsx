@@ -54,6 +54,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useReducedMotion } from "motion/react";
 import { entrance } from "@/shared/lib/motion";
 import { PageShell } from "@/components/ui/page-shell";
+import { LoadError } from "@/components/ui/load-error";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { GoldProgress } from "@/components/game/gold-progress";
 import { trackProductEvent } from "@/shared/lib/product-events";
@@ -189,7 +190,7 @@ function Dashboard() {
   if (isError) {
     return (
       <div className="mx-auto max-w-md px-6 py-20 text-center">
-        <div className="rounded-2xl border border-destructive/30 bg-destructive/5 p-8">
+        <div role="alert" className="rounded-2xl border border-destructive/30 bg-destructive/5 p-8">
           <Skull className="mx-auto h-10 w-10 text-destructive" />
           <h2 className="mt-4 font-display text-xl font-bold">{t.dashboard.failedLoad}</h2>
           <p className="mt-2 text-sm text-muted-foreground">{t.dashboard.failedLoadDesc}</p>
@@ -209,7 +210,7 @@ function Dashboard() {
           ) : null}
           <button
             onClick={() => queryClient.invalidateQueries({ queryKey: ["dashboard"] })}
-            className="mt-4 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
+            className="mt-4 inline-flex min-h-11 items-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground"
           >
             {t.common.retry}
           </button>
@@ -225,8 +226,24 @@ function Dashboard() {
   const { profile, subjects, stats, progress, nextExerciseId } = data;
   // School subjects flagged as locked by the server (premium parcours, no entitlement).
   const lockedSet = new Set(data.premiumLockedSubjectIds ?? []);
-  if (!profile)
-    return <div className="p-8 text-center text-muted-foreground">Profile not found.</div>;
+  // Réponse arrivée, mais sans profil : c'était une ligne d'anglais (« Profile not
+  // found. ») sans aucune action — un cul-de-sac dans les trois langues.
+  if (!profile) {
+    return (
+      <LoadError
+        title={t.dashboard.failedLoad}
+        description={t.dashboard.failedLoadDesc}
+        onRetry={() => queryClient.invalidateQueries({ queryKey: ["dashboard"] })}
+      >
+        <Link
+          to="/parametrage"
+          className="inline-flex min-h-11 items-center rounded-md px-3 text-sm font-medium text-muted-foreground hover:text-foreground"
+        >
+          {t.settings.allSettings}
+        </Link>
+      </LoadError>
+    );
+  }
   // First-run (D-7 / audit §A-5): a brand-new account (no attempt yet) is welcomed,
   // not greeted with « Bon retour » over a column of zeros. `recent` is the
   // attempts feed — empty means the student has never played.

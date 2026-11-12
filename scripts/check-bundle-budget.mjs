@@ -44,7 +44,23 @@ const BUDGETS = {
   // n'exporte pas son composant ; un `loader` importe sa fonction serveur à la demande.
   // Les 43 KB rendus ne sont pas un crédit à dépenser : une fois `react` 19.3 entré,
   // ramener ce plafond près du réel est le geste suivant.
-  "index-": 456 * 1024,
+  //
+  // 2026-11-12, suite — LE SOCLE REACT A SON CHUNK, et le plafond est partagé en deux
+  // sans monter d'un octet : 456 = 242 (`index-`) + 214 (`vendor-react-`).
+  // Mesure par source map (docs/performance-audit.md §0-quater, rt-05) : `react` et
+  // l'entrée de `react-dom` avaient été rangés par le bundler dans `vendor-dndkit`, que
+  // l'entrée importait donc statiquement — 44 KB de glisser-déposer sur chaque page. Un
+  // groupe prioritaire `vendor-react` (vite.config.ts) les en sort ; `motion` cesse du
+  // même coup d'être tiré par l'entrée. Le moteur de son (`src/lib/sound`, chargé au
+  // premier geste) sort aussi. Sur `main` du jour : 237,36 KB ici, 188,68 KB dans
+  // `vendor-react-`, et sur la page d'accueil le JavaScript du premier rendu passe de
+  // 305,0 à 250,3 KB brotli (`npm run perf:budget`, même commit avant/après).
+  "index-": 242 * 1024,
+  // `react` + `react-dom` + `scheduler`, et rien d'autre. 188,68 KB mesurés. La marge
+  // (25 KB) est la part du plafond commun que `index-` ne prend pas ; `react` 19.3 en
+  // demande 28 (docs/dependency-maintenance.md) : il la dépassera de 3 KB, et c'est à ce
+  // moment-là, chiffres en main, que la somme des deux plafonds se rediscute — pas avant.
+  "vendor-react-": 214 * 1024,
   // ---------------------------------------------------------------------------
   // Catalogues i18n. DEUX budgets depuis le 2026-08-26, parce que le catalogue
   // n'est plus monolithique :
@@ -194,8 +210,9 @@ const BUDGETS = {
   "vendor-supabase-": 240 * 1024,
   "vendor-motion-": 150 * 1024,
   // @dnd-kit (core+sortable+utilities) powering the B2 ordering/matching
-  // boards — dedicated chunk (see vite.config manualChunks).
-  "vendor-dndkit-": 64 * 1024,
+  // boards — dedicated chunk (see vite.config codeSplitting).
+  // 64→48 KB (2026-11-12) : `react` n'y est plus (voir `vendor-react-`) ; 43,22 KB mesurés.
+  "vendor-dndkit-": 48 * 1024,
   // Dashboard route chunk. Bumped 30→32 KB for the flagship-concours banner
   // integration (the banner trio is lazy-loaded into its own chunk; only the
   // small lazy glue lands here). Heavy sections (radar/3D, badges/shop) stay lazy.

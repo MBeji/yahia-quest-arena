@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { motion } from "motion/react";
@@ -8,7 +8,6 @@ import {
   Trophy,
   Activity,
   Link as LinkIcon,
-  ArrowLeft,
   Printer,
   Share2,
   Target,
@@ -19,6 +18,7 @@ import {
   getLinkedStudents,
   getStudentDailyGoal,
   getStudentExamSummary,
+  getStudentParcoursComparison,
   getStudentReport,
   getStudentWeeklyGoal,
   getTutorParentCounters,
@@ -43,6 +43,7 @@ import { HelpTip } from "@/components/guide/help-tip";
 import { useEntrance } from "@/shared/lib/motion";
 import { LoadingState } from "@/components/ui/loading-state";
 import { GOAL_TARGET_MAX } from "@/shared/constants/gamification";
+import { BackLink } from "@/components/ui/back-link";
 
 export const Route = createFileRoute("/_authenticated/parent-report")({
   head: () => ({ meta: [{ title: "Suivi parental · Na9ra Nal3ab" }] }),
@@ -59,6 +60,7 @@ function ParentReport() {
   const getReportFn = useServerFn(getStudentReport);
   const getTutorCountersFn = useServerFn(getTutorParentCounters);
   const getExamSummaryFn = useServerFn(getStudentExamSummary);
+  const getComparisonFn = useServerFn(getStudentParcoursComparison);
   const linkByCodeFn = useServerFn(linkStudentByCode);
   const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
   const [studentCode, setStudentCode] = useState("");
@@ -94,6 +96,13 @@ function ParentReport() {
   const { data: examSummary } = useQuery({
     queryKey: ["parent-exam-summary", selectedStudent],
     queryFn: () => getExamSummaryFn({ data: { studentId: selectedStudent! } }),
+    enabled: !!selectedStudent,
+  });
+
+  // Étude 08 lot 3 (US-8) — le repère du parcours, seuillé en base (30 élèves).
+  const { data: parcoursComparison } = useQuery({
+    queryKey: ["parent-parcours-comparison", selectedStudent],
+    queryFn: () => getComparisonFn({ data: { studentId: selectedStudent! } }),
     enabled: !!selectedStudent,
   });
 
@@ -164,12 +173,9 @@ function ParentReport() {
             renvoyé du dashboard vers ici, donc ce lien le ramenait sur cet écran —
             une boucle visible. Cet écran EST son accueil (cf. hub-route.ts). */}
         {!isParentView && (
-          <Link
-            to="/dashboard"
-            className="mb-4 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition hover:text-foreground"
-          >
-            <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> {t.common.backToHall}
-          </Link>
+          <BackLink to="/dashboard" className="mb-4">
+            {t.common.backToHall}
+          </BackLink>
         )}
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
@@ -232,7 +238,7 @@ function ParentReport() {
               type="button"
               disabled={studentCode.trim().length < 8 || linkMutation.isPending}
               onClick={() => linkMutation.mutate()}
-              className="rounded-lg bg-[image:var(--gradient-gold)] px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-50"
+              className="inline-flex items-center justify-center rounded-lg bg-[image:var(--gradient-gold)] px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-50 [@media(pointer:coarse)]:min-h-11"
             >
               {linkMutation.isPending ? t.parentReport.linking : t.parentReport.linkCta}
             </button>
@@ -386,6 +392,7 @@ function ParentReport() {
           report={report}
           tutorCounters={tutorCounters}
           examSummary={examSummary}
+          parcoursComparison={parcoursComparison}
           /* Étude 11 lot 6 (US-14) — le bilan hebdomadaire d'El Ostedh, composé
              ICI parce que `parent-report` n'importe pas `tutor`. Il porte sa
              propre lecture (`get_tutor_parent_digest`), qui rejuge le lien

@@ -13,6 +13,69 @@ import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 // alias and the React/TanStack-Query dedupe. The DEV-only extras it also added
 // (sandbox bridge, HMR gate, component tagger, dev SSR/server-fn error overlays) are
 // intentionally omitted: they only run under `vite serve` and never shipped in the build.
+/**
+ * Le chunk nommé d'un module, ou rien (le bundler décide). Appelée par le second
+ * groupe de `codeSplitting` ci-dessous.
+ */
+function chunkNameFor(id: string): string | undefined {
+  // Locale catalogs (fr/en/ar) — independently cached chunks with their own
+  // budgets, so growing the translations (GAP-010) never eats the index
+  // chunk's budget. ONLY the pure-data catalogs: pulling the
+  // provider/context/hooks in too made the chunk import React back from the
+  // index chunk, creating an i18n⇄index cycle whose TDZ crash killed the
+  // whole client bundle in production (login regression).
+  // H2-fe (2026-10-31) : UN chunk PAR locale. Seul `i18n-fr` reste dans le
+  // graphe statique (contexte + premier rendu) ; `i18n-en` / `i18n-ar` sont
+  // tirés par `import()` depuis `catalogues.ts` pour la seule locale du
+  // visiteur — avant, le chunk trilingue (192 KB) descendait chez chacun.
+  // Données pures seulement, et AUCUN module partagé entre les fichiers de
+  // locale : rolldown fond un module commun dans le premier chunk de locale
+  // rencontré (ar) et ramène ce chunk dans les imports statiques d'index
+  // (mesuré : le gain était annulé).
+  const locale = /\/src\/lib\/i18n\/(fr|en|ar)(-public)?\.ts$/.exec(id)?.[1];
+  if (locale) return `i18n-${locale}`;
+  // Méta du document × 3 locales (données pures, importées par __root seul) :
+  // voyage avec fr. ⚠️ Jamais importé depuis en/ar — cf. la règle ci-dessus.
+  if (/\/src\/lib\/i18n\/meta\.ts$/.test(id)) return "i18n-fr";
+  // Surface-scoped catalog: the parent dashboard's copy (parentReport.* +
+  // parentDaily.*, ~42 KB of source) serves ONLY /suivi and /parent-report,
+  // two dynamically-imported route chunks — so it must not ride along in the
+  // app-wide catalog every student downloads. Same rule as above: ONLY the
+  // pure-data files. `parent/index.ts` holds the hook (React + ../hooks) and
+  // deliberately stays out, or this chunk would import the index chunk back
+  // and re-open the very cycle the comment above is about.
+  if (/\/src\/lib\/i18n\/parent\/(fr|en|ar)\.ts$/.test(id)) return "i18n-parent";
+  // é31 lot 2 : même règle pour les libellés de la collection de badges
+  // (~5 KB ×3 langues), servis par la seule route /boutique.
+  if (/\/src\/lib\/i18n\/badges\/(fr|en|ar)\.ts$/.test(id)) return "i18n-badges";
+  // é34 lot 2 : les étoiles de chapitre et les sceaux de matière. Servis
+  // par le hub matière, et aux lots suivants par le QG et le suivi
+  // parental — trois surfaces derrière des routes paresseuses.
+  if (/\/src\/lib\/i18n\/progress\/(fr|en|ar)\.ts$/.test(id)) return "i18n-progress";
+  // Guide intégré (2026-10-19) : les fiches d'aide de chaque écran. Tirées
+  // par la fiche (`React.lazy`) et par les routes paresseuses qui posent
+  // cartes et bulles — jamais par le chunk index.
+  if (/\/src\/lib\/i18n\/guide\/(fr|en|ar)\.ts$/.test(id)) return "i18n-guide";
+  // Étude 39 : le test de niveau — ses écrans sont une route publique paresseuse, une
+  // carte du Hall en `lazy()` et la fin de l'accueil. Même règle : données seules.
+  if (/\/src\/lib\/i18n\/placement\/(fr|en|ar)\.ts$/.test(id)) return "i18n-placement";
+  if (!id.includes("node_modules")) return;
+
+  if (id.includes("@tanstack/")) return "vendor-tanstack";
+  // 3D landing scene — isolated, lazy-loaded chunk (kept out of index/budget).
+  if (id.includes("/three/") || id.includes("@react-three/") || id.includes("postprocessing"))
+    return "vendor-three";
+  if (id.includes("lucide-react")) return "vendor-icons";
+  if (id.includes("motion")) return "vendor-motion";
+  // Drag-&-drop runtime (B2 ordering/matching boards) — own cached
+  // chunk with its own budget so it never eats the index budget (D-3).
+  if (id.includes("@dnd-kit/")) return "vendor-dndkit";
+  if (id.includes("@supabase/")) return "vendor-supabase";
+  if (id.includes("@radix-ui/")) return "vendor-radix";
+
+  return undefined;
+}
+
 export default defineConfig(async ({ command, mode }) => {
   // Pas de plugin de résolution des `paths` de tsconfig : le seul mapping (`@/*` → `src/*`)
   // est déclaré en dur dans `resolve.alias` ci-dessous (et dans vitest.config.ts).
@@ -65,67 +128,33 @@ export default defineConfig(async ({ command, mode }) => {
     build: {
       rollupOptions: {
         output: {
-          manualChunks(id: string) {
-            // Locale catalogs (fr/en/ar) — independently cached chunks with their own
-            // budgets, so growing the translations (GAP-010) never eats the index
-            // chunk's budget. ONLY the pure-data catalogs: pulling the
-            // provider/context/hooks in too made the chunk import React back from the
-            // index chunk, creating an i18n⇄index cycle whose TDZ crash killed the
-            // whole client bundle in production (login regression).
-            // H2-fe (2026-10-31) : UN chunk PAR locale. Seul `i18n-fr` reste dans le
-            // graphe statique (contexte + premier rendu) ; `i18n-en` / `i18n-ar` sont
-            // tirés par `import()` depuis `catalogues.ts` pour la seule locale du
-            // visiteur — avant, le chunk trilingue (192 KB) descendait chez chacun.
-            // Données pures seulement, et AUCUN module partagé entre les fichiers de
-            // locale : rolldown fond un module commun dans le premier chunk de locale
-            // rencontré (ar) et ramène ce chunk dans les imports statiques d'index
-            // (mesuré : le gain était annulé).
-            const locale = /\/src\/lib\/i18n\/(fr|en|ar)(-public)?\.ts$/.exec(id)?.[1];
-            if (locale) return `i18n-${locale}`;
-            // Méta du document × 3 locales (données pures, importées par __root seul) :
-            // voyage avec fr. ⚠️ Jamais importé depuis en/ar — cf. la règle ci-dessus.
-            if (/\/src\/lib\/i18n\/meta\.ts$/.test(id)) return "i18n-fr";
-            // Surface-scoped catalog: the parent dashboard's copy (parentReport.* +
-            // parentDaily.*, ~42 KB of source) serves ONLY /suivi and /parent-report,
-            // two dynamically-imported route chunks — so it must not ride along in the
-            // app-wide catalog every student downloads. Same rule as above: ONLY the
-            // pure-data files. `parent/index.ts` holds the hook (React + ../hooks) and
-            // deliberately stays out, or this chunk would import the index chunk back
-            // and re-open the very cycle the comment above is about.
-            if (/\/src\/lib\/i18n\/parent\/(fr|en|ar)\.ts$/.test(id)) return "i18n-parent";
-            // é31 lot 2 : même règle pour les libellés de la collection de badges
-            // (~5 KB ×3 langues), servis par la seule route /boutique.
-            if (/\/src\/lib\/i18n\/badges\/(fr|en|ar)\.ts$/.test(id)) return "i18n-badges";
-            // é34 lot 2 : les étoiles de chapitre et les sceaux de matière. Servis
-            // par le hub matière, et aux lots suivants par le QG et le suivi
-            // parental — trois surfaces derrière des routes paresseuses.
-            if (/\/src\/lib\/i18n\/progress\/(fr|en|ar)\.ts$/.test(id)) return "i18n-progress";
-            // Guide intégré (2026-10-19) : les fiches d'aide de chaque écran. Tirées
-            // par la fiche (`React.lazy`) et par les routes paresseuses qui posent
-            // cartes et bulles — jamais par le chunk index.
-            if (/\/src\/lib\/i18n\/guide\/(fr|en|ar)\.ts$/.test(id)) return "i18n-guide";
-            // Étude 39 : le test de niveau — ses écrans sont une route publique paresseuse, une
-            // carte du Hall en `lazy()` et la fin de l'accueil. Même règle : données seules.
-            if (/\/src\/lib\/i18n\/placement\/(fr|en|ar)\.ts$/.test(id)) return "i18n-placement";
-            if (!id.includes("node_modules")) return;
-
-            if (id.includes("@tanstack/")) return "vendor-tanstack";
-            // 3D landing scene — isolated, lazy-loaded chunk (kept out of index/budget).
-            if (
-              id.includes("/three/") ||
-              id.includes("@react-three/") ||
-              id.includes("postprocessing")
-            )
-              return "vendor-three";
-            if (id.includes("lucide-react")) return "vendor-icons";
-            if (id.includes("motion")) return "vendor-motion";
-            // Drag-&-drop runtime (B2 ordering/matching boards) — own cached
-            // chunk with its own budget so it never eats the index budget (D-3).
-            if (id.includes("@dnd-kit/")) return "vendor-dndkit";
-            if (id.includes("@supabase/")) return "vendor-supabase";
-            if (id.includes("@radix-ui/")) return "vendor-radix";
-
-            return undefined;
+          codeSplitting: {
+            groups: [
+              // `react`, `react-dom`, `scheduler` : un chunk À EUX, et PRIORITAIRE
+              // (2026-11-12, rt-05 de docs/performance-audit.md §0-quater).
+              //
+              // Un groupe emporte avec lui les dépendances des modules qu'il capture
+              // (`includeDependenciesRecursively`, vrai par défaut — c'est ce qui évite
+              // les chunks circulaires). `react` n'étant réclamé par personne, il
+              // partait donc avec le premier paquet nommé qui en dépend. Mesuré par
+              // source map : `react` (7,4 KB) et l'entrée de `react-dom` (3,4 KB)
+              // vivaient dans `vendor-dndkit` — que le chunk d'entrée et 68 autres
+              // importaient statiquement pour ces deux-là, traînant les 44 KB du
+              // glisser-déposer sur chaque page du site, pour les seuls plateaux
+              // d'exercice. Une règle de plus dans la fonction ci-dessous n'y change
+              // rien (essayé : le module est déjà pris quand elle est consultée) ;
+              // il faut un groupe de priorité supérieure. Ces trois paquets ne
+              // dépendent de rien d'autre : ce chunk n'importe aucun voisin, il ne peut
+              // pas rouvrir le cycle dont parle le commentaire i18n.
+              {
+                name: "vendor-react",
+                test: /node_modules[\\/](react|react-dom|scheduler)[\\/]/,
+                priority: 2,
+              },
+              // Le reste : les règles d'avant, inchangées — c'est exactement ce en
+              // quoi `manualChunks` (déprécié) était traduit.
+              { name: chunkNameFor },
+            ],
           },
         },
       },

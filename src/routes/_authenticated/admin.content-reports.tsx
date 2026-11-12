@@ -1,8 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft } from "lucide-react";
 import { useMyRole } from "@/features/auth";
 import { ContentReportsAdmin } from "@/features/content-report";
 import { useT } from "@/lib/i18n";
+import { BackLink } from "@/components/ui/back-link";
 
 export const Route = createFileRoute("/_authenticated/admin/content-reports")({
   head: () => ({ meta: [{ title: "Signalements · Na9ra Nal3ab" }] }),
@@ -29,12 +29,7 @@ function AdminContentReportsPage() {
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-10">
-      <Link
-        to="/dashboard"
-        className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
-      >
-        <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> {t.common.backToHall}
-      </Link>
+      <BackLink to="/dashboard">{t.common.backToHall}</BackLink>
       {isAdmin && <ContentReportsAdmin />}
     </div>
   );

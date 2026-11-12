@@ -48,7 +48,7 @@ export function ParentDigestCard({ hasLinkedStudent }: { hasLinkedStudent: boole
     },
     onSuccess: (result) => {
       if (!result) {
-        toast.error(t.parentReport.digestNeedsPush);
+        toast.error(t.parentReport.digestBlocked);
         return;
       }
       queryClient.setQueryData(DIGEST_PREF_KEY, result);

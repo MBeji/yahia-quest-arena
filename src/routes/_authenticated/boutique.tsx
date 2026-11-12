@@ -9,6 +9,7 @@ import { Sparkles } from "lucide-react";
 import { PageShell } from "@/components/ui/page-shell";
 import { BackLink } from "@/components/ui/back-link";
 import { LoadingState } from "@/components/ui/loading-state";
+import { LoadError } from "@/components/ui/load-error";
 import { useT } from "@/lib/i18n";
 import { useSound } from "@/lib/sound";
 import { trackProductEvent } from "@/shared/lib/product-events";
@@ -44,7 +45,7 @@ function BoutiquePage() {
 
   // Primary carries the profile (coins, avatar) + subjects/stats for the radar;
   // secondary carries badges/inventory/shop. Same two reads the dashboard did.
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["dashboard"],
     queryFn: () => fetchDashboard(),
   });
@@ -89,6 +90,18 @@ function BoutiquePage() {
     onError: (error) =>
       toast.error(error instanceof Error ? error.message : t.dashboard.activationFailed),
   });
+
+  // Un échec — ou une réponse sans profil — n'est pas un chargement : l'indicateur
+  // tournait sans fin, sans rien dire ni rien proposer.
+  if (isError || (data && !data.profile)) {
+    return (
+      <LoadError title={t.dashboard.failedLoad} onRetry={() => refetch()}>
+        <BackLink to="/dashboard" className="mb-0">
+          {t.common.backToHall}
+        </BackLink>
+      </LoadError>
+    );
+  }
 
   if (isLoading || !data?.profile) {
     return <LoadingState label={t.common.loading} className="min-h-[60dvh]" />;

@@ -257,8 +257,39 @@ export const getSubject = createServerFn({ method: "GET" })
     // 1 445 KB max (fiqh), 1 095 KB sur math-6eme ; avec ces colonnes 15 KB médian,
     // 38 KB p90, 122 KB max. Mêmes consommateurs, même rendu — `SubjectHubChapter`,
     // `SubjectHubExercise` et `next-exercise.ts` disent exactement ce qu'il faut servir.
-    const [subj, chaps, exs, progress, unrestricted] = await Promise.all([
+    // UNE vague, pas quatre (audit perf rt-04, 2026-11-12). Deux lectures attendaient
+    // sans raison la fin de ce lot, puis l'une l'autre :
+    //   • la disponibilité des Rappels ne dépend que de `subjectId` — et c'est la lecture
+    //     la plus lente de la page (mesuré sur `math` : plus longue que les trois
+    //     lectures de contenu réunies) ;
+    //   • l'ancre de parcours ne dépend que de la ligne `subjects`, pas des chapitres
+    //     ni des missions : elle part dès que cette ligne-là répond.
+    // Le builder postgrest est un thenable PARESSEUX, exécuté à chaque `then` : il est
+    // donc figé en vraie promesse avant d'être attendu deux fois (ici et par l'ancre).
+    const subjPromise = Promise.resolve(
       supabase.from("subjects").select("*").eq("id", data.subjectId).single(),
+    );
+    // Parcours that owns this subject — powers the hub's level anchor + back link
+    // (étude 15 lot 7, D-6 : the kicker shows the CLASS, not the RPG attribute, and
+    // the hub gets a way back up to /niveau). Resolved for EVERYONE (anon included);
+    // a resolution failure degrades to "no anchor", never a broken page.
+    // Une seule définition de la dérivation, partagée avec la quête (é38 lot 2).
+    const parcoursPromise: Promise<SubjectParcours | null> = subjPromise.then((res) =>
+      res.error
+        ? null
+        : resolveSubjectParcours(
+            supabase,
+            res.data as { theme_id?: string | null; grade_id?: string | null },
+          ).catch((err: unknown) => {
+            logger.warn("quest.getSubject: parcours anchor fetch failed", {
+              subjectId: data.subjectId,
+              error: errorMessage(err),
+            });
+            return null;
+          }),
+    );
+    const [subj, chaps, exs, progress, unrestricted, recall, parcoursRow] = await Promise.all([
+      subjPromise,
       supabase
         .from("chapters")
         .select(SUBJECT_CHAPTER_COLUMNS)
@@ -272,17 +303,18 @@ export const getSubject = createServerFn({ method: "GET" })
       progressPromise,
       // Compte de test (admin) : même aller-retour, pas un de plus — quest.access.ts.
       isUnrestrictedViewer(supabase, userId),
+      // Recall availability (étude 17) — resolved for EVERYONE, anon included
+      // (override de R-9, 2026-07-15) : l'éligibilité est dérivée du contenu, donc
+      // calculable sans session ; unlocked/best restent des concepts de compte
+      // (false/null pour l'anonyme). Le hub affiche ainsi les missions Rappel
+      // verrouillées même déconnecté. Graceful empty fallback dans le helper, qui ne
+      // lève jamais — il ne peut donc pas faire échouer ce lot.
+      fetchRecallAvailability(supabase, data.subjectId),
+      parcoursPromise,
     ]);
     if (subj.error) {
       failWithClientError("quest.getSubject", subj.error, "Impossible de charger la matière.");
     }
-
-    // Recall availability (étude 17) — resolved for EVERYONE, anon included
-    // (override de R-9, 2026-07-15) : l'éligibilité est dérivée du contenu, donc
-    // calculable sans session ; unlocked/best restent des concepts de compte
-    // (false/null pour l'anonyme). Le hub affiche ainsi les missions Rappel
-    // verrouillées même déconnecté. Graceful empty fallback dans le helper.
-    const recall = await fetchRecallAvailability(supabase, data.subjectId);
 
     // Comprehension-quiz gate: a chapter's exercises stay locked until the
     // user passes that chapter's mode='quiz' exercise at/above the threshold.
@@ -327,24 +359,6 @@ export const getSubject = createServerFn({ method: "GET" })
     const gates = unrestricted
       ? openEveryGate({ quizPassedByChapter, recall })
       : { quizPassedByChapter, recall };
-
-    // Parcours that owns this subject — powers the hub's level anchor + back link
-    // (étude 15 lot 7, D-6 : the kicker shows the CLASS, not the RPG attribute, and
-    // the hub gets a way back up to /niveau). Resolved for EVERYONE (anon included);
-    // a resolution failure degrades to "no anchor", never a broken page.
-    let parcoursRow: SubjectParcours | null = null;
-    try {
-      // Une seule définition de la dérivation, partagée avec la quête (é38 lot 2).
-      parcoursRow = await resolveSubjectParcours(
-        supabase,
-        subj.data as { theme_id?: string | null; grade_id?: string | null },
-      );
-    } catch (err) {
-      logger.warn("quest.getSubject: parcours anchor fetch failed", {
-        subjectId: data.subjectId,
-        error: errorMessage(err),
-      });
-    }
 
     // Parcours access context for premium gating of missions on the page.
     // Assigned on every path below (both try branches + the catch's locked-safe default),

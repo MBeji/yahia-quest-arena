@@ -1,15 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import {
-  ArrowLeft,
-  BookOpen,
-  Check,
-  ChevronDown,
-  ChevronRight,
-  Lock,
-  Play,
-  Zap,
-} from "lucide-react";
+import { BookOpen, Check, ChevronDown, ChevronRight, Lock, Play, Zap } from "lucide-react";
 import { useI18n, useT } from "@/lib/i18n";
 import { useProgressT } from "@/lib/i18n/progress";
 import { isRtlText } from "@/shared/lib/utils";
@@ -40,6 +31,7 @@ import { ChapterStarsChip, ChapterStarsNote } from "./chapter-stars";
 import { LockedMissionRow } from "./locked-mission-row";
 import { ManuelEleveCard } from "./manuel-eleve-card";
 import { SubjectSeals } from "./subject-seals";
+import { BackLink } from "@/components/ui/back-link";
 
 export type SubjectHubSubject = {
   name_fr: string;
@@ -533,13 +525,9 @@ export function SubjectHub({
     <PageShell dir={isRtl ? "rtl" : "ltr"}>
       <header className="mb-6">
         {parcours && (
-          <Link
-            to="/niveau/$parcoursId"
-            params={{ parcoursId: parcours.id }}
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition hover:text-primary"
-          >
-            <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> {parcoursName(parcours, locale)}
-          </Link>
+          <BackLink to="/niveau/$parcoursId" params={{ parcoursId: parcours.id }} className="mb-0">
+            {parcoursName(parcours, locale)}
+          </BackLink>
         )}
         {parcours && (
           <div className="mt-3 text-xs font-semibold uppercase tracking-[0.2em] text-primary">
@@ -555,8 +543,6 @@ export function SubjectHub({
         {subject.description && <p className="mt-2 text-muted-foreground">{subject.description}</p>}
       </header>
 
-      <GuideIntroCard screen="subject" variant="rule" className="mb-6" />
-
       {unrestricted && (
         <p
           role="status"
@@ -568,8 +554,6 @@ export function SubjectHub({
       )}
 
       <SubjectSeals progress={progress} />
-
-      <ManuelEleveCard manuelRefs={subject.manuel_refs} />
 
       {resume && resume.next && (
         <Link
@@ -637,6 +621,18 @@ export function SubjectHub({
       ) : (
         <div className="space-y-3">{rows.map(renderChapter)}</div>
       )}
+
+      {/* SOUS la liste des chapitres, et plus au-dessus (relevé « première visite » du
+          2026-11-12, C-7). La carte de première visite ne se monte qu'après lecture du
+          stockage de l'appareil : placée en tête, elle s'insérait 4 s après l'affichage et
+          repoussait tout le contenu de 670 px (décalage cumulé mesuré : 0,57), et le premier
+          geste possible — ouvrir le cours, passer le quiz — se retrouvait à 2,4 écrans de
+          téléphone. Ici elle n'a plus rien à pousser. Le manuel, lui, est une référence :
+          il suit les chapitres au lieu de les précéder. */}
+      <div className="mt-6">
+        <GuideIntroCard screen="subject" variant="rule" className="mb-6" />
+        <ManuelEleveCard manuelRefs={subject.manuel_refs} />
+      </div>
     </PageShell>
   );
 }
