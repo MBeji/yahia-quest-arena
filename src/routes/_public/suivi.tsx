@@ -155,7 +155,10 @@ function SuiviPublicPage() {
       >
         <div className="mb-3 flex items-center gap-2 text-primary">
           <LinkIcon className="h-4 w-4" />
-          <span className="font-semibold">{t.parentReport.viewTitle}</span>
+          {/* Sur cette page le parent CONSULTE un bilan, il n'associe rien (lexique §2) :
+              ni « Associer un élève » en titre, ni « Associer » sur le bouton. Libellés
+              repris de clés existantes — `i18n-parent` est à son plafond. */}
+          <span className="font-semibold">{t.parentReport.codePlaceholder}</span>
         </div>
         <div className="grid gap-2 md:grid-cols-[1fr_auto]">
           <input
@@ -170,7 +173,7 @@ function SuiviPublicPage() {
             disabled={code.trim().length < 8 || reportMutation.isPending}
             className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition hover:opacity-90 disabled:opacity-50 [@media(pointer:coarse)]:min-h-11"
           >
-            {reportMutation.isPending ? t.parentReport.viewing : t.parentReport.viewCta}
+            {reportMutation.isPending ? t.common.loading : t.public.landing.personaParentCta}
           </button>
         </div>
         <p className="mt-2 text-xs text-muted-foreground">{t.parentReport.linkHint}</p>

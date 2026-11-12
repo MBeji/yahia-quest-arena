@@ -22,10 +22,6 @@ export type ParentTranslations = {
     codePlaceholder: string;
     relationPlaceholder: string;
     linkCta: string;
-    /** /suivi : le parent CONSULTE un bilan avec le code, il n'associe rien (lexique §2). */
-    viewTitle: string;
-    viewCta: string;
-    viewing: string;
     linking: string;
     linkHint: string;
     // Mémoire locale du code sur la page publique /suivi (sans compte, sans session).
