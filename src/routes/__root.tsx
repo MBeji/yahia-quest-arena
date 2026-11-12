@@ -10,7 +10,7 @@ import {
 import { createIsomorphicFn } from "@tanstack/react-start";
 import { getRequestHeader } from "@tanstack/react-start/server";
 import { useEffect } from "react";
-import { Toaster } from "@/components/ui/sonner";
+import { LazyToaster } from "@/components/ui/lazy-toaster";
 import { I18nProvider, useT } from "@/lib/i18n";
 import { GuideProvider } from "@/components/guide/guide-provider";
 import type { Locale } from "@/lib/i18n";
@@ -372,8 +372,11 @@ function GlobalSoundEffects() {
 }
 
 /** Toaster whose colour scheme follows the active UI theme. `reference` and
- *  `light` are light-family registers; only `dark` is a dark scheme. */
+ *  `light` are light-family registers; only `dark` is a dark scheme. Chargé après
+ *  l'hydratation (`lazy-toaster.tsx`) : `sonner` ne pèse plus sur le chunk d'entrée. */
 function ThemedToaster() {
   const { theme } = useTheme();
-  return <Toaster richColors theme={theme === "dark" ? "dark" : "light"} position="top-center" />;
+  return (
+    <LazyToaster richColors theme={theme === "dark" ? "dark" : "light"} position="top-center" />
+  );
 }
