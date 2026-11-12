@@ -12,9 +12,10 @@ import { getRequestHeader } from "@tanstack/react-start/server";
 import { useEffect } from "react";
 import { LazyToaster } from "@/components/ui/lazy-toaster";
 import { I18nProvider, useT } from "@/lib/i18n";
-import { GuideProvider } from "@/components/guide/guide-provider";
 import type { Locale } from "@/lib/i18n";
-import { DEFAULT_LOCALE, dirForLocale, localeFromCookieHeader } from "@/lib/i18n/context";
+import { GuideProvider } from "@/components/guide/guide-provider";
+import { dirForLocale } from "@/lib/i18n/context";
+import { getShellLocale } from "@/lib/i18n/shell-locale";
 import { metaByLocale } from "@/lib/i18n/meta";
 import { SOCIAL_IMAGE } from "@/shared/constants/site";
 import { buildErrorDebugText } from "@/shared/lib/error-debug";
@@ -111,13 +112,12 @@ function ErrorComponent({ error: thrown, reset }: { error: unknown; reset: () =>
   );
 }
 
-export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+export const Route = createRootRouteWithContext<{ queryClient: QueryClient; locale: Locale }>()({
   head: () => {
     // Per-request locale for the document meta: getShellLocale() reads the
     // persisted cookie at SSR (and document.cookie on the client), so the
     // <title>/description/OG match the visitor's language for crawlers and social
-    // shares. head() is a closure evaluated at render time, after the module is
-    // fully initialised, so it can reference getShellLocale (defined below).
+    // shares.
     const locale = getShellLocale();
     const m = metaByLocale[locale];
     return {
@@ -187,33 +187,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 });
 
 /**
- * Resolve the locale for the SSR document shell from the persisted cookie so that
- * <html lang/dir> is correct on first paint (no RTL FOUC for Arabic users).
- *
- * Hydration safety: the client provider (I18nProvider) starts at DEFAULT_LOCALE
- * and only applies the persisted locale in a post-mount effect, so the *body*
- * markup the client first renders matches the server. The <html> attributes here
- * are set from the same cookie the client reads, so they agree on both sides.
- *
- * Legacy localStorage-only users (preference set before this cookie existed) are
- * migrated automatically: I18nProvider mirrors the resolved locale into the cookie
- * on first mount when it's missing/stale, so subsequent SSR loads paint the right
- * locale with no flash of the default.
- */
-const getShellLocale = createIsomorphicFn()
-  // Client (hydration / client navigation): read the document cookie directly.
-  .client((): Locale => localeFromCookieHeader(document.cookie))
-  // Server: read the request Cookie header. This branch (and its server-only
-  // import) is stripped from the client bundle by the isomorphic boundary.
-  .server((): Locale => {
-    try {
-      return localeFromCookieHeader(getRequestHeader("cookie"));
-    } catch {
-      return DEFAULT_LOCALE;
-    }
-  });
-
-/**
  * Resolve the UI theme for the SSR shell from the persisted cookie so the
  * <html class="dark|light"> is correct on first paint (no flash of the wrong
  * theme). The client branch reads the same cookie during hydration, so both
@@ -246,7 +219,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function RootComponent() {
-  const { queryClient } = Route.useRouteContext();
+  const { queryClient, locale } = Route.useRouteContext();
   const router = useRouter();
 
   // Register the PWA service worker (client + production only). The SW caches
@@ -327,7 +300,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <I18nProvider>
+        <I18nProvider initialLocale={locale}>
           <SoundProvider>
             <GuideProvider>
               <GlobalSoundEffects />
