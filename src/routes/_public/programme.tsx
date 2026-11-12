@@ -5,6 +5,7 @@ import { CloudOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { LoadingState } from "@/components/ui/loading-state";
+import { ResumeCard } from "@/components/public/resume-card";
 import { useT } from "@/lib/i18n";
 import { getParcours } from "@/features/dashboard";
 import {
@@ -84,5 +85,12 @@ function ProgrammePage() {
     return <LoadingState label={t.common.loading} className="min-h-[60dvh]" />;
   }
 
-  return <ProgrammeCatalogue parcours={data.parcours as CatalogueParcours[]} />;
+  return (
+    <>
+      <ProgrammeCatalogue parcours={data.parcours as CatalogueParcours[]} />
+      {/* é38 lot 5 : le visiteur sans compte retrouve ici aussi le chapitre qu'il lisait —
+          en carte flottante, pour ne rien pousser sur cette page rendue côté serveur. */}
+      <ResumeCard surface="programme" />
+    </>
+  );
 }

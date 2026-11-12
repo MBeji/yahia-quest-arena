@@ -219,4 +219,9 @@ export const enPublic: TranslationKeys["public"] = {
     lawBody: "This notice is governed by Tunisian law.",
     updated: "Last updated: June 2026.",
   },
+  resume: {
+    kicker: "Continue reading",
+    forget: "Forget",
+    forgetLabel: "Stop remembering my reading on this device",
+  },
 };

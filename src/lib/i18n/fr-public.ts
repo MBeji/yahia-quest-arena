@@ -223,4 +223,9 @@ export const frPublic: TranslationKeys["public"] = {
     lawBody: "Les présentes mentions sont régies par le droit tunisien.",
     updated: "Dernière mise à jour : juin 2026.",
   },
+  resume: {
+    kicker: "Reprendre",
+    forget: "Oublier",
+    forgetLabel: "Ne plus retenir ma lecture sur cet appareil",
+  },
 };

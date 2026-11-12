@@ -214,4 +214,9 @@ export const arPublic: TranslationKeys["public"] = {
     lawBody: "تخضع هذه المقتضيات للقانون التونسي.",
     updated: "آخر تحديث: جوان 2026.",
   },
+  resume: {
+    kicker: "واصل القراءة",
+    forget: "انسَ",
+    forgetLabel: "لا تحتفظ بقراءتي على هذا الجهاز",
+  },
 };
