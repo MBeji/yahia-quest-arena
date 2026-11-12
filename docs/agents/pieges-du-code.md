@@ -512,6 +512,31 @@ personne n'appelle rien, à l'arrivée sur la page. Et tester dans l'ordre réel
 `signInWithPassword` doit appeler l'écouteur **avant** de rendre sa valeur (voir « la mesure se lit
 avant la consommation » dans `auth-signup.test.tsx`).
 
+## Hors ligne, une requête n'échoue pas : elle se met en PAUSE — et l'écran attend sans le dire
+
+Vécu le 2026-11-12 (étude 38, lot 4), mesuré en production avant le correctif : réseau coupé, un
+clic vers une page matière rendait 24 blocs de squelette, sans un mot, indéfiniment.
+
+- **La cause.** TanStack Query (`networkMode: "online"`, le défaut) ne lance pas une lecture neuve
+  sans réseau : `fetchStatus` vaut `"paused"`, `isLoading` retombe à `false`, `data` reste absente.
+  Un écran qui teste `isLoading || !data` rend donc son squelette pour toujours. Toute route qui
+  lit avant de rendre pose `isWaitingForNetwork({ fetchStatus, data })` **avant** ce test
+  (`components/ui/query-wait-state.tsx`). Les mutations se mettent en pause de la même façon, et
+  repartent seules au retour du réseau.
+- **Une seule source pour l'état du réseau** : `onlineManager` (`hooks/use-online-status.ts`), celui
+  qui décide de la pause. Un écouteur `online`/`offline` maison donnerait un bandeau qui contredit
+  l'écran.
+- **Cela ne se prouve que sur le bundle de production** (`npm run smoke:shell`). Le serveur de dev
+  redemande ses modules à chaque navigation : hors ligne, un clic y finit en page d'erreur du
+  navigateur, pas en état d'attente. Et le service worker ne s'enregistre qu'en production.
+- **Ce que le lot ne couvre pas, à dessein** (étude 06 gelée : aucun précache) : une page dont le
+  code n'a jamais été chargé sur l'appareil ne peut pas s'afficher sans réseau — le routeur passe
+  en navigation complète et le service worker sert `offline.html`.
+- **Deux faux amis rencontrés en l'écrivant.** Un élément `sticky` ne voyage que dans son parent :
+  collé dans une enveloppe pas plus haute que lui, il défile avec la page (la classe va sur la
+  région, pas sur le bandeau). Et l'événement Playwright `framenavigated` part aussi sur un simple
+  `pushState` : pour prouver « sans rechargement », poser un marqueur sur `window` et le relire.
+
 ## Règles laissées par les chantiers d'août-septembre 2026
 
 Sorties de `STATUS.md` le 2026-09-22 (son § 6 les portait) ; le détail et les mesures sont dans
