@@ -1,4 +1,5 @@
 import { captureException } from "./monitoring";
+import { redactDeep, redactSecrets } from "./redact";
 
 type LogLevel = "info" | "warn" | "error";
 
@@ -6,34 +7,15 @@ type LogMeta = Record<string, unknown>;
 
 function safeMeta(meta?: LogMeta): LogMeta | undefined {
   if (!meta) return undefined;
-
-  // Basic redaction for common sensitive keys.
-  const redacted: LogMeta = {};
-  for (const [key, value] of Object.entries(meta)) {
-    const lowered = key.toLowerCase();
-    if (
-      lowered.includes("token") ||
-      lowered.includes("secret") ||
-      lowered.includes("password") ||
-      lowered.includes("key") ||
-      lowered.includes("authorization") ||
-      lowered.includes("bearer") ||
-      lowered.includes("cookie")
-    ) {
-      redacted[key] = "********";
-      continue;
-    }
-    redacted[key] = value;
-  }
-
-  return redacted;
+  // Clés sensibles ET valeurs en forme de secret, à toute profondeur (`redact.ts`).
+  return redactDeep(meta) as LogMeta;
 }
 
 function write(level: LogLevel, message: string, meta?: LogMeta) {
   const payload = {
     ts: new Date().toISOString(),
     level,
-    message,
+    message: redactSecrets(message),
     ...safeMeta(meta),
   };
 
@@ -43,7 +25,7 @@ function write(level: LogLevel, message: string, meta?: LogMeta) {
     // Forward to Sentry (no-op without a DSN). The Error object, if any, is
     // conventionally passed as meta.error; the rest becomes scrubbed context.
     const { error, ...rest } = (meta ?? {}) as { error?: unknown } & LogMeta;
-    captureException(message, error, { source: "logger", extra: rest });
+    captureException(message, error, { source: "logger", extra: safeMeta(rest) });
     return;
   }
 

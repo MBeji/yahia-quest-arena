@@ -59,9 +59,31 @@ Applies to any rendering path that may transform text into HTML.
   string) in front of `extractFigure`/`sanitizeSvg`: a string is sanitized on first sight
   and its sanitizer output is what gets replayed — never the raw markup.
 
+## Server-rendered lessons (since 2026-11)
+
+The public course pages (`/chapitre/…`) leave the server with their lesson already rendered
+(`seedOnServer` in `src/shared/lib/public-page-seo.ts`). **On that path DOMPurify does not
+run**: there is no DOM in the SSR function, `DOMPurify.isSupported` is `false`, `finalize`
+skips the sanitize pass and `sanitizeSvg` fails closed (a figure renders as nothing until the
+client takes over). Hydration does not repair it either — React never rewrites an existing
+`dangerouslySetInnerHTML` subtree. So for a server-rendered lesson:
+
+- the **only** guarantee is the order of the renderer's passes (escape everything, then emit
+  only its own tags). DOMPurify is defence in depth on client navigations, not on first paint;
+- the second net is the CSP: `script-src 'self' 'nonce-…'` without `'unsafe-inline'` refuses
+  an injected inline script or `on*` handler (`src/shared/lib/csp.ts`);
+- `src/shared/lib/__tests__/markdown-ssr.test.ts` runs in the `node` environment (no DOM,
+  exactly the SSR condition) and proves, for a corpus of payloads placed in every position an
+  author can reach, that the output carries no tag and no attribute outside the allowlist. Any
+  change to `markdown.ts` that emits author text must keep that file green — `markdown.test.ts`
+  alone cannot catch a regression, because under jsdom DOMPurify hides it.
+- JSON-LD in `<head>` goes through `serializeJsonLd` (`<` → `\u003c`), so a content title
+  containing `</script>` cannot close the tag; meta tags are plain React attributes.
+
 ## Validation
 
-- Unit tests in `src/shared/lib/__tests__/markdown.test.ts` must pass.
+- Unit tests in `src/shared/lib/__tests__/markdown.test.ts` and `markdown-ssr.test.ts` (no-DOM
+  path) must pass.
 - Unit tests in `src/shared/lib/__tests__/figure.test.ts` (SVG sanitizer boundary) must pass.
 - Unit tests in `src/features/quest/components/__tests__/video-embed.test.tsx` (facade invariant:
   no iframe/third-party URL before click, exact `src` after) and
