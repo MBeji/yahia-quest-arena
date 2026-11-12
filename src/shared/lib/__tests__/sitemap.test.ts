@@ -2,6 +2,7 @@
 import { describe, it, expect, vi } from "vitest";
 import {
   collectSitemapPaths,
+  createDocumentCache,
   renderSitemap,
   SITE_URL,
   SITEMAP_PAGE_SIZE,
@@ -299,5 +300,50 @@ describe("collectSitemapPaths", () => {
     );
     expect(paths.filter((p) => p.startsWith("/matiere/"))).toHaveLength(SITEMAP_PAGE_SIZE);
     expect(ranges.subjects).toHaveLength(2);
+  });
+});
+
+describe("createDocumentCache — /sitemap.xml ne relit pas la base à chaque appel", () => {
+  it("ne construit qu'une fois dans la fenêtre, quel que soit le nombre d'appels", async () => {
+    const build = vi.fn().mockResolvedValue("<xml/>");
+    const get = createDocumentCache(build, 1000, () => 0);
+
+    expect(await get()).toBe("<xml/>");
+    expect(await get()).toBe("<xml/>");
+    expect(await get()).toBe("<xml/>");
+    expect(build).toHaveBeenCalledTimes(1);
+  });
+
+  it("des appels simultanés partagent la construction en cours", async () => {
+    let release: (value: string) => void = () => {};
+    const build = vi.fn(() => new Promise<string>((resolve) => (release = resolve)));
+    const get = createDocumentCache(build, 1000, () => 0);
+
+    const calls = [get(), get(), get()];
+    release("<xml/>");
+    expect(await Promise.all(calls)).toEqual(["<xml/>", "<xml/>", "<xml/>"]);
+    expect(build).toHaveBeenCalledTimes(1);
+  });
+
+  it("reconstruit une fois la fenêtre passée", async () => {
+    let clock = 0;
+    const build = vi.fn().mockResolvedValueOnce("v1").mockResolvedValueOnce("v2");
+    const get = createDocumentCache(build, 1000, () => clock);
+
+    expect(await get()).toBe("v1");
+    clock = 999;
+    expect(await get()).toBe("v1");
+    clock = 1000;
+    expect(await get()).toBe("v2");
+    expect(build).toHaveBeenCalledTimes(2);
+  });
+
+  it("ne retient pas un échec : l'appel suivant réessaie", async () => {
+    const build = vi.fn().mockRejectedValueOnce(new Error("base en panne")).mockResolvedValue("ok");
+    const get = createDocumentCache(build, 1000, () => 0);
+
+    await expect(get()).rejects.toThrow("base en panne");
+    expect(await get()).toBe("ok");
+    expect(build).toHaveBeenCalledTimes(2);
   });
 });
