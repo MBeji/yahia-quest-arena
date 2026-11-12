@@ -30,6 +30,15 @@ export const ar: TranslationKeys = {
     extrasLoadFailed: "تعذّر تحميل الإضافات.",
     sessionStartFailed: "تعذّر بدء الجلسة.",
     sessionExpired: "انتهت صلاحية جلستك. أعِد تسجيل الدخول لحفظ تقدّمك.",
+    offline: "لا توجد شبكة — أعد المحاولة عند عودتها.",
+    rateLimited: "محاولات كثيرة — انتظر دقيقة.",
+  },
+  offline: {
+    banner: "غير متصل — في انتظار الشبكة.",
+    pendingOne: "مهمّة واحدة في انتظار الإرسال",
+    pendingMany: "مهامّ في انتظار الإرسال: {n}",
+    waiting: "في انتظار الشبكة",
+    waitingDesc: "يظهر المحتوى فور عودتها.",
   },
   auth: {
     titleSignup: "أنشئ حسابك",

@@ -40,6 +40,19 @@ export type TranslationKeys = {
     sessionStartFailed: string;
     /** Jeton refusé même après rafraîchissement : il faut se reconnecter. */
     sessionExpired: string;
+    /** L'appel a échoué faute de réseau (étude 38, R-15). */
+    offline: string;
+    /** Le serveur a refusé : trop d'appels en une minute (code `RATE_LIMITED`). */
+    rateLimited: string;
+  };
+  /** L'état du réseau, dit dans les deux coquilles — sans pronom (étude 38, R-12). */
+  offline: {
+    banner: string;
+    pendingOne: string;
+    /** `{n}` = le nombre de missions en file d'envoi (≥ 2). */
+    pendingMany: string;
+    waiting: string;
+    waitingDesc: string;
   };
   // Auth screen (login / signup)
   auth: {

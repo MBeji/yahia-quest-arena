@@ -30,6 +30,15 @@ export const fr: TranslationKeys = {
     extrasLoadFailed: "Impossible de charger les extras.",
     sessionStartFailed: "Impossible de démarrer la session.",
     sessionExpired: "Ta session a expiré. Reconnecte-toi pour enregistrer ta progression.",
+    offline: "Pas de réseau — réessaie quand il revient.",
+    rateLimited: "Trop d'essais — patiente une minute.",
+  },
+  offline: {
+    banner: "Hors connexion — en attente du réseau.",
+    pendingOne: "1 mission en attente d'envoi",
+    pendingMany: "{n} missions en attente d'envoi",
+    waiting: "En attente du réseau",
+    waitingDesc: "Le contenu s'affiche dès son retour.",
   },
   auth: {
     titleSignup: "Crée ton compte",

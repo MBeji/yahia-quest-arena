@@ -9,7 +9,7 @@
  *
  * Bump VERSION to invalidate old caches on deploy.
  */
-const VERSION = "v1";
+const VERSION = "v2";
 const ASSET_CACHE = `xp-assets-${VERSION}`;
 const OFFLINE_CACHE = `xp-offline-${VERSION}`;
 const OFFLINE_URL = "/offline.html";

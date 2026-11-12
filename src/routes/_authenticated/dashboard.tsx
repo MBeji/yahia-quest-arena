@@ -59,6 +59,7 @@ import { LoadError } from "@/components/ui/load-error";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { GoldProgress } from "@/components/game/gold-progress";
 import { trackProductEvent } from "@/shared/lib/product-events";
+import { WaitingForNetwork, isWaitingForNetwork } from "@/components/ui/query-wait-state";
 
 const GoldAmbientCanvas = lazy(() => import("@/components/visual/gold-ambient-canvas"));
 // « Carte de compétences » (étude 07 lot 4) : lazy comme les sections lourdes du dashboard —
@@ -128,7 +129,7 @@ function Dashboard() {
   const fetchDailyRing = useServerFn(getDailyRing);
   const fetchWeeklyRecap = useServerFn(getWeeklyRecap);
   const fetchActiveEvent = useServerFn(getActiveEvent);
-  const { data, isLoading, isError, error } = useQuery({
+  const { data, isLoading, isError, error, refetch, fetchStatus } = useQuery({
     queryKey: ["dashboard"],
     queryFn: () => fetchDashboard(),
   });
@@ -218,6 +219,12 @@ function Dashboard() {
         </div>
       </div>
     );
+  }
+
+  // é38 lot 4 (R-9) : sans réseau la lecture est en PAUSE, pas en cours — le dire,
+  // au lieu d'un chargement qui ne finira pas. Elle repart seule à son retour.
+  if (isWaitingForNetwork({ fetchStatus, data })) {
+    return <WaitingForNetwork onRetry={() => refetch()} />;
   }
 
   if (isLoading || !data) {

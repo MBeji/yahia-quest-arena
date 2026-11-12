@@ -17,6 +17,7 @@ import {
   seedOnServer,
 } from "@/shared/lib/public-page-seo";
 import { CatalogueNotFound } from "./-catalogue-not-found";
+import { WaitingForNetwork, isWaitingForNetwork } from "@/components/ui/query-wait-state";
 
 /**
  * Public level page — the subjects of one parcours/level (« Référence » register,
@@ -90,7 +91,7 @@ function NiveauPage() {
   const saveParcours = useServerFn(setCurrentParcours);
   const seed = Route.useLoaderData();
 
-  const { data, isLoading, isError, refetch } = useQuery({
+  const { data, isLoading, isError, refetch, fetchStatus } = useQuery({
     queryKey: ["parcours-subjects", parcoursId],
     queryFn: () => fetchParcoursSubjects({ data: { parcoursId } }),
     placeholderData: seed?.data,
@@ -125,6 +126,12 @@ function NiveauPage() {
         />
       </div>
     );
+  }
+
+  // é38 lot 4 (R-9) : sans réseau la lecture est en PAUSE, pas en cours — le dire,
+  // au lieu d'un chargement qui ne finira pas. Elle repart seule à son retour.
+  if (isWaitingForNetwork({ fetchStatus, data })) {
+    return <WaitingForNetwork onRetry={() => refetch()} />;
   }
 
   if (isLoading || !data) {
