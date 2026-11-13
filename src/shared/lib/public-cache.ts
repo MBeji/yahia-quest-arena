@@ -101,7 +101,10 @@ export async function replaceNonceWithHashes(
   const nonceAttribute = ` nonce="${nonce}"`;
   if (!html.includes(nonceAttribute)) return null;
   const hashes = new Set<string>();
-  for (const match of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script\s*>/gi)) {
+  // Balise de fin selon la spec HTML : `</script` suivi de `>`, d'un blanc ou d'un `/`,
+  // puis n'importe quoi jusqu'au `>` — `</script foo>` ferme le script pour le navigateur,
+  // l'analyse doit donc le fermer aussi (alerte CodeQL de la PR #1322).
+  for (const match of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script(?:[\s/][^>]*)?>/gi)) {
     const [, attributes, body] = match;
     if (!attributes.includes(nonceAttribute) || !isExecutableScript(attributes)) continue;
     if (/\ssrc\s*=/i.test(attributes)) continue; // externe : couvert par 'self'

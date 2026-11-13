@@ -139,6 +139,20 @@ describe("public-cache — le nonce devient des empreintes", () => {
     expect(result?.html).toContain(`<script>${INJECTED}</script>`);
   });
 
+  // Alerte CodeQL de la PR #1322 (« bad HTML filtering regexp ») : une balise de fin
+  // `</script foo>` termine le script pour le navigateur. Si l'analyse ne la reconnaît pas,
+  // elle déborde sur le script suivant et calcule une empreinte fausse — le script du
+  // framework est alors refusé et la page ne s'hydrate plus.
+  it("reconnaît toute balise de fin que le navigateur reconnaît", async () => {
+    const html = [
+      `<p>x</p><script>${INJECTED}</script\t\nfoo>`,
+      `<script nonce="${NONCE}">${BOOT}</script >`,
+      `<script nonce="${NONCE}">${STREAM}</SCRIPT>`,
+    ].join("");
+    const result = await replaceNonceWithHashes(html, NONCE);
+    expect(result?.hashes.sort()).toEqual([sha(BOOT), sha(STREAM)].sort());
+  });
+
   it("rend `null` sur une page qui ne porte pas le nonce attendu", async () => {
     expect(await replaceNonceWithHashes(page("autre"), NONCE)).toBeNull();
   });
