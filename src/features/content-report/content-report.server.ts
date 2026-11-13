@@ -1,6 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import type { TablesInsert } from "@/shared/integrations/supabase/types";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 import { isRateLimited } from "@/shared/lib/rate-limit";
 import { failWithClientError } from "@/shared/lib/safe-error";
@@ -19,23 +18,6 @@ export type ContentReportStatus = "open" | "resolved" | "dismissed";
 export type ContentReportKind = "content_error" | "recall_false_negative";
 
 const CONTENT_REPORT_KINDS = ["content_error", "recall_false_negative"] as const;
-
-/**
- * Ligne d'insertion élargie à la colonne `kind` de l'étude 20, que les types
- * Supabase GÉNÉRÉS ignorent encore (ils datent d'avant la migration de ce lot).
- * Même posture que le narrowing `ChapterLessonRow` de `quest.server.ts` pour la
- * colonne `videos` : on décrit la ligne localement plutôt que d'éditer à la main
- * `src/shared/integrations/supabase/types.ts`, qui est généré. Dette : la
- * prochaine régénération des types rend ce type superflu.
- */
-type ContentReportInsert = {
-  user_id: string;
-  exercise_id: string | null;
-  question_id: string | null;
-  message: string;
-  status: ContentReportStatus;
-  kind: ContentReportKind;
-};
 
 /** A content error report, as exposed to the admin queue. */
 export type ContentReport = {
@@ -73,21 +55,18 @@ export const reportContentError = createServerFn({ method: "POST" })
       throw new Error("Trop de signalements. Réessaie dans une minute.");
     }
 
-    const row: ContentReportInsert = {
+    // Les unions fermées de l'application, posées AVANT l'appel : le type généré
+    // n'y voit que des `string` (miroirs des CHECK `content_reports_*_check`).
+    const status: ContentReportStatus = "open";
+    const kind: ContentReportKind = data.kind ?? "content_error";
+    const { error } = await supabase.from("content_reports").insert({
       user_id: userId,
       exercise_id: data.exerciseId ?? null,
       question_id: data.questionId ?? null,
       message: data.message,
-      status: "open",
-      kind: data.kind ?? "content_error",
-    };
-    // Le client rejette toute propriété excédentaire, et `kind` n'existe pas
-    // encore dans les types générés. Le cast ne porte QUE là-dessus : `row` est
-    // vérifié juste au-dessus contre `ContentReportInsert`, donc les colonnes
-    // historiques restent typées, et `kind` part bien sur le fil.
-    const { error } = await supabase
-      .from("content_reports")
-      .insert(row as TablesInsert<"content_reports">);
+      status,
+      kind,
+    });
     if (error)
       failWithClientError(
         "contentReport.reportContentError",

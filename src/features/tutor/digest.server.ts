@@ -73,12 +73,6 @@ import {
 } from "./digest";
 
 /**
- * Les RPC du lot 6 (migration 20260824120000) sont postérieures aux types
- * Supabase générés — contrat figé ici, motif `tutor.server.ts` /
- * `ai-call.server.ts`. À SUPPRIMER à la prochaine régénération de
- * `src/shared/integrations/supabase/types.ts`.
- */
-/**
  * Les LECTURES de table que le batch fait en direct. Aucune n'a de RPC, et
  * aucune n'en mérite une :
  *
@@ -93,26 +87,8 @@ import {
  *    pas deux juges.
  *  • `tutor_digests` dit ce qui est DÉJÀ écrit pour la semaine. C'est la garde
  *    anti-double-facture : `store_tutor_digest` remplace la ligne sur conflit,
- *    donc sans cette lecture un rejeu paierait une seconde fois. Cette table est
- *    postérieure aux types générés — contrat local, à supprimer à la prochaine
- *    régénération.
+ *    donc sans cette lecture un rejeu paierait une seconde fois.
  */
-type DigestRowReader = {
-  from: (table: "tutor_digests") => {
-    select: (cols: "audience") => {
-      eq: (
-        col: "user_id",
-        val: string,
-      ) => {
-        eq: (
-          col: "week_start",
-          val: string,
-        ) => PromiseLike<{ data: { audience: string }[] | null; error: unknown }>;
-      };
-    };
-  };
-};
-
 // ---------------------------------------------------------------------------
 // LECTURE — l'écran
 // ---------------------------------------------------------------------------
@@ -372,7 +348,7 @@ async function pendingAudiences(
   studentUserId: string,
   weekStart: string,
 ): Promise<TutorDigestAudience[]> {
-  const done = await (supabaseAdmin as unknown as DigestRowReader)
+  const done = await supabaseAdmin
     .from("tutor_digests")
     .select("audience")
     .eq("user_id", studentUserId)

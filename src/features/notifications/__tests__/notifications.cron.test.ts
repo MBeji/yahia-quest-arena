@@ -229,6 +229,32 @@ describe("é31 lot 4 — un seul push par élève et par soir", () => {
     expect((await res.json()).byTag).toEqual({ "league-result": 1 });
   });
 
+  // Le type généré dit `tag: string` ; l'application en fait une union fermée.
+  // La frontière tranche : un tag que `PUSH_PRIORITY` ne connaît pas n'a aucun
+  // texte dans `push-copy.ts`, il ne doit donc ni partir ni faire tomber les
+  // envois des autres élèves.
+  it("écarte une ligne au tag inconnu, journalise la dérive, et sert les autres", async () => {
+    withSubscriptions([SUB(1)]);
+    audience([
+      { user_id: "u1", tag: "streak-at-risk", arg: 3 },
+      { user_id: "u2", tag: "black-friday", arg: 1 },
+    ]);
+    mockSend.mockResolvedValue(undefined);
+
+    const handle = await loadHandler();
+    const res = await handle(cronRequest("Bearer secret"), WEDNESDAY);
+    const { logger } = await import("@/shared/lib/logger");
+
+    expect(res.status).toBe(200);
+    expect((await res.json()).byTag).toEqual({ "streak-at-risk": 1 });
+    expect(payloads().map((p) => p.tag)).toEqual(["streak-at-risk"]);
+    expect(logger.error).toHaveBeenCalledWith("Push cron: daily audiences: unexpected RPC shape", {
+      rejected: 1,
+      total: 2,
+      firstIssue: "tag: invalid_value",
+    });
+  });
+
   it("⭐ l'élève qui a PERDU sa série est enfin recontacté — le trou du canal d'avant", async () => {
     withSubscriptions([SUB(1)]);
     audience([{ user_id: "u1", tag: "streak-lost", arg: 12 }]);

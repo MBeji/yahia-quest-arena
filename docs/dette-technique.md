@@ -1,7 +1,9 @@
 # Dette technique — ce qui reste vraiment ouvert
 
-> **Re-vérifié dans le code le 2026-11-12** (`main` à #1275 : section « Ouvert » relue ligne à
-> ligne, trois dettes soldées, une périmée retirée, deux défauts neufs trouvés et soldés).
+> **Re-vérifié dans le code le 2026-11-13** (`main` à #1302 : la dernière ligne « Ouvert » —
+> les vues d'ombre du client Supabase — soldée ; la section est vide à cette date).
+> **2026-11-12** (`main` à #1275 : section « Ouvert » relue ligne à ligne, trois dettes soldées,
+> une périmée retirée, deux défauts neufs trouvés et soldés).
 > **Passe précédente : 2026-08-26** (`main` à #884) — celle d'avant datait du
 > 2026-08-02 (#703), et l'écart entre les deux est la meilleure démonstration de la règle
 > ci-dessous : trois des quatre lignes « ouvertes » citaient un chiffre que le code avait
@@ -18,15 +20,10 @@
 
 ## Ouvert
 
-> **Re-mesuré le 2026-08-26** (`main` à #884), ligne de code par ligne de code, par une passe
-> qualité à 6 axes. Ce que la re-mesure a trouvé mérite d'être dit, parce que c'est exactement
-> ce que l'en-tête ci-dessus interdit : **trois des quatre lignes citaient des chiffres que le
-> code avait démentis**. Le compteur de `quest.server.ts` datait de douze jours et sous-estimait
-> de 22 lignes ; surtout, il désignait le mauvais fichier — deux autres sont plus gros.
-
-| Dette                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | Où                                                                                                                | Effort | Axe        |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------- | ------ | ---------- |
-| **Les 13 vues d'ombre du client Supabase hors des features nettoyées.** Re-compté le 2026-11-12 (`grep "as unknown as"` hors tests) : `ai-vault.server.ts` (1), `features/ai/ai-access.server.ts` (1), `features/auth/` (3 : `welcome-pack.server.ts`, `auth.server.ts` ×2), `features/parent-report/` (1), `features/notifications/notifications.cron.server.ts` (2, plus la **dernière** recopie de la prémisse fausse « sans accès DB »), `features/shop/` (1), `features/tutor/` (2 : `tutor.practice.server.ts`, `digest.server.ts`), et un cast de LIGNE à part, `quest.lesson.server.ts` (`videos` JSONB → `CompiledVideo[]`). La ligne précédente en annonçait 10 **en tout** : le compte datait d'août et la source a coulé depuis. La méthode est écrite et éprouvée (voir « Soldé ») : signature SQL lue AVANT de choisir — **(A)** `DEFAULT NULL` → `?? undefined`, zéro cast ; **(B)** obligatoire mais nullable → `nullableRpcArg()` ; **(C)** le SQL refuse NULL → rendre la garde prouvable — et, quand la FORME DE RETOUR diverge (union fermée, nullabilité), un schéma Zod dans `shared/integrations/supabase/rpc-rows.ts`, jamais un cast. **La source ne coule plus** : `local/no-supabase-shadow-view` (née verte le 2026-11-12) refuse tout nouveau cast du client, et ces fichiers sont nommés un à un dans son `PENDING_FILES` — le test de la règle échoue dès que l'un d'eux est propre, donc la liste ne peut que rétrécir | `src/features/{ai,auth,notifications,parent-report,shop,tutor}/`, `src/shared/integrations/ai/ai-vault.server.ts` | M      | 📝 Qualité |
+> **Vide au 2026-11-13** (`main` à #1302). La dernière ligne — les vues d'ombre du client
+> Supabase — est soldée ci-dessous, et la règle `local/no-supabase-shadow-view` juge désormais
+> tout le code possédé, sans liste d'attente. Une section vide n'est pas une promesse : c'est un
+> état mesuré à une date, et la règle de l'en-tête vaut pour la prochaine ligne qui s'y inscrira.
 
 ## Latent — réveillé seulement par un retour du premium
 
@@ -35,6 +32,30 @@
 | **N+1 sur `has_parcours_entitlement`** — un appel RPC par parcours. **Ne se déclenche pas aujourd'hui** : les deux sites d'appel court-circuitent sur `!p.is_premium`, et la phase gratuite met `is_premium = false` partout. À batcher **avant** tout dégel du premium (étude 01) | `src/features/dashboard/dashboard.server.ts:323, :769` |
 
 ## Soldé depuis l'audit (2026-06-30 → 2026-08-13)
+
+- **Les 13 vues d'ombre restantes du client Supabase** — soldé le 2026-11-13. Mesure sur le diff :
+  **12 casts `as unknown as` retirés** (11 posés sur le client dans 9 fichiers — `ai`, `auth` ×3,
+  `notifications` ×2, `parent-report`, `shop`, `tutor` ×2, `ai-vault` — et la ligne de chapitre de
+  `quest.lesson.server.ts`), **aucun ajouté**, **10 types de vue supprimés**. La règle
+  `local/no-supabase-shadow-view` perd sa liste d'attente (`PENDING_FILES`, l'option
+  `ignorePending` et le test-cliquet qui la gardait) : elle juge tout le code possédé, et le lint
+  de `src` passe. Les **quatre dernières recopies** de la prémisse fausse sont effacées
+  (`notifications.cron.server.ts`, un commentaire orphelin de `digest.server.ts`,
+  `tutor.server.ts`, `content-report.server.ts`) ; la dernière portait encore un type
+  d'insertion local et un cast `as TablesInsert<…>` périmés depuis la régénération — retirés,
+  la valeur insérée est identique. Plus aucune recopie dans `src`. **Huit sites étaient
+  mécaniques** : la table ou la RPC était déjà dans les types générés, à l'identique. **Quatre
+  portaient une divergence de forme**, validée à la frontière, et c'est là que la relecture a
+  payé : `push_daily_audiences` (`tag: string` généré, union fermée côté app, castée sans
+  contrôle — un tag inconnu n'avait aucun texte dans `push-copy.ts`, `payloadFor` levait et
+  l'envoi du jour tombait pour tous ; la ligne est désormais écartée et journalisée, les autres
+  élèves sont servis) ; `ai_credentials.provider` (un fournisseur hors `AI_PROVIDERS` entrait
+  dans l'AAD du coffre ; il est refusé avant, sans marquer la clé illisible) ;
+  `export_user_data` (enveloppe validée, lâche en largeur pour ne rien décider de ce qui sort,
+  opaque en profondeur pour ne pas recopier la liste des tables) ; `chapters.videos` (chaque
+  entrée relue par le schéma de la vidéo de correction, étude 23 D-10). Tests : **+8 de
+  frontière**, chacun vérifié rouge sur l'ancien code (cron 1, export 2, leçon 2, coffre 3 — le
+  premier test direct d'`ai-vault.server.ts`) ; le test de la règle passe de 21 à 11 cas : les neuf du cliquet et les deux de la liste d'attente partent, un cas arrive — un ancien fichier en attente est désormais jugé comme les autres.
 
 - **Une `Error` journalisée sortait vide, et un onglet fermé comptait pour une panne** — trouvé et
   soldé le 2026-11-12, dans le sillage de la capture SSR ci-dessous. Deux défauts mesurés. **(1)**

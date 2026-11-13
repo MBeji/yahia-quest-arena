@@ -1,12 +1,9 @@
 // @vitest-environment node
-import { existsSync, readFileSync } from "node:fs";
-import { resolve } from "node:path";
-
-import { ESLint, RuleTester } from "eslint";
-import { afterAll, describe, expect, it } from "vitest";
+import { RuleTester } from "eslint";
+import { afterAll, describe, it } from "vitest";
 import tseslint from "typescript-eslint";
 
-import { noSupabaseShadowView, PENDING_FILES } from "../eslint-rules/no-supabase-shadow-view.mjs";
+import { noSupabaseShadowView } from "../eslint-rules/no-supabase-shadow-view.mjs";
 
 // Wire ESLint's RuleTester into vitest's runner (it drives describe/it itself).
 RuleTester.afterAll = afterAll;
@@ -24,7 +21,7 @@ const ruleTester = new RuleTester({
 
 const FEATURE = "D:/repo/src/features/dashboard/dashboard.server.ts";
 const TEST_FILE = "D:/repo/src/features/dashboard/__tests__/dashboard.test.ts";
-const PENDING = "D:/repo/src/features/shop/shop.server.ts";
+const FORMERLY_PENDING = "D:/repo/src/features/shop/shop.server.ts";
 
 ruleTester.run("no-supabase-shadow-view", noSupabaseShadowView, {
   valid: [
@@ -52,11 +49,6 @@ ruleTester.run("no-supabase-shadow-view", noSupabaseShadowView, {
       name: "un faux client de test est partiel par nature",
       filename: TEST_FILE,
       code: `const client = { rpc } as unknown as Client; read(supabase as unknown as Client);`,
-    },
-    {
-      name: "un fichier de la liste d'attente n'est pas encore jugé",
-      filename: PENDING,
-      code: `const client = context.supabase as unknown as { rpc: () => void };`,
     },
   ],
   invalid: [
@@ -91,40 +83,12 @@ ruleTester.run("no-supabase-shadow-view", noSupabaseShadowView, {
       errors: [{ messageId: "unknownParam" }],
     },
     {
-      name: "`ignorePending` juge aussi la liste d'attente",
-      filename: PENDING,
-      options: [{ ignorePending: true }],
+      // La liste d'attente de la naissance de la règle est vidée (2026-11-13) :
+      // aucun fichier n'est plus exempté, un ancien comme un neuf.
+      name: "un ancien fichier de la liste d'attente est jugé comme les autres",
+      filename: FORMERLY_PENDING,
       code: `const client = context.supabase as unknown as { rpc: () => void };`,
       errors: [{ messageId: "shadowCast" }],
     },
   ],
-});
-
-/**
- * LE CLIQUET. La liste d'attente ne peut que rétrécir : un fichier qui n'a plus
- * de violation doit en sortir, sinon il resterait exempté pour toujours et la
- * vue pourrait y revenir sans que personne ne le voie.
- */
-describe("PENDING_FILES — une liste d'attente, pas une exemption", () => {
-  const root = resolve(import.meta.dirname, "../../..");
-  const eslint = new ESLint({
-    cwd: root,
-    overrideConfigFile: true,
-    overrideConfig: [
-      {
-        files: ["**/*.ts"],
-        languageOptions: { parser: tseslint.parser, ecmaVersion: 2022, sourceType: "module" },
-        plugins: { local: { rules: { "no-supabase-shadow-view": noSupabaseShadowView } } },
-        rules: { "local/no-supabase-shadow-view": ["error", { ignorePending: true }] },
-      },
-    ],
-  });
-
-  it.each(PENDING_FILES)("%s porte encore une vue d'ombre", async (file) => {
-    const path = resolve(root, file);
-    expect(existsSync(path), `${file} n'existe plus : le retirer de PENDING_FILES`).toBe(true);
-    const [result] = await eslint.lintText(readFileSync(path, "utf8"), { filePath: path });
-    const hits = result.messages.filter((m) => m.ruleId === "local/no-supabase-shadow-view");
-    expect(hits.length, `${file} est propre : le retirer de PENDING_FILES`).toBeGreaterThan(0);
-  });
 });
