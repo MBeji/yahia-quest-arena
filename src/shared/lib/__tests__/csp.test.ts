@@ -19,6 +19,14 @@ describe("buildContentSecurityPolicy", () => {
     expect(csp).not.toContain("script-src 'self' 'unsafe-inline'");
   });
 
+  it("autorise les empreintes d'une page servie par le CDN, sans nonce ni 'unsafe-inline'", () => {
+    const csp = buildContentSecurityPolicy(undefined, ["sha256-AAA=", "sha256-BBB="]);
+    const scriptSrc = csp.split("; ").find((d) => d.startsWith("script-src ")) ?? "";
+    expect(scriptSrc).toContain("'sha256-AAA=' 'sha256-BBB='");
+    expect(scriptSrc).not.toContain("nonce-");
+    expect(scriptSrc).not.toContain("'unsafe-inline'");
+  });
+
   it("keeps 'unsafe-inline' for styles (out of GAP-022 scope)", () => {
     const csp = buildContentSecurityPolicy("n");
     expect(csp).toContain("style-src 'self' 'unsafe-inline'");
