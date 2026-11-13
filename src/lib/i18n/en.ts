@@ -791,8 +791,10 @@ export const en: TranslationKeys = {
     updateError: "Failed to process the bug.",
   },
   pushNotifications: {
-    cardTitle: "Quest reminders",
-    cardDesc: "Get an alert when your streak is at risk so you never break your run.",
+    cardTitle: "Your daily plan, without having to think about it",
+    cardDesc:
+      "El Ostedh lets you know once a day at most: your plan is ready, your streak carries on, your league is counted. Turn it off whenever you like.",
+    later: "Later",
     enable: "Enable notifications",
     enabling: "Enabling…",
     enabled: "Notifications enabled",
