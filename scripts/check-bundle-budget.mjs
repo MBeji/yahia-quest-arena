@@ -197,9 +197,17 @@ const BUDGETS = {
   // par locale ci-dessus, plus les 20 % d'une surface qui débutait.
   //
   // LE PROCHAIN LEVIER N'EST PAS UN RELÈVEMENT. Ce chunk porte les TROIS langues
-  // (`parent/index.ts` les importe statiquement) alors qu'un parent n'en lit qu'une :
-  // sources fr 17 Ko, en 15 Ko, ar 19 Ko. Le découpage par locale qu'`i18n-` a reçu
-  // le 2026-10-31 (H2-fe, ci-dessus) rendrait ≈ deux tiers du chunk à chaque parent.
+  // (`parent/index.ts` les importe statiquement) alors qu'un parent n'en lit qu'une.
+  // Mesuré le 2026-11-13 (esbuild, minifié UTF-8) : fr 14,7 Ko / 5,8 gz, en 13,3 / 5,2,
+  // ar 17,3 / 6,2 — contre 45,3 / 14,6 servis aujourd'hui : ≈ 9 Ko gz rendus à chaque
+  // parent. ÉCARTÉ ce jour-là, pour une raison qui tiendra tant que l'architecture
+  // tient : l'hydratation ne rejoue NI `loader` NI `beforeLoad` (router-core,
+  // `load-client.js` : seuls les chunks de composant sont attendus). Un catalogue tiré
+  // à la demande ne serait donc pas là quand `/suivi`, rendue au serveur, s'hydrate. Il
+  // faudrait le faire voyager dans les données du loader, le poser dans un contexte
+  // sous les ~40 appels de `useParentT`, traiter à part la bascule de langue à chaud,
+  // et reprendre une quinzaine de tests de composants — pour un gain qui ne touche
+  // que les parents, sur des routes paresseuses. À rouvrir quand ce plafond rougira.
   "i18n-parent-": 46 * 1024,
   // Surface boutique : les libellés de la collection de badges (nom + condition,
   // 13 badges × 3 langues, é31 lot 2). Servis par la seule route /boutique, elle

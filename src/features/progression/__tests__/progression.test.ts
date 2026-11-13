@@ -41,6 +41,10 @@ vi.mock("@/shared/lib/rate-limit", () => ({
   isRateLimited: vi.fn().mockResolvedValue(false),
 }));
 
+vi.mock("@/shared/lib/logger", () => ({
+  logger: { error: vi.fn(), warn: vi.fn(), info: vi.fn(), debug: vi.fn() },
+}));
+
 // ---- Query chain helper ----
 function mockQuery(data: unknown, error: unknown = null) {
   const chain: Record<string, unknown> = {};
@@ -199,5 +203,160 @@ describe("gamification.progression — recoverStreak", () => {
     await expect((recoverStreak as unknown as () => Promise<unknown>)()).rejects.toThrow(
       "Insufficient funds",
     );
+  });
+});
+
+// =============================================================================
+// Les trois lectures de compétence — passées au client généré par #1263, avec
+// leur forme de retour validée à la frontière (`parseRpcRows`). Avant ces tests,
+// seul le typecheck les couvrait.
+// =============================================================================
+type Call = (input?: unknown) => Promise<unknown>;
+
+const exercise = (over: Record<string, unknown> = {}) => ({
+  exercise_id: "e1",
+  chapter_id: "c1",
+  subject_id: "s1",
+  exercise_title: "Fractions",
+  difficulty: 1,
+  ...over,
+});
+
+const frontierRow = (over: Record<string, unknown> = {}) => ({
+  competency_id: "k1",
+  slug: "math.frac.add",
+  label_fr: "Additionner",
+  label_en: "Add",
+  label_ar: "جمع",
+  state: "fragile",
+  p_known: 0.4,
+  unlocks: 3,
+  entry_exercise_id: null,
+  entry_subject_id: null,
+  entry_odds: null,
+  ...over,
+});
+
+describe("gamification.progression — getCompetencyExercises", () => {
+  beforeEach(() => {
+    vi.resetModules();
+    mockRpc.mockReset();
+  });
+
+  it("rend les exercices conformes et écarte une ligne hors contrat, en le disant", async () => {
+    mockRpc.mockResolvedValue({
+      data: [exercise(), exercise({ exercise_id: "e2", difficulty: "dur" })],
+      error: null,
+    });
+    const { getCompetencyExercises } = await import("@/features/progression/progression.server");
+    const { logger } = await import("@/shared/lib/logger");
+
+    await expect(
+      (getCompetencyExercises as unknown as Call)({ competency: "math.frac.add" }),
+    ).resolves.toEqual([exercise()]);
+    expect(mockRpc).toHaveBeenCalledWith("get_exercises_for_competency", {
+      p_competency: "math.frac.add",
+    });
+    expect(logger.error).toHaveBeenCalledWith(
+      "getCompetencyExercises: unexpected RPC shape",
+      expect.objectContaining({ rejected: 1, total: 2 }),
+    );
+  });
+
+  it("se dégrade en liste vide quand la RPC échoue — le bouton ne mène nulle part", async () => {
+    mockRpc.mockResolvedValue({ data: null, error: { message: "boom" } });
+    const { getCompetencyExercises } = await import("@/features/progression/progression.server");
+
+    await expect(
+      (getCompetencyExercises as unknown as Call)({ competency: "math.frac.add" }),
+    ).resolves.toEqual([]);
+  });
+});
+
+describe("gamification.progression — getLearningFrontier", () => {
+  beforeEach(() => {
+    vi.resetModules();
+    mockRpc.mockReset();
+  });
+
+  it("OMET la famille quand il n'y en a pas — `p_family TEXT DEFAULT NULL`", async () => {
+    mockRpc.mockResolvedValue({ data: [frontierRow()], error: null });
+    const { getLearningFrontier } = await import("@/features/progression/progression.server");
+
+    await expect((getLearningFrontier as unknown as Call)({})).resolves.toEqual([frontierRow()]);
+    // Clé absente, pas `null` : c'est l'absence qui vaut « toutes les familles ».
+    expect(mockRpc).toHaveBeenCalledWith("get_learning_frontier", {
+      p_family: undefined,
+      p_limit: 3,
+    });
+  });
+
+  it("transmet la famille et la limite demandées", async () => {
+    mockRpc.mockResolvedValue({ data: [], error: null });
+    const { getLearningFrontier } = await import("@/features/progression/progression.server");
+
+    await (getLearningFrontier as unknown as Call)({ family: "math", limit: 5 });
+    expect(mockRpc).toHaveBeenCalledWith("get_learning_frontier", { p_family: "math", p_limit: 5 });
+  });
+
+  it("écarte un état hors de l'union fermée au lieu de le laisser atteindre l'écran", async () => {
+    mockRpc.mockResolvedValue({
+      data: [frontierRow(), frontierRow({ competency_id: "k2", state: "maîtrisée" })],
+      error: null,
+    });
+    const { getLearningFrontier } = await import("@/features/progression/progression.server");
+
+    await expect((getLearningFrontier as unknown as Call)({})).resolves.toEqual([frontierRow()]);
+  });
+
+  it("se dégrade en liste vide quand la RPC échoue", async () => {
+    mockRpc.mockResolvedValue({ data: null, error: { message: "boom" } });
+    const { getLearningFrontier } = await import("@/features/progression/progression.server");
+
+    await expect((getLearningFrontier as unknown as Call)({})).resolves.toEqual([]);
+  });
+});
+
+describe("gamification.progression — disputeInference", () => {
+  beforeEach(() => {
+    vi.resetModules();
+    mockRpc.mockReset();
+  });
+
+  it("rend `disputed: true` quand la RPC a marqué au moins une croyance", async () => {
+    mockRpc.mockResolvedValue({
+      data: [{ competency_id: "k1", p_known: 0.5, state: "fragile" }],
+      error: null,
+    });
+    const { disputeInference } = await import("@/features/progression/progression.server");
+
+    await expect(
+      (disputeInference as unknown as Call)({ competency: "math.frac.add" }),
+    ).resolves.toEqual({ disputed: true });
+    expect(mockRpc).toHaveBeenCalledWith("dispute_inference", { p_competency: "math.frac.add" });
+  });
+
+  it("rend `disputed: false` sur une liste vide comme sur une panne — jamais d'exception", async () => {
+    const { disputeInference } = await import("@/features/progression/progression.server");
+
+    mockRpc.mockResolvedValueOnce({ data: [], error: null });
+    await expect((disputeInference as unknown as Call)({ competency: "x" })).resolves.toEqual({
+      disputed: false,
+    });
+    mockRpc.mockResolvedValueOnce({ data: null, error: { message: "boom" } });
+    await expect((disputeInference as unknown as Call)({ competency: "x" })).resolves.toEqual({
+      disputed: false,
+    });
+  });
+
+  it("refuse une rafale de contestations avant d'appeler la base", async () => {
+    const { isRateLimited } = await import("@/shared/lib/rate-limit");
+    vi.mocked(isRateLimited).mockResolvedValueOnce(true);
+    const { disputeInference } = await import("@/features/progression/progression.server");
+
+    await expect((disputeInference as unknown as Call)({ competency: "x" })).rejects.toThrow(
+      /Trop de contestations/,
+    );
+    expect(mockRpc).not.toHaveBeenCalled();
   });
 });
