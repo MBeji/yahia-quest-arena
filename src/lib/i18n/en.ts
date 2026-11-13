@@ -854,6 +854,13 @@ export const en: TranslationKeys = {
     allianceCopy: "Copy",
     allianceCopied: "Copied",
     allianceHint: "Share this code with your parent to unlock mentor tracking.",
+    inviteParent: "Invite my parent",
+    inviteParentHint: "This link opens your report: send it only to your parent.",
+    inviteParentText:
+      "👋 I’m studying on Na9ra Nal3ab. You can follow my work here, no account needed: {url}",
+    inviteParentCopied: "Message copied — paste it in a chat with your parent.",
+    inviteParentCardTitle: "Show your work to your parent",
+    inviteParentLater: "Later",
     password: "Password",
     passwordAction: "Get a reset link",
     passwordSent: "A reset link is on its way to your address.",

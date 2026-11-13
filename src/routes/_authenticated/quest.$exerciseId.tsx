@@ -17,11 +17,16 @@ import {
 // La ROUTE compose aussi l'accueil différé (étude 38, lot 2) : la carte de classe est
 // une primitive de présentation, et ce sont les fonctions serveur de l'assistant —
 // les mêmes, pas des copies — que la route lui passe.
-import { claimWelcomePack, setCurrentParcours, useMyRole } from "@/features/auth";
+import { claimWelcomePack, setCurrentParcours, useAuth, useMyRole } from "@/features/auth";
 import { ParcoursQuickPick } from "@/components/game/parcours-quick-pick";
 import { PageShell } from "@/components/ui/page-shell";
 import { NudgeSlot } from "@/components/public/nudge-slot";
 import { useInstallCandidate } from "@/components/public/use-install-candidate";
+import { useParentInviteCandidate } from "@/components/public/use-parent-invite-candidate";
+// Imports directs plutôt que par le barrel : celui de `parent-report` tirerait le bilan parent
+// (tableau de bord, schémas) dans le chunk de la quête.
+import { formatStudentAllianceCode } from "@/features/parent-report/family-link";
+import { hasActiveParentLink } from "@/features/parent-report/parent-link.server";
 import { parcoursName } from "@/shared/lib/parcours-locale";
 import { trackProductEvent } from "@/shared/lib/product-events";
 import { hasPostponedQuickPick, postponeQuickPick } from "@/shared/lib/quick-pick-later";
@@ -73,6 +78,8 @@ function QuestPage() {
   // la SEULE route connectée — sans compte il n'y a pas de grand livre à lire,
   // et le registre anonyme laisse donc `loadProgress` absente.
   const loadProgress = useServerFn(getAttemptProgress);
+  // Étude 40, lot 5 : la réponse « parent déjà lié ? » se lit PENDANT la quête (voir le hook).
+  useParentInviteFacts();
 
   const strategy = useMemo<ExercisePlayerStrategy>(
     () => ({
@@ -188,17 +195,43 @@ function QuestPage() {
  * après une réussite, choisie par `NudgeSlot` dans l'ordre rappel → installation → inviter son
  * parent. C'est la ROUTE qui compose : chaque invitation vient d'une feature différente.
  *
- * Aujourd'hui seule l'installation existe (lot 3). Le rappel (lot 2) et le parent (lot 5)
- * s'ajoutent à la liste des candidats — l'ordre et la règle « une seule » sont déjà tenus.
+ * L'installation (lot 3) et le parent (lot 5) existent ; le rappel (lot 2) s'ajoutera à la liste
+ * des candidats — l'ordre et la règle « une seule » sont déjà tenus.
  */
 function QuestResultNudge({ passed }: { passed: boolean }) {
   const install = useInstallCandidate("student", passed);
-  const candidates = useMemo(() => [install], [install]);
+  const parent = useParentInviteCandidate({ eligible: passed, ...useParentInviteFacts() });
+  const candidates = useMemo(() => [install, parent], [install, parent]);
   return (
     <div className="mt-6 empty:hidden">
       <NudgeSlot candidates={candidates} />
     </div>
   );
+}
+
+/**
+ * Ce que la carte « Inviter mon parent » doit savoir (étude 40, lot 5 — R-20) : le code de
+ * l'élève, et s'il a DÉJÀ un parent lié actif. Un parent ou un admin n'ont pas de code : la
+ * lecture ne part même pas.
+ *
+ * Appelé deux fois, à dessein : par la page dès l'ouverture de la quête, puis par l'écran de
+ * résultat. `NudgeSlot` choisit sa carte AVANT la première peinture et ignore ce qui arrive après ;
+ * la première lecture met donc la réponse en cache pendant que l'élève joue, la seconde la trouve
+ * là. Pas encore arrivée, ou en échec ⇒ `undefined` ⇒ pas de carte (sens sûr).
+ */
+function useParentInviteFacts(): { allianceCode: string; hasActiveParent: boolean | undefined } {
+  const { user } = useAuth();
+  const { role } = useMyRole();
+  const allianceCode = role === "student" && user ? formatStudentAllianceCode(user.id) : "";
+  const fetchLink = useServerFn(hasActiveParentLink);
+  const { data } = useQuery({
+    queryKey: ["parent-link-active", user?.id],
+    queryFn: () => fetchLink(),
+    enabled: allianceCode !== "",
+    staleTime: 5 * 60_000,
+    retry: false,
+  });
+  return { allianceCode, hasActiveParent: data };
 }
 
 /**

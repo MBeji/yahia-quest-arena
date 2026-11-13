@@ -877,6 +877,13 @@ export const fr: TranslationKeys = {
     allianceCopy: "Copier",
     allianceCopied: "Copié",
     allianceHint: "Partage ce code avec ton parent pour activer le suivi mentor.",
+    inviteParent: "Inviter mon parent",
+    inviteParentHint: "Ce lien ouvre ton bilan : envoie-le seulement à ton parent.",
+    inviteParentText:
+      "👋 Je révise sur Na9ra Nal3ab. Tu peux suivre mon travail ici, sans compte : {url}",
+    inviteParentCopied: "Message copié — colle-le dans une conversation avec ton parent.",
+    inviteParentCardTitle: "Montre ton travail à ton parent",
+    inviteParentLater: "Plus tard",
     password: "Mot de passe",
     passwordAction: "Recevoir un lien de changement",
     passwordSent: "Un lien de changement vient de partir vers ton adresse.",

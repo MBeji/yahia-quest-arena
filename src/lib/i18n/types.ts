@@ -678,6 +678,13 @@ export type TranslationKeys = {
     allianceCopy: string;
     allianceCopied: string;
     allianceHint: string;
+    /** Étude 40, lot 5 (R-19) — « Inviter mon parent » : bouton, aide, message `{url}`, carte. */
+    inviteParent: string;
+    inviteParentHint: string;
+    inviteParentText: string;
+    inviteParentCopied: string;
+    inviteParentCardTitle: string;
+    inviteParentLater: string;
     password: string;
     passwordAction: string;
     passwordSent: string;
