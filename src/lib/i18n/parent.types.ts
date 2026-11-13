@@ -38,6 +38,7 @@ export type ParentTranslations = {
       self_link: string;
       not_student: string;
       not_found: string;
+      rate_limited: string;
       generic_link: string;
       generic_report: string;
     };
