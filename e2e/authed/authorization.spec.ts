@@ -42,6 +42,9 @@ test.describe("Authorization — student boundaries", () => {
     // A student's getLinkedStudents is denied server-side; React Query retries
     // (~7s) before the page settles to the alliance-code linking UI (no linked
     // students → no foreign data), so allow generous time.
-    await expect(page.getByText(/alliance code/i).first()).toBeVisible({ timeout: 20_000 });
+    // « code alliance » en français, « alliance code » en anglais (lexique du 2026-11-12, #1270).
+    await expect(page.getByText(/code alliance|alliance code/i).first()).toBeVisible({
+      timeout: 20_000,
+    });
   });
 });

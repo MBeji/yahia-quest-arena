@@ -4,8 +4,13 @@ import { type Page, type Locator, expect } from "@playwright/test";
 export class ParentReportPage {
   constructor(private readonly page: Page) {}
 
+  /**
+   * Le champ du code alliance. Son libellé a changé avec le lexique du 2026-11-12
+   * (#1270 : « Code élève » → « Code alliance », « Alliance code », « رمز التحالف ») ;
+   * ce sélecteur suit les trois langues du catalogue parent.
+   */
   get codeInput(): Locator {
-    return this.page.getByPlaceholder(/code [ée]l[èe]ve|student code/i);
+    return this.page.getByPlaceholder(/code alliance|alliance code|رمز التحالف/i);
   }
   get relationInput(): Locator {
     return this.page.getByPlaceholder(/relation/i);
