@@ -10,10 +10,12 @@ import {
   checkPushBuildEnv,
 } from "../check-push-env.mjs";
 
+// Une clé de la bonne FORME (87 caractères base64url, « B » en tête) — fabriquée, pas une vraie.
+const VALID_KEY = `B${"A".repeat(43)}${"_".repeat(43)}`;
 const PROD_WWW = { VERCEL_ENV: "production", VERCEL_PROJECT_PRODUCTION_URL: "www.na9ranal3ab.tn" };
 const KEYS = {
-  VITE_VAPID_PUBLIC_KEY: "BPub",
-  VAPID_PUBLIC_KEY: "BPub",
+  VITE_VAPID_PUBLIC_KEY: VALID_KEY,
+  VAPID_PUBLIC_KEY: VALID_KEY,
   VAPID_PRIVATE_KEY: "priv",
   VAPID_SUBJECT: "mailto:contact@example.org",
   CRON_SECRET: "s3cret",
@@ -47,8 +49,25 @@ describe("garde de build du push — étude 40, lot 1", () => {
   });
 
   it("refuse une clé publique du client différente de celle du serveur", () => {
-    const verdict = checkPushBuildEnv({ ...PROD_WWW, ...KEYS, VITE_VAPID_PUBLIC_KEY: "BAutre" });
+    const other = `B${"C".repeat(86)}`;
+    const verdict = checkPushBuildEnv({ ...PROD_WWW, ...KEYS, VITE_VAPID_PUBLIC_KEY: other });
     expect(verdict.problems).toEqual(["VITE_VAPID_PUBLIC_KEY diffère de VAPID_PUBLIC_KEY"]);
+  });
+
+  it.each([
+    ["collée avec ses guillemets", `"${VALID_KEY}"`],
+    ["tronquée", VALID_KEY.slice(0, 60)],
+    ["en base64 standard", `B${"A".repeat(43)}${"+".repeat(43)}`],
+    ["sans le « B » d'un point non compressé", `A${"A".repeat(86)}`],
+  ])("refuse une clé malformée IDENTIQUE des deux côtés (%s)", (_label, key) => {
+    const verdict = checkPushBuildEnv({
+      ...PROD_WWW,
+      ...KEYS,
+      VITE_VAPID_PUBLIC_KEY: key,
+      VAPID_PUBLIC_KEY: key,
+    });
+    expect(verdict.ok).toBe(false);
+    expect(verdict.problems.join(" ")).toMatch(/forme d'une clé publique VAPID/);
   });
 
   it("reconnaît le projet quand Vercel le désigne par l'apex, son domaine le plus court", () => {
@@ -88,6 +107,7 @@ describe("garde de build du push — étude 40, lot 1", () => {
 
   it("n'écrit jamais une valeur dans son message d'erreur", () => {
     const env = { ...PROD_WWW, ...KEYS, VITE_VAPID_PUBLIC_KEY: "BClientSecretish" };
+    // (clé malformée ET différente : deux problèmes, aucun ne doit citer une valeur)
     delete env.CRON_SECRET;
     let message = "";
     try {
@@ -96,6 +116,6 @@ describe("garde de build du push — étude 40, lot 1", () => {
       message = String(error);
     }
     expect(message).toContain("CRON_SECRET absente");
-    expect(message).not.toMatch(/BClientSecretish|BPub|priv|s3cret|mailto/);
+    expect(message).not.toMatch(/BClientSecretish|BAAAA|priv|s3cret|mailto/);
   });
 });

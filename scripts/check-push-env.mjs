@@ -29,6 +29,14 @@ export const CANONICAL_HOST = "www.na9ranal3ab.tn";
  */
 const CANONICAL_PRODUCTION_HOSTS = new Set([CANONICAL_HOST, CANONICAL_HOST.replace(/^www\./, "")]);
 
+/**
+ * La forme d'une clé publique VAPID : un point P-256 non compressé (65 octets, premier octet
+ * 0x04) en base64url sans remplissage — 87 caractères, le premier toujours « B ». Une clé
+ * collée avec ses guillemets, tronquée ou encodée en base64 standard passe l'égalité si elle
+ * est fausse des deux côtés pareil ; le navigateur, lui, la refuserait à la souscription.
+ */
+export const VAPID_PUBLIC_KEY_FORMAT = /^B[A-Za-z0-9_-]{86}$/;
+
 /** Les cinq variables de `docs/environment-variables.md` § Web Push. */
 export const PUSH_BUILD_ENV_KEYS = [
   "VITE_VAPID_PUBLIC_KEY",
@@ -57,6 +65,11 @@ export function checkPushBuildEnv(env) {
   const server = value(env, "VAPID_PUBLIC_KEY");
   if (client && server && client !== server) {
     problems.push("VITE_VAPID_PUBLIC_KEY diffère de VAPID_PUBLIC_KEY");
+  }
+  if (client && !VAPID_PUBLIC_KEY_FORMAT.test(client)) {
+    problems.push(
+      "VITE_VAPID_PUBLIC_KEY n'a pas la forme d'une clé publique VAPID (87 caractères base64url, commençant par B)",
+    );
   }
   return { applies, ok: problems.length === 0, problems };
 }
