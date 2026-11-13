@@ -47,9 +47,28 @@ jobs:
     with:
       stage: smoke
 
+  prod-push:
+    # Étude 40, lot 1 — le push est-il armé EN PRODUCTION ? Il a été éteint cinq mois sans
+    # qu'aucune suite le voie : ses variables vivent dans Vercel, pas dans le dépôt. Lit
+    # `/api/health` (champ `push`) ; aucun secret, aucune écriture.
+    name: Push armé en production
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - name: Setup Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 24
+      - name: Lire /api/health
+        run: node scripts/ci/check-prod-push.mjs
+
   report:
     name: Nightly report
-    needs: [e2e, e2e-auth, pgtap, perf]
+    needs: [e2e, e2e-auth, pgtap, perf, prod-push]
     # Always run so the report reflects failures too, not just all-green nights.
     if: ${{ always() }}
     runs-on: ubuntu-latest
@@ -64,6 +83,7 @@ jobs:
           E2E_AUTH_RESULT: ${{ needs.e2e-auth.result }}
           PGTAP_RESULT: ${{ needs.pgtap.result }}
           PERF_RESULT: ${{ needs.perf.result }}
+          PROD_PUSH_RESULT: ${{ needs.prod-push.result }}
         with:
           script: |
             const results = {
@@ -71,6 +91,7 @@ jobs:
               'E2E (authenticated)': process.env.E2E_AUTH_RESULT,
               'DB integration (pgTAP)': process.env.PGTAP_RESULT,
               'Performance (load)': process.env.PERF_RESULT,
+              'Push armé en production': process.env.PROD_PUSH_RESULT,
             };
             const icon = (r) =>
               r === 'success' ? '✅' : r === 'skipped' ? '⏭️' : '❌';
