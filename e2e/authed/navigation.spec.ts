@@ -60,7 +60,16 @@ test.describe("Primary navigation", () => {
     await page.goto("/parametrage");
     // Les réglages rapides du menu s'y retrouvent en entier…
     await expect(page.getByRole("switch")).toHaveCount(2, { timeout: 15_000 });
-    await expect(page.getByRole("radio")).toHaveCount(5);
+    // Deux groupes, comptés PAR LEUR NOM : thème (2) et langue (3). Depuis #1267 ces
+    // choix portent le rôle `radio` (ils étaient des `menuitemradio` orphelins) ; un
+    // décompte de tous les `radio` de la page y mêlerait l'objectif du jour, qui en
+    // a trois et n'est pas un réglage du menu.
+    await expect(
+      page.getByRole("radiogroup", { name: /thème|theme|السمة/i }).getByRole("radio"),
+    ).toHaveCount(2);
+    await expect(
+      page.getByRole("radiogroup", { name: /langue|language|اللغة/i }).getByRole("radio"),
+    ).toHaveCount(3);
     // …plus ce que le menu ne porte pas : compte, parcours, mentions.
     await expect(page.getByTestId("settings-sign-out")).toBeVisible();
     for (const href of ["/boutique", "/programme", "/conditions", "/confidentialite"]) {
