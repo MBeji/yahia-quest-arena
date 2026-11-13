@@ -68,9 +68,11 @@ SECURITY DEFINER.
   catalogue) à chaque appel. **Corrigé le soir même** : `generateSitemap` mémorise le document
   dix minutes par instance et partage une construction en cours (`createDocumentCache`,
   `sitemap.test.ts`).
-- **Une RPC refusée par la borne rend `PT429`**, que les server fns traduisent en erreur
-  générique. Un message « trop de requêtes » demanderait une ligne dans
-  `quest.practice.server.ts`, `placement.server.ts`, `parent-report.server.ts`.
+- ~~**Une RPC refusée par la borne rend `PT429`**, que les server fns traduisent en erreur
+  générique.~~ **Corrigé** : `failWithClientError` reconnaît le refus et rend « Trop de
+  requêtes », au niveau `warn` (#1291 — correction et quiz publics, placement) ; le suivi
+  par code alliance a son code stable `rate_limited`, libellé dans les trois langues du
+  parent (2026-11-13, budget `i18n-parent` relevé de 44 à 46 KB pour lui).
 - **Les six RPC anonymes STABLE** ne sont pas bornées (transaction en lecture seule ; données
   de catalogue). Motivé dans la migration et figé par le cliquet de pgTAP 108.
 - **Le palier « source » ne distingue pas un visiteur d'un autre derrière Vercel** : les
