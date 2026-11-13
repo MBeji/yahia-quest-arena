@@ -10,13 +10,18 @@
 // Pur : le code entre en argument, l'hôte vient de la constante canonique.
 
 import { SITE_URL } from "@/shared/constants/site";
-import { ENTRY_PARAM, type EntrySource } from "@/shared/lib/entry-source";
+// Le TYPE seulement, comme `share-text.ts` : importer une valeur d'`entry-source` en fait un
+// module partagé entre ce chunk et la mesure du retour (`visit-beacon`), que Rollup sort alors
+// dans un chunk à lui — une requête de plus sur CHAQUE page publique (`perf:budget`, `/programme`
+// à 42 pour 41). Le nom du paramètre est donc écrit ici ; le test fait l'aller-retour avec
+// `consumeEntrySource` et `stripEntrySource`, qui tiennent les deux écritures d'accord.
+import type { EntrySource } from "@/shared/lib/entry-source";
 
 const INVITE_SOURCE: EntrySource = "share";
 
 /** R-19 — le lien du bilan, absolu (un lien relatif collé dans WhatsApp n'ouvre rien). */
 export function parentInviteUrl(allianceCode: string): string {
-  return `${SITE_URL}/suivi?code=${encodeURIComponent(allianceCode)}&${ENTRY_PARAM}=${INVITE_SOURCE}`;
+  return `${SITE_URL}/suivi?code=${encodeURIComponent(allianceCode)}&src=${INVITE_SOURCE}`;
 }
 
 /** R-19 — met le gabarit en mots : `{url}` seul. Du texte brut ; ni prénom ni pseudo. */

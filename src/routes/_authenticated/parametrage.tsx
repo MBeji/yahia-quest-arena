@@ -64,6 +64,7 @@ import { parcoursName } from "@/shared/lib/parcours-locale";
 import { supabase } from "@/shared/integrations/supabase/client";
 import { DailyGoalChoice } from "@/features/dashboard/components/daily-goal-choice";
 import { pageTitle } from "@/lib/i18n/head";
+import { useInviteT } from "@/lib/i18n/invite";
 
 /**
  * Paramétrage — le pôle unique des réglages.
@@ -297,6 +298,7 @@ function ParametragePage() {
   // Étude 40, lot 5 (R-19, R-20) : le geste qui remplace le copier-coller — ici en PERMANENCE,
   // qu'un parent soit déjà lié ou non (un second parent, un nouvel appareil).
   const inviteParent = useParentInvite(allianceCode, "settings");
+  const inviteCopy = useInviteT();
 
   async function signOut() {
     await supabase.auth.signOut();
@@ -403,7 +405,7 @@ function ParametragePage() {
           {allianceCode && (
             <Row
               label={t.settings.allianceCode}
-              hint={`${t.settings.allianceHint} ${t.settings.inviteParentHint}`}
+              hint={`${t.settings.allianceHint} ${inviteCopy.hint}`}
             >
               <span className="font-mono text-xs">{allianceCode}</span>
               <button
@@ -425,7 +427,7 @@ function ParametragePage() {
                 className={ACTION_CLASS}
               >
                 <Share2 className="h-3.5 w-3.5" />
-                {t.settings.inviteParent}
+                {inviteCopy.button}
               </button>
             </Row>
           )}

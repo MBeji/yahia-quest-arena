@@ -51,6 +51,18 @@
  *     monde), ou le loger de force dans un chunk voisin par une règle de découpage (les groupes
  *     emportent leurs dépendances : c'est le cycle `index` ⇄ chunk que `vite.config.ts` raconte).
  *     `/` reste à 37 (36 mesurées). Poids : inchangés, aucun plafond d'octets ne bouge.
+ *
+ *   • 2026-11-13, étude 40 lot 5 — `/programme` : 263 → 263,5 Ko de JavaScript. `main` (a1384de)
+ *     était à 262,9/263. Le poids de plus (+195 octets brotli) est dans le chunk d'ENTRÉE et n'est
+ *     pas du code : c'est la table de préchargement de Vite (`__vite__mapDeps`), qui nomme chaque
+ *     chunk qu'une route paresseuse peut tirer. « Inviter mon parent » vit sur deux routes (le
+ *     paramétrage, l'écran de résultat de la quête) : ses modules forment un chunk partagé, et son
+ *     nom entre dans la table — par construction, aucun `import()` ne la diffère. Ce qui a été fait
+ *     d'abord : `parent-invite.ts` n'importe plus que le TYPE d'`entry-source` (la valeur en faisait
+ *     un chunk de plus sur chaque page : 42 requêtes pour 41, −1 requête) ; les chaînes ont quitté
+ *     `i18n-fr` pour un catalogue chargé avec le bouton et la carte (`i18n/invite`, −0,2 Ko). Ce qui
+ *     a été écarté : loger ces modules dans un chunk voisin par une règle de découpage (même raison
+ *     qu'au lot 0) ; dupliquer le geste dans les deux routes (dette). `/` : 257,9/262, inchangé.
  */
 
 /** Chargements par page ; le budget se lit sur la médiane. */
@@ -58,5 +70,5 @@ export const LCP_RUNS = 5;
 
 export const BUDGETS = {
   "/": { requests: 37, transferredKb: 328, jsKb: 262, htmlKb: 8.5, lcpMs: 2000 },
-  "/programme": { requests: 41, transferredKb: 327, jsKb: 263, htmlKb: 5, lcpMs: 2000 },
+  "/programme": { requests: 41, transferredKb: 327, jsKb: 263.5, htmlKb: 5, lcpMs: 2000 },
 };
