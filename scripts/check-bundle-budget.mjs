@@ -186,7 +186,21 @@ const BUDGETS = {
   // tirés par l'import dynamique des routes /suivi et /parent-report. Si ce chunk
   // réapparaît un jour dans les imports STATIQUES du chunk index, le découpage est
   // cassé sans que rien ne rougisse : relire `manualChunks` dans `vite.config.ts`.
-  "i18n-parent-": 44 * 1024,
+  //
+  // ## 2026-11-13 : 44 → 46 KB, à la demande du propriétaire
+  //
+  // Les 20 % de marge se sont consommés en deux mois et demi (36,52 → 43,94 KB). Le
+  // libellé « trop de demandes » du suivi par code (refus PT429 de la borne durable,
+  // audit S-1) l'a fait déborder : 44 994 → 45 291 octets (+297 bruts, +110 gz), trois
+  // langues. Sans lui, un parent refusé lisait « vérifiez le code » et retapait un
+  // code juste. Nouveau plafond à ≈ +4 % de la mesure — la règle des catalogues
+  // par locale ci-dessus, plus les 20 % d'une surface qui débutait.
+  //
+  // LE PROCHAIN LEVIER N'EST PAS UN RELÈVEMENT. Ce chunk porte les TROIS langues
+  // (`parent/index.ts` les importe statiquement) alors qu'un parent n'en lit qu'une :
+  // sources fr 17 Ko, en 15 Ko, ar 19 Ko. Le découpage par locale qu'`i18n-` a reçu
+  // le 2026-10-31 (H2-fe, ci-dessus) rendrait ≈ deux tiers du chunk à chaque parent.
+  "i18n-parent-": 46 * 1024,
   // Surface boutique : les libellés de la collection de badges (nom + condition,
   // 13 badges × 3 langues, é31 lot 2). Servis par la seule route /boutique, elle
   // aussi chargée dynamiquement. C'est la règle ci-dessus APPLIQUÉE plutôt que
