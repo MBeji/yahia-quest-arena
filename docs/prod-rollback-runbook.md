@@ -321,8 +321,13 @@ gh run view <id> --log-failed           # qu'est-ce qui a VRAIMENT échoué ?
 ```bash
 curl -sL -o /dev/null -w '%{http_code}\n' https://www.na9ranal3ab.tn/api/health   # 200 ou 503
 curl -sL https://www.na9ranal3ab.tn/api/health
-# {"status":"ok","checks":{"database":"ok"},"commit":"4eb36f9","ts":"…"}
+# {"status":"ok","checks":{"database":"ok"},"push":"configured","commit":"4eb36f9","ts":"…"}
 ```
+
+`push` (étude 40, lot 1) dit si les variables serveur du canal push sont posées sur le
+déploiement qui répond. Il ne change **jamais** `status` ni le code HTTP : un `unconfigured`
+n'est pas une panne du site, mais après un rollback vers un déploiement d'avant le
+2026-11-13 le champ manque — c'est le signe que le code servi est antérieur aux gardes du push.
 
 `www.na9ranal3ab.tn` est le **seul hôte qui répond 200** : le `.vercel.app` y redirige en 301
 et l'apex en 308 (constat 2026-07-20, reconfirmé 2026-07-27). D'où le `-L` : sans lui, on lit
