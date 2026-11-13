@@ -606,14 +606,9 @@ export const getTutorParentCounters = createServerFn({ method: "GET" })
   .handler(async ({ data, context }): Promise<TutorParentCounters | null> => {
     const { supabase } = context;
 
-    const { data: raw, error } = await (
-      supabase as unknown as {
-        rpc: (
-          fn: "get_tutor_parent_counters",
-          args: Record<string, unknown>,
-        ) => PromiseLike<{ data: unknown; error: { message: string } | null }>;
-      }
-    ).rpc("get_tutor_parent_counters", { p_student_id: data.studentId });
+    const { data: raw, error } = await supabase.rpc("get_tutor_parent_counters", {
+      p_student_id: data.studentId,
+    });
 
     if (error) {
       logger.warn("parentReport.tutorCounters", { error: errorMessage(error) });

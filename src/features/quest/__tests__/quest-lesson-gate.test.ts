@@ -85,10 +85,12 @@ function mockChapterWorld({
   gradeId,
   exercises,
   attempts = [],
+  videos,
 }: {
   gradeId: string | null;
   exercises: Array<{ id: string; mode: string; display_order: number }>;
   attempts?: Array<{ duration_seconds: number; total_count: number }>;
+  videos?: unknown;
 }) {
   let calls = 0;
   mockFrom.mockImplementation((table: string) => {
@@ -100,6 +102,7 @@ function mockChapterWorld({
             title: "C1",
             subject_id: "s1",
             lesson_content: "x",
+            videos,
             subjects: { id: "s1", name_fr: "Maths", grade_id: gradeId },
           })
         : mockQuery([{ id: "ch-1", title: "C1", display_order: 1, lesson_content: "x" }]);
@@ -329,5 +332,54 @@ describe("gamification.quest — le niveau d'une matière, lisible sans compte",
     });
     const res = (await callGetChapterLesson()) as unknown as { parcours: unknown };
     expect(res.parcours).toEqual(PARCOURS);
+  });
+});
+
+/**
+ * `chapters.videos` est un JSONB : le type généré n'en dit que `Json`. Chaque
+ * entrée est relue par le schéma de la vidéo de correction (étude 23 D-10) — une
+ * entrée malformée ou héritée disparaît au lieu de devenir un lecteur à moitié
+ * construit, et la leçon s'affiche quand même.
+ */
+describe("getChapterLesson — les vidéos du chapitre sont relues à la frontière", () => {
+  const VALID = {
+    id: "v-thales",
+    provider: "youtube",
+    videoId: "dQw4w9WgXcQ",
+    title: "Le théorème de Thalès",
+    channel: "Maths Tunisie",
+    lang: "fr",
+    durationSec: 420,
+  };
+
+  beforeEach(() => {
+    vi.resetModules();
+    mockFrom.mockReset();
+    mockRpc.mockReset();
+  });
+
+  async function lessonVideos(videos: unknown): Promise<unknown> {
+    mockChapterWorld({ gradeId: null, exercises: [], videos });
+    const { getChapterLesson } = await import("@/features/quest");
+    const res = (await (getChapterLesson as unknown as (d: unknown) => Promise<unknown>)({
+      chapterId: CH,
+    })) as { chapter: { videos: unknown } };
+    return res.chapter.videos;
+  }
+
+  it("garde les entrées valides et écarte les autres", async () => {
+    await expect(
+      lessonVideos([
+        VALID,
+        { ...VALID, id: "v-url", videoId: "https://evil.example/x" },
+        "https://youtu.be/legacy",
+        { ...VALID, id: "v-sans-titre", title: "" },
+      ]),
+    ).resolves.toEqual([VALID]);
+  });
+
+  it("rend une liste vide pour une colonne qui n'est pas un tableau", async () => {
+    await expect(lessonVideos({ legacy: true })).resolves.toEqual([]);
+    await expect(lessonVideos(undefined)).resolves.toEqual([]);
   });
 });
