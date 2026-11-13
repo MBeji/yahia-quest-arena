@@ -98,9 +98,20 @@ test.describe("Accessibilité — reliquat de l'audit d'affichage", () => {
         }).observe({ type: "layout-shift", buffered: true });
       });
       await page.goto("/");
-      await page.waitForLoadState("networkidle");
-      // La session se lit après l'hydratation : c'est là que « Créer mon compte » arrive.
+      // La session se lit après l'hydratation : c'est là que « Créer mon compte » arrive,
+      // et c'est CE moment que mesure ce test — le décalage dû à l'en-tête. Pas
+      // `networkidle` : sans backend, la lecture des chiffres de l'accueil échoue, se
+      // rejoue trois fois (≥ 7 s), puis la bande de preuve replie la place qu'elle
+      // réservait. Ce repli est celui d'une PANNE, que l'environnement de test simule
+      // en permanence ; la réserve elle-même est épinglée par `public-landing.test.tsx`.
       await expect(page.getByTestId("header-signup")).toBeVisible();
+      // Deux images : laisser le navigateur rendre la mise en page qui suit l'arrivée.
+      await page.evaluate(
+        () =>
+          new Promise<void>((resolve) =>
+            requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+          ),
+      );
 
       const { height, cls } = await page.evaluate(() => ({
         height: document.querySelector("[data-public-header]")!.getBoundingClientRect().height,
@@ -109,9 +120,12 @@ test.describe("Accessibilité — reliquat de l'audit d'affichage", () => {
       // 168 px à l'audit (rangée de liens sur deux lignes, cibles de 36 px) ; 106 px
       // depuis, avec toutes les cibles à 44 : une barre, une rangée de navigation.
       expect(height).toBeLessThanOrEqual(110);
-      // CLS 0,116 mesuré à 360 px avant que la place du bouton ne soit réservée.
-      // Seuil « bon » des Core Web Vitals : 0,1 ; on exige bien mieux.
-      expect(cls).toBeLessThan(0.02);
+      // CLS 0,116 mesuré à 360 px quand la rangée de navigation s'enroulait et que les
+      // entrées du compte arrivaient sans place réservée. Depuis qu'elle tient sur une
+      // rangée, la même arrivée sans réserve ne coûte plus que 0,004 (l'en-tête ne
+      // grandit plus, seuls l'aide et l'engrenage glissent) ; avec la réserve : 0,000.
+      // Le seuil passe ENTRE les deux, sinon ce test ne garderait plus rien.
+      expect(cls).toBeLessThan(0.002);
     });
   }
 });
