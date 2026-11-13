@@ -1,5 +1,5 @@
 import type { EngagementOverview } from "../engagement.server";
-import { PRODUCT_EVENT_CATALOGUE } from "@/shared/lib/product-events";
+import { PRODUCT_EVENT_CATALOGUE } from "@/shared/lib/product-events-catalogue";
 
 /**
  * Console « Engagement » (étude 31 lot 1, US-13) — read-only.

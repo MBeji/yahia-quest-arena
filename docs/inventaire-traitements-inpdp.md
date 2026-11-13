@@ -184,7 +184,8 @@ porte le lien de son bilan — `/suivi?code=<code alliance>&src=share`. Le code 
 porteur déjà décrite pour le suivi public ; il se transmettait déjà de la main à la main, et le
 texte d'aide redit de n'envoyer ce lien qu'à son parent. Aucun destinataire n'est demandé ni
 connu de nous. La mesure n'en reçoit que le **fait** : `content_shared` avec trois étiquettes
-fermées (intention `parent`, surface, canal) — ni le code, ni un identifiant. La carte de l'écran
+fermées (intention `parent`, surface, canal) — ni le code, ni un identifiant. Sur l'écran de résultat, l'affichage de la carte et son refus se comptent aussi (`parent_invite`,
+une étiquette : montrée ou écartée), pour rapporter les envois aux cartes vues. La carte de l'écran
 de résultat ne paraît qu'à un élève sans parent lié actif, ce que dit une lecture de ses propres
 liens (`parent_student_links`, politique RLS existante) qui ne rend qu'un booléen. Code :
 `src/shared/lib/parent-invite.ts`, `src/components/public/use-parent-invite.ts`,
