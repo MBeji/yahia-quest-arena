@@ -20,13 +20,18 @@ import type { Locale } from "@/lib/i18n";
  * définitivement.
  */
 
-/** Les six moments d'élève, dans l'ORDRE DE PRIORITÉ du pipeline (R-16). */
+/**
+ * Les sept moments d'élève, dans l'ORDRE DE PRIORITÉ du pipeline (R-16). `first-quest`
+ * (étude 40, lot 2 — R-7) se range en AVANT-DERNIER : tout ce qu'un élève a déjà commencé
+ * passe avant l'invitation à commencer, et elle passe avant le « reviens » de J+7.
+ */
 export const PUSH_PRIORITY = [
   "league-result",
   "streak-lost",
   "streak-at-risk",
   "streak-milestone",
   "tutor-daily-plan",
+  "first-quest",
   "comeback",
 ] as const;
 
@@ -124,6 +129,25 @@ export const PUSH_COPY: Record<PushTag, Record<Locale, Copy>> = {
       url: "/dashboard",
     },
   },
+  // Étude 40, lot 2 (R-10) — l'inscrit qui n'a pas encore joué, à J+1 et J+3. Le texte dit ce
+  // qui l'attend, jamais ce qu'il n'a pas fait (é31 R-20) : pas de « tu n'as pas encore… ».
+  "first-quest": {
+    fr: {
+      title: "🎯 Ta première quête est prête",
+      body: "Cinq questions, quelques minutes, et tes premiers XP.",
+      url: "/dashboard",
+    },
+    en: {
+      title: "🎯 Your first quest is ready",
+      body: "Five questions, a few minutes, and your first XP.",
+      url: "/dashboard",
+    },
+    ar: {
+      title: "🎯 مهمّتك الأولى جاهزة",
+      body: "خمسة أسئلة، بضع دقائق، وأولى نقاط خبرتك.",
+      url: "/dashboard",
+    },
+  },
   comeback: {
     fr: {
       title: "👋 Reprends où tu en étais",
@@ -179,12 +203,33 @@ export function safeLocale(locale: string | null | undefined): Locale {
 
 export type PushPayload = { title: string; body: string; url: string; tag: string };
 
+/**
+ * Étude 40, lot 2 (R-9) — la série d'UN jour. C'est le cas du lendemain de la première quête,
+ * donc LE rappel de la deuxième visite : « tes 1 jours continuent » s'y lisait comme une machine.
+ * (Le jalon ne part qu'à 7, 30 et 100 : il n'a pas de singulier.)
+ */
+const SINGULAR_STREAK: Record<"streak-at-risk" | "streak-lost", Record<Locale, string>> = {
+  "streak-at-risk": {
+    fr: "Une quête avant ce soir et ta série d'un jour continue.",
+    en: "One quest before tonight and your one-day streak carries on.",
+    ar: "مهمّة واحدة قبل المساء وتتواصل سلسلتك ذات اليوم الواحد.",
+  },
+  "streak-lost": {
+    fr: "Elle s'est arrêtée à un jour. Une quête aujourd'hui et tu repars.",
+    en: "It stopped at one day. One quest today and you're off again.",
+    ar: "توقّفت عند يوم واحد. مهمّة واحدة اليوم وتنطلق من جديد.",
+  },
+};
+
 /** Construit le payload d'un candidat — le seul endroit qui interpole `{n}`. */
 export function payloadFor(tag: PushTag, locale: Locale, arg: number | null): PushPayload {
+  const base = PUSH_COPY[tag][locale];
   const copy =
-    tag === "tutor-daily-plan" && arg === 1
-      ? { ...PUSH_COPY[tag][locale], body: SINGULAR_PLAN[locale] }
-      : PUSH_COPY[tag][locale];
+    arg === 1 && tag === "tutor-daily-plan"
+      ? { ...base, body: SINGULAR_PLAN[locale] }
+      : arg === 1 && (tag === "streak-at-risk" || tag === "streak-lost")
+        ? { ...base, body: SINGULAR_STREAK[tag][locale] }
+        : base;
   return {
     title: copy.title.replace("{n}", String(arg ?? "")),
     body: copy.body.replace("{n}", String(arg ?? "")),
