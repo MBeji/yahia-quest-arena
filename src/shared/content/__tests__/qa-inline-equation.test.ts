@@ -39,9 +39,9 @@ describe("auditInlineEquation — une formule d'énoncé se pose seule sur sa li
   });
 
   it("ne signale qu'une fois un énoncé qui porte deux formules", () => {
-    expect(
-      run("حُلَّ المعادلتان (x − 1)(x + 3) = 0 و (y − 2)(y + 5) = 0. فما المجموع؟"),
-    ).toHaveLength(1);
+    expect(run("حُلَّ المعادلتان (x − 1)(x + 3) = 0 و (y − 2)(y + 5) = 0. فما المجموع؟")).toHaveLength(
+      1,
+    );
   });
 
   // L'arithmétique linéaire se rend nativement en RTL et la phrase la porte bien

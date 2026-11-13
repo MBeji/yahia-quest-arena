@@ -650,9 +650,7 @@ describe("splitMathRuns — une équation ne se coupe jamais en deux lignes", ()
       "12 + 8√2 = 5√2",
     ]);
     expect(parenthetical[parenthetical.length - 1].text.startsWith(" (")).toBe(true);
-    expect(rebuild("لأنّ 12 + 8√2 = 5√2 (تقريبًا) دائمًا")).toBe(
-      "لأنّ 12 + 8√2 = 5√2 (تقريبًا) دائمًا",
-    );
+    expect(rebuild("لأنّ 12 + 8√2 = 5√2 (تقريبًا) دائمًا")).toBe("لأنّ 12 + 8√2 = 5√2 (تقريبًا) دائمًا");
   });
 
   // Même parité pour la coche finale : elle reste dans la prose, avec l'espace qui la précède.
