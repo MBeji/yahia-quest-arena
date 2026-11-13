@@ -26,7 +26,7 @@ const DIGEST_PREF_KEY = ["parent-digest-pref"] as const;
  */
 export function ParentDigestCard({ hasLinkedStudent }: { hasLinkedStudent: boolean }) {
   const t = useParentT();
-  const push = usePush();
+  const push = usePush({ moment: "parent" });
   const switchId = useId();
   const queryClient = useQueryClient();
   const getPref = useServerFn(getParentDigestPref);

@@ -57,6 +57,11 @@ vi.mock("@/features/quest/components/quest-result-actions", () => ({
   QuestResultActions: () => null,
 }));
 vi.mock("@/features/tutor", () => ({ TutorPanel: () => null }));
+// Étude 40, lot 2 — le candidat « rappel » de l'écran de résultat : jamais proposable ici
+// (l'écran de résultat n'est pas l'objet de ce fichier ; il a ses propres tests).
+vi.mock("@/features/notifications", () => ({
+  usePushVictoryCandidate: () => ({ kind: "push", available: false, render: () => null }),
+}));
 vi.mock("@/features/content-report", () => ({ ReportErrorButton: () => null }));
 vi.mock("@/features/subscription", () => ({ SubscriptionPaywall: () => null }));
 

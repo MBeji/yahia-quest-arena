@@ -814,8 +814,10 @@ export const fr: TranslationKeys = {
     updateError: "Échec du traitement du bug.",
   },
   pushNotifications: {
-    cardTitle: "Rappels de quête",
-    cardDesc: "Reçois une alerte quand ta série est en danger pour ne jamais la casser.",
+    cardTitle: "Ton plan du jour, sans y penser",
+    cardDesc:
+      "El Ostedh te prévient une fois par jour au plus : ton plan est prêt, ta série continue, ta ligue est comptée. Tu coupes quand tu veux.",
+    later: "Plus tard",
     enable: "Activer les notifications",
     enabling: "Activation…",
     enabled: "Notifications activées",
