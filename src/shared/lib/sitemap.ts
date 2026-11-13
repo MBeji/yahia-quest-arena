@@ -82,8 +82,17 @@ function levelKey(row: LevelKey): string {
  *    extras, mais listé ici). Si la lecture des matières échoue on ne sait pas
  *    lesquels sont vides : tous les niveaux disponibles restent listés.
  *  - chapters with no `lesson_content` (the reader shows a coming-soon state),
- *  - comprehension quizzes (`mode: "quiz"`) and any non-`admin` exercise (the
- *    public practice page only renders an account upsell for those).
+ *  - any non-`admin` exercise (the public practice page only renders an account
+ *    upsell for those),
+ *  - an exercise a NEW visitor finds LOCKED (décision du propriétaire, 2026-11-13,
+ *    option B) : dans une matière SCOLAIRE, les missions d'un chapitre qui a un quiz
+ *    de compréhension restent fermées tant que ce quiz n'est pas réussi (cours →
+ *    quiz → missions). Un robot, comme un visiteur neuf, n'y voyait que l'écran
+ *    « exercice verrouillé » : 4 657 des 5 477 pages d'exercice du sitemap le
+ *    2026-11-12. Elles en sortent (et leur page porte `noindex`), et les QUIZ, ouverts
+ *    à tous, y entrent à leur place — c'est la porte réelle de chaque chapitre.
+ *    Si la lecture des matières échoue, on ne sait pas lesquelles sont scolaires :
+ *    toute mission d'un chapitre à quiz est alors tenue pour verrouillée.
  *
  * A failing table query is logged and skipped so a partial sitemap still ships
  * rather than failing the whole document.
@@ -112,8 +121,18 @@ export async function collectSitemapPaths(supabase: SitemapClient): Promise<stri
         .order("id")
         .range(from, to),
     ),
-    fetchAllRows<{ id: string; mode: string; source: string }>((from, to) =>
-      supabase.from("exercises").select("id,mode,source").order("id").range(from, to),
+    fetchAllRows<{
+      id: string;
+      mode: string;
+      source: string;
+      chapter_id: string | null;
+      subject_id: string | null;
+    }>((from, to) =>
+      supabase
+        .from("exercises")
+        .select("id,mode,source,chapter_id,subject_id")
+        .order("id")
+        .range(from, to),
     ),
   ]);
 
@@ -152,8 +171,21 @@ export async function collectSitemapPaths(supabase: SitemapClient): Promise<stri
   if (exercises.error) {
     logger.warn("sitemap: exercises query failed", { error: exercises.error.message });
   } else {
-    for (const e of exercises.data ?? []) {
-      if (e.source === "admin" && e.mode !== "quiz") paths.push(`/exercice/${e.id}`);
+    const publicExercises = (exercises.data ?? []).filter((e) => e.source === "admin");
+    // Les chapitres qui ont un quiz de compréhension : leurs missions en dépendent.
+    const quizChapters = new Set(
+      publicExercises.filter((e) => e.mode === "quiz").map((e) => e.chapter_id),
+    );
+    // `null` = lecture des matières en échec : on ne sait pas lesquelles sont scolaires.
+    const schoolSubjects = subjects.error
+      ? null
+      : new Set((subjects.data ?? []).filter((s) => s.grade_id !== null).map((s) => s.id));
+    for (const e of publicExercises) {
+      const lockedForNewVisitor =
+        e.mode !== "quiz" &&
+        quizChapters.has(e.chapter_id) &&
+        (schoolSubjects === null || schoolSubjects.has(e.subject_id ?? ""));
+      if (!lockedForNewVisitor) paths.push(`/exercice/${e.id}`);
     }
   }
 

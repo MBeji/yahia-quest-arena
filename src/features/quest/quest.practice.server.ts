@@ -5,11 +5,14 @@
 // déplacé à l'identique.
 
 import { createServerFn } from "@tanstack/react-start";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { optionalSupabaseAuth } from "@/shared/integrations/supabase/optional-auth-middleware";
 import { isRateLimited, isRateLimitedLocal } from "@/shared/lib/rate-limit";
 import { failWithClientError } from "@/shared/lib/safe-error";
+import { logger } from "@/shared/lib/logger";
+import type { Database } from "@/shared/integrations/supabase/types";
 import { RATE_LIMITED_CODE } from "@/shared/lib/client-error-codes";
 import { MAX_CHOICE_LENGTH } from "@/shared/lib/answer-formats";
 import { assertAnswerFormats } from "@/features/quest/answer-format-guard";
@@ -175,6 +178,33 @@ export const scoreQuizPublic = createServerFn({ method: "POST" })
 
 // ---------- Public practice page — what its <head> needs, nothing more ----------
 
+/**
+ * Même règle que la porte du quiz (`getSubject`, `getChapterLesson`) : seules les
+ * missions d'une matière SCOLAIRE (classe définie) sont fermées, et seulement si
+ * leur chapitre a un quiz. Un quiz ne l'est jamais. Une lecture d'une ligne, faite
+ * seulement pour une mission scolaire ; en échec, la mission est tenue pour fermée
+ * (au pire, `noindex` sur une page qu'un robot verrait verrouillée de toute façon).
+ */
+async function isLockedForNewVisitor(
+  supabase: SupabaseClient<Database>,
+  exercise: { mode: string; chapterId: string | null; gradeId: string | null },
+): Promise<boolean> {
+  if (exercise.mode === "quiz" || exercise.gradeId === null || exercise.chapterId === null) {
+    return false;
+  }
+  const { data, error } = await supabase
+    .from("exercises")
+    .select("id")
+    .eq("chapter_id", exercise.chapterId)
+    .eq("mode", "quiz")
+    .limit(1);
+  if (error) {
+    logger.warn("quest.getExerciseMeta: quiz lookup failed", { error: error.message });
+    return true;
+  }
+  return (data ?? []).length > 0;
+}
+
 /** Les trois noms qui décrivent une page d'entraînement à un moteur de recherche. */
 export type ExerciseMeta = {
   title: string;
@@ -183,6 +213,13 @@ export type ExerciseMeta = {
   subjectName: string | null;
   /** Langue du contenu (`subjects.content_language`), pour `og:locale`. */
   contentLanguage: string | null;
+  /**
+   * Un visiteur NEUF trouve-t-il cet exercice fermé ? Vrai pour une mission d'un
+   * chapitre SCOLAIRE qui a un quiz de compréhension : elle ne s'ouvre qu'après ce
+   * quiz (cours → quiz → missions). La page porte alors `noindex` — un moteur n'y
+   * verrait que l'écran « exercice verrouillé » (décision du 2026-11-13, option B).
+   */
+  lockedForNewVisitor: boolean;
 };
 
 /**
@@ -207,7 +244,9 @@ export const getExerciseMeta = createServerFn({ method: "GET" })
   .handler(async ({ data, context }): Promise<ExerciseMeta | null> => {
     const { data: row, error } = await context.supabase
       .from("exercises")
-      .select("title, mode, chapters(title), subjects(name_fr, content_language)")
+      .select(
+        "title, mode, chapter_id, chapters(title), subjects(name_fr, content_language, grade_id)",
+      )
       .eq("id", data.exerciseId)
       .maybeSingle();
     if (error) {
@@ -220,5 +259,10 @@ export const getExerciseMeta = createServerFn({ method: "GET" })
       chapterTitle: row.chapters?.title ?? null,
       subjectName: row.subjects?.name_fr ?? null,
       contentLanguage: row.subjects?.content_language ?? null,
+      lockedForNewVisitor: await isLockedForNewVisitor(context.supabase, {
+        mode: row.mode,
+        chapterId: row.chapter_id,
+        gradeId: row.subjects?.grade_id ?? null,
+      }),
     };
   });
