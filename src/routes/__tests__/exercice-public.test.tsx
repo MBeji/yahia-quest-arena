@@ -495,6 +495,26 @@ describe("entraînement public — le <head> rendu par le serveur", () => {
     });
   });
 
+  // Décision du 2026-11-13 (option B) : une mission qu'un visiteur neuf trouve
+  // fermée est servie, mais pas indexée ; le quiz qui l'ouvre, si.
+  it("mission fermée à un visiteur neuf : noindex ; quiz ou mission ouverte : indexable", async () => {
+    vi.stubEnv("SSR", true);
+    const robotsOf = async (lockedForNewVisitor: boolean) => {
+      getExerciseMeta.mockResolvedValue({
+        title: "Mission 3",
+        mode: "practice",
+        chapterTitle: "Les fractions",
+        subjectName: "Mathématiques",
+        contentLanguage: "fr",
+        lockedForNewVisitor,
+      });
+      const seeded = await routeOptions.loader({ params: { exerciseId: EX_ID } });
+      return routeOptions.head({ loaderData: seeded }).meta.find((tag) => tag.name === "robots");
+    };
+    expect(await robotsOf(true)).toEqual({ name: "robots", content: "noindex" });
+    expect(await robotsOf(false)).toBeUndefined();
+  });
+
   it("adresse qui n'a pas la forme d'un uuid : 404 sans interroger la base", async () => {
     vi.stubEnv("SSR", true);
     await expect(routeOptions.loader({ params: { exerciseId: "pas-un-uuid" } })).rejects.toEqual({
