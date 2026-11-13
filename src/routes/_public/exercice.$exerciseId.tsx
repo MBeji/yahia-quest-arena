@@ -73,6 +73,9 @@ async function seedExercice(exerciseId: string) {
     path: `/exercice/${exerciseId}`,
     contentLanguage: meta.contentLanguage,
   });
+  // Une mission qu'un visiteur neuf trouve fermée (le quiz du chapitre d'abord) :
+  // servie, pas indexée — elle est aussi retirée du sitemap (décision du 2026-11-13).
+  if (meta.lockedForNewVisitor) head.meta.push({ name: "robots", content: "noindex" });
   return { head };
 }
 

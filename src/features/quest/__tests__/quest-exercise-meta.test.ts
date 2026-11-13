@@ -87,7 +87,9 @@ describe("getExerciseMeta", () => {
       chapterTitle: "Les fractions",
       subjectName: "Mathématiques",
       contentLanguage: "ar",
+      lockedForNewVisitor: false,
     });
+    // Matière sans classe : aucune porte de quiz, aucune lecture de plus.
     expect(mockFrom).toHaveBeenCalledTimes(1);
     expect(mockFrom).toHaveBeenCalledWith("exercises");
     expect(eq).toHaveBeenCalledWith("id", EXERCISE_ID);
@@ -107,6 +109,7 @@ describe("getExerciseMeta", () => {
       chapterTitle: null,
       subjectName: null,
       contentLanguage: null,
+      lockedForNewVisitor: false,
     });
   });
 
@@ -133,5 +136,84 @@ describe("getExerciseMeta", () => {
   it("rejects an id that is not a GUID before any read", async () => {
     await expect(getExerciseMeta({ data: { exerciseId: "pas-un-uuid" } })).rejects.toThrow();
     expect(mockFrom).not.toHaveBeenCalled();
+  });
+
+  // Décision du 2026-11-13 (option B) : la page d'une mission qu'un visiteur neuf
+  // trouve fermée porte `noindex`. La règle est celle de la porte du quiz.
+  describe("lockedForNewVisitor — la porte du quiz, vue par un visiteur neuf", () => {
+    // Chaque monde empile deux réponses ; un exercice qui n'en lit qu'une laisse
+    // l'autre en file — elle ne doit pas déborder sur le test suivant.
+    beforeEach(() => {
+      mockFrom.mockReset();
+    });
+
+    function mockWorld(
+      exercise: { mode: string; grade_id: string | null; chapter_id?: string | null },
+      quizLookup: { data: unknown; error: unknown } = { data: [{ id: "qz" }], error: null },
+    ) {
+      const quizEq = vi.fn();
+      const limit = vi.fn().mockResolvedValue(quizLookup);
+      quizEq.mockReturnValue({ eq: quizEq, limit });
+      mockFrom
+        .mockReturnValueOnce({
+          select: () => ({
+            eq: () => ({
+              maybeSingle: () =>
+                Promise.resolve({
+                  data: {
+                    title: "Mission",
+                    mode: exercise.mode,
+                    chapter_id: exercise.chapter_id === undefined ? "ch-1" : exercise.chapter_id,
+                    chapters: { title: "Chapitre" },
+                    subjects: {
+                      name_fr: "Maths",
+                      content_language: "fr",
+                      grade_id: exercise.grade_id,
+                    },
+                  },
+                  error: null,
+                }),
+            }),
+          }),
+        })
+        .mockReturnValueOnce({ select: () => ({ eq: quizEq }) });
+      return { quizEq };
+    }
+    const locked = async () =>
+      (await getExerciseMeta({ data: { exerciseId: EXERCISE_ID } }))?.lockedForNewVisitor;
+
+    it("mission scolaire d'un chapitre qui a un quiz : fermée", async () => {
+      const { quizEq } = mockWorld({ mode: "practice", grade_id: "g-6" });
+      await expect(locked()).resolves.toBe(true);
+      expect(quizEq).toHaveBeenCalledWith("chapter_id", "ch-1");
+      expect(quizEq).toHaveBeenCalledWith("mode", "quiz");
+    });
+
+    it("mission scolaire d'un chapitre sans quiz : ouverte", async () => {
+      mockWorld({ mode: "boss", grade_id: "g-6" }, { data: [], error: null });
+      await expect(locked()).resolves.toBe(false);
+    });
+
+    it("le quiz lui-même, ou une matière hors programme : ouverts, sans lecture de plus", async () => {
+      mockWorld({ mode: "quiz", grade_id: "g-6" });
+      await expect(locked()).resolves.toBe(false);
+      expect(mockFrom).toHaveBeenCalledTimes(1);
+      mockFrom.mockReset();
+      mockWorld({ mode: "practice", grade_id: null });
+      await expect(locked()).resolves.toBe(false);
+      expect(mockFrom).toHaveBeenCalledTimes(1);
+    });
+
+    it("lecture du quiz en échec : tenue pour fermée, et journalisée", async () => {
+      mockWorld(
+        { mode: "practice", grade_id: "g-6" },
+        { data: null, error: { message: "timeout" } },
+      );
+      await expect(locked()).resolves.toBe(true);
+      expect(logger.warn).toHaveBeenCalledWith(
+        expect.stringContaining("getExerciseMeta"),
+        expect.objectContaining({ error: "timeout" }),
+      );
+    });
   });
 });
