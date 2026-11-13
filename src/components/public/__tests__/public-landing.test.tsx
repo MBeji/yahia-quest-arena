@@ -8,16 +8,19 @@ vi.mock("@tanstack/react-router", () => ({
     to,
     params,
     onClick,
+    className,
   }: {
     children: React.ReactNode;
     to: string;
     params?: Record<string, string>;
     onClick?: () => void;
+    className?: string;
   }) =>
     React.createElement(
       "a",
       {
         href: params ? to.replace(/\$(\w+)/g, (_m, k: string) => params[k] ?? `$${k}`) : to,
+        className,
         onClick: (e: React.MouseEvent) => {
           e.preventDefault();
           onClick?.();
@@ -126,9 +129,34 @@ describe("PublicLanding", () => {
     expect(container.querySelector('a[href="/chapitre/chap-1"]')).not.toBeNull();
   });
 
+  // Audit « première visite » (2026-11-13, production 360×780) : la bande arrivait
+  // ~1,5 s après l'hydratation et repoussait la page (CLS 0,025). Elle réserve sa place.
+  it("pendant la lecture, la bande est là à sa taille — emplacements vides, jamais un faux chiffre", () => {
+    const { container } = render(<PublicLanding statsPending />);
+    const band = screen.getByTestId("proof-band");
+    expect(band).toHaveAttribute("aria-busy", "true");
+    // Les intitulés sont réels ; les chiffres, absents.
+    expect(band).toHaveTextContent("matières");
+    expect(band.textContent).not.toMatch(/\d/);
+    // La rangée du lien d'exemple est réservée, sans lien.
+    expect(container.querySelector('a[href^="/chapitre/"]')).toBeNull();
+    expect(band.querySelector('[aria-hidden="true"].min-h-11')).not.toBeNull();
+  });
+
+  it("le lien « Voir un exemple de cours » est une cible tactile de 44 px", () => {
+    const { container } = render(
+      <PublicLanding
+        stats={{ subjects: 62, lessons: 418, exercises: 3250, sampleChapterId: "chap-1" }}
+      />,
+    );
+    expect(screen.getByTestId("proof-band")).not.toHaveAttribute("aria-busy");
+    expect(container.querySelector('a[href="/chapitre/chap-1"]')?.className).toContain("min-h-11");
+  });
+
   it("omits the proof band when there are no stats or an empty catalogue", () => {
     const { container: noStats } = render(<PublicLanding />);
     expect(noStats.querySelector('a[href^="/chapitre/"]')).toBeNull();
+    expect(screen.queryByTestId("proof-band")).toBeNull();
     const { container: empty } = render(
       <PublicLanding stats={{ subjects: 0, lessons: 0, exercises: 0, sampleChapterId: null }} />,
     );

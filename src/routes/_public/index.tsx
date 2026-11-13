@@ -19,14 +19,16 @@ export const Route = createFileRoute("/_public/")({
 
 /**
  * Fetches the anon catalogue stats (real compiled numbers) for the landing proof
- * band and hands them to <PublicLanding/>. The band self-hides until the numbers
- * load, so the landing renders instantly and never shows a fake/placeholder count.
+ * band and hands them to <PublicLanding/>. While they load the band holds its place
+ * with empty slots (never a fake count); it disappears only if the read fails.
  */
 function HomePage() {
   const fetchStats = useServerFn(getCatalogueStats);
-  const { data } = useQuery({
+  const { data, isPending } = useQuery({
     queryKey: ["catalogue-stats"],
     queryFn: () => fetchStats(),
   });
-  return <PublicLanding stats={data} />;
+  // `isPending` est vrai aussi au rendu serveur (la requête ne part que du client) : le
+  // HTML porte la bande à sa taille, et l'arrivée des chiffres ne déplace plus rien.
+  return <PublicLanding stats={data} statsPending={isPending} />;
 }
