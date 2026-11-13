@@ -111,4 +111,27 @@ describe("exportUserData", () => {
 
     await expect(run()).rejects.toThrow("data_export_failed");
   });
+
+  // Le type généré ne connaît que `Json` : l'enveloppe est désormais VALIDÉE, pas
+  // affirmée. Une forme inattendue est un refus franc, jamais un fichier bancal
+  // tendu à quelqu'un comme étant « ses données ».
+  it("refuse un document dont l'enveloppe n'a pas la forme attendue", async () => {
+    mockRpc.mockResolvedValue({ data: { ...DOCUMENT, tables: "pas une table" }, error: null });
+    const { logger } = await import("@/shared/lib/logger");
+    const run = await loadExport();
+
+    await expect(run()).rejects.toThrow("data_export_failed");
+    // Le chemin fautif, jamais la valeur : c'est un dossier personnel.
+    const logged = JSON.stringify(vi.mocked(logger.error).mock.calls);
+    expect(logged).toContain("tables");
+    expect(logged).not.toContain("pas une table");
+  });
+
+  it("laisse passer une clé que le SQL ajouterait demain — rien ne se décide ici", async () => {
+    const tomorrow = { ...DOCUMENT, consents: [{ kind: "push", at: "2026-11-01" }] };
+    mockRpc.mockResolvedValue({ data: tomorrow, error: null });
+    const run = await loadExport();
+
+    expect((await run()).document).toEqual(tomorrow);
+  });
 });

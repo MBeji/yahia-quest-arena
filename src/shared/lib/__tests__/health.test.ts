@@ -21,6 +21,8 @@ import {
   healthResponse,
   handleHealthRequest,
   HEALTH_TIMEOUT_MS,
+  PUSH_SERVER_ENV_KEYS,
+  pushConfiguration,
 } from "@/shared/lib/health";
 
 type ProbeClient = Parameters<typeof probeDatabase>[0];
@@ -91,9 +93,10 @@ describe("buildHealthReport", () => {
   const now = new Date("2026-07-20T18:30:00.000Z");
 
   it("is ok when the database answers", () => {
-    expect(buildHealthReport(true, { commit: "abc1234", now })).toEqual({
+    expect(buildHealthReport(true, { commit: "abc1234", now, push: "configured" })).toEqual({
       status: "ok",
       checks: { database: "ok" },
+      push: "configured",
       commit: "abc1234",
       ts: "2026-07-20T18:30:00.000Z",
     });
@@ -103,6 +106,47 @@ describe("buildHealthReport", () => {
     const report = buildHealthReport(false, { commit: "abc1234", now });
     expect(report.status).toBe("degraded");
     expect(report.checks.database).toBe("fail");
+  });
+});
+
+describe("pushConfiguration — étude 40, lot 1", () => {
+  const ALL = {
+    VAPID_PUBLIC_KEY: "BPub",
+    VAPID_PRIVATE_KEY: "priv",
+    VAPID_SUBJECT: "mailto:contact@example.org",
+    CRON_SECRET: "s3cret",
+  };
+
+  it("is configured when the four server variables are present", () => {
+    expect(pushConfiguration(ALL)).toBe("configured");
+  });
+
+  it.each(PUSH_SERVER_ENV_KEYS)("is unconfigured when %s is missing", (key) => {
+    const env: NodeJS.ProcessEnv = { ...ALL };
+    delete env[key];
+    expect(pushConfiguration(env)).toBe("unconfigured");
+  });
+
+  it("treats a blank value as missing — a variable set to spaces arms nothing", () => {
+    expect(pushConfiguration({ ...ALL, CRON_SECRET: "   " })).toBe("unconfigured");
+  });
+
+  it("is unconfigured on an empty environment (local dev, CI)", () => {
+    expect(pushConfiguration({})).toBe("unconfigured");
+  });
+
+  it("never degrades the status: a site without reminders still serves its pages", () => {
+    const report = buildHealthReport(true, { now: new Date(0), push: "unconfigured" });
+    expect(report.status).toBe("ok");
+    expect(healthResponse(report).status).toBe(200);
+  });
+
+  it("puts the verdict in the body, and no value nor variable name", async () => {
+    const body = await healthResponse(
+      buildHealthReport(true, { now: new Date(0), push: "unconfigured" }),
+    ).text();
+    expect(JSON.parse(body)).toMatchObject({ push: "unconfigured" });
+    expect(body).not.toMatch(/VAPID|CRON|SECRET|mailto/i);
   });
 });
 

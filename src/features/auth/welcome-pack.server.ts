@@ -22,12 +22,6 @@ import { failWithClientError } from "@/shared/lib/safe-error";
 
 const CLAIM_ERROR_FR = "Impossible de récupérer ta récompense de bienvenue.";
 
-type WelcomePackClient = {
-  rpc: (
-    fn: "claim_welcome_pack",
-  ) => PromiseLike<{ data: unknown; error: { message: string } | null }>;
-};
-
 export type WelcomePack = {
   /** `true` seulement si CET appel a crédité — l'écran ne fête pas deux fois. */
   granted: boolean;
@@ -39,8 +33,7 @@ export type WelcomePack = {
 export const claimWelcomePack = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<WelcomePack> => {
-    const client = context.supabase as unknown as WelcomePackClient;
-    const { data, error } = await client.rpc("claim_welcome_pack");
+    const { data, error } = await context.supabase.rpc("claim_welcome_pack");
     if (error) failWithClientError("auth.claimWelcomePack", error, CLAIM_ERROR_FR);
 
     const row = (data ?? {}) as Record<string, unknown>;

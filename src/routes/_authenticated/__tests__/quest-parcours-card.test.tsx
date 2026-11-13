@@ -67,6 +67,12 @@ vi.mock("@/features/auth", () => ({
   setCurrentParcours: (...a: unknown[]) => setCurrentParcours(...a),
   claimWelcomePack: (...a: unknown[]) => claimWelcomePack(...a),
   useMyRole: () => useMyRole(),
+  useAuth: () => ({ user: { id: "11111111-1111-4111-8111-111111111111" } }),
+}));
+
+const hasActiveParentLink = vi.fn();
+vi.mock("@/features/parent-report/parent-link.server", () => ({
+  hasActiveParentLink: (...a: unknown[]) => hasActiveParentLink(...a),
 }));
 
 import { Route } from "../quest.$exerciseId";
@@ -103,7 +109,23 @@ describe("quête — carte de classe d'un élève sans parcours (é38 lot 2)", (
     getExerciseParcours.mockResolvedValue(NEUVIEME);
     setCurrentParcours.mockResolvedValue({ ok: true });
     claimWelcomePack.mockResolvedValue({ granted: true, coins: 50 });
+    hasActiveParentLink.mockResolvedValue(false);
   });
+
+  it("é40 lot 5 — « un parent est-il déjà lié ? » se lit PENDANT la quête d'un élève", async () => {
+    renderPage();
+    await waitFor(() => expect(hasActiveParentLink).toHaveBeenCalledTimes(1));
+  });
+
+  it.each(["parent", "admin"])(
+    "é40 lot 5 — un %s n'a pas de code : rien n'est lu",
+    async (role) => {
+      useMyRole.mockReturnValue({ ...NEW_STUDENT, role });
+      renderPage();
+      await Promise.resolve();
+      expect(hasActiveParentLink).not.toHaveBeenCalled();
+    },
+  );
 
   it("joue la quête ET propose la classe du chapitre à un élève sans parcours", async () => {
     renderPage();

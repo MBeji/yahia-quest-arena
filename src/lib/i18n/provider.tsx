@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { Locale } from "./types";
 import { fr } from "./fr";
+import { writeLocal } from "@/shared/lib/safe-storage";
 import { loadCatalogue, loadedCatalogue, persistedLocale } from "./catalogues";
 import {
   DEFAULT_LOCALE,
@@ -83,7 +84,7 @@ export function I18nProvider({
 
   const setLocale = useCallback(
     (newLocale: Locale) => {
-      localStorage.setItem(STORAGE_KEY, newLocale);
+      writeLocal(STORAGE_KEY, newLocale);
       writeLocaleCookie(newLocale);
       applyLocale(newLocale);
     },

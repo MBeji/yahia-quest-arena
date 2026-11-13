@@ -65,10 +65,10 @@ import {
 import { allowsFreeText, type TutorMessage } from "./chat";
 import { validateTutorOutput } from "./validator";
 
-// Les RPC de ce lot ne sont pas encore dans les types générés (ils se
-// régénèrent depuis la base, et la base ne les a pas avant la migration). Le
-// contrat est donc figé ici, motif `exam.server.ts` / `ai-access.server.ts` —
-// À SUPPRIMER à la prochaine régénération de `supabase/types.ts`.
+// Les RPC de ce lot rendent `Json` : les types générés ne peuvent pas en dire
+// plus. Leur forme se valide donc ICI, à la frontière, et ces schémas restent —
+// une dérive du SQL devient une erreur nommée au lieu d'une valeur mal typée
+// (arbitrage du 2026-11-12, motif `parseOrFail` d'`exam.server.ts`).
 const langSchema = z.enum(TUTOR_LANGS);
 const ageBandSchema = z.enum(TUTOR_AGE_BANDS);
 

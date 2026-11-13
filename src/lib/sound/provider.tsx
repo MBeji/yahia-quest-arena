@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { readLocal, writeLocal } from "@/shared/lib/safe-storage";
 import {
   DEFAULT_MUSIC_ENABLED,
   DEFAULT_SOUND_ENABLED,
@@ -13,15 +14,6 @@ import { vibrateFor } from "./haptics";
 import { LATE_SOUND_MAX_MS, audioIfLoaded, withAudio } from "./lazy";
 import type { MusicMood } from "./music";
 
-function readPref(key: string, parse: (v: string | null) => boolean, fallback: boolean): boolean {
-  if (typeof window === "undefined") return fallback;
-  try {
-    return parse(localStorage.getItem(key));
-  } catch {
-    return fallback;
-  }
-}
-
 export function SoundProvider({ children }: { children: React.ReactNode }) {
   // Start at the defaults so the first client render matches SSR; the persisted
   // preferences are applied post-mount (audio is client-only — nothing to flash).
@@ -29,10 +21,9 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
   const [musicEnabled, setMusicEnabledState] = useState<boolean>(DEFAULT_MUSIC_ENABLED);
 
   useEffect(() => {
-    setEnabledState(readPref(SOUND_STORAGE_KEY, soundEnabledFromStored, DEFAULT_SOUND_ENABLED));
-    setMusicEnabledState(
-      readPref(MUSIC_STORAGE_KEY, musicEnabledFromStored, DEFAULT_MUSIC_ENABLED),
-    );
+    // Stockage refusé : `readLocal` rend `null`, que les deux lecteurs changent en valeur par défaut.
+    setEnabledState(soundEnabledFromStored(readLocal(SOUND_STORAGE_KEY)));
+    setMusicEnabledState(musicEnabledFromStored(readLocal(MUSIC_STORAGE_KEY)));
   }, []);
 
   // Browsers start the AudioContext suspended until a user gesture. Prime it on
@@ -82,21 +73,14 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
 
   const setEnabled = useCallback((next: boolean) => {
     setEnabledState(next);
-    try {
-      localStorage.setItem(SOUND_STORAGE_KEY, next ? "on" : "off");
-    } catch {
-      // Private-mode / disabled storage: keep the in-memory preference.
-    }
+    // Stockage refusé : la préférence reste en mémoire, le temps de la page.
+    writeLocal(SOUND_STORAGE_KEY, next ? "on" : "off");
     if (next) withAudio((audio) => audio.unlockAudio());
   }, []);
 
   const setMusicEnabled = useCallback((next: boolean) => {
     setMusicEnabledState(next);
-    try {
-      localStorage.setItem(MUSIC_STORAGE_KEY, next ? "on" : "off");
-    } catch {
-      // Private-mode / disabled storage.
-    }
+    writeLocal(MUSIC_STORAGE_KEY, next ? "on" : "off");
     if (next) withAudio((audio) => audio.unlockAudio());
   }, []);
 

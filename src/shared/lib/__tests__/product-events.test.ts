@@ -3,11 +3,8 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 
-import {
-  PRODUCT_EVENT_CATALOGUE,
-  trackProductEvent,
-  type ProductEventName,
-} from "../product-events";
+import { trackProductEvent, type ProductEventName } from "../product-events";
+import { PRODUCT_EVENT_CATALOGUE } from "../product-events-catalogue";
 
 vi.mock("../product-analytics", () => ({ captureProductEvent: vi.fn() }));
 import { captureProductEvent } from "../product-analytics";
@@ -70,6 +67,9 @@ const ETUDE_31_CLOSED_LIST: ProductEventName[] = [
   "visit_returned",
   "install_invite",
   "content_shared",
+  // Étude 40 lot 5 — septième amendement écrit, décision du propriétaire du 2026-11-13 : l'affichage
+  // de la carte « Inviter mon parent » se compte (dénominateur de `content_shared{intent:"parent"}`).
+  "parent_invite",
 ];
 
 const SRC = join(process.cwd(), "src");
@@ -81,7 +81,11 @@ function sourceFiles(dir: string, out: string[] = []): string[] {
     if (statSync(full).isDirectory()) {
       if (entry === "__tests__") continue;
       sourceFiles(full, out);
-    } else if (/\.(ts|tsx)$/.test(entry) && entry !== "product-events.ts") {
+    } else if (
+      /\.(ts|tsx)$/.test(entry) &&
+      entry !== "product-events.ts" &&
+      entry !== "product-events-catalogue.ts"
+    ) {
       out.push(full);
     }
   }

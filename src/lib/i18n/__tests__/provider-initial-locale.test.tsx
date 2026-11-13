@@ -1,10 +1,10 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { renderToString } from "react-dom/server";
 import { hydrateRoot } from "react-dom/client";
 import { act } from "react";
 import { I18nProvider, useI18n, useT } from "@/lib/i18n";
-import { loadCatalogue } from "@/lib/i18n/catalogues";
+import { loadCatalogue, persistedLocale } from "@/lib/i18n/catalogues";
 
 // =============================================================================
 // LE PREMIER RENDU SORT DANS LA LANGUE DU COOKIE (issue #1228,
@@ -111,5 +111,46 @@ describe("I18nProvider — initialLocale", () => {
       </I18nProvider>,
     );
     expect(html).toContain("Chargement…");
+  });
+});
+
+// #1307 — stockage refusé : la langue persistée se lisait sans garde dans l'effet de montage,
+// et la page entière tombait. Le cookie décide, et changer de langue marche quand même.
+describe("I18nProvider — stockage refusé (#1307)", () => {
+  function Switcher() {
+    const { locale, setLocale } = useI18n();
+    return (
+      <button type="button" data-testid="switch" onClick={() => setLocale("en")}>
+        {locale}
+      </button>
+    );
+  }
+
+  beforeEach(() => {
+    vi.spyOn(window, "localStorage", "get").mockImplementation(() => {
+      throw new DOMException("The operation is insecure.", "SecurityError");
+    });
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("la locale persistée est celle du cookie, sans lever", () => {
+    document.cookie = "xp-scholars-locale=ar; path=/";
+    expect(persistedLocale()).toBe("ar");
+  });
+
+  it("monte sans lever, puis change de langue et l'écrit dans le cookie", async () => {
+    await loadCatalogue("en");
+    render(
+      <I18nProvider>
+        <Switcher />
+      </I18nProvider>,
+    );
+    expect(screen.getByTestId("switch")).toHaveTextContent("fr");
+    fireEvent.click(screen.getByTestId("switch"));
+    await waitFor(() => expect(screen.getByTestId("switch")).toHaveTextContent("en"));
+    expect(document.cookie).toContain("xp-scholars-locale=en");
   });
 });

@@ -69,6 +69,33 @@ const CANONICAL_ORIGIN = await (async () => {
  *  the static server fallback). Any hit = the shell died. */
 const ERROR_MARKERS = ["s'est déchiré", "didn't load", "تمزّقت", "torn apart"];
 
+/**
+ * LE STOCKAGE REFUSÉ (#1307). Cookies et données de site bloqués, certains modes privés, un
+ * navigateur intégré verrouillé : `localStorage` lève à l'ACCÈS ; quota plein : il lève à
+ * l'USAGE. Une seule lecture sans garde au démarrage remplaçait le site entier par l'écran
+ * d'erreur de la racine — vert partout ailleurs, puisque ni jsdom ni le serveur de dev ne
+ * refusent quoi que ce soit. Script injecté avant tout code de la page.
+ */
+const STORAGE_DENIAL = {
+  refused: `
+    for (const name of ["localStorage", "sessionStorage"]) {
+      Object.defineProperty(window, name, {
+        configurable: true,
+        get() { throw new DOMException("The operation is insecure.", "SecurityError"); },
+      });
+    }`,
+  full: `
+    for (const store of [window.localStorage, window.sessionStorage]) {
+      const proto = Object.getPrototypeOf(store);
+      for (const method of ["getItem", "setItem", "removeItem", "key", "clear"]) {
+        Object.defineProperty(proto, method, {
+          configurable: true,
+          value() { throw new DOMException("The quota has been exceeded.", "QuotaExceededError"); },
+        });
+      }
+    }`,
+};
+
 const MIME = {
   ".js": "text/javascript",
   ".css": "text/css",
@@ -155,8 +182,9 @@ async function launchChromium() {
   }
 }
 
-async function probePage(browser, path, marker) {
+async function probePage(browser, path, marker, storage = null) {
   const context = await browser.newContext();
+  if (storage) await context.addInitScript(STORAGE_DENIAL[storage]);
   const page = await context.newPage();
   // Hermetic: localhost only. Blocks fonts/gtag/Supabase — the shell must
   // survive all of them being unreachable anyway.
@@ -378,6 +406,18 @@ for (const [path, marker] of Object.entries(PAGES)) {
   } else {
     failed = true;
     console.error(`✖ ${path} FAILED:`);
+    for (const failure of failures) console.error(`    ${failure.split("\n").join("\n    ")}`);
+  }
+}
+
+// Le stockage refusé se joue sur l'accueil : la racine est commune à toutes les pages.
+for (const storage of Object.keys(STORAGE_DENIAL)) {
+  const failures = await probePage(browser, "/", PAGES["/"], storage);
+  if (failures.length === 0) {
+    console.log(`✔ / renders with storage ${storage} (#1307)`);
+  } else {
+    failed = true;
+    console.error(`✖ / with storage ${storage} FAILED:`);
     for (const failure of failures) console.error(`    ${failure.split("\n").join("\n    ")}`);
   }
 }

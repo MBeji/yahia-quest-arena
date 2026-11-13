@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { readLocal, writeLocal } from "@/shared/lib/safe-storage";
 import {
   DEFAULT_THEME,
   THEME_COOKIE,
@@ -16,7 +17,8 @@ function getInitialTheme(): Theme {
   // localStorage is the primary client-side preference (setTheme writes both it
   // and the cookie, so they normally agree). The cookie is a fallback that also
   // lets the SSR shell read the theme for the <html> class (see __root.tsx).
-  const stored = localStorage.getItem(THEME_STORAGE_KEY);
+  // Stockage refusé (#1307) : `null`, et le cookie décide.
+  const stored = readLocal(THEME_STORAGE_KEY);
   if (isTheme(stored)) return stored;
   if (stored !== null) {
     // One-time migration: a persisted value from a removed theme (e.g. the old
@@ -38,7 +40,7 @@ function applyThemeClass(theme: Theme) {
 }
 
 function persistTheme(theme: Theme) {
-  localStorage.setItem(THEME_STORAGE_KEY, theme);
+  writeLocal(THEME_STORAGE_KEY, theme);
   document.cookie = `${THEME_COOKIE}=${theme}; path=/; max-age=${COOKIE_MAX_AGE}; SameSite=Lax`;
   applyThemeClass(theme);
 }

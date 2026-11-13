@@ -9,9 +9,17 @@ type HealthClient = ReturnType<typeof createPublicSupabaseClient>;
  */
 export const HEALTH_TIMEOUT_MS = 3_000;
 
+export type PushConfiguration = "configured" | "unconfigured";
+
 export type HealthReport = {
   status: "ok" | "degraded";
   checks: { database: "ok" | "fail" };
+  /**
+   * Étude 40, lot 1 — le canal push est-il armé sur CE déploiement ? Ne dégrade jamais
+   * `status` : un site sans rappels sert toujours ses pages, et un moniteur de disponibilité
+   * n'a pas à crier pour ça. C'est le nightly qui lit ce champ.
+   */
+  push: PushConfiguration;
   /** Short SHA of the deployment actually serving this response. */
   commit: string;
   ts: string;
@@ -66,13 +74,43 @@ export function deploymentCommit(env: NodeJS.ProcessEnv = process.env): string {
   return sha ? sha.slice(0, 7) : "unknown";
 }
 
+/**
+ * Les quatre variables SERVEUR sans lesquelles aucun rappel ne part (docs/environment-
+ * variables.md § Web Push) : la paire VAPID et son contact signent l'envoi, `CRON_SECRET`
+ * ouvre `/api/cron/notify` au cron de Vercel. La cinquième, `VITE_VAPID_PUBLIC_KEY`, est
+ * incrustée dans le bundle client au build : elle se garde au build (`check-push-env.mjs`),
+ * pas ici.
+ *
+ * Pourquoi ce champ existe : du 2026-06-13 au 2026-11-13, le push a été déclaré livré alors
+ * qu'aucune de ces variables n'était posée en production — zéro souscription, un cron refusé
+ * chaque soir en 401, et rien pour le dire (étude 40, T-1). Seule la PRÉSENCE est rendue ;
+ * jamais une valeur, ni même le nom de celle qui manque.
+ */
+export const PUSH_SERVER_ENV_KEYS = [
+  "VAPID_PUBLIC_KEY",
+  "VAPID_PRIVATE_KEY",
+  "VAPID_SUBJECT",
+  "CRON_SECRET",
+] as const;
+
+export function pushConfiguration(env: NodeJS.ProcessEnv = process.env): PushConfiguration {
+  return PUSH_SERVER_ENV_KEYS.every((key) => (env[key] ?? "").trim().length > 0)
+    ? "configured"
+    : "unconfigured";
+}
+
 export function buildHealthReport(
   databaseOk: boolean,
-  { commit = deploymentCommit(), now = new Date() }: { commit?: string; now?: Date } = {},
+  {
+    commit = deploymentCommit(),
+    now = new Date(),
+    push = pushConfiguration(),
+  }: { commit?: string; now?: Date; push?: PushConfiguration } = {},
 ): HealthReport {
   return {
     status: databaseOk ? "ok" : "degraded",
     checks: { database: databaseOk ? "ok" : "fail" },
+    push,
     commit,
     ts: now.toISOString(),
   };
