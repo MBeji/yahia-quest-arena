@@ -1022,12 +1022,45 @@ Décision du propriétaire, journalisée (`docs/journal-decisions.md`, 2026-11-1
 sur un HIT, niveau 260 → ≈ 40 ms, pour tout visiteur sans compte comme pour un élève
 (l'auth ne passe jamais par le HTML).
 
-**À vérifier dès le déploiement** — non vérifiable avant (plus d'aperçu Vercel pour les
-branches d'agents) : que le CDN applique `Vary` aux en-têtes posés par le routage. Méthode :
-`curl` deux fois la même page sans cookie (`x-vercel-cache` MISS puis HIT, `html lang="fr"`),
-puis avec `Cookie: xp-scholars-locale=ar` (`lang="ar"`, jamais la variante française), puis
-avec le thème sombre ; et la page cours, qui doit rester MISS. Une variante qui fuit = retour
-arrière immédiat.
+**Vérifié en production le 2026-11-13 à 17:01 UTC** (#1322 fusionnée à 16:49, `curl` avec un
+User-Agent de navigateur, passes espacées de 2 à 3 s) :
+
+| Requête                                | `/`                 | `/niveau/concours-6eme` |
+| -------------------------------------- | ------------------- | ----------------------- |
+| sans cookie                            | MISS puis HIT, `fr` | MISS puis HIT, `fr`     |
+| `xp-scholars-locale=ar` (+ `_ga` n° 1) | MISS, `ar`          | MISS, `ar`              |
+| `xp-scholars-locale=ar` (+ `_ga` n° 2) | **HIT, `ar`**       | **HIT, `ar`**           |
+| `xp-scholars-theme=dark`               | MISS, `fr` sombre   | MISS, `fr` sombre       |
+| `xp-scholars-locale=en; …theme=dark`   | MISS, `en` sombre   | MISS, `en` sombre       |
+| sans cookie, ensuite                   | HIT, `fr`           | HIT, `fr`               |
+
+**Aucune variante ne fuit** : chaque couple langue × thème a son entrée, un cookie d'audience
+différent ne crée pas d'entrée de plus (le second visiteur arabe reçoit le HIT arabe), et le
+visiteur sans cookie ne reçoit jamais la page d'un autre. Toutes ces réponses portent une
+CSP à 2 empreintes et aucun nonce. Cours et matière restent MISS, nonce compris.
+
+Dans Chromium contre la production : accueil (`fr`, puis `ar` sombre), niveau et programme
+s'hydratent, **aucune violation `script-src`**.
+
+**Premier octet** (`curl`, connexion ouverte, 5 passes espacées de 3 s) :
+
+| Ressource               | Avant (2026-11-13, matin) | Après, 5 passes (ms)           | Médiane |
+| ----------------------- | ------------------------: | ------------------------------ | ------: |
+| `/favicon.svg` (témoin) |                        43 | 64 · 55 · 68 · 73 · 56         |      64 |
+| accueil                 |                       175 | 65 · 60 · 59 · 68 · 77         |  **65** |
+| niveau                  |                       260 | 64 · 68 · 65 · 58 · 99         |  **65** |
+| `/programme`            |                         — | 328 (MISS) · 56 · 59 · 54 · 54 |  **56** |
+| cours (non caché)       |                       292 | 428 · 441 · 346 · 341 · 501    |     428 |
+
+Le trajet du conteneur était plus lent que le matin (le témoin passe de 43 à 64 ms, le cours
+non caché de 292 à 428) : la comparaison juste n'est pas « 175 → 65 » à la milliseconde près, c'est
+qu'**un sommaire coûte désormais ce que coûte un fichier statique servi par le CDN**, pour
+tout visiteur.
+
+**Vu au passage, sans rapport avec ce lot** : toutes les pages, cachées ou non, nonce ou
+empreintes, refusent une balise de Google Analytics vers `stats.g.doubleclick.net`
+(`connect-src`, la liste étroite de `csp.ts`). La mesure d'audience perd donc ses signaux
+Google ; élargir `connect-src` est une décision de sécurité, laissée au propriétaire.
 
 ### Le garde-fou posé
 
