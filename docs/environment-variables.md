@@ -100,7 +100,9 @@ The Content-Security-Policy allow-lists the required origins (`src/shared/lib/cs
 `https://www.googletagmanager.com` in `script-src` for the loader, and in `connect-src` the
 **five** hosts gtag.js actually beacons `/g/collect` to — `www.google-analytics.com`,
 `*.google-analytics.com`, `analytics.google.com`, `*.analytics.google.com` and
-`www.google.com`. The loader is an external `<script>` and every gtag call is plain JS, so no
+`www.google.com` — plus `stats.g.doubleclick.net`, the Google-signals beacon (exact host only,
+never `*.doubleclick.net`; added on the owner's decision of 2026-11-13 after it was found
+blocked on every page). The loader is an external `<script>` and every gtag call is plain JS, so no
 CSP nonce is involved.
 
 ⚠️ **Un joker d'hôte CSP ne couvre pas le domaine nu.** `https://*.analytics.google.com` ne
