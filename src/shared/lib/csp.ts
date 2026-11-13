@@ -24,7 +24,14 @@
  */
 import { POSTHOG_HOST } from "@/shared/lib/product-analytics";
 
-export function buildContentSecurityPolicy(nonce?: string): string {
+/**
+ * @param nonce  le nonce de la requête (pages rendues à chaque visite).
+ * @param scriptHashes  empreintes `sha256-…` des scripts en ligne d'une page servie par le
+ *   CDN (`public-cache.ts`) : une page mise en cache ne peut pas porter de nonce — il serait
+ *   le même pour tous ses visiteurs, donc plus un secret. Elle autorise à la place les
+ *   octets exacts des scripts que le framework a émis pour elle, et rien d'autre.
+ */
+export function buildContentSecurityPolicy(nonce?: string, scriptHashes: string[] = []): string {
   // Google Analytics 4 (gtag.js) loads from this host as an external <script>.
   // We do NOT use 'strict-dynamic', so listing the host alongside the nonce keeps
   // it effective (see src/shared/lib/analytics.ts).
@@ -49,9 +56,11 @@ export function buildContentSecurityPolicy(nonce?: string): string {
   // With a nonce, `'self'` still allows the hashed /assets/*.js chunks (we do
   // not use 'strict-dynamic', so host-source allowlisting stays effective);
   // the nonce allows the framework's inline scripts. No 'unsafe-inline'.
-  const scriptSrc = nonce
-    ? `script-src 'self' 'nonce-${nonce}' ${gaScript}`
-    : `script-src 'self' ${gaScript}`;
+  const inlineSources = [
+    ...(nonce ? [`'nonce-${nonce}'`] : []),
+    ...scriptHashes.map((hash) => `'${hash}'`),
+  ];
+  const scriptSrc = ["script-src", "'self'", ...inlineSources, gaScript].join(" ");
   return [
     "default-src 'self'",
     scriptSrc,
