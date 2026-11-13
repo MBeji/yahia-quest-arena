@@ -22,6 +22,11 @@ vi.mock("@tanstack/react-start", () => ({
   useServerFn: (fn: { __id?: string }) => (fn?.__id === "save" ? mockSave : mockRemove),
 }));
 
+const trackProductEvent = vi.fn();
+vi.mock("@/shared/lib/product-events", () => ({
+  trackProductEvent: (...a: unknown[]) => trackProductEvent(...a),
+}));
+
 import { usePush } from "../use-push";
 
 let getSubscription: ReturnType<typeof vi.fn>;
@@ -96,6 +101,26 @@ describe("usePush", () => {
       data: { endpoint: "https://push/x", p256dh: "pk", auth: "ak", userAgent: "test-UA" },
     });
     expect(result.current.state).toBe("granted");
+  });
+
+  it("étude 40, lot 2 — l'activation porte son moment, et rien d'autre", async () => {
+    trackProductEvent.mockClear();
+    const { result } = renderHook(() => usePush({ moment: "victory" }));
+    await waitFor(() => expect(result.current.state).toBe("default"));
+    await act(async () => {
+      await result.current.enable();
+    });
+    expect(trackProductEvent).toHaveBeenCalledWith("push_optin", { moment: "victory" });
+  });
+
+  it("sans moment, l'activation part sans propriété", async () => {
+    trackProductEvent.mockClear();
+    const { result } = renderHook(() => usePush());
+    await waitFor(() => expect(result.current.state).toBe("default"));
+    await act(async () => {
+      await result.current.enable();
+    });
+    expect(trackProductEvent).toHaveBeenCalledWith("push_optin", undefined);
   });
 
   it("disable() unsubscribes and removes the subscription", async () => {

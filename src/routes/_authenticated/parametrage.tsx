@@ -485,7 +485,7 @@ function ParametragePage() {
 
         <Section Icon={Bell} title={t.settings.soundTitle} desc={t.settings.soundDesc}>
           <SoundToggles />
-          <EnablePushCard />
+          <EnablePushCard moment="settings" />
           {/* Le rappel du plan du jour (étude 11 US-7) se règle SOUS la carte qui
               arme le push : il en dépend, et une bascule qui n'allume rien tant
               que la permission manque est exactement la faute corrigée par #813.

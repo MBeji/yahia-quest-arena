@@ -35,6 +35,13 @@ export type NudgeCandidate = {
   readonly kind: NudgeKind;
   /** L'écran peut-il la proposer MAINTENANT (bon moment, appareil capable) ? La mémoire, elle, est lue ici. */
   readonly available: boolean;
+  /**
+   * La réponse à `available` est-elle encore en route (l'état du push se lit du service worker,
+   * en asynchrone) ? Tant qu'un candidat est en attente, l'emplacement ne choisit PAS : sans cette
+   * retenue, une invitation plus haute dans l'ordre perdrait sa place à chaque fois, au profit
+   * de la suivante. Le candidat doit borner son attente lui-même (étude 40, lot 2).
+   */
+  readonly pending?: boolean;
   readonly render: (controls: NudgeControls) => ReactNode;
 };
 
@@ -54,15 +61,18 @@ export function NudgeSlot({
     .filter((candidate) => candidate.available)
     .map((candidate) => candidate.kind)
     .join(",");
+  const waiting = candidates.some((candidate) => candidate.pending === true);
 
   useLayoutEffect(() => {
     if (chosen !== null || (decided.current && !late)) return;
+    // Un candidat dont la réponse est en route : on attend, sans rien retenir.
+    if (waiting) return;
     decided.current = true;
     const day = today();
     const kind = chooseNudge(available ? (available.split(",") as NudgeKind[]) : [], day);
     // Montrée seulement si la mémoire a pu le retenir (stockage plein ou refusé ⇒ rien).
     if (kind !== null && markShown(kind, day)) setChosen(kind);
-  }, [available, late, chosen]);
+  }, [available, late, chosen, waiting]);
 
   const candidate = candidates.find((c) => c.kind === chosen && c.available);
   if (!candidate || closed) return null;

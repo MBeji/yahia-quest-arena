@@ -613,6 +613,8 @@ export type TranslationKeys = {
   pushNotifications: {
     cardTitle: string;
     cardDesc: string;
+    /** Étude 40, lot 2 — le refus de la carte d'après-victoire (R-6). */
+    later: string;
     enable: string;
     enabling: string;
     enabled: string;
