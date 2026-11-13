@@ -15,6 +15,7 @@ import {
   Monitor,
   Pencil,
   ScrollText,
+  Share2,
   Shield,
   Sparkles,
   Trash2,
@@ -57,6 +58,8 @@ import { AiModeSection } from "@/features/ai/components/ai-mode-section";
 // de correction et ses server fns dans le chunk du paramétrage.
 import { TutorPlanPushCard } from "@/features/tutor/components/tutor-plan-push-card";
 import { formatStudentAllianceCode } from "@/features/parent-report";
+import { useParentInvite } from "@/components/public/use-parent-invite";
+import { useInviteT } from "@/lib/i18n/invite";
 import { useI18n, useT } from "@/lib/i18n";
 import { parcoursName } from "@/shared/lib/parcours-locale";
 import { supabase } from "@/shared/integrations/supabase/client";
@@ -292,6 +295,10 @@ function ParametragePage() {
   // fois et qui appartient au parent (audit étude 15, constat [MOYEN] de C-1). Le hall n'en
   // porte plus de copie : cette ligne est le seul endroit où un élève lit son code.
   const allianceCode = role === "student" && user ? formatStudentAllianceCode(user.id) : "";
+  // Étude 40, lot 5 (R-19, R-20) : le geste qui remplace le copier-coller — ici en PERMANENCE,
+  // qu'un parent soit déjà lié ou non (un second parent, un nouvel appareil).
+  const inviteParent = useParentInvite(allianceCode, "settings");
+  const { copy: inviteCopy } = useInviteT();
 
   async function signOut() {
     await supabase.auth.signOut();
@@ -396,7 +403,10 @@ function ParametragePage() {
             </Link>
           </Row>
           {allianceCode && (
-            <Row label={t.settings.allianceCode} hint={t.settings.allianceHint}>
+            <Row
+              label={t.settings.allianceCode}
+              hint={`${t.settings.allianceHint} ${inviteCopy.hint}`}
+            >
               <span className="font-mono text-xs">{allianceCode}</span>
               <button
                 type="button"
@@ -409,6 +419,15 @@ function ParametragePage() {
               >
                 {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
                 {copied ? t.settings.allianceCopied : t.settings.allianceCopy}
+              </button>
+              <button
+                type="button"
+                data-testid="invite-parent"
+                onClick={() => void inviteParent()}
+                className={ACTION_CLASS}
+              >
+                <Share2 className="h-3.5 w-3.5" />
+                {inviteCopy.cta}
               </button>
             </Row>
           )}
