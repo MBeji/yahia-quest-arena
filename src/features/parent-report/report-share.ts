@@ -1,4 +1,5 @@
 import type { ParentTranslations } from "@/lib/i18n/parent.types";
+import { shareText, type ShareEnv, type ShareMethod } from "@/shared/lib/share-text";
 import type { getStudentReport } from "./parent-report.server";
 
 /** La forme du bilan famille telle que retournée (et validée) par le server fn. */
@@ -56,4 +57,14 @@ export function buildFamilyReportShareText(report: ReportData, t: ParentTranslat
   }
   lines.push(`💡 ${t.parentReport.adviceTitle} : ${buildWeeklyAdvice(report, t)}`);
   return lines.join("\n");
+}
+
+/**
+ * Partage du bilan : la feuille de partage de l'appareil quand elle existe (mobile), sinon
+ * WhatsApp web — le canal familial n°1 en Tunisie. Le geste est celui de `shareText` (é40 R-18),
+ * réglé comme ces deux écrans l'ont toujours fait : une feuille fermée ou refusée n'ouvre rien
+ * d'autre, et il n'y a pas de repli sur la copie.
+ */
+export function shareFamilyReport(text: string, env?: ShareEnv): Promise<ShareMethod> {
+  return shareText(text, { channels: ["share", "whatsapp"], afterUnsharedSheet: "stop" }, env);
 }

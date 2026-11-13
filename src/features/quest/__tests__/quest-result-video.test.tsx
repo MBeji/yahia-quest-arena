@@ -98,6 +98,7 @@ function renderScreen(over: Partial<Parameters<typeof QuestResultScreen>[0]> = {
     recallUnlockable: false,
     qlang: "fr" as const,
     chapterId: "ch-1",
+    chapterTitle: "Chapitre 1",
     subjectId: "math-9eme",
     correctionVideo: video,
     exerciseId: "ex-1",

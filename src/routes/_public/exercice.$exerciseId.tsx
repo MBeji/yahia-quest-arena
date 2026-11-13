@@ -21,6 +21,7 @@ import {
 } from "@/shared/constants/gamification";
 import { useAuth } from "@/features/auth";
 import { InstallNudge } from "@/components/public/install-nudge";
+import { KeepRow } from "@/components/public/keep-row";
 import { useT } from "@/lib/i18n";
 import { trackProductEvent } from "@/shared/lib/product-events";
 import { rememberCurrentPage } from "@/shared/lib/return-to";
@@ -232,6 +233,7 @@ function ExercicePage() {
         subjectId,
         nextExerciseId,
         xpReward,
+        chapter,
         onReplay,
         result,
         passed,
@@ -279,9 +281,20 @@ function ExercicePage() {
             )}
           </div>
 
-          {/* é40 lot 3 (R-11) — l'invitation à installer : après une RÉUSSITE seulement, sous les
-              actions et avant l'invitation au compte, qui reste en dernier. (Le lot 4 posera
-              « Garder ce chapitre » juste au-dessus.) */}
+          {/* é40 lot 4 (R-15 à R-17) — « Garder ce chapitre » : le visiteur sans compte s'envoie
+              la suite, et partage sa réussite s'il y en a une. Un échec ne se partage pas. */}
+          {!loading && !isAuthenticated && chapter && (
+            <KeepRow
+              chapterId={chapter.id}
+              chapterTitle={chapter.title}
+              subjectName={chapter.subjectName}
+              surface="practice"
+              success={passed ? { correct: result.correct, total: result.total } : null}
+            />
+          )}
+
+          {/* é40 lot 3 (R-11) — l'invitation à installer : après une RÉUSSITE seulement, sous la
+              rangée « Garder ce chapitre » et avant l'invitation au compte, qui reste en dernier. */}
           <InstallNudge audience="student" eligible={passed} />
 
           {/* Suppress both CTAs while the session is still resolving — an

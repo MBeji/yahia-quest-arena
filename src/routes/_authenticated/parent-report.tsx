@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import {
   buildFamilyReportShareText,
+  shareFamilyReport,
   DailyDashboard,
   getLinkedStudents,
   getStudentDailyGoal,
@@ -194,7 +195,7 @@ function ParentReport() {
             <div className="flex flex-wrap gap-2">
               <button
                 type="button"
-                onClick={() => shareReport(buildFamilyReportShareText(report, t))}
+                onClick={() => void shareFamilyReport(buildFamilyReportShareText(report, t))}
                 className="inline-flex items-center gap-2 rounded-lg border border-gold/40 bg-surface-2 px-4 py-2 text-sm font-semibold text-champagne transition hover:border-gold [@media(pointer:coarse)]:min-h-11"
               >
                 <Share2 className="h-4 w-4" /> {t.parentReport.shareCta}
@@ -465,18 +466,6 @@ function DailyDashboardPanel({ studentId }: { studentId: string }) {
       dailyGoal={daily ? { target: daily.target, done: daily.done } : null}
     />
   );
-}
-
-/**
- * Partage du bilan : Web Share natif quand disponible (mobile), sinon WhatsApp
- * web — le canal familial n°1 en Tunisie.
- */
-function shareReport(text: string): void {
-  if (typeof navigator !== "undefined" && typeof navigator.share === "function") {
-    navigator.share({ text }).catch(() => {});
-    return;
-  }
-  window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank", "noopener,noreferrer");
 }
 
 /** Actif dans les 7 derniers jours — pastille verte sur la carte enfant. */

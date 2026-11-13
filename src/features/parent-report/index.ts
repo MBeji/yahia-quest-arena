@@ -30,7 +30,7 @@ export {
 export { ReportContent } from "./components/report-content";
 export { DailyDashboard } from "./components/daily-dashboard";
 export { reportSourceKey, type ReportSource } from "./report-source";
-export { buildFamilyReportShareText, buildWeeklyAdvice } from "./report-share";
+export { buildFamilyReportShareText, buildWeeklyAdvice, shareFamilyReport } from "./report-share";
 // Le moteur d'analyse (pur) reste importable à part pour les tests et pour une
 // future couche d'insights : `@/features/parent-report/insights`.
 export {

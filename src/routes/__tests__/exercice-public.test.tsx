@@ -80,6 +80,24 @@ vi.mock("@/components/public/install-nudge", () => ({
       "data-eligible": String(eligible),
     }),
 }));
+// é40 lot 4 — la rangée a ses propres tests ; ici on prouve ce que la ROUTE lui dit.
+vi.mock("@/components/public/keep-row", () => ({
+  KeepRow: (props: {
+    chapterId: string;
+    chapterTitle: string;
+    subjectName: string | null;
+    surface: string;
+    success: { correct: number; total: number } | null;
+  }) =>
+    React.createElement("div", {
+      "data-testid": "keep-row",
+      "data-chapter": props.chapterId,
+      "data-title": props.chapterTitle,
+      "data-subject": props.subjectName ?? "",
+      "data-surface": props.surface,
+      "data-success": props.success ? `${props.success.correct}/${props.success.total}` : "",
+    }),
+}));
 const authState = vi.hoisted(() => ({ user: null as { id: string } | null, loading: false }));
 vi.mock("@/features/auth", () => ({ useAuth: () => authState }));
 
@@ -187,6 +205,7 @@ describe("entraînement public — public_practice_completed (é38 lot 0)", () =
           subjectId: "s1",
           nextExerciseId: null,
           xpReward: null,
+          chapter: null,
           onReplay: () => {},
           result: {} as never,
           passed: false,
@@ -217,6 +236,7 @@ describe("entraînement public — la suite après une réussite (relevé premi�
           subjectId: "s1",
           nextExerciseId: "ex-2",
           xpReward: null,
+          chapter: null,
           onReplay: () => {},
           result: { scorePct } as never,
           passed: scorePct >= 60,
@@ -320,6 +340,7 @@ describe("entraînement public — le retour au point de départ (é38 lot 1)", 
           subjectId: "s1",
           nextExerciseId: null,
           xpReward: null,
+          chapter: null,
           onReplay: () => {},
           result: {} as never,
           passed: false,
@@ -345,6 +366,7 @@ describe("entraînement public — la valeur de la mission dans l'invitation (é
           subjectId: "s1",
           nextExerciseId: null,
           xpReward,
+          chapter: null,
           onReplay: () => {},
           result: {} as never,
           passed: false,
@@ -505,6 +527,7 @@ describe("entraînement public — l'invitation à installer (é40 lot 3, R-11)"
           subjectId: "s1",
           nextExerciseId: "ex-2",
           xpReward: null,
+          chapter: null,
           onReplay: () => {},
           result: { scorePct: passed ? 100 : 20 } as never,
           passed,
@@ -540,5 +563,76 @@ describe("entraînement public — l'invitation à installer (é40 lot 3, R-11)"
     authState.user = { id: "u1" };
     const nudge = renderFooter(true).querySelector('[data-testid="install-nudge"]');
     expect(nudge).toHaveAttribute("data-eligible", "true");
+  });
+});
+
+describe("entraînement public — « Garder ce chapitre » (é40 lot 4, R-15 à R-17)", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    holder.strategy = null;
+    authState.user = null;
+    authState.loading = false;
+  });
+
+  const chapter = { id: "c1", title: "Les fractions", subjectName: "Mathématiques" };
+
+  function renderFooter(passed: boolean, withChapter: typeof chapter | null = chapter) {
+    const strategy = mountStrategy();
+    return render(
+      <div>
+        {strategy.renderResultFooter({
+          exerciseId: "ex-1",
+          subjectId: "s1",
+          nextExerciseId: "ex-2",
+          xpReward: null,
+          chapter: withChapter,
+          onReplay: () => {},
+          result: { scorePct: passed ? 80 : 20, correct: passed ? 4 : 1, total: 5 } as never,
+          passed,
+        })}
+      </div>,
+    ).container;
+  }
+  const row = (container: HTMLElement) => container.querySelector('[data-testid="keep-row"]');
+
+  it("US-7 — fin d'entraînement sans compte ⇒ la rangée, avec le CHAPITRE de l'exercice", () => {
+    const keep = row(renderFooter(false));
+    expect(keep).toHaveAttribute("data-chapter", "c1");
+    expect(keep).toHaveAttribute("data-title", "Les fractions");
+    expect(keep).toHaveAttribute("data-subject", "Mathématiques");
+    expect(keep).toHaveAttribute("data-surface", "practice");
+  });
+
+  it("US-8 — réussite ⇒ le score est confié à la rangée (« Partager ma réussite »)", () => {
+    expect(row(renderFooter(true))).toHaveAttribute("data-success", "4/5");
+  });
+
+  it("R-17 — échec ⇒ aucun score confié : pas de partage de réussite", () => {
+    expect(row(renderFooter(false))).toHaveAttribute("data-success", "");
+  });
+
+  it("elle se pose SOUS les actions, AVANT l'invitation à installer, le compte restant en dernier", () => {
+    const container = renderFooter(true);
+    const order = (selector: string) =>
+      Array.from(container.querySelectorAll("*")).indexOf(
+        container.querySelector(selector) as Element,
+      );
+    const keep = order('[data-testid="keep-row"]');
+    expect(order('[data-testid="practice-next"]')).toBeLessThan(keep);
+    expect(order("button")).toBeLessThan(keep);
+    expect(keep).toBeLessThan(order('[data-testid="install-nudge"]'));
+    expect(order('[data-testid="install-nudge"]')).toBeLessThan(order('a[href="/signup"]'));
+  });
+
+  it("un exercice hors chapitre n'a pas de lien à donner : pas de rangée", () => {
+    expect(row(renderFooter(true, null))).toBeNull();
+  });
+
+  it("un élève connecté, ou une session encore inconnue : pas de rangée (périmètre du lot)", () => {
+    authState.user = { id: "u1" };
+    expect(row(renderFooter(true))).toBeNull();
+    authState.user = null;
+    authState.loading = true;
+    expect(row(renderFooter(true))).toBeNull();
   });
 });

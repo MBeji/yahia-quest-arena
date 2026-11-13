@@ -468,3 +468,26 @@ describe("LessonReader — le retour au point de départ (é38 lot 1)", () => {
     window.localStorage.clear();
   });
 });
+
+describe("LessonReader — « M'envoyer ce cours » (é40 lot 4, US-7)", () => {
+  it("un lecteur sans compte le trouve en bas du cours, AU-DESSUS de l'invitation au compte", () => {
+    const { container } = render(
+      <LessonReader chapterId="c1" chapter={chapter} allChapters={siblings} />,
+    );
+    const send = screen.getByRole("button", { name: "M’envoyer ce cours" });
+    const invite = container.querySelector('a[href="/signup"]') as Element;
+    expect(send.compareDocumentPosition(invite) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    // Un cours n'est pas une réussite : un seul geste.
+    expect(screen.queryByTestId("keep-share-success")).not.toBeInTheDocument();
+  });
+
+  it("un élève connecté, ou une session encore inconnue, ne le voit pas", () => {
+    const signedIn = render(
+      <LessonReader chapterId="c1" chapter={chapter} allChapters={siblings} isAuthenticated />,
+    );
+    expect(screen.queryByTestId("keep-row")).not.toBeInTheDocument();
+    signedIn.unmount();
+    render(<LessonReader chapterId="c1" chapter={chapter} allChapters={siblings} authLoading />);
+    expect(screen.queryByTestId("keep-row")).not.toBeInTheDocument();
+  });
+});

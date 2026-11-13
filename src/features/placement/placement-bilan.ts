@@ -10,6 +10,7 @@ import {
   type PlacementBand,
 } from "@/shared/constants/placement";
 import { SITE_URL } from "@/shared/constants/site";
+import { shareEnvFrom, shareText } from "@/shared/lib/share-text";
 import type { PlacementTranslations } from "@/lib/i18n/placement.types";
 
 /** Un chapitre du bilan, tel que le snapshot le porte. */
@@ -110,6 +111,9 @@ export function bandCopy(
  * Partager : la feuille de partage de l'appareil quand elle existe, le presse-papiers sinon.
  * Rend ce qui a été fait, pour que l'écran le dise et que la mesure le nomme (`method`).
  * Un refus de l'utilisateur (il ferme la feuille) n'est pas une erreur : rien n'est parti.
+ *
+ * Le geste est celui de `shareText` (é40 R-18), réglé comme ce bilan l'a toujours fait : pas de
+ * WhatsApp, et une feuille fermée retombe sur la copie.
  */
 export async function sharePlacementText(
   text: string,
@@ -117,20 +121,10 @@ export async function sharePlacementText(
     ? undefined
     : navigator,
 ): Promise<"share" | "copy" | "none"> {
-  if (!nav) return "none";
-  if (typeof nav.share === "function") {
-    try {
-      await nav.share({ text });
-      return "share";
-    } catch {
-      // Annulé, ou non pris en charge pour ce contenu : on retombe sur la copie.
-    }
-  }
-  if (!nav.clipboard || typeof nav.clipboard.writeText !== "function") return "none";
-  try {
-    await nav.clipboard.writeText(text);
-    return "copy";
-  } catch {
-    return "none";
-  }
+  const method = await shareText(
+    text,
+    { channels: ["share", "copy"], afterUnsharedSheet: "next" },
+    shareEnvFrom(nav),
+  );
+  return method === "whatsapp" ? "none" : method;
 }
