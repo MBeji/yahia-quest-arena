@@ -13,6 +13,7 @@ import {
   PARENT_LINK_ERROR_PREFIX,
   REPORT_CODE_ERROR_PREFIX,
   parentCodeErrorCode,
+  type ParentCodeErrorCode,
 } from "./parent-code-errors";
 import { parseAttemptDetail, parseDailyReport } from "./insights/daily-report.schemas";
 // Les schémas de niveau module vivent à part (2026-10-31) : voir ce fichier.
@@ -27,6 +28,16 @@ import {
   type ParcoursComparison,
   type StudentExamSummary,
 } from "./parent-report.schemas";
+
+/**
+ * Journalise l'échec d'une RPC au code alliance. Un refus de cadence (borne
+ * durable des RPC, audit S-1) n'est pas une panne serveur : il part au niveau
+ * `warn`, comme dans `failWithClientError`, pour ne pas nourrir l'alerte d'erreurs.
+ */
+function logCodeFailure(context: string, error: unknown, code: ParentCodeErrorCode): void {
+  if (code === "rate_limited") logger.warn(`${context}: rate limited`);
+  else logger.error(`${context}: RPC failed`, { error: errorMessage(error) });
+}
 
 type ParentStudent = {
   id: string;
@@ -305,9 +316,9 @@ export const getStudentDailyReportByCode = createServerFn({ method: "GET" })
     });
 
     if (error) {
-      const raw = errorMessage(error);
-      logger.error("parentReport.getStudentDailyReportByCode: RPC failed", { error: raw });
-      throw new Error(REPORT_CODE_ERROR_PREFIX + parentCodeErrorCode(raw));
+      const code = parentCodeErrorCode(errorMessage(error));
+      logCodeFailure("parentReport.getStudentDailyReportByCode", error, code);
+      throw new Error(REPORT_CODE_ERROR_PREFIX + code);
     }
 
     return parseDailyReport(payload);
@@ -358,9 +369,9 @@ export const getStudentAttemptDetailByCode = createServerFn({ method: "GET" })
     });
 
     if (error) {
-      const raw = errorMessage(error);
-      logger.error("parentReport.getStudentAttemptDetailByCode: RPC failed", { error: raw });
-      throw new Error(REPORT_CODE_ERROR_PREFIX + parentCodeErrorCode(raw));
+      const code = parentCodeErrorCode(errorMessage(error));
+      logCodeFailure("parentReport.getStudentAttemptDetailByCode", error, code);
+      throw new Error(REPORT_CODE_ERROR_PREFIX + code);
     }
 
     return parseAttemptDetail(payload);
@@ -513,9 +524,9 @@ export const linkStudentByCode = createServerFn({ method: "POST" })
       p_relation: data.relationLabel,
     });
     if (error) {
-      const raw = errorMessage(error);
-      logger.error("parentReport.linkStudentByCode: RPC failed", { error: raw });
-      throw new Error(PARENT_LINK_ERROR_PREFIX + parentCodeErrorCode(raw));
+      const code = parentCodeErrorCode(errorMessage(error));
+      logCodeFailure("parentReport.linkStudentByCode", error, code);
+      throw new Error(PARENT_LINK_ERROR_PREFIX + code);
     }
 
     const row = result && typeof result === "object" ? (result as Record<string, unknown>) : {};
@@ -549,9 +560,9 @@ export const getStudentReportByCode = createServerFn({ method: "GET" })
     });
 
     if (error) {
-      const raw = errorMessage(error);
-      logger.error("parentReport.getStudentReportByCode: RPC failed", { error: raw });
-      throw new Error(REPORT_CODE_ERROR_PREFIX + parentCodeErrorCode(raw));
+      const code = parentCodeErrorCode(errorMessage(error));
+      logCodeFailure("parentReport.getStudentReportByCode", error, code);
+      throw new Error(REPORT_CODE_ERROR_PREFIX + code);
     }
 
     return parseStudentReportPayload(reportData);

@@ -13,7 +13,13 @@ import type { ParentTranslations } from "@/lib/i18n/parent.types";
  * meaningful enumeration risk.
  */
 export type ParentCodeErrorCode =
-  "not_parent" | "invalid_code" | "self_link" | "not_student" | "not_found" | "generic";
+  | "not_parent"
+  | "invalid_code"
+  | "self_link"
+  | "not_student"
+  | "not_found"
+  | "rate_limited"
+  | "generic";
 
 export const PARENT_LINK_ERROR_PREFIX = "PARENT_LINK_ERROR:";
 export const REPORT_CODE_ERROR_PREFIX = "REPORT_CODE_ERROR:";
@@ -21,6 +27,10 @@ export const REPORT_CODE_ERROR_PREFIX = "REPORT_CODE_ERROR:";
 /** Raw RPC reason → stable code (server-side use; pure). */
 export function parentCodeErrorCode(raw: string): ParentCodeErrorCode {
   const m = raw.toLowerCase();
+  // La borne durable des RPC par code (audit S-1) lève `RATE_LIMITED`
+  // (SQLSTATE PT429). Ce n'est pas un code faux : « vérifiez le code » enverrait
+  // le parent le retaper, donc aggraver la cadence qui l'a fait refuser.
+  if (m.includes("rate_limited")) return "rate_limited";
   if (m.includes("parent account required")) return "not_parent";
   if (m.includes("invalid student alliance code")) return "invalid_code";
   if (m.includes("cannot link your own account")) return "self_link";
@@ -35,6 +45,7 @@ const CODES: ReadonlySet<string> = new Set([
   "self_link",
   "not_student",
   "not_found",
+  "rate_limited",
   "generic",
 ] satisfies ParentCodeErrorCode[]);
 

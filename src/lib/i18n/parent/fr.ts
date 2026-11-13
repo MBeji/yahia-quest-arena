@@ -25,6 +25,7 @@ export const frParent: ParentTranslations = {
       self_link: "Ce code est celui de votre propre compte : entrez le code de l'élève.",
       not_student: "Ce code n'appartient pas à un compte élève.",
       not_found: "Aucun élève ne correspond à ce code : vérifiez-le, ou le compte a été supprimé.",
+      rate_limited: "Trop de demandes en peu de temps. Patientez une minute, puis réessayez.",
       generic_link: "Impossible d'associer cet élève. Vérifiez le code et réessayez.",
       generic_report: "Impossible d'afficher ce suivi. Vérifiez le code et réessayez.",
     },
