@@ -16,7 +16,15 @@ import { trackProductEvent } from "@/shared/lib/product-events";
 export type PushState =
   "loading" | "unsupported" | "unconfigured" | "default" | "granted" | "denied";
 
-export function usePush() {
+/**
+ * Étude 40, lot 2 — OÙ l'activation a eu lieu, porté par `push_optin{moment}` : la carte
+ * d'après-victoire (`victory`) n'a de sens que si elle convertit mieux que le hall
+ * (`hall`), le paramétrage (`settings`) ou le bilan parent (`parent`). Un moment, jamais
+ * une page ni un identifiant.
+ */
+export type PushMoment = "victory" | "hall" | "settings" | "parent";
+
+export function usePush({ moment }: { moment?: PushMoment } = {}) {
   const [state, setState] = useState<PushState>("loading");
   const [busy, setBusy] = useState(false);
   const save = useServerFn(savePushSubscription);
@@ -75,12 +83,12 @@ export function usePush() {
       // é31 lot 1 — KPI-D. Le refus de permission n'est PAS un opt-out : on ne
       // compte que la bascule effective, dans les deux sens (le côté serveur en
       // journalise la vérité durable dans `push_consent_events`).
-      trackProductEvent("push_optin");
+      trackProductEvent("push_optin", moment ? { moment } : undefined);
       return true;
     } finally {
       setBusy(false);
     }
-  }, [save]);
+  }, [save, moment]);
 
   const disable = useCallback(async () => {
     setBusy(true);

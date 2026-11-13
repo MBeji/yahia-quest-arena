@@ -49,7 +49,12 @@ export const PRODUCT_EVENT_CATALOGUE: readonly ProductEventEntry[] = [
   },
   { name: "shop_purchase", fires: "Achat d'un objet en boutique", live: true },
   { name: "streak_recovered", fires: "Rachat de série réussi", live: true },
-  { name: "push_optin", fires: "Activation des notifications", live: true },
+  {
+    name: "push_optin",
+    fires:
+      "Activation des notifications, avec son moment : après une victoire, au hall, au paramétrage, au bilan parent (étude 40, lot 2)",
+    live: true,
+  },
   { name: "push_optout", fires: "Désactivation des notifications", live: true },
   {
     name: "chapter_star_earned",
