@@ -23,6 +23,7 @@ import { rememberCurrentPage } from "@/shared/lib/return-to";
 import { useGuideT } from "@/lib/i18n/guide";
 import { ChapterSteps } from "@/components/guide/chapter-steps";
 import { HelpTip } from "@/components/guide/help-tip";
+import { KeepRow } from "@/components/public/keep-row";
 import { LOCKED_CHAPTER_STEPS } from "@/shared/lib/guide";
 import { exerciseRouteFor } from "../exercise-route";
 import { ManuelPagesSection } from "./manuel-pages-section";
@@ -503,8 +504,19 @@ export function LessonReader({
           never be told to create the account they already have (audit §B-4).
           Also suppressed while the session is still resolving (authLoading) to
           avoid a stale CTA flash for authenticated visitors on cold loads. */}
+      {/* é40 lot 4 (US-7) — « M'envoyer ce cours », au-dessus de l'invitation au compte. */}
       {!authLoading && !isAuthenticated && (
-        <aside className="mt-12 rounded-2xl border border-primary/20 bg-secondary px-6 py-7 text-center print:hidden">
+        <KeepRow
+          className="mt-12"
+          chapterId={chapterId}
+          chapterTitle={chapter.title}
+          subjectName={subjectData?.name_fr ?? null}
+          surface="reader"
+        />
+      )}
+
+      {!authLoading && !isAuthenticated && (
+        <aside className="mt-6 rounded-2xl border border-primary/20 bg-secondary px-6 py-7 text-center print:hidden">
           <FileText className="mx-auto h-6 w-6 text-primary" />
           <h2 className="mt-2 font-display text-lg font-bold text-foreground">
             {t.public.reader.inviteTitle}

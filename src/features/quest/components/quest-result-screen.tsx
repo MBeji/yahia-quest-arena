@@ -46,6 +46,7 @@ export function QuestResultScreen({
   recallUnlockable,
   qlang,
   chapterId,
+  chapterTitle,
   subjectId,
   correctionVideo,
   exerciseId,
@@ -74,6 +75,8 @@ export function QuestResultScreen({
   recallUnlockable: boolean;
   qlang: QuestContentLang;
   chapterId: string | null;
+  /** Le titre du chapitre, pour le lien de reprise du pied de résultat (é40 lot 4). */
+  chapterTitle: string | null;
   subjectId: string | null;
   /** Review video offered on failure (étude 23 R-6) — resolved server-side. */
   correctionVideo: CompiledVideo | null;
@@ -102,6 +105,7 @@ export function QuestResultScreen({
     subjectId: string | null;
     nextExerciseId: string | null;
     xpReward: number | null;
+    chapter: { id: string; title: string; subjectName: string | null } | null;
     onReplay: () => void;
     result: PlayerResult;
     passed: boolean;
@@ -379,6 +383,10 @@ export function QuestResultScreen({
             subjectId,
             nextExerciseId,
             xpReward,
+            chapter:
+              chapterId && chapterTitle
+                ? { id: chapterId, title: chapterTitle, subjectName: subjectName || null }
+                : null,
             onReplay,
             result,
             passed: passed && !result.quizTooFast,

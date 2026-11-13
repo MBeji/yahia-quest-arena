@@ -164,6 +164,8 @@ export type ExercisePlayerStrategy = {
     nextExerciseId: string | null;
     /** Ce que la mission rapporte (`exercises.xp_reward`), ou `null` quand rien n'est à promettre — é38 R-8. */
     xpReward: number | null;
+    /** Le chapitre de l'exercice, pour un lien qui y ramène (é40 R-16) ; `null` hors chapitre. */
+    chapter: { id: string; title: string; subjectName: string | null } | null;
     onReplay: () => void;
     result: PlayerResult;
     /** Réussite au sens de l'écran (seuil du mode atteint, sans précipitation au quiz) — é40 R-11. */
@@ -637,6 +639,7 @@ export function ExercisePlayer({
   if (isLoading || !data) return preparingScreen;
 
   const chapterId = (data.exercise.chapter_id as string | null) ?? null;
+  const chapterTitle = (data.exercise.chapters as { title?: string } | null)?.title ?? null;
   const exSubjectId = (data.exercise.subject_id as string | null) ?? null;
   // La colonne est servie telle quelle aux deux registres. Une valeur absente ou égale à 0 ne
   // promet rien : le pied de résultat garde alors sa phrase sans chiffre.
@@ -673,6 +676,7 @@ export function ExercisePlayer({
         recallUnlockable={recallUnlockable}
         qlang={qlang}
         chapterId={chapterId}
+        chapterTitle={chapterTitle}
         subjectId={exSubjectId}
         correctionVideo={data?.correctionVideo ?? null}
         exerciseId={exerciseId}

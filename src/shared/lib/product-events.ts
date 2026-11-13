@@ -223,8 +223,7 @@ export const PRODUCT_EVENT_CATALOGUE: readonly ProductEventEntry[] = [
     name: "content_shared",
     fires:
       "Partage d'un contenu par la personne : intention (reprise, réussite, parent), surface et méthode (étude 40)",
-    live: false,
-    note: "étude 40 lot 4",
+    live: true,
   },
 ] as const;
 

@@ -6,6 +6,7 @@ import { Activity, Link as LinkIcon, Printer, Share2, Trash2 } from "lucide-reac
 import { LoadingState } from "@/components/ui/loading-state";
 import {
   buildFamilyReportShareText,
+  shareFamilyReport,
   DailyDashboard,
   forgetRememberedCode,
   getStudentReportByCode,
@@ -215,7 +216,7 @@ function SuiviPublicPage() {
           <div className="mb-6 flex flex-wrap gap-2 print:hidden">
             <button
               type="button"
-              onClick={() => shareReport(buildFamilyReportShareText(report, t))}
+              onClick={() => void shareFamilyReport(buildFamilyReportShareText(report, t))}
               className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-sm font-semibold text-foreground transition hover:border-primary [@media(pointer:coarse)]:min-h-11"
             >
               <Share2 className="h-4 w-4" /> {t.parentReport.shareCta}
@@ -290,16 +291,4 @@ function ViewTab({
       {label}
     </button>
   );
-}
-
-/**
- * Partage du bilan : Web Share natif quand disponible (mobile), sinon WhatsApp web
- * — le canal familial n°1 en Tunisie. (Miroir de la page parent authentifiée.)
- */
-function shareReport(text: string): void {
-  if (typeof navigator !== "undefined" && typeof navigator.share === "function") {
-    navigator.share({ text }).catch(() => {});
-    return;
-  }
-  window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank", "noopener,noreferrer");
 }
