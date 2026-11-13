@@ -73,7 +73,11 @@ test.describe("L'invitation à installer — Chromium Android (é40 lot 3, US-5)
     await practice.firstQuestionVisible();
     await invite.offerNativeInstall();
     // Expédié (bien moins de 4 s par question) : quel que soit le score, ce n'est pas une réussite.
-    await practice.playThrough();
+    // `answerAll` et non `playThrough` : il rejoue le premier clic tant que l'hydratation ne l'a
+    // pas pris — un clic perdu laisse « Valider » désactivé, et le test attendait ce bouton
+    // jusqu'à son délai (run e2e-auth 43347085188, trois tentatives).
+    await new QuestPage(page).answerAll();
+    await expect(practice.score).toBeVisible({ timeout: 15_000 });
 
     // Le pied de résultat est là (l'invitation au compte) — et la carte n'y est pas.
     await expect(practice.accountInvite).toBeVisible({ timeout: 15_000 });
