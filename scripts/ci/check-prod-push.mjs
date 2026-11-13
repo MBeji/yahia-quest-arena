@@ -18,6 +18,42 @@ import { pathToFileURL } from "node:url";
 export const DEFAULT_SITE_URL = "https://www.na9ranal3ab.tn";
 
 /**
+ * Trois essais espacés de 15 s : une coupure d'un instant entre GitHub et le site ne doit pas
+ * rouvrir l'issue `nightly-failure`. Seule une réponse LUE compte ; un `unconfigured` lu n'est
+ * pas réessayé — c'est un fait, pas un aléa du réseau.
+ */
+export const ATTEMPTS = 3;
+export const RETRY_DELAY_MS = 15_000;
+
+/**
+ * Lit `/api/health`, en réessayant ce qui n'a pas abouti (réseau, délai, corps illisible).
+ * `fetchImpl` et `sleep` sont injectés pour les tests.
+ */
+export async function readHealth(
+  base,
+  {
+    fetchImpl = fetch,
+    sleep = (ms) => new Promise((r) => setTimeout(r, ms)),
+    attempts = ATTEMPTS,
+  } = {},
+) {
+  let lastError;
+  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    try {
+      const response = await fetchImpl(new URL("/api/health", base), {
+        headers: { accept: "application/json" },
+        signal: AbortSignal.timeout(15_000),
+      });
+      return await response.json();
+    } catch (error) {
+      lastError = error;
+      if (attempt < attempts) await sleep(RETRY_DELAY_MS);
+    }
+  }
+  throw lastError;
+}
+
+/**
  * @param {unknown} body le JSON de `/api/health`
  * @returns {{ ok: boolean, message: string }}
  */
@@ -47,11 +83,7 @@ async function main() {
   const base = i !== -1 && process.argv[i + 1] ? process.argv[i + 1] : DEFAULT_SITE_URL;
   let body;
   try {
-    const response = await fetch(new URL("/api/health", base), {
-      headers: { accept: "application/json" },
-      signal: AbortSignal.timeout(15_000),
-    });
-    body = await response.json();
+    body = await readHealth(base);
   } catch (error) {
     console.error(
       `[prod-push] /api/health injoignable : ${error instanceof Error ? error.message : error}`,
