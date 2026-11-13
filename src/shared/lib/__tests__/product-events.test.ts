@@ -65,7 +65,7 @@ const ETUDE_31_CLOSED_LIST: ProductEventName[] = [
   "public_practice_started",
   "public_gate_shown",
   // Étude 40 lot 0 — sixième amendement écrit : la mesure du retour. Deux câblés (`visit_first`,
-  // `visit_returned`), deux déclarés pour leur lot (`install_invite` lot 3, `content_shared` lot 4).
+  // `visit_returned`), `install_invite` câblé par le lot 3, `content_shared` déclaré pour le lot 4.
   "visit_first",
   "visit_returned",
   "install_invite",

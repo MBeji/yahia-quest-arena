@@ -20,6 +20,8 @@ import {
 import { claimWelcomePack, setCurrentParcours, useMyRole } from "@/features/auth";
 import { ParcoursQuickPick } from "@/components/game/parcours-quick-pick";
 import { PageShell } from "@/components/ui/page-shell";
+import { NudgeSlot } from "@/components/public/nudge-slot";
+import { useInstallCandidate } from "@/components/public/use-install-candidate";
 import { parcoursName } from "@/shared/lib/parcours-locale";
 import { trackProductEvent } from "@/shared/lib/product-events";
 import { hasPostponedQuickPick, postponeQuickPick } from "@/shared/lib/quick-pick-later";
@@ -155,13 +157,14 @@ function QuestPage() {
       // par construction, et un aller-retour de plus pour l'apprendre serait payé
       // par l'élève en attente.
       renderTutor: (questionId: string) => <TutorPanel questionId={questionId} />,
-      renderResultFooter: ({ exerciseId: exId, subjectId, nextExerciseId, onReplay }) => (
+      renderResultFooter: ({ exerciseId: exId, subjectId, nextExerciseId, onReplay, passed }) => (
         <>
           <QuestResultActions
             subjectId={subjectId}
             nextExerciseId={nextExerciseId}
             onReplay={onReplay}
           />
+          <QuestResultNudge passed={passed} />
           <ReportErrorButton exerciseId={exId} />
         </>
       ),
@@ -177,6 +180,24 @@ function QuestPage() {
       <QuestParcoursCard exerciseId={exerciseId} />
       <ExercisePlayer exerciseId={exerciseId} strategy={strategy} variant={variant} />
     </>
+  );
+}
+
+/**
+ * L'INVITATION de l'écran de résultat connecté (étude 40, R-11 et R-12) : UNE SEULE carte au plus,
+ * après une réussite, choisie par `NudgeSlot` dans l'ordre rappel → installation → inviter son
+ * parent. C'est la ROUTE qui compose : chaque invitation vient d'une feature différente.
+ *
+ * Aujourd'hui seule l'installation existe (lot 3). Le rappel (lot 2) et le parent (lot 5)
+ * s'ajoutent à la liste des candidats — l'ordre et la règle « une seule » sont déjà tenus.
+ */
+function QuestResultNudge({ passed }: { passed: boolean }) {
+  const install = useInstallCandidate("student", passed);
+  const candidates = useMemo(() => [install], [install]);
+  return (
+    <div className="mt-6 empty:hidden">
+      <NudgeSlot candidates={candidates} />
+    </div>
   );
 }
 

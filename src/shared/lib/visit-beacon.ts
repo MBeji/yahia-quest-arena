@@ -17,10 +17,10 @@
 import {
   consumeEntrySource,
   entrySurfaceFromPath,
-  isStandaloneDisplay,
   type EntrySource,
   type EntrySurface,
 } from "@/shared/lib/entry-source";
+import { isStandaloneDisplay } from "@/shared/lib/install-signals";
 import { trackProductEvent, type ProductEventProps } from "@/shared/lib/product-events";
 import { recordVisit, type VisitVerdict } from "@/shared/lib/visit-memory";
 

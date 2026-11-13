@@ -20,6 +20,7 @@ import {
   QUIZ_PASS_THRESHOLD_PCT,
 } from "@/shared/constants/gamification";
 import { useAuth } from "@/features/auth";
+import { InstallNudge } from "@/components/public/install-nudge";
 import { useT } from "@/lib/i18n";
 import { trackProductEvent } from "@/shared/lib/product-events";
 import { rememberCurrentPage } from "@/shared/lib/return-to";
@@ -233,6 +234,7 @@ function ExercicePage() {
         xpReward,
         onReplay,
         result,
+        passed,
       }) => (
         <div className="mt-8 space-y-4">
           {/* Mission réussie → la suivante, en un toucher. Jamais après un quiz (réussi, il a sa
@@ -276,6 +278,11 @@ function ExercicePage() {
               </Link>
             )}
           </div>
+
+          {/* é40 lot 3 (R-11) — l'invitation à installer : après une RÉUSSITE seulement, sous les
+              actions et avant l'invitation au compte, qui reste en dernier. (Le lot 4 posera
+              « Garder ce chapitre » juste au-dessus.) */}
+          <InstallNudge audience="student" eligible={passed} />
 
           {/* Suppress both CTAs while the session is still resolving — an
               authenticated visitor must never see a stale "create account" card. */}

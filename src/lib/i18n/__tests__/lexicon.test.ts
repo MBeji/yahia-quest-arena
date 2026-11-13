@@ -11,7 +11,7 @@ import { describe, expect, it } from "vitest";
  * SOURCES des catalogues : une valeur fautive est rouge où qu'elle soit rangée.
  */
 const I18N_DIR = join(process.cwd(), "src", "lib", "i18n");
-const SPLIT_DIRS = ["parent", "badges", "progress", "guide", "placement"];
+const SPLIT_DIRS = ["parent", "badges", "progress", "guide", "placement", "install"];
 
 function sources(locale: "fr" | "en" | "ar"): { file: string; values: string[] }[] {
   const files = [

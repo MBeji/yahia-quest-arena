@@ -166,6 +166,8 @@ export type ExercisePlayerStrategy = {
     xpReward: number | null;
     onReplay: () => void;
     result: PlayerResult;
+    /** Réussite au sens de l'écran (seuil du mode atteint, sans précipitation au quiz) — é40 R-11. */
+    passed: boolean;
   }) => ReactNode;
 };
 

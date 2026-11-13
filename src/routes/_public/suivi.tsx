@@ -16,6 +16,7 @@ import {
 } from "@/features/parent-report";
 import { useParentT } from "@/lib/i18n/parent";
 import { GuideIntroCard } from "@/components/guide/guide-intro-card";
+import { InstallNudge } from "@/components/public/install-nudge";
 import { useRedirectConnectedParent } from "@/features/auth";
 import { pageTitle } from "@/lib/i18n/head";
 
@@ -251,6 +252,13 @@ function SuiviPublicPage() {
           ) : (
             <ReportContent report={report} />
           )}
+
+          {/* é40 lot 3 (US-10) — le bilan affiché, on propose de le garder sur l'écran d'accueil.
+              SOUS le bilan : rien n'est poussé, même si le navigateur n'annonce l'installation
+              possible qu'après l'arrivée du bilan (`late`). */}
+          <div className="mx-auto mt-8 max-w-md empty:hidden">
+            <InstallNudge audience="parent" eligible late />
+          </div>
         </>
       )}
 

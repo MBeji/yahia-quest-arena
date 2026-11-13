@@ -104,6 +104,7 @@ export function QuestResultScreen({
     xpReward: number | null;
     onReplay: () => void;
     result: PlayerResult;
+    passed: boolean;
   }) => ReactNode;
   resolvePrompt: (questionId: string) => string;
   getDisplayChoice: (questionId: string, choice: string) => string;
@@ -380,6 +381,7 @@ export function QuestResultScreen({
             xpReward,
             onReplay,
             result,
+            passed: passed && !result.quizTooFast,
           })}
 
           {/* Failed exercise: the video sits ABOVE the per-question correction. */}
