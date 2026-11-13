@@ -386,4 +386,55 @@ describe("server fetch wrapper", () => {
     expect(response).toBe(upstream);
     expect(mockLoggerError).not.toHaveBeenCalled();
   });
+
+  // Sommaires publics au CDN (2026-11-13) : le câblage du wrapper. Les conditions elles-mêmes
+  // sont couvertes par `public-cache.test.ts`.
+  it("sert un sommaire au CDN quand le routage a posé la variante", async () => {
+    const nonce = "abc-123";
+    mockServerFetch.mockResolvedValue(
+      new Response(`<html><body><script nonce="${nonce}">boot()</script></body></html>`, {
+        status: 200,
+        headers: {
+          "content-type": "text/html; charset=utf-8",
+          "content-security-policy": `script-src 'self' 'nonce-${nonce}'`,
+        },
+      }),
+    );
+    const server = (await import("@/server")).default;
+    const request = new Request("https://app.local/programme", {
+      headers: {
+        "user-agent": "Mozilla/5.0 (Linux; Android 13) Chrome/130.0 Mobile Safari/537.36",
+        "x-na9ra-locale": "fr",
+        "x-na9ra-theme": "reference",
+      },
+    });
+
+    const response = await server.fetch(request, {}, {});
+
+    expect(response.headers.get("vercel-cdn-cache-control")).toContain("max-age=300");
+    expect(response.headers.get("content-security-policy")).not.toContain("nonce-");
+    expect(await response.text()).not.toContain(nonce);
+  });
+
+  it("ne met jamais en cache une page de contenu, et retire la marque de rendu dégradé", async () => {
+    mockServerFetch.mockResolvedValue(
+      new Response("<html></html>", {
+        status: 200,
+        headers: { "content-type": "text/html", "x-na9ra-ssr-degraded": "1" },
+      }),
+    );
+    const server = (await import("@/server")).default;
+    const request = new Request("https://app.local/matiere/math", {
+      headers: {
+        "user-agent": "Mozilla/5.0 (Linux; Android 13) Chrome/130.0 Mobile Safari/537.36",
+        "x-na9ra-locale": "fr",
+        "x-na9ra-theme": "reference",
+      },
+    });
+
+    const response = await server.fetch(request, {}, {});
+
+    expect(response.headers.has("vercel-cdn-cache-control")).toBe(false);
+    expect(response.headers.has("x-na9ra-ssr-degraded")).toBe(false);
+  });
 });

@@ -34,6 +34,19 @@
  * identique à `/assets/`, depuis toujours). Inoffensif tant qu'aucune page ne
  * référence un fichier manquant — y penser avant d'ajouter une règle ici.
  */
+/**
+ * Les chemins des sommaires mis en cache au CDN, et les deux en-têtes qui portent leur
+ * variante. ⚠️ Recopiés de `src/shared/lib/public-cache.ts` (ce module ne peut rien
+ * importer) ; `vercel-routes.test.mjs` échoue si les deux divergent.
+ */
+export const SUMMARY_PATH_SOURCE = "^/(?:programme(?:/lycee/[^/]+)?|niveau/[^/]+)?$";
+export const SHELL_LOCALE_HEADER = "x-na9ra-locale";
+export const SHELL_THEME_HEADER = "x-na9ra-theme";
+
+function setRequestHeader(key, value) {
+  return { type: "request.headers", op: "set", target: { key }, args: value };
+}
+
 export const VERCEL_ROUTES = [
   // Static security headers on every response (then continue routing).
   // The Content-Security-Policy is deliberately NOT here: it needs a
@@ -71,6 +84,33 @@ export const VERCEL_ROUTES = [
   {
     src: "/(icons/.*|favicon\\.svg|manifest\\.webmanifest)",
     headers: { "Cache-Control": "public, max-age=86400, stale-while-revalidate=604800" },
+    continue: true,
+  },
+  // Les SOMMAIRES publics servis par le CDN (2026-11-13, src/shared/lib/public-cache.ts).
+  // Leur rendu ne dépend que de deux cookies, la langue et le thème ; ces routes les
+  // recopient dans deux en-têtes de REQUÊTE, sur lesquels la réponse déclare `Vary` —
+  // une variante de cache par couple, au lieu d'une par visiteur. La première route pose
+  // les valeurs par défaut (et écrase un en-tête que le visiteur aurait envoyé lui-même) ;
+  // les suivantes les remplacent quand le cookie dit autre chose. La fonction re-vérifie
+  // que ces en-têtes disent la même chose que les cookies avant de laisser cacher.
+  {
+    src: SUMMARY_PATH_SOURCE,
+    transforms: [
+      setRequestHeader(SHELL_LOCALE_HEADER, "fr"),
+      setRequestHeader(SHELL_THEME_HEADER, "reference"),
+    ],
+    continue: true,
+  },
+  ...["en", "ar"].map((locale) => ({
+    src: SUMMARY_PATH_SOURCE,
+    has: [{ type: "cookie", key: "xp-scholars-locale", value: locale }],
+    transforms: [setRequestHeader(SHELL_LOCALE_HEADER, locale)],
+    continue: true,
+  })),
+  {
+    src: SUMMARY_PATH_SOURCE,
+    has: [{ type: "cookie", key: "xp-scholars-theme", value: "dark" }],
+    transforms: [setRequestHeader(SHELL_THEME_HEADER, "dark")],
     continue: true,
   },
   // Les fichiers statiques existants sont servis tels quels (sw.js, offline.html,

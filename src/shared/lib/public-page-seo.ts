@@ -60,6 +60,21 @@ export const SEED_TIMEOUT_MS = 1500;
 
 const SEED_TIMED_OUT = Symbol("seed-timed-out");
 
+/**
+ * Un préchargement manqué rend le squelette : la page est juste pour CE visiteur, pas pour
+ * les suivants. La marque empêche le CDN de la resservir (`public-cache.ts`, sommaires
+ * publics, 2026-11-13) ; `server.ts` la retire avant que la réponse ne parte.
+ */
+async function markResponseDegraded(): Promise<void> {
+  try {
+    const { setResponseHeader } = await import("@tanstack/react-start/server");
+    const { DEGRADED_RESPONSE_HEADER } = await import("@/shared/lib/public-cache");
+    setResponseHeader(DEGRADED_RESPONSE_HEADER, "1");
+  } catch {
+    // Hors contexte de requête (tests) : rien à marquer.
+  }
+}
+
 export async function seedOnServer<T>(
   label: string,
   load: () => Promise<T>,
@@ -81,12 +96,14 @@ export async function seedOnServer<T>(
         label,
         timeoutMs,
       });
+      await markResponseDegraded();
       return null;
     }
     return result;
   } catch (error) {
     if (isNotFound(error)) throw error;
     logger.warn("public page SSR seed failed — falling back to client fetch", { label, error });
+    await markResponseDegraded();
     return null;
   } finally {
     clearTimeout(timer);
