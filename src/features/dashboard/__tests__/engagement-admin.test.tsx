@@ -4,7 +4,7 @@ import React from "react";
 
 import { EngagementAdmin } from "../components/engagement-admin";
 import type { EngagementOverview } from "../engagement.server";
-import { PRODUCT_EVENT_CATALOGUE } from "@/shared/lib/product-events";
+import { PRODUCT_EVENT_CATALOGUE } from "@/shared/lib/product-events-catalogue";
 
 /**
  * Étude 31 lot 1 — la page « Engagement ».

@@ -56,6 +56,9 @@ const mount = (facts: Partial<Facts> = {}, install = false) =>
   );
 
 const card = () => screen.queryByTestId("parent-invite");
+/** Les `content_shared` seuls — `parent_invite{shown}` part dès que la carte paraît. */
+const shares = () => trackProductEvent.mock.calls.filter(([name]) => name === "content_shared");
+const SHOWN = ["parent_invite", { action: "shown" }];
 const memory = (): Record<string, { shown: string; dismissed: number }> =>
   JSON.parse(window.localStorage.getItem(NUDGE_KEY) ?? "{}");
 
@@ -140,12 +143,15 @@ describe("R-12 — une seule invitation par écran, le parent en dernier", () =>
     expect(card()).toBeNull();
   });
 
-  it("« Plus tard » ferme la carte et compte un refus ; rien n'est mesuré comme un partage", () => {
+  it("« Plus tard » ferme la carte, compte un refus, mesure `dismissed` — et aucun partage", () => {
     mount();
     fireEvent.click(screen.getByTestId("parent-invite-later"));
     expect(card()).toBeNull();
     expect(memory().parent.dismissed).toBe(1);
-    expect(trackProductEvent).not.toHaveBeenCalled();
+    expect(trackProductEvent.mock.calls).toEqual([
+      SHOWN,
+      ["parent_invite", { action: "dismissed" }],
+    ]);
   });
 
   it("deux refus ⇒ plus jamais", () => {
@@ -155,6 +161,32 @@ describe("R-12 — une seule invitation par écran, le parent en dernier", () =>
     );
     mount();
     expect(card()).toBeNull();
+  });
+});
+
+describe("l'affichage de la carte se compte (décision du 2026-11-13)", () => {
+  it('⭐ carte montrée ⇒ `parent_invite{action:"shown"}`, une fois, sans rien sur l\'élève', () => {
+    const { rerender } = mount();
+    rerender(
+      <I18nProvider>
+        <Screen facts={FACTS} />
+      </I18nProvider>,
+    );
+    expect(trackProductEvent.mock.calls).toEqual([SHOWN]);
+  });
+
+  it.each([
+    ["un parent déjà lié", { hasActiveParent: true }],
+    ["un échec", { eligible: false }],
+    ["une lecture absente", { hasActiveParent: undefined }],
+  ] as const)("pas de carte (%s) ⇒ rien n'est compté", (_label, facts) => {
+    mount(facts);
+    expect(trackProductEvent).not.toHaveBeenCalled();
+  });
+
+  it("l'installation passe devant ⇒ la carte du parent n'est pas comptée montrée", () => {
+    mount({}, true);
+    expect(trackProductEvent).not.toHaveBeenCalled();
   });
 });
 
@@ -181,15 +213,11 @@ describe("R-19 — ce qui part, et ce qui est mesuré", () => {
     device({ share: vi.fn().mockResolvedValue(undefined) });
     mount();
     fireEvent.click(screen.getByTestId("parent-invite-cta"));
-    await waitFor(() => expect(trackProductEvent).toHaveBeenCalled());
+    await waitFor(() => expect(shares()).toHaveLength(1));
     const sent = JSON.stringify(trackProductEvent.mock.calls);
     expect(sent).not.toContain("1111");
     expect(sent).not.toContain("suivi");
-    expect(Object.keys(trackProductEvent.mock.calls[0][1] as object).sort()).toEqual([
-      "intent",
-      "method",
-      "surface",
-    ]);
+    expect(Object.keys(shares()[0][1] as object).sort()).toEqual(["intent", "method", "surface"]);
   });
 
   it("feuille fermée par l'élève ⇒ rien ne part, rien n'est compté, la carte reste", async () => {
@@ -200,7 +228,7 @@ describe("R-19 — ce qui part, et ce qui est mesuré", () => {
     fireEvent.click(screen.getByTestId("parent-invite-cta"));
     await waitFor(() => expect(share).toHaveBeenCalled());
     expect(open).not.toHaveBeenCalled();
-    expect(trackProductEvent).not.toHaveBeenCalled();
+    expect(trackProductEvent.mock.calls).toEqual([SHOWN]);
     expect(card()).not.toBeNull();
   });
 
@@ -242,7 +270,7 @@ describe("R-19 — ce qui part, et ce qui est mesuré", () => {
     mount();
     fireEvent.click(screen.getByTestId("parent-invite-cta"));
     await Promise.resolve();
-    expect(trackProductEvent).not.toHaveBeenCalled();
+    expect(trackProductEvent.mock.calls).toEqual([SHOWN]);
     expect(card()).not.toBeNull();
   });
 });

@@ -1,6 +1,8 @@
+import { useEffect, useRef } from "react";
 import type { NudgeControls } from "@/components/public/nudge-slot";
 import { useParentInvite } from "@/components/public/use-parent-invite";
 import { useInviteT } from "@/lib/i18n/invite";
+import { trackProductEvent } from "@/shared/lib/product-events";
 
 /**
  * La carte « Inviter mon parent » de l'écran de résultat (étude 40, lot 5 — R-20). Le geste et sa
@@ -15,6 +17,21 @@ export function ParentInviteCard({
 }) {
   const { copy, dir } = useInviteT();
   const invite = useParentInvite(allianceCode, "result");
+
+  // Une carte montrée = un événement, quel que soit le nombre de rendus. Dénominateur du taux
+  // montrée → envoyée (`content_shared{intent:"parent", surface:"result"}`), décision du
+  // propriétaire du 2026-11-13. Aucune propriété sur l'élève.
+  const counted = useRef(false);
+  useEffect(() => {
+    if (counted.current) return;
+    counted.current = true;
+    trackProductEvent("parent_invite", { action: "shown" });
+  }, []);
+
+  function later() {
+    trackProductEvent("parent_invite", { action: "dismissed" });
+    controls.dismiss();
+  }
 
   async function send() {
     // Feuille de partage fermée : ni envoi ni refus — la carte reste, l'élève peut réessayer.
@@ -43,7 +60,7 @@ export function ParentInviteCard({
         <button
           type="button"
           data-testid="parent-invite-later"
-          onClick={controls.dismiss}
+          onClick={later}
           className="inline-flex min-h-11 items-center rounded-lg px-3 py-2.5 text-sm font-semibold text-muted-foreground transition hover:text-foreground"
         >
           {copy.later}
