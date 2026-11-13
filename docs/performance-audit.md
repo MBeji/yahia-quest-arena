@@ -872,11 +872,11 @@ immuables depuis ssr-01) sont au plancher.
 
 ### Livré dans la foulée — chaque gain avec sa mesure, même méthode avant et après
 
-| ID        | Ce qui change                                                                                                                                                                                                                                                                  | Avant → après                                                                                                                                                                                                                                                                | Méthode                                                                                                                                                           |
-| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **rt-05** | Un groupe `vendor-react` prioritaire (`vite.config.ts`, `codeSplitting`). Un groupe emporte les dépendances de ce qu'il capture : `react`, que personne ne réclamait, partait avec `@dnd-kit`. Une règle de plus dans la fonction ne suffisait pas (essayé : module déjà pris) | Accueil : JS du premier rendu **305,0 → 251,3 Ko br** (−17,6 %), transféré 369,5 → 315,8 Ko, 34 → 33 requêtes. `vendor-dndkit` importé par 69 chunks → **1** ; `vendor-motion` par 93 → **13**, plus par le chunk d'entrée. Entrée 413,80 → 238,2 KB + `vendor-react` 188,68 | `npm run perf:budget`, même commit ; `grep` des imports statiques de `dist/client/assets`                                                                         |
-| —         | Moteur de son chargé au premier geste (`src/lib/sound/lazy.ts`) : la synthèse sort de l'entrée, les préférences y restent. Safari exige `resume()` dans le geste : l'écouteur reste posé jusqu'au premier geste où le moteur est déjà là                                       | Entrée 243 967 → 239 717 octets ; chunk `audio` de 4 753 octets, demandé après un geste (vérifié en navigateur sur une page d'exercice). JS du premier rendu 251,3 → 250,3 Ko br                                                                                             | `ls -l` des chunks ; `perf:budget` ; Chromium sur le bundle de prod                                                                                               |
-| **rt-04** | `getSubject` : la disponibilité des Rappels et l'ancre de parcours partent avec les lectures de contenu au lieu de les attendre, puis de s'attendre l'une l'autre                                                                                                              | Rendu serveur de `/matiere/math`, à chaud : **1 070 · 1 132 · 1 126 → 744 · 844 · 637 ms** ; lectures en série 3 → 1. Le rendu React et la sérialisation ne comptent que pour ≈ 20 ms des 285 Ko : tout le temps est dans les lectures                                       | Bundle de prod en local, catalogue lu en anonyme, `fetch` chronométré (≈ 155 ms de trajet par lecture depuis le conteneur — les rapports valent, pas les valeurs) |
+| ID        | Ce qui change                                                                                                                                                                                                                                                                  | Avant → après                                                                                                                                                                                                                                                                                                                     | Méthode                                                                                                                                                           |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **rt-05** | Un groupe `vendor-react` prioritaire (`vite.config.ts`, `codeSplitting`). Un groupe emporte les dépendances de ce qu'il capture : `react`, que personne ne réclamait, partait avec `@dnd-kit`. Une règle de plus dans la fonction ne suffisait pas (essayé : module déjà pris) | Accueil : JS du premier rendu **305,0 → 251,3 Ko br** (−17,6 %), transféré 369,5 → 315,8 Ko, 34 → 33 requêtes. `vendor-dndkit` importé par 69 chunks → **1** ; `vendor-motion` par 93 → **13**, plus par le chunk d'entrée. Entrée 413,80 → 238,2 KB + `vendor-react` 188,68                                                      | `npm run perf:budget`, même commit ; `grep` des imports statiques de `dist/client/assets`                                                                         |
+| —         | Moteur de son chargé au premier geste (`src/lib/sound/lazy.ts`) : la synthèse sort de l'entrée, les préférences y restent. Safari exige `resume()` dans le geste : l'écouteur reste posé jusqu'au premier geste où le moteur est déjà là                                       | Entrée 243 967 → 239 717 octets ; chunk `audio` de 4 753 octets, demandé après un geste (vérifié en navigateur sur une page d'exercice). JS du premier rendu 251,3 → 250,3 Ko br                                                                                                                                                  | `ls -l` des chunks ; `perf:budget` ; Chromium sur le bundle de prod                                                                                               |
+| **rt-04** | `getSubject` : la disponibilité des Rappels et l'ancre de parcours partent avec les lectures de contenu au lieu de les attendre, puis de s'attendre l'une l'autre                                                                                                              | Rendu serveur de `/matiere/math`, à chaud : **1 070 · 1 132 · 1 126 → 744 · 844 · 637 ms** ; lectures en série 3 → 1. Le rendu React et la sérialisation ne comptent que pour ≈ 20 ms des 285 Ko : tout le temps est dans les lectures — **⚠️ non confirmé en production le 2026-11-13** (TTFB 682 → 728 ms) : voir « Re-mesure » | Bundle de prod en local, catalogue lu en anonyme, `fetch` chronométré (≈ 155 ms de trajet par lecture depuis le conteneur — les rapports valent, pas les valeurs) |
 
 Vérifié en navigateur sur le bundle de production, catalogue réel lu en anonyme : matière,
 cours et exercice rendent sans erreur de page avec le nouveau découpage ; matière et cours ne
@@ -916,6 +916,63 @@ d'exécution. En production s'y ajoutent ce que la mesure locale n'a pas — `gt
 TTFB. Ce qui raccourcit l'attente est donc ce qui retire des octets du premier rendu :
 rt-05 (fait, −54 Ko), puis `vendor-supabase` (55,4 Ko br) et `gtag.js`, tous deux à arbitrer
 (rt-06, rt-07). Travailler l'hydratation n'y changerait presque rien.
+
+### Re-mesure en production — 2026-11-13, 14:47 UTC (#1262 en ligne)
+
+Le déploiement a repris : la production sert `vendor-react-*.js` (constaté dans le HTML de
+`/`), donc #1262. Même sonde, mêmes pages, mêmes profils, même conteneur qu'au 2026-11-12.
+**Ce n'est pas un avant/après pur** : `main` est passé de `2dd1f8b` à `acb29a9`, une
+cinquantaine de PR des autres axes sont en ligne avec #1262. Les écarts ci-dessous ne sont
+attribués à ce lot que là où le mécanisme le désigne sans ambiguïté (quels chunks partent).
+
+**JavaScript du site** (brotli, hors `gtag.js` — dont l'arrivée dans la fenêtre de mesure
+varie d'une passe à l'autre et brouillait la colonne « JS » du 2026-11-12), sans bridage,
+médiane de 3 :
+
+| Page     | 2026-11-12 | 2026-11-13 |        Écart | `vendor-dndkit` / `vendor-motion` |
+| -------- | ---------: | ---------: | -----------: | --------------------------------- |
+| accueil  |      363,3 |      305,6 | **−57,7 Ko** | plus téléchargés                  |
+| niveau   |      363,0 |      306,6 | **−56,4 Ko** | plus téléchargés                  |
+| matière  |      388,4 |      335,6 | **−52,8 Ko** | plus téléchargés                  |
+| cours    |      404,1 |      349,9 | **−54,2 Ko** | plus téléchargés                  |
+| exercice |      418,0 |      430,4 |     +12,4 Ko | téléchargés (la page s'en sert)   |
+
+**rt-05 est confirmé en production** : −53 à −58 Ko br sur quatre pages sur cinq, l'ordre de
+grandeur mesuré en local (−54 Ko). Sur l'exercice, la hausse n'est pas de ce lot : la page
+fait désormais un `_serverFn` de 28,2 Ko br (1,4 Ko la veille) et le chunk `audio` y part
+**sans geste** — un effet sonore est demandé au montage de la page, `withAudio` le charge
+(4,7 Ko) ; sans conséquence audible, mais le différé n'y diffère rien.
+
+**Temps serveur** (`curl`, connexion ouverte, 5 passes espacées de 3 s) :
+
+| Ressource      | 2026-11-12 (médiane) | 2026-11-13, 5 passes (ms)   | Médiane |
+| -------------- | -------------------: | --------------------------- | ------: |
+| `/favicon.svg` |                   39 | 52 · 45 · 42 · 43 · 38      |      43 |
+| accueil        |                  165 | 189 · 169 · 174 · 178 · 175 |     175 |
+| exercice       |                  197 | 218 · 209 · 207 · 211 · 236 |     211 |
+| niveau         |                  234 | 300 · 236 · 262 · 253 · 260 |     260 |
+| cours          |                  256 | 378 · 287 · 313 · 269 · 292 |     292 |
+| **matière**    |              **682** | 730 · 730 · 722 · 726 · 738 | **730** |
+
+**rt-04 n'est PAS confirmé en production**, et le gain local annoncé était un artefact de la
+mesure. Mis en parallèle, les allers-retours ne coûtaient en local que parce que chaque
+lecture y traverse ≈ 155 ms de trajet (conteneur → base). En production la fonction
+(`arn1`) est voisine de la base : quatre vagues en série y coûtaient quelques dizaines de
+millisecondes, et le temps de la page est celui de la lecture la plus lente —
+`get_recall_availability` (rt-08), qui a toujours été là et qui l'est encore. Le code reste
+(il ne coûte rien et retire une lecture de `subjects`), mais **son gain mesuré en production
+est nul**, et la ligne « Livré » le dit désormais. Leçon de méthode, pour la suite de cet
+audit : un parallélisme de lectures se mesure depuis la région de la fonction, ou se mesure
+en production — jamais depuis un poste qui ajoute 150 ms à chaque aller-retour.
+
+**Ce qui reste le levier de la page matière : rt-08**, précalculer à l'application du
+contenu le compte de questions éligibles au Rappel par mission (`supabase/**`, hors de cet
+axe). Ensuite rt-02 (le sommaire re-téléchargé à l'hydratation, 27,1 Ko br, toujours là).
+
+**LCP bridé** (à lire avec l'avertissement de trajet de la section) : matière 5,0 → 3,5 s,
+l'élément LCP est désormais le chapeau de la matière, présent dans le HTML du serveur (vérifié par `curl`) — effet de #1281 (« la page matière
+commence par ses chapitres », axe première visite) qui résout rt-01, pas de ce lot ; exercice 5,0 → 4,8 s,
+toujours posé après l'appel client (rt-03 ouvert).
 
 ### ssr-04 — pourquoi ce n'est pas livré, et ce qu'il faut décider
 
