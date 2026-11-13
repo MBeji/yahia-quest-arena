@@ -9,11 +9,17 @@ import { execSync } from "node:child_process";
 import { cpSync, mkdirSync, writeFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
+import { assertPushBuildEnv } from "./check-push-env.mjs";
 import { SSR_MAX_DURATION_S } from "./vercel-function.mjs";
 import { VERCEL_ROUTES } from "./vercel-routes.mjs";
 
 const ROOT = process.cwd();
 const OUTPUT = join(ROOT, ".vercel", "output");
+
+// Step 0 — Étude 40, lot 1 : la production de www ne se compile pas sans ses clés Web Push
+// (la clé publique s'incruste dans le bundle client ici même ; absente, le push s'éteint en
+// silence). Sans effet hors de ce build-là — voir check-push-env.mjs.
+assertPushBuildEnv();
 
 // Step 1 — Run Vite build (produces dist/client + dist/server)
 console.log("▶ Running vite build...");

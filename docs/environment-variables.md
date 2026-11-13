@@ -245,6 +245,27 @@ Scheduled push (streak reminders) needs a VAPID keypair and a cron secret:
    sends `Authorization: Bearer $CRON_SECRET` on each scheduled run, which
    `src/server.ts` → `handlePushCron` verifies.
 
+**Ce qui garde ces variables (étude 40, lot 1).** Du 2026-06-13 au 2026-11-13, aucune des cinq
+n'était posée en production : zéro souscription, un cron refusé chaque soir en 401, et rien pour
+le dire. Trois gardes, désormais :
+
+- **Au build** — `scripts/check-push-env.mjs`, appelé par `build-vercel.mjs` : le build de
+  production du projet qui sert `www.na9ranal3ab.tn` échoue si une des cinq manque, ou si
+  `VITE_VAPID_PUBLIC_KEY` diffère de `VAPID_PUBLIC_KEY`. Sans effet sur un build local, de CI, de
+  prévisualisation, ou sur la production de l'autre projet Vercel du dépôt.
+- **À chaud** — `GET /api/health` rend `push: "configured" | "unconfigured"` (les quatre
+  variables serveur ; seule la présence, jamais une valeur). Il ne dégrade pas `status`.
+- **Chaque nuit** — le job « Push armé en production » de `nightly.yml`
+  (`scripts/ci/check-prod-push.mjs`) lit ce champ et tient l'issue `nightly-failure` ouverte tant
+  qu'il dit `unconfigured`.
+
+**Constater après coup** (après une pose ou une rotation) : (1) `curl -sL
+https://www.na9ranal3ab.tn/api/health` rend `"push":"configured"` ; (2) le chunk
+`assets/enable-push-card-*.js` servi contient la clé publique ; (3) connecté, la carte
+« Rappels » est visible au hall ; (4) une activation réelle crée une ligne dans
+`push_subscriptions` ; (5) la réponse du cron du soir porte `audience` ≥ 1 (journaux Vercel,
+« Push cron complete »).
+
 ## Mode IA — la porte (étude 29)
 
 L'étage IA a **deux payeurs derrière une seule porte** (étude 29 §1.3) : la clé
