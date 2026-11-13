@@ -25,6 +25,7 @@ export const enParent: ParentTranslations = {
       self_link: "This code belongs to your own account: enter the student's code.",
       not_student: "This code does not belong to a student account.",
       not_found: "No student matches this code: check it, or the account was deleted.",
+      rate_limited: "Too many requests in a short time. Please wait a minute, then try again.",
       generic_link: "Couldn't link this student. Check the code and try again.",
       generic_report: "Couldn't open this report. Check the code and try again.",
     },
