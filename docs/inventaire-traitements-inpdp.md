@@ -165,6 +165,19 @@ d'adresse `?src=` qui porte la source d'entrée est retiré de l'adresse affich�
 Code : `src/shared/lib/visit-memory.ts`, `src/shared/lib/entry-source.ts`,
 `src/shared/lib/visit-beacon.ts`.
 
+**La mémoire des invitations** (étude 40, lot 3) vit à côté, sous la même discipline :
+
+| Clé (`localStorage`) | Contenu                                                                                                                                 | Remarque                                                                                                                                                                                                                                               |
+| -------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `na9ra.nudge`        | Par genre d'invitation (`push`, `install`, `parent`) : `shown` = jour civil (Tunis) du dernier affichage, `dismissed` = nombre de refus | Évite de reproposer la même invitation (pas deux fois en 14 jours — 7 pour le rappel —, deux refus ⇒ plus jamais, une seule par écran). **Ni heure, ni page, ni identifiant.** Jamais envoyée. Sans limite de durée ; effacée avec les données du site |
+
+Ce qui part vers la mesure n'est pas la mémoire mais le **fait** : `install_invite` avec trois
+étiquettes fermées — l'action (montrée, acceptée, écartée), la plateforme (fenêtre du navigateur ou
+gestes Safari) et l'audience (élève ou parent). Stockage indisponible ⇒ aucune invitation, donc
+aucun événement. Code : `src/shared/lib/nudge-memory.ts`, `src/shared/lib/install-signals.ts`,
+`src/shared/lib/install-prompt.ts`,
+`src/components/public/install-invite.tsx`.
+
 ### 3.6 Étage IA — **dormant**, tables créées, aucune donnée
 
 `ai_credentials` (clé d'API d'une famille, chiffrée AES-256-GCM à clé maîtresse

@@ -9,7 +9,10 @@ import type React from "react";
  * Le hook a ses propres tests (qui part, qui reste). Ici on prouve le câblage de la route : la
  * demande précise d'un lien partagé `/suivi?code=…` la garde, et le visiteur garde sa page.
  */
-const hold = vi.hoisted(() => ({ search: {} as { code?: string } }));
+const hold = vi.hoisted(() => ({
+  search: {} as { code?: string },
+  report: undefined as object | undefined,
+}));
 const redirect = vi.hoisted(() => vi.fn());
 
 vi.mock("@tanstack/react-router", () => ({
@@ -24,8 +27,8 @@ vi.mock("@tanstack/react-query", () => ({
   useMutation: () => ({
     mutate: vi.fn(),
     reset: vi.fn(),
-    data: undefined,
-    variables: undefined,
+    data: hold.report,
+    variables: hold.report ? "ABCD1234" : undefined,
     error: null,
     isPending: false,
     isError: false,
@@ -46,6 +49,12 @@ vi.mock("@/features/parent-report", () => ({
   ReportContent: () => null,
 }));
 vi.mock("@/components/guide/guide-intro-card", () => ({ GuideIntroCard: () => null }));
+// é40 lot 3 — la carte a ses propres tests ; ici on prouve ce que la ROUTE lui dit.
+vi.mock("@/components/public/install-nudge", () => ({
+  InstallNudge: ({ audience, eligible }: { audience: string; eligible: boolean }) => (
+    <div data-testid="install-nudge" data-audience={audience} data-eligible={String(eligible)} />
+  ),
+}));
 
 import { Route } from "../_public/suivi";
 
@@ -55,6 +64,7 @@ describe("/suivi — le parent connecté a son espace (é38 lot 1, R-14)", () =>
   beforeEach(() => {
     vi.clearAllMocks();
     hold.search = {};
+    hold.report = undefined;
   });
 
   it("sans code dans le lien, la redirection du parent connecté est armée", () => {
@@ -75,5 +85,28 @@ describe("/suivi — le parent connecté a son espace (é38 lot 1, R-14)", () =>
     render(<Page />);
 
     expect(screen.getByRole("textbox")).toBeInTheDocument();
+  });
+});
+
+describe("/suivi — l'invitation à installer (é40 lot 3, US-10)", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    hold.search = {};
+    hold.report = undefined;
+  });
+
+  it("⭐ sans bilan affiché ⇒ aucune invitation (jamais à l'arrivée)", () => {
+    render(<Page />);
+
+    expect(screen.queryByTestId("install-nudge")).toBeNull();
+  });
+
+  it("⭐ bilan affiché ⇒ l'invitation, au texte parent", () => {
+    hold.report = {};
+    render(<Page />);
+
+    const nudge = screen.getByTestId("install-nudge");
+    expect(nudge).toHaveAttribute("data-audience", "parent");
+    expect(nudge).toHaveAttribute("data-eligible", "true");
   });
 });

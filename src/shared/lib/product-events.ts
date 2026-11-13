@@ -217,8 +217,7 @@ export const PRODUCT_EVENT_CATALOGUE: readonly ProductEventEntry[] = [
     name: "install_invite",
     fires:
       "Invitation à installer l'application : montrée, acceptée ou écartée, par plateforme et par audience (étude 40)",
-    live: false,
-    note: "étude 40 lot 3",
+    live: true,
   },
   {
     name: "content_shared",

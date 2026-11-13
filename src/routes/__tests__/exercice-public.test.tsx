@@ -71,6 +71,15 @@ vi.mock("@/features/quest/quest.practice.server", () => ({
 vi.mock("@/shared/lib/logger", () => ({
   logger: { warn: vi.fn(), error: vi.fn(), info: vi.fn() },
 }));
+// é40 lot 3 — la carte a ses propres tests ; ici on prouve ce que la ROUTE lui dit.
+vi.mock("@/components/public/install-nudge", () => ({
+  InstallNudge: ({ audience, eligible }: { audience: string; eligible: boolean }) =>
+    React.createElement("div", {
+      "data-testid": "install-nudge",
+      "data-audience": audience,
+      "data-eligible": String(eligible),
+    }),
+}));
 const authState = vi.hoisted(() => ({ user: null as { id: string } | null, loading: false }));
 vi.mock("@/features/auth", () => ({ useAuth: () => authState }));
 
@@ -180,6 +189,7 @@ describe("entraînement public — public_practice_completed (é38 lot 0)", () =
           xpReward: null,
           onReplay: () => {},
           result: {} as never,
+          passed: false,
         })}
       </div>,
     );
@@ -209,6 +219,7 @@ describe("entraînement public — la suite après une réussite (relevé premi�
           xpReward: null,
           onReplay: () => {},
           result: { scorePct } as never,
+          passed: scorePct >= 60,
         })}
       </div>,
     ).container.querySelector('a[href="/exercice/$exerciseId"]');
@@ -311,6 +322,7 @@ describe("entraînement public — le retour au point de départ (é38 lot 1)", 
           xpReward: null,
           onReplay: () => {},
           result: {} as never,
+          passed: false,
         })}
       </div>,
     );
@@ -335,6 +347,7 @@ describe("entraînement public — la valeur de la mission dans l'invitation (é
           xpReward,
           onReplay: () => {},
           result: {} as never,
+          passed: false,
         })}
       </div>,
     );
@@ -472,5 +485,60 @@ describe("entraînement public — le <head> rendu par le serveur", () => {
     vi.stubEnv("SSR", false);
     expect(routeOptions.loader({ params: { exerciseId: EX_ID } })).toBeNull();
     expect(getExerciseMeta).not.toHaveBeenCalled();
+  });
+});
+
+describe("entraînement public — l'invitation à installer (é40 lot 3, R-11)", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    holder.strategy = null;
+    authState.user = null;
+    authState.loading = false;
+  });
+
+  function renderFooter(passed: boolean) {
+    const strategy = mountStrategy();
+    return render(
+      <div>
+        {strategy.renderResultFooter({
+          exerciseId: "ex-1",
+          subjectId: "s1",
+          nextExerciseId: "ex-2",
+          xpReward: null,
+          onReplay: () => {},
+          result: { scorePct: passed ? 100 : 20 } as never,
+          passed,
+        })}
+      </div>,
+    ).container;
+  }
+
+  it("⭐ quiz ou mission réussis ⇒ l'invitation est proposable, au registre élève", () => {
+    const nudge = renderFooter(true).querySelector('[data-testid="install-nudge"]');
+    expect(nudge).toHaveAttribute("data-eligible", "true");
+    expect(nudge).toHaveAttribute("data-audience", "student");
+  });
+
+  it("⭐ quiz raté ⇒ rien n'est proposable", () => {
+    const nudge = renderFooter(false).querySelector('[data-testid="install-nudge"]');
+    expect(nudge).toHaveAttribute("data-eligible", "false");
+  });
+
+  it("⭐ elle se pose SOUS « Quête suivante » et les actions, et AVANT l'invitation au compte, qui reste en dernier", () => {
+    const container = renderFooter(true);
+    const order = (selector: string) =>
+      Array.from(container.querySelectorAll("*")).indexOf(
+        container.querySelector(selector) as Element,
+      );
+    const nudge = order('[data-testid="install-nudge"]');
+    expect(order('[data-testid="practice-next"]')).toBeLessThan(nudge);
+    expect(order("button")).toBeLessThan(nudge);
+    expect(nudge).toBeLessThan(order('a[href="/signup"]'));
+  });
+
+  it("⭐ un élève connecté qui réussit ici la voit aussi (R-11 : connecté ou non)", () => {
+    authState.user = { id: "u1" };
+    const nudge = renderFooter(true).querySelector('[data-testid="install-nudge"]');
+    expect(nudge).toHaveAttribute("data-eligible", "true");
   });
 });

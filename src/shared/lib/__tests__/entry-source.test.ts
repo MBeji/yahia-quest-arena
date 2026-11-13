@@ -4,7 +4,6 @@ import { describe, expect, it, vi } from "vitest";
 import {
   consumeEntrySource,
   entrySurfaceFromPath,
-  isStandaloneDisplay,
   readEntrySource,
   stripEntrySource,
   type EntryWindow,
@@ -136,25 +135,6 @@ describe("R-3 — `entry_surface`, déduit du chemin, jamais l'adresse", () => {
 
   it("⭐ l'identifiant du chapitre ne ressort jamais", () => {
     expect(entrySurfaceFromPath("/chapitre/secret-chapter-id")).not.toContain("secret");
-  });
-});
-
-describe("`standalone` — installée, ou dans un onglet", () => {
-  it("lit la media query, et `navigator.standalone` pour Safari iOS", () => {
-    expect(isStandaloneDisplay({ matchMedia: () => ({ matches: true }) })).toBe(true);
-    expect(isStandaloneDisplay({ matchMedia: () => ({ matches: false }) })).toBe(false);
-    expect(isStandaloneDisplay({ navigator: { standalone: true } })).toBe(true);
-    expect(isStandaloneDisplay(undefined)).toBe(false);
-  });
-
-  it("une media query qui lève ne casse rien", () => {
-    expect(
-      isStandaloneDisplay({
-        matchMedia: () => {
-          throw new Error("boom");
-        },
-      }),
-    ).toBe(false);
   });
 });
 

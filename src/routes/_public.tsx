@@ -7,6 +7,9 @@ import { CanonicalLink } from "@/components/public/canonical-link";
 import { usePublicContentProtection } from "@/shared/lib/content-protection";
 import { useAuth } from "@/features/auth";
 import { AiLauncher } from "@/features/ai/components/ai-launcher";
+// é40 lot 3 (R-13) — importé pour son EFFET : le module retient `beforeinstallprompt`, que le
+// navigateur n'émet qu'une fois par page, bien avant l'écran de résultat qui s'en servira.
+import "@/shared/lib/install-signals";
 
 /**
  * Public coquille — NO auth guard: its content (courses, catalogue, exercises) is

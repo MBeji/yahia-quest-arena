@@ -1,10 +1,11 @@
 {
   "name": "Na9ra Nal3ab",
   "short_name": "Na9ra Nal3ab",
-  "description": "L'académie shonen des concours nationaux 6ème & 9ème — et l'exploration libre : Culture Générale, Muscle ton Cerveau et les Langues. Quêtes, XP, donjons et révision.",
+  "description": "Cours, résumés et exercices corrigés de toute l’école tunisienne, de la 1re année au Baccalauréat. Quêtes, XP et révision — gratuit, en accès libre.",
   "lang": "fr",
   "dir": "auto",
-  "start_url": "/",
+  "id": "/",
+  "start_url": "/?src=pwa",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait-primary",

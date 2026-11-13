@@ -25,6 +25,9 @@ import { GoldAmbient } from "@/components/visual/gold-ambient";
 import { AccountHud } from "@/components/account-hud";
 import { GuideButton } from "@/components/guide/guide-button";
 import { CrownMark } from "@/components/brand-mark";
+// é40 lot 3 (R-13) — importé pour son EFFET : le module retient `beforeinstallprompt`, que le
+// navigateur n'émet qu'une fois par page, bien avant l'écran de résultat qui s'en servira.
+import "@/shared/lib/install-signals";
 
 const NAV_LINK =
   "flex min-h-11 items-center gap-1.5 rounded-md px-3 py-1.5 text-muted-foreground transition hover:bg-[color:var(--gold)]/10 hover:text-champagne";

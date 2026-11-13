@@ -131,27 +131,3 @@ export function entrySurfaceFromPath(pathname: string): EntrySurface {
   if (segment === undefined) return "accueil";
   return SURFACE_BY_SEGMENT[segment] ?? "autre";
 }
-
-/** Ce que `isStandaloneDisplay` lit d'une fenêtre — injectable dans les tests. */
-export type StandaloneProbe = {
-  readonly matchMedia?: (query: string) => { matches: boolean };
-  /** `navigator.standalone` n'existe que sur Safari iOS : il se lit sans le supposer typé. */
-  readonly navigator?: object;
-};
-
-function browserProbe(): StandaloneProbe | undefined {
-  return typeof window === "undefined" ? undefined : window;
-}
-
-/** L'application tourne-t-elle installée (icône d'écran d'accueil), plutôt que dans un onglet ? */
-export function isStandaloneDisplay(win: StandaloneProbe | undefined = browserProbe()): boolean {
-  try {
-    if (!win) return false;
-    if (win.matchMedia?.("(display-mode: standalone)").matches === true) return true;
-    // Safari iOS ne connaît pas toujours la media query.
-    const nav = win.navigator;
-    return nav !== undefined && "standalone" in nav && nav.standalone === true;
-  } catch {
-    return false;
-  }
-}
