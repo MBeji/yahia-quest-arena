@@ -12,6 +12,8 @@ export const HEALTH_TIMEOUT_MS = 3_000;
 export type HealthReport = {
   status: "ok" | "degraded";
   checks: { database: "ok" | "fail" };
+  /** Whether the server can send Web Push — see {@link pushConfiguration}. */
+  push: PushConfiguration;
   /** Short SHA of the deployment actually serving this response. */
   commit: string;
   ts: string;
@@ -66,13 +68,43 @@ export function deploymentCommit(env: NodeJS.ProcessEnv = process.env): string {
   return sha ? sha.slice(0, 7) : "unknown";
 }
 
+export type PushConfiguration = "configured" | "unconfigured";
+
+/** The four server-side variables Web Push needs: three to sign, one to let the cron in. */
+export const PUSH_SERVER_ENV = [
+  "VAPID_PUBLIC_KEY",
+  "VAPID_PRIVATE_KEY",
+  "VAPID_SUBJECT",
+  "CRON_SECRET",
+] as const;
+
+/**
+ * Can this deployment send Web Push? (étude 40, lot 1.) Push stayed dead in production
+ * for months — `CRON_SECRET` was missing, so the evening cron answered 401 — and nothing
+ * outside said so. This makes it readable from outside, and the nightly asserts it.
+ *
+ * Only presence is reported, never a value, nor WHICH variable is missing: the answer
+ * to that lives in Vercel, not in a public endpoint. It does not touch `status` — a
+ * dormant push is a product defect, not an outage an uptime monitor should page on.
+ */
+export function pushConfiguration(env: NodeJS.ProcessEnv = process.env): PushConfiguration {
+  return PUSH_SERVER_ENV.every((name) => (env[name] ?? "").trim() !== "")
+    ? "configured"
+    : "unconfigured";
+}
+
 export function buildHealthReport(
   databaseOk: boolean,
-  { commit = deploymentCommit(), now = new Date() }: { commit?: string; now?: Date } = {},
+  {
+    commit = deploymentCommit(),
+    now = new Date(),
+    push = pushConfiguration(),
+  }: { commit?: string; now?: Date; push?: PushConfiguration } = {},
 ): HealthReport {
   return {
     status: databaseOk ? "ok" : "degraded",
     checks: { database: databaseOk ? "ok" : "fail" },
+    push,
     commit,
     ts: now.toISOString(),
   };

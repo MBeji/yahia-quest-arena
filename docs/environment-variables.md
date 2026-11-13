@@ -245,6 +245,38 @@ Scheduled push (streak reminders) needs a VAPID keypair and a cron secret:
    sends `Authorization: Bearer $CRON_SECRET` on each scheduled run, which
    `src/server.ts` → `handlePushCron` verifies.
 
+### Constat après coup (P-0, étude 40) — le push n'a jamais marché en production
+
+**Ce qui manquait.** Pendant des mois, sur le projet Vercel `na9ranal3ab` (celui qui sert
+`www.na9ranal3ab.tn`) :
+
+- `VITE_VAPID_PUBLIC_KEY` était absente **du build** : la clé publique s'incruste à la
+  compilation, donc `usePush` compilait en « unconfigured » et la carte d'activation ne
+  proposait jamais rien ;
+- `CRON_SECRET` était absente : le cron du soir (`/api/cron/notify`) répondait **401** depuis
+  toujours.
+
+Rien ne le disait : pas d'erreur côté élève (la carte se taisait), pas d'alerte côté serveur.
+
+**Ce qui a été posé** — le 2026-11-13 à 09:13 UTC, par le propriétaire : les cinq variables
+ci-dessus sur le projet `na9ranal3ab`, puis un redéploiement de la production. Le second projet
+relié au dépôt, `yahia-quest-arena` (sans domaine propre), ne les a **pas** et n'en a pas besoin :
+il ne sert personne.
+
+**Comment vérifier** (et ce qui le vérifie désormais tout seul, étude 40 lot 1) :
+
+| Quoi                             | Comment                                                                                                                                                                                                                                                  | Qui veille                                                    |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| Les quatre variables **serveur** | `GET https://www.na9ranal3ab.tn/api/health` (User-Agent de navigateur) rend `"push":"configured"` — `unconfigured` si l'une de `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT`, `CRON_SECRET` manque. Aucune valeur, ni le nom de la manquante. | Le nightly (`nightly.yml`, job `push-health`) — chaque nuit   |
+| La clé **navigateur** au build   | Le build Vercel échoue (`scripts/check-push-build-env.mjs`, appelé par `build-vercel.mjs`) quand `VERCEL_ENV=production`, que le projet sert `na9ranal3ab.tn` (`VERCEL_PROJECT_PRODUCTION_URL`) et que `VITE_VAPID_PUBLIC_KEY` est vide ou malformée.    | Chaque build de production — la production reste sur l'ancien |
+| À la main, la clé dans le bundle | Le chunk `enable-push-card-*.js` servi par `www` contient une chaîne base64url de 87 caractères commençant par `B`.                                                                                                                                      | Personne — contrôle ponctuel                                  |
+
+Sur le projet secondaire `yahia-quest-arena`, la garde de build **avertit** sans échouer :
+échouer rougirait chaque déploiement de production de ce projet, donc chaque commit de `main`.
+Si Vercel cessait d'exposer `VERCEL_PROJECT_PRODUCTION_URL`, la garde avertirait partout au lieu
+d'échouer ; le nightly ne couvre que les variables serveur — le contrôle à la main du chunk reste
+alors le seul filet pour la clé navigateur.
+
 ## Mode IA — la porte (étude 29)
 
 L'étage IA a **deux payeurs derrière une seule porte** (étude 29 §1.3) : la clé

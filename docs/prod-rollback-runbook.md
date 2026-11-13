@@ -321,7 +321,7 @@ gh run view <id> --log-failed           # qu'est-ce qui a VRAIMENT échoué ?
 ```bash
 curl -sL -o /dev/null -w '%{http_code}\n' https://www.na9ranal3ab.tn/api/health   # 200 ou 503
 curl -sL https://www.na9ranal3ab.tn/api/health
-# {"status":"ok","checks":{"database":"ok"},"commit":"4eb36f9","ts":"…"}
+# {"status":"ok","checks":{"database":"ok"},"push":"configured","commit":"4eb36f9","ts":"…"}
 ```
 
 `www.na9ranal3ab.tn` est le **seul hôte qui répond 200** : le `.vercel.app` y redirige en 301

@@ -20,6 +20,8 @@ import {
   buildHealthReport,
   healthResponse,
   handleHealthRequest,
+  pushConfiguration,
+  PUSH_SERVER_ENV,
   HEALTH_TIMEOUT_MS,
 } from "@/shared/lib/health";
 
@@ -87,13 +89,43 @@ describe("deploymentCommit", () => {
   });
 });
 
+describe("pushConfiguration", () => {
+  const ALL = {
+    VAPID_PUBLIC_KEY: "BPublicKeyValue",
+    VAPID_PRIVATE_KEY: "private-key-value",
+    VAPID_SUBJECT: "mailto:ops@example.test",
+    CRON_SECRET: "cron-secret-value",
+  };
+
+  it("is configured when the four server variables are present", () => {
+    expect(pushConfiguration(ALL)).toBe("configured");
+  });
+
+  it.each(PUSH_SERVER_ENV)("is unconfigured when %s is missing or blank", (name) => {
+    expect(pushConfiguration({ ...ALL, [name]: undefined })).toBe("unconfigured");
+    expect(pushConfiguration({ ...ALL, [name]: "  " })).toBe("unconfigured");
+  });
+
+  it("never renders a value — nor which variable is missing — in the health body", async () => {
+    const now = new Date("2026-07-20T18:30:00.000Z");
+    for (const env of [ALL, { ...ALL, CRON_SECRET: undefined }]) {
+      const body = await healthResponse(
+        buildHealthReport(true, { commit: "abc1234", now, push: pushConfiguration(env) }),
+      ).text();
+      for (const value of Object.values(ALL)) expect(body).not.toContain(value);
+      expect(body).not.toMatch(/VAPID|CRON|mailto/i);
+    }
+  });
+});
+
 describe("buildHealthReport", () => {
   const now = new Date("2026-07-20T18:30:00.000Z");
 
   it("is ok when the database answers", () => {
-    expect(buildHealthReport(true, { commit: "abc1234", now })).toEqual({
+    expect(buildHealthReport(true, { commit: "abc1234", now, push: "configured" })).toEqual({
       status: "ok",
       checks: { database: "ok" },
+      push: "configured",
       commit: "abc1234",
       ts: "2026-07-20T18:30:00.000Z",
     });
@@ -103,6 +135,18 @@ describe("buildHealthReport", () => {
     const report = buildHealthReport(false, { commit: "abc1234", now });
     expect(report.status).toBe("degraded");
     expect(report.checks.database).toBe("fail");
+  });
+
+  it("does not degrade the status for a dormant push — that is not an outage", () => {
+    const report = buildHealthReport(true, { commit: "abc1234", now, push: "unconfigured" });
+    expect(report.status).toBe("ok");
+    expect(report.push).toBe("unconfigured");
+  });
+
+  it("reads the push configuration from the environment by default", () => {
+    vi.stubEnv("VAPID_PUBLIC_KEY", "");
+    expect(buildHealthReport(true, { now }).push).toBe("unconfigured");
+    vi.unstubAllEnvs();
   });
 });
 

@@ -47,9 +47,56 @@ jobs:
     with:
       stage: smoke
 
+  push-health:
+    name: Production push configured
+    # Étude 40, lot 1 — « le push se prouve ». Le push est resté mort en production des
+    # mois (CRON_SECRET et VITE_VAPID_PUBLIC_KEY absents de Vercel) sans que rien ne le dise.
+    # `/api/health` rend `push: "configured" | "unconfigured"` (les quatre variables serveur
+    # présentes, aucune valeur rendue) ; cette étape exige `configured` de la production,
+    # chaque nuit. Un échec ouvre/tient l'issue `nightly-failure` comme les autres suites.
+    # La clé du navigateur, elle, est gardée au build (scripts/check-push-build-env.mjs).
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions: {}
+    env:
+      PROD_URL: https://www.na9ranal3ab.tn
+      # User-Agent de navigateur : la sonde passe avant le garde anti-robots, mais un
+      # changement d'ordre dans server.ts ne doit pas rougir cette étape à tort.
+      UA: "Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 Chrome/126.0 Mobile Safari/537.36"
+    steps:
+      - name: Assert /api/health reports push "configured"
+        run: |
+          set -euo pipefail
+          body=""
+          for attempt in 1 2 3; do
+            if body="$(curl -sS -L -A "$UA" --max-time 20 "$PROD_URL/api/health")" \
+              && printf '%s' "$body" | jq -e . >/dev/null 2>&1; then
+              break
+            fi
+            body=""
+            echo "Tentative $attempt : /api/health n'a pas rendu de JSON — nouvel essai dans 15 s."
+            sleep 15
+          done
+          if [ -z "$body" ]; then
+            echo "::error::/api/health de la production ne répond pas en JSON après 3 essais."
+            exit 1
+          fi
+          echo "Sonde : $body"
+          push="$(printf '%s' "$body" | jq -r '.push // "absent"')"
+          commit="$(printf '%s' "$body" | jq -r '.commit // "?"')"
+          {
+            echo "### 🔔 Push en production"
+            echo
+            echo "\`$PROD_URL/api/health\` → \`push: $push\` (commit \`$commit\`)"
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [ "$push" != "configured" ]; then
+            echo "::error::Production push = \"$push\" (attendu \"configured\") : une des variables VAPID_PUBLIC_KEY / VAPID_PRIVATE_KEY / VAPID_SUBJECT / CRON_SECRET manque au projet Vercel na9ranal3ab. Voir docs/environment-variables.md § Web Push."
+            exit 1
+          fi
+
   report:
     name: Nightly report
-    needs: [e2e, e2e-auth, pgtap, perf]
+    needs: [e2e, e2e-auth, pgtap, perf, push-health]
     # Always run so the report reflects failures too, not just all-green nights.
     if: ${{ always() }}
     runs-on: ubuntu-latest
@@ -64,6 +111,7 @@ jobs:
           E2E_AUTH_RESULT: ${{ needs.e2e-auth.result }}
           PGTAP_RESULT: ${{ needs.pgtap.result }}
           PERF_RESULT: ${{ needs.perf.result }}
+          PUSH_HEALTH_RESULT: ${{ needs.push-health.result }}
         with:
           script: |
             const results = {
@@ -71,6 +119,7 @@ jobs:
               'E2E (authenticated)': process.env.E2E_AUTH_RESULT,
               'DB integration (pgTAP)': process.env.PGTAP_RESULT,
               'Performance (load)': process.env.PERF_RESULT,
+              'Push configuré en production': process.env.PUSH_HEALTH_RESULT,
             };
             const icon = (r) =>
               r === 'success' ? '✅' : r === 'skipped' ? '⏭️' : '❌';

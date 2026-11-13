@@ -9,11 +9,22 @@ import { execSync } from "node:child_process";
 import { cpSync, mkdirSync, writeFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
+import { enforcePushBuildEnv } from "./check-push-build-env.mjs";
 import { SSR_MAX_DURATION_S } from "./vercel-function.mjs";
 import { VERCEL_ROUTES } from "./vercel-routes.mjs";
 
 const ROOT = process.cwd();
 const OUTPUT = join(ROOT, ".vercel", "output");
+
+// Step 0 — Garde Web Push (étude 40, lot 1) : AVANT la compilation, puisque la clé publique
+// s'y incruste. Échoue le build de production qui sert www.na9ranal3ab.tn sans
+// VITE_VAPID_PUBLIC_KEY ; avertit seulement ailleurs (voir check-push-build-env.mjs).
+try {
+  enforcePushBuildEnv();
+} catch {
+  // Le message est déjà imprimé ; une pile d'appels n'y ajouterait rien.
+  process.exit(1);
+}
 
 // Step 1 — Run Vite build (produces dist/client + dist/server)
 console.log("▶ Running vite build...");
