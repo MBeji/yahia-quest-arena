@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { Bell, BellRing, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useT } from "@/lib/i18n";
-import { usePush, type PushState } from "../use-push";
+import { usePush, type PushMoment, type PushState } from "../use-push";
 
 type PushController = {
   state: PushState;
@@ -100,8 +100,12 @@ export function PushCardShell({
  * browser / iOS-not-installed / no VAPID key configured) so we never tease a dead
  * control.
  */
-export function EnablePushCard({ title, desc }: { title?: string; desc?: string } = {}) {
-  const push = usePush();
+export function EnablePushCard({
+  title,
+  desc,
+  moment,
+}: { title?: string; desc?: string; moment?: PushMoment } = {}) {
+  const push = usePush({ moment });
   const { state } = push;
 
   if (state === "loading" || state === "unsupported" || state === "unconfigured") return null;
