@@ -274,7 +274,7 @@ export function ProgrammeCatalogue({ parcours }: { parcours: CatalogueParcours[]
         <p className="text-sm text-muted-foreground">{t.public.catalogue.extrasLinkQuestion}</p>
         <Link
           to="/extras"
-          className="mt-2 inline-flex items-center gap-1.5 font-semibold text-primary hover:underline"
+          className="mt-1 inline-flex min-h-11 items-center gap-1.5 font-semibold text-primary hover:underline"
         >
           {t.public.catalogue.extrasLinkCta} <ChevronRight className="h-4 w-4 rtl:-scale-x-100" />
         </Link>

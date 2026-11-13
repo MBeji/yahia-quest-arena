@@ -99,7 +99,14 @@ export type CatalogueStats = {
 /** Group thousands with a space — Western digits, identical in every locale. */
 const groupThousands = (n: number) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 
-export function PublicLanding({ stats }: { stats?: CatalogueStats | null }) {
+export function PublicLanding({
+  stats,
+  statsPending = false,
+}: {
+  stats?: CatalogueStats | null;
+  /** Les chiffres sont en route : la bande réserve sa place (aucun décalage à l'arrivée). */
+  statsPending?: boolean;
+}) {
   const t = useT();
   // é39 : la porte du test de niveau lit son propre catalogue — l'accueil est une route paresseuse,
   // et `i18n-` n'a plus de place pour une surface qui ne sert qu'ici (règle du 2026-08-26).
@@ -245,41 +252,63 @@ export function PublicLanding({ stats }: { stats?: CatalogueStats | null }) {
       </section>
 
       {/* BANDE DE PREUVE — la preuve remplace l'affirmation (§C-1) : chiffres réels
-          compilés du catalogue (server fn anonyme) + un exemple de cours ouvrable. */}
-      {stats && stats.subjects > 0 && (
-        <section className="mx-auto max-w-3xl px-4 pb-6 sm:px-6">
+          compilés du catalogue (server fn anonyme) + un exemple de cours ouvrable.
+          Pendant la lecture, la bande est déjà là, À SA TAILLE : les chiffres arrivent
+          ~1,5 s après l'hydratation, et une bande de 231 px qui surgissait au milieu de
+          l'écran repoussait tout ce qui suit (CLS 0,025 mesuré en production à 360 px).
+          La rendre côté serveur effaçait le décalage mais ajoutait 240 à 390 ms au
+          premier octet de chaque visite (lecture mesurée en production, HTML à ~31 ms) :
+          la place réservée ne coûte rien. Jamais un faux chiffre : des emplacements vides. */}
+      {(statsPending || (stats && stats.subjects > 0)) && (
+        <section
+          className="mx-auto max-w-3xl px-4 pb-6 sm:px-6"
+          aria-busy={statsPending || undefined}
+          data-testid="proof-band"
+        >
           <div className="rounded-2xl border border-border bg-card p-5">
             <div className="text-center text-xs font-semibold uppercase tracking-wider text-primary">
               {t.public.landing.proofBandKicker}
             </div>
             <div className="mt-4 grid grid-cols-3 gap-3">
               {[
-                { n: stats.subjects, l: t.public.landing.proofStatSubjects },
-                { n: stats.lessons, l: t.public.landing.proofStatLessons },
-                { n: stats.exercises, l: t.public.landing.proofStatExercises },
+                { n: stats?.subjects, l: t.public.landing.proofStatSubjects },
+                { n: stats?.lessons, l: t.public.landing.proofStatLessons },
+                { n: stats?.exercises, l: t.public.landing.proofStatExercises },
               ].map((s) => (
                 <div
                   key={s.l}
                   className="rounded-xl border border-border bg-background/50 p-3 text-center"
                 >
                   <div className="font-display text-2xl font-bold text-primary sm:text-3xl">
-                    {groupThousands(s.n)}
+                    {s.n === undefined ? (
+                      // Même boîte de ligne que le chiffre : la police fixe la hauteur.
+                      <span
+                        aria-hidden="true"
+                        className="inline-block h-[0.8em] w-[2.5ch] animate-pulse rounded bg-muted align-middle motion-reduce:animate-none"
+                      />
+                    ) : (
+                      groupThousands(s.n)
+                    )}
                   </div>
                   <div className="mt-0.5 text-xs text-muted-foreground">{s.l}</div>
                 </div>
               ))}
             </div>
-            {stats.sampleChapterId && (
-              <div className="mt-4 text-center">
-                <Link
-                  to="/chapitre/$chapterId"
-                  params={{ chapterId: stats.sampleChapterId }}
-                  className="inline-flex items-center gap-2 text-sm font-bold text-primary hover:underline"
-                >
-                  <BookOpen className="h-4 w-4" /> {t.public.landing.proofSampleCta}
-                  <ArrowRight className="h-4 w-4 rtl:-scale-x-100" />
-                </Link>
-              </div>
+            {statsPending ? (
+              <div aria-hidden="true" className="mt-2 min-h-11" />
+            ) : (
+              stats?.sampleChapterId && (
+                <div className="mt-2 text-center">
+                  <Link
+                    to="/chapitre/$chapterId"
+                    params={{ chapterId: stats.sampleChapterId }}
+                    className="inline-flex min-h-11 items-center gap-2 text-sm font-bold text-primary hover:underline"
+                  >
+                    <BookOpen className="h-4 w-4" /> {t.public.landing.proofSampleCta}
+                    <ArrowRight className="h-4 w-4 rtl:-scale-x-100" />
+                  </Link>
+                </div>
+              )
             )}
           </div>
         </section>
