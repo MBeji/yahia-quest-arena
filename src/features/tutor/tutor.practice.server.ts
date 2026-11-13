@@ -44,29 +44,6 @@ import { errorMessage } from "@/shared/lib/safe-error";
 import { decidePractice } from "./practice";
 
 /**
- * Les RPC de ce lot ne sont pas encore dans les types générés (ils se
- * régénèrent depuis la base, et la base ne les a pas avant la migration).
- * Contrat figé ici, motif `tutor.server.ts` — À SUPPRIMER à la prochaine
- * régénération de `supabase/types.ts`.
- */
-/** `ai_student_access` est postérieure aux types générés — même contrat local que `ai-access.server.ts`. */
-type SurfacesReader = {
-  from: (table: "ai_student_access") => {
-    select: (cols: "enabled, features") => {
-      eq: (
-        col: "student_user_id",
-        val: string,
-      ) => {
-        maybeSingle: () => PromiseLike<{
-          data: { enabled: boolean | null; features: string[] | null } | null;
-          error: unknown;
-        }>;
-      };
-    };
-  };
-};
-
-/**
  * Une ligne de la sélection. R-16 : ni clé, ni explication, ni `distractor_tags`
  * — la RPC ne les nomme même pas dans son `RETURNS TABLE`.
  */
@@ -216,8 +193,7 @@ export const startTargetedPractice = createServerFn({ method: "POST" })
     // lignes plutôt que déplacer une lecture dans `shared/`.
     let forgeEnabled = false;
     try {
-      const surfaces = context.supabase as unknown as SurfacesReader;
-      const { data: row } = await surfaces
+      const { data: row } = await context.supabase
         .from("ai_student_access")
         .select("enabled, features")
         .eq("student_user_id", context.userId)

@@ -16,32 +16,9 @@ import { logger } from "@/shared/lib/logger";
 import type { CompiledVideo } from "@/shared/content/schema";
 import type { Database } from "@/shared/integrations/supabase/types";
 import { isUnrestrictedViewer } from "./quest.access";
+import { parseCompiledVideo } from "./correction-video";
 
 // ---------- Get chapter lesson content ----------
-/** Narrowed chapter row for the reader — adds the `videos` and `domain` columns the generated types lack. */
-type ChapterLessonRow = {
-  id: string;
-  title: string;
-  description: string | null;
-  lesson_content: string | null;
-  summary: string | null;
-  subject_id: string;
-  display_order: number;
-  /**
-   * Domaine du programme auquel ce chapitre appartient — la « section » de la
-   * matière (Algèbre, Géométrie, قواعد اللغة…). NULL tant que le contenu ne l'a
-   * pas rattaché : c'est l'état de tout le corpus au moment où la colonne arrive.
-   */
-  domain: string | null;
-  videos: CompiledVideo[] | null;
-  subjects: {
-    grade_id?: string | null;
-    theme_id?: string | null;
-    name_fr: string;
-    content_language?: string;
-  } | null;
-};
-
 /** Le niveau (parcours) auquel une matière appartient — de quoi le nommer et y renvoyer. */
 export type SubjectParcours = {
   id: string;
@@ -107,18 +84,20 @@ export const getChapterLesson = createServerFn({ method: "GET" })
     // `.single()` confondait les deux en une même erreur, journalisée en `error`.
     if (!chapterRow) throw notFound();
 
-    // Selecting the étude-23 `videos` column and `domain` (both absent from the
-    // pre-existing generated types) makes the row loosely typed — narrow it once,
-    // the same posture the joined `subjects` relation already uses. The compiled
-    // `videos` JSONB (0–3 display objects) flows straight to the public reader,
-    // and `domain` names the section of the program this chapter sits in.
+    // `videos` est un JSONB (0–3 objets d'affichage) écrit par le pipeline de
+    // contenu ; le type généré n'en dit que `Json`. Chaque entrée est relue par le
+    // schéma de la vidéo de correction (étude 23 D-10) : une entrée malformée ou
+    // héritée disparaît, elle ne devient jamais un lecteur à moitié construit.
+    // `domain` nomme la section du programme où vit ce chapitre.
     //
     // Cette liste de colonnes est EXPLICITE : elle exige que `domain` existe en
     // base. C'est pourquoi ce lot arrive APRÈS le merge de sa migration
     // (`20260818120000`, appliquée en prod le 2026-08-18) et non avec elle — le
     // hub, lui, lit `select("*")` et tolérait son absence (DoD §7).
-    const chapter = chapterRow as unknown as ChapterLessonRow;
-    const videos: CompiledVideo[] = chapter.videos ?? [];
+    const chapter = chapterRow;
+    const videos: CompiledVideo[] = Array.isArray(chapter.videos)
+      ? chapter.videos.flatMap((entry) => parseCompiledVideo(entry) ?? [])
+      : [];
 
     // Fetch all sibling chapters for navigation. We only need each sibling's
     // metadata + whether it HAS a lesson — never the lesson body itself. Pulling
@@ -171,8 +150,7 @@ export const getChapterLesson = createServerFn({ method: "GET" })
     // Anonymous visitors resolve their pass client-side (device memory, see
     // anon-quiz-gate.ts), so quizPassed stays null for them.
     const quizExerciseId = (chapterExercises ?? []).find((e) => e.mode === "quiz")?.id ?? null;
-    const isSchoolSubject =
-      ((chapter.subjects as { grade_id?: string | null } | null)?.grade_id ?? null) !== null;
+    const isSchoolSubject = (chapter.subjects?.grade_id ?? null) !== null;
     const quizGated = isSchoolSubject && quizExerciseId !== null;
     let quizPassed: boolean | null = null;
     if (quizGated && userId && !unrestricted) {

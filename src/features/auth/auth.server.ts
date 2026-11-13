@@ -5,6 +5,7 @@ import { supabaseAdmin } from "@/shared/integrations/supabase/client.server";
 import { failWithClientError } from "@/shared/lib/safe-error";
 import { logger } from "@/shared/lib/logger";
 import { ACCOUNT_DELETE_ERROR_PREFIX, confirmsAccountEmail } from "./account-deletion";
+import type { Json } from "@/shared/integrations/supabase/types";
 import type { UserDataExport } from "./data-export";
 import { displayNameSchema } from "./display-name.schema";
 
@@ -254,20 +255,41 @@ export const deleteAccount = createServerFn({ method: "POST" })
  * journal d'accès avec son URL. Le geste est rare et explicite ; il n'a aucun
  * besoin de la sémantique de cache d'un `GET`, et beaucoup à perdre à l'avoir.
  */
+/**
+ * L'ENVELOPPE du dossier, validée à la frontière. Le type généré ne connaît que
+ * `Json` ; l'application déclare une enveloppe (`UserDataExport`). Entre les deux,
+ * un schéma — pas un cast, qui affirmerait la forme sans la vérifier.
+ *
+ * Deux choix, tenus par les tests :
+ *  - LÂCHE en largeur : une clé que le SQL ajouterait demain traverse telle quelle.
+ *    Aucune décision sur CE QUI sort ne se prend ici ; c'est `user_data_export_plan()`
+ *    qui décide.
+ *  - OPAQUE en profondeur : le contenu des lignes est du JSON par construction
+ *    (PostgREST l'a sérialisé, le client l'a relu) et sa forme est celle du schéma,
+ *    qui change à chaque migration. Le valider ici reproduirait la liste que
+ *    `data-export.ts` interdit de recopier.
+ */
+const opaqueJson = z.custom<Json>(() => true);
+const exportNoteSchema = z.looseObject({
+  table: z.string(),
+  column: z.string(),
+  reason: z.string(),
+});
+const userDataExportSchema = z.looseObject({
+  format_version: z.number(),
+  generated_at: z.string(),
+  account: z.record(z.string(), opaqueJson),
+  tables: z.record(z.string(), z.array(opaqueJson)),
+  redacted: z.array(exportNoteSchema),
+  not_exported: z.array(exportNoteSchema.extend({ disposition: z.string() })),
+});
+
 export const exportUserData = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    // Même patron que les RPC de `progression.server.ts` : la fonction est
-    // postérieure aux types Supabase générés, qui ne peuvent pas être régénérés
-    // sans accès à une base. On fige donc son contrat ici — sans argument, ce qui
-    // est aussi ce que le pgTAP 85 vérifie côté SQL.
-    const client = context.supabase as unknown as {
-      rpc: (
-        fn: "export_user_data",
-      ) => PromiseLike<{ data: UserDataExport | null; error: { message: string } | null }>;
-    };
-
-    const { data, error } = await client.rpc("export_user_data");
+    // Sans argument — ce que le pgTAP 85 vérifie aussi côté SQL : rien dans cet
+    // appel ne désigne une personne, le périmètre est `auth.uid()`.
+    const { data, error } = await context.supabase.rpc("export_user_data");
 
     if (error || !data) {
       failWithClientError(
@@ -277,11 +299,26 @@ export const exportUserData = createServerFn({ method: "POST" })
       );
     }
 
+    const parsed = userDataExportSchema.safeParse(data);
+    if (!parsed.success) {
+      // Le CHEMIN et le code, jamais la valeur : ce document est un dossier
+      // personnel, sa moindre ligne n'a rien à faire dans un journal.
+      const issue = parsed.error.issues[0];
+      failWithClientError(
+        "auth.exportUserData",
+        new Error(`unexpected document shape at ${issue?.path.join(".") ?? "?"}: ${issue?.code}`),
+        "data_export_failed",
+      );
+    }
+    // Une affectation, pas un cast : l'enveloppe validée EST un `UserDataExport` ;
+    // seule la signature d'index du schéma lâche disparaît du type.
+    const document: UserDataExport = parsed.data;
+
     // Le SUCCÈS ne laisse aucune trace nominative — même règle que la suppression
     // juste au-dessus : journaliser qui a demandé son dossier, et quand, créerait
     // une donnée personnelle de plus à l'endroit exact où l'on rend les siennes.
     logger.info("auth.exportUserData: un dossier a été servi");
-    return { document: data };
+    return { document };
   });
 
 /**
@@ -304,13 +341,9 @@ export const setProfileLocale = createServerFn({ method: "POST" })
     z.object({ locale: z.union([z.literal("fr"), z.literal("en"), z.literal("ar")]) }).parse(d),
   )
   .handler(async ({ data, context }) => {
-    const client = context.supabase as unknown as {
-      rpc: (
-        fn: "set_profile_locale",
-        args: { p_locale: string },
-      ) => PromiseLike<{ error: { message: string } | null }>;
-    };
-    const { error } = await client.rpc("set_profile_locale", { p_locale: data.locale });
+    const { error } = await context.supabase.rpc("set_profile_locale", {
+      p_locale: data.locale,
+    });
     if (error) {
       // Une langue non enregistrée ne casse rien à l'écran : elle coûte une
       // notification en français. On journalise, on ne fait pas échouer la page.

@@ -103,13 +103,7 @@ export const equipCosmetic = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .validator((d) => z.object({ itemCode: z.string().min(1) }).parse(d))
   .handler(async ({ data, context }) => {
-    const client = context.supabase as unknown as {
-      rpc: (
-        fn: "equip_cosmetic",
-        args: { p_item_code: string },
-      ) => PromiseLike<{ data: unknown; error: { message: string } | null }>;
-    };
-    const { data: result, error } = await client.rpc("equip_cosmetic", {
+    const { data: result, error } = await context.supabase.rpc("equip_cosmetic", {
       p_item_code: data.itemCode,
     });
     if (error) {

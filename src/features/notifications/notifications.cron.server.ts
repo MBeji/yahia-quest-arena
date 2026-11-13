@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { supabaseAdmin } from "@/shared/integrations/supabase/client.server";
+import { parseRpcRows } from "@/shared/integrations/supabase/rpc-rows";
 import { logger } from "@/shared/lib/logger";
 // Le TRANSPORT push vit dans `shared/` depuis l'étude 29 lot 3 : les alertes de
 // budget du mode IA en ont besoin aussi, et une feature n'en importe pas une
@@ -12,11 +13,11 @@ import {
   isParentDigestDay,
   parentDigestPayload,
   payloadFor,
+  PUSH_PRIORITY,
   resolveDailyPushPlan,
   safeLocale,
   type DigestChild,
   type PushCandidate,
-  type PushTag,
 } from "./push-audience";
 
 function jsonResponse(body: unknown, status = 200): Response {
@@ -33,38 +34,19 @@ function addStats(a: SendStats, b: SendStats): SendStats {
 }
 
 /**
- * `push_daily_audiences` est postérieure aux types Supabase générés : contrat
- * figé ici, même patron que les autres RPC récentes.
+ * Une ligne de `push_daily_audiences`, validée à la frontière. Le type généré dit
+ * `tag: string` et ses autres colonnes non nulles ; le SQL rend six tags FERMÉS —
+ * exactement `PUSH_PRIORITY` — et peut rendre `NULL` (langue d'un profil, compteur
+ * absent). Un tag inconnu n'atteint donc jamais `payloadFor`, qui n'aurait aucun
+ * texte pour lui : la ligne est écartée et la dérive journalisée, les autres
+ * élèves reçoivent leur notification.
  */
-type AudienceRow = {
-  user_id: string;
-  tag: string;
-  locale: string | null;
-  arg: number | null;
-  detail: string | null;
-};
-
-/** Contrat étroit pour `profiles.locale` (é31 lot 4), en attendant la régénération. */
-type ParentLocaleClient = {
-  from: (table: "profiles") => {
-    select: (columns: string) => {
-      in: (
-        column: string,
-        values: string[],
-      ) => PromiseLike<{
-        data: { id: string; locale: string | null }[] | null;
-        error: { message: string } | null;
-      }>;
-    };
-  };
-};
-
-type AudienceClient = {
-  rpc: (
-    fn: "push_daily_audiences",
-    args: { p_today: string },
-  ) => PromiseLike<{ data: AudienceRow[] | null; error: { message: string } | null }>;
-};
+const audienceRowSchema = z.object({
+  user_id: z.string(),
+  tag: z.enum(PUSH_PRIORITY),
+  locale: z.string().nullable(),
+  arg: z.number().nullable(),
+});
 
 /**
  * ⭐ LE DISPATCHER D'ÉLÈVE — une lecture, un pipeline, au plus un push par élève.
@@ -81,18 +63,18 @@ type AudienceClient = {
 async function dispatchStudentPush(
   now: Date,
 ): Promise<{ stats: SendStats; byTag: Record<string, number> }> {
-  const { data, error } = await (supabaseAdmin as unknown as AudienceClient).rpc(
-    "push_daily_audiences",
-    { p_today: appLocalDate(now) },
-  );
+  const { data, error } = await supabaseAdmin.rpc("push_daily_audiences", {
+    p_today: appLocalDate(now),
+  });
   if (error) {
     logger.error("Push cron: failed to load daily audiences", { error });
     throw new Error("audiences");
   }
 
-  const candidates: PushCandidate[] = (data ?? []).map((row) => ({
+  const rows = parseRpcRows(audienceRowSchema, data, "Push cron: daily audiences");
+  const candidates: PushCandidate[] = rows.map((row) => ({
     userId: row.user_id,
-    tag: row.tag as PushTag,
+    tag: row.tag,
     locale: row.locale,
     arg: row.arg,
   }));
@@ -225,11 +207,7 @@ async function dispatchParentDigest(
   if (parentIds.length === 0) return { stats: EMPTY, breakdown: NO_BREAKDOWN };
 
   // é31 R-17 — le bilan part dans la langue du parent, comme le reste.
-  // ⚠️ `locale` est postérieure aux types Supabase générés (régénération
-  // impossible sans accès DB) : contrat étroit, comme les autres lectures du lot.
-  const { data: profiles, error: profilesError } = await (
-    supabaseAdmin as unknown as ParentLocaleClient
-  )
+  const { data: profiles, error: profilesError } = await supabaseAdmin
     .from("profiles")
     .select("id, locale")
     .in("id", parentIds);

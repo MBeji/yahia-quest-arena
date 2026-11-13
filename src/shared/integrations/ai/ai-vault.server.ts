@@ -20,7 +20,9 @@
 import { supabaseAdmin } from "@/shared/integrations/supabase/client.server";
 import { logger } from "@/shared/lib/logger";
 import { errorMessage } from "@/shared/lib/safe-error";
-import { AI_ENC_VERSION, type AiProviderId } from "@/shared/constants/ai";
+import { z } from "zod";
+
+import { AI_ENC_VERSION, AI_PROVIDERS, type AiProviderId } from "@/shared/constants/ai";
 import type { AiErrorCode } from "@/shared/integrations/ai";
 import type { OpaqueSecret } from "@/shared/integrations/ai/types";
 // `crypto.server` — le coffre — n'est PAS importé statiquement : il tire
@@ -29,29 +31,13 @@ import type { OpaqueSecret } from "@/shared/integrations/ai/types";
 // nombre, vient de `@/shared/constants/ai`.
 
 /**
- * La lecture du CHIFFRÉ, et d'elle seule. L'étude la décrit ainsi : « le
- * chargement du chiffré se fait en Node, avec le client `service_role` » (§3.4).
- * La table n'est pas dans les types générés (elle est postérieure), et son
- * contrat est figé ici — trois colonnes, jamais une de plus.
- *
- * `secret_enc` sort d'ici sous sa forme CHIFFRÉE. Le seul consommateur est le
- * coffre, dans la ligne suivante.
+ * La lecture du CHIFFRÉ (`openOwnerSecret`), et d'elle seule. L'étude la décrit
+ * ainsi : « le chargement du chiffré se fait en Node, avec le client
+ * `service_role` » (§3.4). Trois colonnes, jamais une de plus ; `secret_enc` en
+ * sort sous sa forme CHIFFRÉE, et son seul consommateur est le coffre. Le
+ * fournisseur y est relu contre ce schéma.
  */
-type AiSecretReader = {
-  from: (table: "ai_credentials") => {
-    select: (columns: string) => {
-      eq: (
-        column: string,
-        value: string,
-      ) => {
-        maybeSingle: () => PromiseLike<{
-          data: { secret_enc: string; enc_version: number; provider: AiProviderId } | null;
-          error: { message: string } | null;
-        }>;
-      };
-    };
-  };
-};
+const providerSchema = z.enum(AI_PROVIDERS);
 
 const rpc = () => supabaseAdmin;
 
@@ -90,7 +76,7 @@ export async function markCredentialState(
 export async function openOwnerSecret(
   ownerUserId: string,
 ): Promise<{ secret: OpaqueSecret; provider: AiProviderId } | null> {
-  const { data: row, error } = await (supabaseAdmin as unknown as AiSecretReader)
+  const { data: row, error } = await supabaseAdmin
     .from("ai_credentials")
     .select("secret_enc, enc_version, provider")
     .eq("owner_user_id", ownerUserId)
@@ -101,13 +87,22 @@ export async function openOwnerSecret(
     return null;
   }
 
+  // `provider` est un TEXT sous CHECK côté SQL ; le type généré n'en garde que
+  // `string`. Il choisit l'adaptateur ET entre dans l'AAD du chiffré : un
+  // fournisseur inconnu est une clé inutilisable, pas un appel à tenter.
+  const provider = providerSchema.safeParse(row.provider);
+  if (!provider.success) {
+    logger.error("ai.credential.load", { error: "unknown provider" });
+    return null;
+  }
+
   // PostgREST rend un `bytea` en notation `\x…`. C'est le seul endroit du
   // système qui reconstitue le tampon, et il le passe immédiatement au coffre.
   const blob = Buffer.from(row.secret_enc.replace(/^\\x/, ""), "hex");
   const { openSecret } = await import("./crypto.server");
   const opened = openSecret(blob, {
     ownerUserId,
-    provider: row.provider,
+    provider: provider.data,
     encVersion: row.enc_version ?? AI_ENC_VERSION,
   });
 
@@ -123,10 +118,10 @@ export async function openOwnerSecret(
     // Rotation paresseuse : la lecture a réussi avec la KEK précédente. On ne
     // bloque pas l'appel là-dessus — la ré-écriture est un effet de bord, et son
     // échec se rattrape à la lecture suivante.
-    void rewriteSecret(ownerUserId, blob, row.provider, row.enc_version ?? AI_ENC_VERSION);
+    void rewriteSecret(ownerUserId, blob, provider.data, row.enc_version ?? AI_ENC_VERSION);
   }
 
-  return { secret: opened.secret, provider: row.provider };
+  return { secret: opened.secret, provider: provider.data };
 }
 
 async function rewriteSecret(

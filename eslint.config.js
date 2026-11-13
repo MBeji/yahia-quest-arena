@@ -105,9 +105,8 @@ export default tseslint.config(
       // 2026-10-27, une fois la porte IA passée dans `src/shared/` : voir l'en-tête.
       "local/no-cross-feature-import": "error",
       // Le client Supabase ne se caste plus vers une « vue d'ombre » — née verte
-      // le 2026-11-12, après le retrait de 22 de ces casts. Les neuf fichiers
-      // encore à nettoyer sont nommés dans la règle (`PENDING_FILES`), et son
-      // test échoue dès que l'un d'eux est propre : la liste ne peut que rétrécir.
+      // le 2026-11-12 avec une liste d'attente de neuf fichiers, vidée le
+      // 2026-11-13 : la règle juge désormais tout le code possédé, sans exemption.
       "local/no-supabase-shadow-view": "error",
     },
   },

@@ -22,30 +22,6 @@ import { AI_LIVE_FEATURES, TUTOR_HARD_DAILY_CAP } from "@/shared/constants/ai";
 import { isPlatformPathEnabled } from "@/shared/integrations/ai/provider.server";
 import { AI_MODE_ERROR_PREFIX } from "./ai-mode-status";
 
-type MaybeSingle<Row> = {
-  maybeSingle: () => PromiseLike<{
-    data: Row | null;
-    error: { message: string } | null;
-  }>;
-};
-
-type AiSurfacesReader = {
-  from: {
-    (table: "ai_student_access"): {
-      select: (columns: string) => {
-        eq: (
-          column: string,
-          value: string,
-        ) => MaybeSingle<{ enabled: boolean; features: string[] }>;
-      };
-    };
-    /** Singleton (`id` booléen vrai, CHECK sur la clé) : pas de `.eq()` à écrire. */
-    (table: "ai_admin_state"): {
-      select: (columns: string) => MaybeSingle<{ ai_enabled: boolean }>;
-    };
-  };
-};
-
 const studentRowSchema = z.object({
   student_user_id: z.string(),
   display_name: z.string().nullable(),
@@ -235,10 +211,9 @@ export function studentSurfaces(input: {
 export const getAiStudentSurfaces = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<AiStudentSurfaces> => {
-    // Contrat figé ici, même patron que `exam.server.ts`. Deux colonnes pour
-    // l'accès, jamais une de plus — et surtout jamais `owner_user_id`, qui n'a
-    // rien à faire chez l'élève.
-    const client = context.supabase as unknown as AiSurfacesReader;
+    // Deux colonnes pour l'accès, jamais une de plus — et surtout jamais
+    // `owner_user_id`, qui n'a rien à faire chez l'élève.
+    const client = context.supabase;
 
     const [family, admin] = await Promise.all([
       client
