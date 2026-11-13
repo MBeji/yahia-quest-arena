@@ -16,6 +16,11 @@ import { handleTutorStream } from "@/features/tutor/tutor.stream.server";
 import { guardRequest } from "@/shared/lib/bot-guard";
 import { generateSitemap } from "@/shared/lib/sitemap";
 import { handleHealthRequest } from "@/shared/lib/health";
+import {
+  isShareableSummaryRequest,
+  toCacheableSummary,
+  withoutInternalMarks,
+} from "@/shared/lib/public-cache";
 
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
@@ -219,8 +224,18 @@ export default {
 
     try {
       const handler = await getServerEntry();
-      const response = await handler.fetch(request, env, ctx);
-      return await normalizeCatastrophicSsrResponse(response, request);
+      const response = await normalizeCatastrophicSsrResponse(
+        await handler.fetch(request, env, ctx),
+        request,
+      );
+      // Les sommaires publics (accueil, programme, niveaux) partent vers le CDN quand rien
+      // dans la requête ni dans le rendu ne les rend propres à un visiteur — décision du
+      // 2026-11-13, conditions et CSP par empreintes : `public-cache.ts`. Toute autre page
+      // garde son nonce et son `max-age=0`.
+      if (isShareableSummaryRequest(request)) {
+        return withoutInternalMarks(await toCacheableSummary(response));
+      }
+      return withoutInternalMarks(response);
     } catch (error) {
       logger.error("Unhandled server fetch error", {
         path: new URL(request.url).pathname,

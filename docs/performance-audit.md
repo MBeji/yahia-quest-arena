@@ -996,6 +996,39 @@ Trois issues, à trancher par le propriétaire :
 3. **Ne rien cacher** et traiter le temps serveur à la source (rt-04 fait, rt-08, rt-02).
    C'est ce que fait cet axe en attendant la décision.
 
+### ssr-04 — tranché le 2026-11-13 : option 2, les sommaires seulement
+
+Décision du propriétaire, journalisée (`docs/journal-decisions.md`, 2026-11-13). Livré :
+
+- **Pages** : `/`, `/programme`, `/programme/lycee/<année>`, `/niveau/<parcours>`. Cours,
+  matière et exercice restent rendus à chaque visite, garde anti-aspiration compris.
+- **Variantes** : le rendu serveur ne lit que deux cookies, la langue et le thème (relu dans
+  le code). Le routage (`scripts/vercel-routes.mjs`) les recopie dans `x-na9ra-locale` et
+  `x-na9ra-theme`, la réponse déclare `Vary` sur eux : six variantes au plus, au lieu d'une
+  par visiteur (`Vary: Cookie` aurait été inutilisable, les cookies de mesure d'audience
+  rendent chaque visiteur unique).
+- **Conditions** (`src/shared/lib/public-cache.ts`) : `GET` sans `Authorization`, en-têtes
+  du routage égaux aux cookies, réponse 200 en HTML, aucun cookie posé, aucun préchargement
+  en échec (marque posée par `seedOnServer`, retirée avant envoi). Sinon : comportement
+  d'avant, nonce et `max-age=0`.
+- **CSP** : nonce remplacé, sur la seule réponse mise en cache, par les empreintes SHA-256
+  des scripts qui portaient le nonce de la requête. Vérifié dans Chromium sur le bundle de
+  production : aucune violation hors une injection volontaire, hydratation complète ; témoin
+  à empreintes corrompues → les trois scripts du framework refusés, hydratation en échec.
+- **Durée** : `Vercel-CDN-Cache-Control: max-age=300, stale-while-revalidate=86400` ; le
+  navigateur revalide toujours (`max-age=0`). Un déploiement vide le cache.
+
+**Attendu** (mesure du 2026-11-13, même trajet) : premier octet de l'accueil 175 ms → ≈ 40 ms
+sur un HIT, niveau 260 → ≈ 40 ms, pour tout visiteur sans compte comme pour un élève
+(l'auth ne passe jamais par le HTML).
+
+**À vérifier dès le déploiement** — non vérifiable avant (plus d'aperçu Vercel pour les
+branches d'agents) : que le CDN applique `Vary` aux en-têtes posés par le routage. Méthode :
+`curl` deux fois la même page sans cookie (`x-vercel-cache` MISS puis HIT, `html lang="fr"`),
+puis avec `Cookie: xp-scholars-locale=ar` (`lang="ar"`, jamais la variante française), puis
+avec le thème sombre ; et la page cours, qui doit rester MISS. Une variante qui fuit = retour
+arrière immédiat.
+
 ### Le garde-fou posé
 
 `npm run perf:budget` (étape de `ci.yml`, après `smoke:shell`) : le bundle de production
