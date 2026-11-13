@@ -996,6 +996,72 @@ Trois issues, à trancher par le propriétaire :
 3. **Ne rien cacher** et traiter le temps serveur à la source (rt-04 fait, rt-08, rt-02).
    C'est ce que fait cet axe en attendant la décision.
 
+### ssr-04 — tranché le 2026-11-13 : option 2, les sommaires seulement
+
+Décision du propriétaire, journalisée (`docs/journal-decisions.md`, 2026-11-13). Livré :
+
+- **Pages** : `/`, `/programme`, `/programme/lycee/<année>`, `/niveau/<parcours>`. Cours,
+  matière et exercice restent rendus à chaque visite, garde anti-aspiration compris.
+- **Variantes** : le rendu serveur ne lit que deux cookies, la langue et le thème (relu dans
+  le code). Le routage (`scripts/vercel-routes.mjs`) les recopie dans `x-na9ra-locale` et
+  `x-na9ra-theme`, la réponse déclare `Vary` sur eux : six variantes au plus, au lieu d'une
+  par visiteur (`Vary: Cookie` aurait été inutilisable, les cookies de mesure d'audience
+  rendent chaque visiteur unique).
+- **Conditions** (`src/shared/lib/public-cache.ts`) : `GET` sans `Authorization`, en-têtes
+  du routage égaux aux cookies, réponse 200 en HTML, aucun cookie posé, aucun préchargement
+  en échec (marque posée par `seedOnServer`, retirée avant envoi). Sinon : comportement
+  d'avant, nonce et `max-age=0`.
+- **CSP** : nonce remplacé, sur la seule réponse mise en cache, par les empreintes SHA-256
+  des scripts qui portaient le nonce de la requête. Vérifié dans Chromium sur le bundle de
+  production : aucune violation hors une injection volontaire, hydratation complète ; témoin
+  à empreintes corrompues → les trois scripts du framework refusés, hydratation en échec.
+- **Durée** : `Vercel-CDN-Cache-Control: max-age=300, stale-while-revalidate=86400` ; le
+  navigateur revalide toujours (`max-age=0`). Un déploiement vide le cache.
+
+**Attendu** (mesure du 2026-11-13, même trajet) : premier octet de l'accueil 175 ms → ≈ 40 ms
+sur un HIT, niveau 260 → ≈ 40 ms, pour tout visiteur sans compte comme pour un élève
+(l'auth ne passe jamais par le HTML).
+
+**Vérifié en production le 2026-11-13 à 17:01 UTC** (#1322 fusionnée à 16:49, `curl` avec un
+User-Agent de navigateur, passes espacées de 2 à 3 s) :
+
+| Requête                                | `/`                 | `/niveau/concours-6eme` |
+| -------------------------------------- | ------------------- | ----------------------- |
+| sans cookie                            | MISS puis HIT, `fr` | MISS puis HIT, `fr`     |
+| `xp-scholars-locale=ar` (+ `_ga` n° 1) | MISS, `ar`          | MISS, `ar`              |
+| `xp-scholars-locale=ar` (+ `_ga` n° 2) | **HIT, `ar`**       | **HIT, `ar`**           |
+| `xp-scholars-theme=dark`               | MISS, `fr` sombre   | MISS, `fr` sombre       |
+| `xp-scholars-locale=en; …theme=dark`   | MISS, `en` sombre   | MISS, `en` sombre       |
+| sans cookie, ensuite                   | HIT, `fr`           | HIT, `fr`               |
+
+**Aucune variante ne fuit** : chaque couple langue × thème a son entrée, un cookie d'audience
+différent ne crée pas d'entrée de plus (le second visiteur arabe reçoit le HIT arabe), et le
+visiteur sans cookie ne reçoit jamais la page d'un autre. Toutes ces réponses portent une
+CSP à 2 empreintes et aucun nonce. Cours et matière restent MISS, nonce compris.
+
+Dans Chromium contre la production : accueil (`fr`, puis `ar` sombre), niveau et programme
+s'hydratent, **aucune violation `script-src`**.
+
+**Premier octet** (`curl`, connexion ouverte, 5 passes espacées de 3 s) :
+
+| Ressource               | Avant (2026-11-13, matin) | Après, 5 passes (ms)           | Médiane |
+| ----------------------- | ------------------------: | ------------------------------ | ------: |
+| `/favicon.svg` (témoin) |                        43 | 64 · 55 · 68 · 73 · 56         |      64 |
+| accueil                 |                       175 | 65 · 60 · 59 · 68 · 77         |  **65** |
+| niveau                  |                       260 | 64 · 68 · 65 · 58 · 99         |  **65** |
+| `/programme`            |                         — | 328 (MISS) · 56 · 59 · 54 · 54 |  **56** |
+| cours (non caché)       |                       292 | 428 · 441 · 346 · 341 · 501    |     428 |
+
+Le trajet du conteneur était plus lent que le matin (le témoin passe de 43 à 64 ms, le cours
+non caché de 292 à 428) : la comparaison juste n'est pas « 175 → 65 » à la milliseconde près, c'est
+qu'**un sommaire coûte désormais ce que coûte un fichier statique servi par le CDN**, pour
+tout visiteur.
+
+**Vu au passage, sans rapport avec ce lot** : toutes les pages, cachées ou non, nonce ou
+empreintes, refusent une balise de Google Analytics vers `stats.g.doubleclick.net`
+(`connect-src`, la liste étroite de `csp.ts`). La mesure d'audience perd donc ses signaux
+Google ; élargir `connect-src` est une décision de sécurité, laissée au propriétaire.
+
 ### Le garde-fou posé
 
 `npm run perf:budget` (étape de `ci.yml`, après `smoke:shell`) : le bundle de production

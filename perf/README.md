@@ -100,8 +100,13 @@ node perf/runtime/measure-pages.mjs --base https://www.na9ranal3ab.tn \
   --page accueil=/ --page cours=/chapitre/<id> --runs 3 [--detail] [--no-throttle]
 ```
 
-`PERF_CHROMIUM_PATH=/opt/pw-browsers/chromium` dans un conteneur cloud dont le Chromium ne
-correspond pas au Playwright du dépôt. **Lire les temps avec leur trajet** : depuis un
+Dans un conteneur cloud dont le Chromium ne correspond pas au Playwright du dépôt, pointer
+`PERF_CHROMIUM_PATH` sur le **headless shell**
+(`/opt/pw-browsers/chromium_headless_shell-*/chrome-headless-shell-linux64/chrome-headless-shell`),
+pas sur le Chromium complet : c'est le binaire que lance la CI, et le Chromium complet fait des
+requêtes de navigateur de plus (favicon, icône PWA). Relevé le 2026-11-13 : `/programme` à
+42-43 requêtes avec le Chromium complet, 41 avec le headless shell — exactement le chiffre du
+runner, même commit. Un budget « rouge d'une requête » en local se relit d'abord avec ce binaire. **Lire les temps avec leur trajet** : depuis un
 conteneur, la sonde traverse un proxy sortant et un PoP américain — les **poids**, les
 **requêtes** et l'**élément LCP** sont fiables partout, les **millisecondes** ne se comparent
 qu'entre deux mesures prises du même endroit.

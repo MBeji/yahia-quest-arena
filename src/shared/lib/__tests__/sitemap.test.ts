@@ -235,24 +235,118 @@ describe("collectSitemapPaths", () => {
     expect(selects.chapters).toEqual(["id"]);
   });
 
-  it("includes admin practice exercises, drops quizzes and non-admin content", async () => {
+  it("drops non-admin content", async () => {
     const paths = await collectSitemapPaths(
       mockClient({
         ...EMPTY,
         exercises: {
           data: [
-            { id: "ex-practice", mode: "practice", source: "admin" },
-            { id: "ex-boss", mode: "boss", source: "admin" },
-            { id: "ex-quiz", mode: "quiz", source: "admin" },
-            { id: "ex-parent", mode: "practice", source: "parent" },
+            { id: "ex-practice", mode: "practice", source: "admin", chapter_id: "c1" },
+            { id: "ex-parent", mode: "practice", source: "parent", chapter_id: "c1" },
           ],
         },
       }),
     );
     expect(paths).toContain("/exercice/ex-practice");
-    expect(paths).toContain("/exercice/ex-boss");
-    expect(paths).not.toContain("/exercice/ex-quiz");
     expect(paths).not.toContain("/exercice/ex-parent");
+  });
+
+  // Décision du propriétaire, 2026-11-13 (option B) : 4 657 des 5 477 pages
+  // d'exercice du sitemap s'ouvraient, pour un visiteur neuf, sur « exercice
+  // verrouillé ». Elles sortent ; les quiz, qui les ouvrent, entrent.
+  it("lists quizzes and open exercises, drops the ones a new visitor finds locked", async () => {
+    const paths = await collectSitemapPaths(
+      mockClient({
+        ...EMPTY,
+        subjects: {
+          data: [
+            { id: "math-6eme", theme_id: "scolaire", grade_id: "g6" },
+            { id: "anglais-a1", theme_id: "anglais", grade_id: null },
+          ],
+        },
+        exercises: {
+          data: [
+            // Matière scolaire, chapitre à quiz : le quiz entre, les missions sortent.
+            {
+              id: "qz-1",
+              mode: "quiz",
+              source: "admin",
+              chapter_id: "c1",
+              subject_id: "math-6eme",
+            },
+            {
+              id: "ex-1",
+              mode: "practice",
+              source: "admin",
+              chapter_id: "c1",
+              subject_id: "math-6eme",
+            },
+            {
+              id: "boss-1",
+              mode: "boss",
+              source: "admin",
+              chapter_id: "c1",
+              subject_id: "math-6eme",
+            },
+            // Matière scolaire, chapitre SANS quiz : rien ne ferme la mission.
+            {
+              id: "ex-2",
+              mode: "practice",
+              source: "admin",
+              chapter_id: "c2",
+              subject_id: "math-6eme",
+            },
+            // Hors programme : jamais de porte, même avec un quiz.
+            {
+              id: "qz-3",
+              mode: "quiz",
+              source: "admin",
+              chapter_id: "c3",
+              subject_id: "anglais-a1",
+            },
+            {
+              id: "ex-3",
+              mode: "practice",
+              source: "admin",
+              chapter_id: "c3",
+              subject_id: "anglais-a1",
+            },
+          ],
+        },
+      }),
+    );
+    const exercises = paths.filter((p) => p.startsWith("/exercice/"));
+    expect(exercises.sort()).toEqual(
+      ["/exercice/ex-2", "/exercice/ex-3", "/exercice/qz-1", "/exercice/qz-3"].sort(),
+    );
+  });
+
+  // Lecture des matières en échec : on ne sait pas lesquelles sont scolaires — toute
+  // mission d'un chapitre à quiz est tenue pour fermée, plutôt que de lister des
+  // pages verrouillées.
+  it("treats every mission of a quiz chapter as locked when the subjects read fails", async () => {
+    const paths = await collectSitemapPaths(
+      mockClient({
+        ...EMPTY,
+        subjects: { error: { message: "boom" } },
+        exercises: {
+          data: [
+            { id: "qz-1", mode: "quiz", source: "admin", chapter_id: "c1", subject_id: "s" },
+            { id: "ex-1", mode: "practice", source: "admin", chapter_id: "c1", subject_id: "s" },
+            { id: "ex-2", mode: "practice", source: "admin", chapter_id: "c2", subject_id: "s" },
+          ],
+        },
+      }),
+    );
+    expect(paths).toContain("/exercice/qz-1");
+    expect(paths).not.toContain("/exercice/ex-1");
+    expect(paths).toContain("/exercice/ex-2");
+  });
+
+  it("reads only ids and keys for exercises — never a question", async () => {
+    const selects: Record<string, string[]> = {};
+    await collectSitemapPaths(mockClient(EMPTY, {}, selects));
+    expect(selects.exercises).toEqual(["id,mode,source,chapter_id,subject_id"]);
   });
 
   it("ships a partial sitemap when one table query fails", async () => {
