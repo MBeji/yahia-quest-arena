@@ -21,6 +21,7 @@ import { claimWelcomePack, setCurrentParcours, useAuth, useMyRole } from "@/feat
 import { ParcoursQuickPick } from "@/components/game/parcours-quick-pick";
 import { PageShell } from "@/components/ui/page-shell";
 import { NudgeSlot } from "@/components/public/nudge-slot";
+import { usePushVictoryCandidate } from "@/features/notifications";
 import { useInstallCandidate } from "@/components/public/use-install-candidate";
 import { useParentInviteCandidate } from "@/components/public/use-parent-invite-candidate";
 // Imports directs plutôt que par le barrel : celui de `parent-report` tirerait le bilan parent
@@ -195,13 +196,14 @@ function QuestPage() {
  * après une réussite, choisie par `NudgeSlot` dans l'ordre rappel → installation → inviter son
  * parent. C'est la ROUTE qui compose : chaque invitation vient d'une feature différente.
  *
- * L'installation (lot 3) et le parent (lot 5) existent ; le rappel (lot 2) s'ajoutera à la liste
- * des candidats — l'ordre et la règle « une seule » sont déjà tenus.
+ * Le rappel (lot 2) passe en premier : c'est la seule invitation qui ramène l'élève sans qu'il
+ * ait à y penser. Son état se lit en asynchrone ; l'emplacement l'attend, au plus 1,5 s.
  */
 function QuestResultNudge({ passed }: { passed: boolean }) {
+  const push = usePushVictoryCandidate(passed);
   const install = useInstallCandidate("student", passed);
   const parent = useParentInviteCandidate({ eligible: passed, ...useParentInviteFacts() });
-  const candidates = useMemo(() => [install, parent], [install, parent]);
+  const candidates = useMemo(() => [push, install, parent], [push, install, parent]);
   return (
     <div className="mt-6 empty:hidden">
       <NudgeSlot candidates={candidates} />

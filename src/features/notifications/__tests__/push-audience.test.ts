@@ -216,6 +216,46 @@ describe("é31 lot 4 — pipeline de priorité et textes localisés", () => {
     expect(payloadFor("streak-milestone", "ar", 30).title).toContain("30");
   });
 
+  describe("étude 40, lot 2", () => {
+    it("⭐ R-9 — une série d'UN jour se dit au singulier, dans les trois langues", () => {
+      for (const tag of ["streak-at-risk", "streak-lost"] as const) {
+        for (const locale of ["fr", "en", "ar"] as const) {
+          const { title, body } = payloadFor(tag, locale, 1);
+          expect(`${title} ${body}`, `${tag}/${locale}`).not.toMatch(/\b1\b|\{n\}/);
+        }
+      }
+      expect(payloadFor("streak-at-risk", "fr", 1).body).toContain("ta série d'un jour continue");
+      expect(payloadFor("streak-lost", "fr", 1).body).toContain("arrêtée à un jour");
+    });
+
+    it("garde le pluriel et le nombre dès deux jours", () => {
+      expect(payloadFor("streak-at-risk", "fr", 4).body).toContain("tes 4 jours continuent");
+      expect(payloadFor("streak-lost", "en", 5).body).toContain("5 days");
+    });
+
+    it("⭐ R-7 — `first-quest` est avant-dernier : tout ce qui est commencé passe avant", () => {
+      expect(PUSH_PRIORITY.at(-1)).toBe("comeback");
+      expect(PUSH_PRIORITY.at(-2)).toBe("first-quest");
+      const plan = resolveDailyPushPlan([
+        candidate({ userId: "u", tag: "first-quest" }),
+        candidate({ userId: "u", tag: "tutor-daily-plan", arg: 2 }),
+      ]);
+      expect(plan.map((p) => p.tag)).toEqual(["tutor-daily-plan"]);
+    });
+
+    it("⭐ R-10 — la première quête mène au hall, dit le gain, ne compte rien", () => {
+      for (const locale of ["fr", "en", "ar"] as const) {
+        const payload = payloadFor("first-quest", locale, null);
+        expect(payload.url).toBe("/dashboard");
+        expect(payload.tag).toBe("first-quest");
+        expect(`${payload.title} ${payload.body}`).not.toContain("{n}");
+      }
+      expect(payloadFor("first-quest", "fr", null).title).toBe("🎯 Ta première quête est prête");
+      const fr = `${PUSH_COPY["first-quest"].fr.title} ${PUSH_COPY["first-quest"].fr.body}`;
+      expect(fr).not.toMatch(/pas encore|toujours pas|n'as pas/i);
+    });
+  });
+
   it("une langue inconnue retombe en français plutôt que de ne rien envoyer", () => {
     expect(safeLocale(null)).toBe("fr");
     expect(safeLocale("de")).toBe("fr");

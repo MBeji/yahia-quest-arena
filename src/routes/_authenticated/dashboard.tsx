@@ -676,7 +676,7 @@ function Dashboard() {
             deux blocs de contenu) : c'est un réglage, pas une étape du parcours. */}
         <div className="mt-8 space-y-4 opacity-90">
           <MotivationalQuote />
-          <EnablePushCard />
+          <EnablePushCard moment="hall" />
         </div>
       </PageShell>
     </>

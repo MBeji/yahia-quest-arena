@@ -10,4 +10,6 @@ export { savePushSubscription, deletePushSubscription } from "./notifications.se
 // appareil avant de proposer un rappel : le tuteur (é11 US-7) ne montre son
 // opt-in que si la permission existe — un interrupteur qui n'allume rien est
 // pire que pas d'interrupteur (#813).
-export { usePush, type PushState } from "./use-push";
+export { usePush, type PushMoment, type PushState } from "./use-push";
+// Étude 40, lot 2 — le rappel proposé après une victoire, candidat de `NudgeSlot`.
+export { usePushVictoryCandidate } from "./components/use-push-victory-candidate";
