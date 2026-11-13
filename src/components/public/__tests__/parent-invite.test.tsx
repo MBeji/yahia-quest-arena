@@ -14,8 +14,8 @@ vi.mock("sonner", () => ({ toast: { success: (...a: unknown[]) => toastSuccess(.
 
 import { I18nProvider } from "@/lib/i18n";
 import { STORAGE_KEY as LOCALE_KEY } from "@/lib/i18n/context";
-import { ar } from "@/lib/i18n/ar";
-import { fr } from "@/lib/i18n/fr";
+import { arInvite as ar } from "@/lib/i18n/invite/ar";
+import { frInvite as fr } from "@/lib/i18n/invite/fr";
 import { NUDGE_KEY } from "@/shared/lib/nudge-memory";
 import { NudgeSlot, type NudgeCandidate } from "../nudge-slot";
 import { useParentInvite } from "../use-parent-invite";
@@ -86,8 +86,8 @@ describe("R-20 — à qui la carte paraît", () => {
   it("⭐ réussite, élève sans parent lié ⇒ la carte, sans aucun champ de saisie", () => {
     const { container } = mount();
     expect(card()).not.toBeNull();
-    expect(screen.getByText(fr.settings.inviteParentCardTitle)).toBeInTheDocument();
-    expect(screen.getByText(fr.settings.inviteParentHint)).toBeInTheDocument();
+    expect(screen.getByText(fr.cardTitle)).toBeInTheDocument();
+    expect(screen.getByText(fr.hint)).toBeInTheDocument();
     expect(screen.getByTestId("parent-invite-cta")).toHaveTextContent("Inviter mon parent");
     expect(container.querySelector("input, textarea, select, form")).toBeNull();
     expect(memory().parent).toEqual({ shown: "2026-11-13", dismissed: 0 });
@@ -119,7 +119,7 @@ describe("R-20 — à qui la carte paraît", () => {
     mount();
     // Le catalogue arabe se charge à part : la carte suit dès qu'il est là.
     await waitFor(() => expect(card()).toHaveAttribute("dir", "rtl"));
-    expect(screen.getByTestId("parent-invite-cta")).toHaveTextContent(ar.settings.inviteParent);
+    expect(screen.getByTestId("parent-invite-cta")).toHaveTextContent(ar.cta);
   });
 });
 
@@ -228,7 +228,7 @@ describe("R-19 — ce qui part, et ce qui est mesuré", () => {
       </I18nProvider>,
     );
     fireEvent.click(screen.getByRole("button", { name: "inviter" }));
-    await waitFor(() => expect(toastSuccess).toHaveBeenCalledWith(fr.settings.inviteParentCopied));
+    await waitFor(() => expect(toastSuccess).toHaveBeenCalledWith(fr.copied));
     expect(writeText.mock.calls[0][0]).toContain(LINK);
     expect(trackProductEvent).toHaveBeenCalledWith("content_shared", {
       intent: "parent",

@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { toast } from "sonner";
-import { useT } from "@/lib/i18n";
+import { useInviteT } from "@/lib/i18n/invite";
 import { parentInviteText } from "@/shared/lib/parent-invite";
 import { trackProductEvent } from "@/shared/lib/product-events";
 import { shareText, type ShareMethod } from "@/shared/lib/share-text";
@@ -29,9 +29,9 @@ export function useParentInvite(
   allianceCode: string,
   surface: ParentInviteSurface,
 ): () => Promise<ShareMethod> {
-  const t = useT();
-  const template = t.settings.inviteParentText;
-  const copied = t.settings.inviteParentCopied;
+  const { copy } = useInviteT();
+  const template = copy.text;
+  const copied = copy.copied;
   return useCallback(async () => {
     if (!allianceCode) return "none";
     const method = await shareText(parentInviteText(template, allianceCode));
