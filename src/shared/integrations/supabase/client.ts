@@ -30,7 +30,10 @@ function createSupabaseClient() {
 
   return createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
     auth: {
-      storage: typeof window !== "undefined" ? localStorage : undefined,
+      // Pas d'option `storage` : la bibliothèque prend `localStorage` quand il est joignable et
+      // inscriptible, et la mémoire de l'onglet sinon. Lui passer le global `localStorage` lisait
+      // ce global sans garde — il lève quand le navigateur refuse le stockage, et la page entière
+      // tombait (#1307).
       persistSession: true,
       autoRefreshToken: true,
     },

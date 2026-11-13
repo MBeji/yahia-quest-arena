@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { render, screen, fireEvent, act } from "@testing-library/react";
 import { ThemeProvider, useTheme } from "@/lib/theme";
 import { isTheme, normalizeTheme, themeFromCookieHeader, DEFAULT_THEME } from "@/lib/theme/context";
@@ -188,5 +188,46 @@ describe("ThemeProvider", () => {
       fireEvent.click(screen.getByTestId("set-reference"));
     });
     expect(screen.getByTestId("theme").textContent).toBe("reference");
+  });
+});
+
+// #1307 — un navigateur qui refuse le stockage (cookies et données de site bloqués, certains
+// modes privés) voyait l'écran d'erreur à la place du site : la lecture du thème levait dans
+// l'effet de montage. Le cookie décide alors, et un choix de thème s'applique quand même.
+describe("ThemeProvider — stockage refusé (#1307)", () => {
+  beforeEach(() => {
+    resetThemeState();
+    vi.spyOn(window, "localStorage", "get").mockImplementation(() => {
+      throw new DOMException("The operation is insecure.", "SecurityError");
+    });
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+    resetThemeState();
+  });
+
+  it("monte sans lever et prend le thème du cookie", () => {
+    document.cookie = "xp-scholars-theme=dark; path=/";
+    render(
+      <ThemeProvider>
+        <TestConsumer />
+      </ThemeProvider>,
+    );
+    expect(screen.getByTestId("theme").textContent).toBe("dark");
+    expect(document.documentElement.classList.contains("dark")).toBe(true);
+  });
+
+  it("un choix de thème s'applique et va dans le cookie", () => {
+    render(
+      <ThemeProvider>
+        <TestConsumer />
+      </ThemeProvider>,
+    );
+    act(() => {
+      fireEvent.click(screen.getByTestId("set-dark"));
+    });
+    expect(screen.getByTestId("theme").textContent).toBe("dark");
+    expect(themeFromCookieHeader(document.cookie)).toBe("dark");
   });
 });

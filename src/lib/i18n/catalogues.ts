@@ -1,5 +1,6 @@
 import type { Locale, TranslationKeys } from "./types";
 import { fr } from "./fr";
+import { readLocal } from "@/shared/lib/safe-storage";
 import { DEFAULT_LOCALE, STORAGE_KEY, isLocale, localeFromCookieHeader } from "./context";
 
 /**
@@ -71,15 +72,16 @@ export function loadCatalogue(locale: Locale): Promise<TranslationKeys> {
  */
 export function persistedLocale(): Locale {
   if (typeof window === "undefined") return DEFAULT_LOCALE;
-  const stored = localStorage.getItem(STORAGE_KEY);
+  // Stockage refusé (#1307) : `null`, et le cookie décide.
+  const stored = readLocal(STORAGE_KEY);
   if (isLocale(stored)) return stored;
   return localeFromCookieHeader(document.cookie);
 }
 
 // Préchauffage : le chunk de la locale persistée part dès que le graphe client
-// s'évalue, en parallèle du routeur et de l'hydratation. Sous try/catch : une
-// SecurityError de stockage (navigation privée, iframe) tuerait sinon tout le
-// chunk index — l'effet du provider refera la demande.
+// s'évalue, en parallèle du routeur et de l'hydratation. Le stockage ne lève plus
+// (`readLocal`, #1307) ; reste `document.cookie`, qui lève dans une iframe sandboxée
+// et tuerait tout le chunk index — l'effet du provider refera la demande.
 if (typeof window !== "undefined") {
   try {
     const warm = persistedLocale();

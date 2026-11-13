@@ -49,6 +49,35 @@ describe("shared supabase client", () => {
     expect(options.auth.autoRefreshToken).toBe(true);
   });
 
+  // #1307 — le client recevait le global `localStorage` : le lire lève quand le navigateur refuse
+  // le stockage, et la page entière tombait à la création du client. Sans option `storage`,
+  // auth-js prend lui-même `localStorage` s'il est joignable et inscriptible, la mémoire sinon.
+  it("ne lit pas le localStorage du navigateur : auth-js choisit, mémoire comprise", async () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://example.supabase.co");
+    vi.stubEnv("VITE_SUPABASE_PUBLISHABLE_KEY", "anon-key");
+    mockCreateClient.mockReturnValue({ from: vi.fn() });
+    const refusing = {};
+    Object.defineProperty(refusing, "localStorage", {
+      get() {
+        throw new DOMException("The operation is insecure.", "SecurityError");
+      },
+    });
+    vi.stubGlobal("window", refusing);
+    try {
+      const { supabase } = await import("@/shared/integrations/supabase/client");
+      expect(() => (supabase as unknown as Record<string, unknown>).from).not.toThrow();
+      const [, , options] = mockCreateClient.mock.calls[0] as [
+        string,
+        string,
+        { auth: Record<string, unknown> },
+      ];
+      expect(options.auth).not.toHaveProperty("storage");
+      expect(options.auth.persistSession).toBe(true);
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
   it("throws for missing env vars in admin client", async () => {
     const { supabaseAdmin } = await import("@/shared/integrations/supabase/client.server");
     expect(() => (supabaseAdmin as unknown as Record<string, unknown>).from).toThrow(
