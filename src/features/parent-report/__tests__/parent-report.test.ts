@@ -687,6 +687,25 @@ describe("parent-report — parentCodeErrorCode / parentCodeErrorLabel", () => {
     expect(parentCodeErrorCode("connection reset by peer")).toBe("generic");
   });
 
+  // La borne durable (audit S-1) refuse par SQLSTATE PT429, message
+  // `RATE_LIMITED`. Rendu en « vérifiez le code », le parent retapait un code
+  // juste — et aggravait la cadence qui l'avait fait refuser.
+  it("names a rate-limit refusal instead of blaming the code, in each language", async () => {
+    const { parentCodeErrorCode, parentCodeErrorLabel } =
+      await import("@/features/parent-report/parent-code-errors");
+    const { frParent } = await import("@/lib/i18n/parent/fr");
+    const { enParent } = await import("@/lib/i18n/parent/en");
+    const { arParent } = await import("@/lib/i18n/parent/ar");
+
+    expect(parentCodeErrorCode("RATE_LIMITED")).toBe("rate_limited");
+    for (const t of [frParent, enParent, arParent]) {
+      const label = parentCodeErrorLabel("REPORT_CODE_ERROR:rate_limited", t);
+      expect(label).toBe(t.parentReport.codeErrors.rate_limited);
+      expect(label).not.toBe(t.parentReport.codeErrors.generic_report);
+    }
+    expect(frParent.parentReport.codeErrors.rate_limited).toMatch(/Patientez/);
+  });
+
   it("translates prefixed codes in the visitor's language, per context", async () => {
     const { parentCodeErrorLabel } = await import("@/features/parent-report/parent-code-errors");
     const { frParent } = await import("@/lib/i18n/parent/fr");
@@ -764,6 +783,24 @@ describe("parent-report — getStudentReportByCode", () => {
     expect(mockRpc).toHaveBeenCalledWith("get_student_report_by_code", {
       p_code: "AABB-CCDD-1122-3344-5566-7788-9900-1122",
     });
+  });
+
+  it("turns a PT429 refusal into `rate_limited`, logged as a warning — not a server error", async () => {
+    mockRpc.mockResolvedValue({
+      data: null,
+      error: { code: "PT429", message: "RATE_LIMITED", details: null, hint: null },
+    });
+
+    const { getStudentReportByCode } =
+      await import("@/features/parent-report/parent-report.server");
+    const { logger } = await import("@/shared/lib/logger");
+    await expect(
+      (getStudentReportByCode as unknown as (d: unknown) => Promise<unknown>)({
+        studentCode: "AABB-CCDD-1122-3344-5566-7788-9900-1122",
+      }),
+    ).rejects.toThrow("REPORT_CODE_ERROR:rate_limited");
+    expect(logger.warn).toHaveBeenCalledWith("parentReport.getStudentReportByCode: rate limited");
+    expect(logger.error).not.toHaveBeenCalled();
   });
 
   it("throws the report-context stable code when the code is not a student account", async () => {
