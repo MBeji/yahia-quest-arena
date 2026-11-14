@@ -92,3 +92,29 @@ describe("Échelle de rareté (levier 02)", () => {
     },
   );
 });
+
+// 2026-11-14 — une page posée dans le sens de son contenu (matière en arabe) rendait ses
+// libellés français de droite à gauche : « ? Pourquoi », « Cours .1 ».
+describe("`bidi-plaintext` — le libellé choisit son sens d'écriture, l'écran garde son alignement", () => {
+  const stripped = CSS.replace(/\/\*[\s\S]*?\*\//g, "");
+  const start = stripped.indexOf(".bidi-plaintext *");
+  const rule = stripped.slice(start, stripped.indexOf("}", start));
+
+  it("n'atteint JAMAIS un nœud qui déclare son `dir`, ni ce qu'il contient : le contenu garde son sens", () => {
+    expect(start).toBeGreaterThanOrEqual(0);
+    expect(rule).toContain(":not([dir])");
+    expect(rule).toContain(":not(.bidi-plaintext [dir] *)");
+  });
+
+  it("écrit chaque libellé dans son sens et l'aligne sur celui de l'écran", () => {
+    expect(rule).toContain("unicode-bidi: plaintext");
+    // Chromium et Safari ne connaissent que l'écriture préfixée.
+    expect(rule).toContain("text-align: -webkit-match-parent");
+    expect(rule).toContain("text-align: match-parent");
+  });
+
+  it("vit dans `@layer base` : un `text-center` posé sur un libellé doit gagner", () => {
+    const before = stripped.slice(0, start);
+    expect(before.lastIndexOf("@layer base")).toBeGreaterThan(before.lastIndexOf("\n}\n"));
+  });
+});

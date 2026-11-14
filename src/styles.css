@@ -15,6 +15,10 @@
   fichier couvre toute la plage de graisses (Orbitron 500–900, Space Grotesk
   400–700, Noto Kufi 600–700) au lieu d'un fichier par graisse.
 
+  Qui porte quoi (2026-11-14) : Space Grotesk écrit TOUT le texte de l'interface,
+  titres compris ; Orbitron n'écrit plus que le logotype « Na9ra Nal3ab »
+  (`font-brand`). Voir `docs/design-surfaces.md` § Typographie.
+
   Les `unicode-range` sont ceux de Google et font le vrai travail : une face ne
   descend que si l'un de ses glyphes est RENDU, et un lecteur arabophone ne prend
   le latin que s'il en croise. Seules les deux faces latines sont préchargées
@@ -111,7 +115,13 @@
   ===================================================== */
 
 @theme inline {
-  --font-display: "Orbitron", "Space Grotesk", system-ui, sans-serif;
+  /* Titres : la même famille que le texte, en gras et resserrée. Orbitron les
+     portait jusqu'au 2026-11-14 — une face de science-fiction, étroite en glyphes
+     (zéro barré, « 1 » et « 7 » ambigus) et sans arabe : un titre arabe et un
+     titre français de la même page ne se ressemblaient pas. */
+  --font-display: "Space Grotesk", "Inter", system-ui, sans-serif;
+  /* Le logotype, et lui seul. Jamais sur un titre ni sur un chiffre. */
+  --font-brand: "Orbitron", "Space Grotesk", system-ui, sans-serif;
   --font-sans: "Space Grotesk", "Inter", system-ui, sans-serif;
   --font-arabic: "Noto Kufi Arabic", "Noto Sans Arabic", system-ui, sans-serif;
   --font-brand-ar: "Noto Kufi Arabic Brand", system-ui, sans-serif;
@@ -300,8 +310,9 @@
   `use-sticky-header-offset.ts`. Avant l'hydratation (arrivée directe sur une
   ancre) ou sans ResizeObserver, les valeurs ci-dessous servent de repli, prises
   sur les hauteurs mesurées le 2026-11-11 : 168 px sur téléphone (deux rangées
-  qui s'enroulent), 118 px sur tablette, 81 px à partir de `lg`. Hors coquille
-  publique, pas d'en-tête collant : 0.
+  qui s'enroulent), 118 px sur tablette, 81 px à partir de `xl` (une seule
+  rangée — depuis le 2026-11-14 la barre unique commence à `xl`, plus à `lg`).
+  Hors coquille publique, pas d'en-tête collant : 0.
   ===================================================== */
 html {
   scroll-padding-top: calc(var(--public-header-h, 0px) + 0.75rem);
@@ -314,9 +325,46 @@ html:has([data-public-header]) {
     --public-header-h: 7.5rem;
   }
 }
-@media (min-width: 64rem) {
+@media (min-width: 80rem) {
   html:has([data-public-header]) {
     --public-header-h: 5.25rem;
+  }
+}
+
+/* Une rangée qui défile à l'horizontale s'efface vers sa fin : le dernier lien,
+   coupé par le bord, se lit comme « il y en a d'autres », pas comme un défaut de
+   rendu. Le fondu suit le sens de lecture. */
+.scroll-fade-end {
+  mask-image: linear-gradient(to right, #000 calc(100% - 1.75rem), transparent);
+}
+[dir="rtl"] .scroll-fade-end {
+  mask-image: linear-gradient(to left, #000 calc(100% - 1.75rem), transparent);
+}
+
+/* Un écran dont le SENS suit son contenu (la page d'une matière en arabe est
+   posée de droite à gauche) porte aussi les libellés de l'interface, qui peuvent
+   être dans une autre écriture : sous une interface française, « Pourquoi ? » s'y
+   affichait « ? Pourquoi », « 1. Cours » devenait « Cours .1 » et le point final
+   passait en tête de phrase — la ponctuation, neutre, prenait le sens du bloc.
+   Ici chaque libellé choisit son sens d'ÉCRITURE d'après sa première lettre
+   (`plaintext`), et son ALIGNEMENT reste celui de l'écran (`match-parent` : sans
+   lui un libellé français partirait à gauche d'une page posée à droite). Ne
+   touche pas au CONTENU : tout nœud qui déclare son `dir` (titre de chapitre, de
+   mission, énoncé) garde le sien, et ce qu'il contient avec lui — un énoncé arabe
+   qui commence par un symbole latin doit rester de droite à gauche. À poser sur
+   le conteneur qui porte le `dir` du contenu, et seulement là où chaque nœud de
+   contenu déclare le sien. Dans `@layer base` : `text-center` doit gagner.
+
+   `.bidi-label` est la même règle pour UN libellé d'interface, sur un écran dont le
+   contenu ne déclare pas son `dir` nœud par nœud (le lecteur de quête : l'énoncé et
+   ses options héritent le sens de l'écran, et doivent le garder). */
+@layer base {
+  .bidi-label,
+  .bidi-plaintext *:not([dir]):not(.bidi-plaintext [dir] *) {
+    unicode-bidi: plaintext;
+    /* Les deux écritures : Chromium et Safari ne connaissent que la préfixée. */
+    text-align: -webkit-match-parent;
+    text-align: match-parent;
   }
 }
 
@@ -453,7 +501,7 @@ html.reference {
   h3,
   .font-display {
     font-family: var(--font-display);
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
   }
 }
 
@@ -942,7 +990,7 @@ html:not(.reference) .lesson-figure__plate {
 .lesson-content .lesson-blk__label {
   display: inline-block;
   margin-bottom: 0.5rem;
-  /* `inherit` et non var(--font-display) : Orbitron n'a pas de glyphes arabes. */
+  /* `inherit` : l'étiquette suit la face du cours, arabe compris. */
   font-family: inherit;
   font-size: 0.6875rem;
   font-weight: 700;
@@ -1415,7 +1463,7 @@ html:not(.reference) .lesson-figure__plate {
     align-items: center;
     justify-content: center;
     transform: rotate(-30deg);
-    font-family: var(--font-display);
+    font-family: var(--font-brand);
     font-size: 5rem;
     font-weight: 800;
     letter-spacing: 0.12em;

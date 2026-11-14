@@ -44,6 +44,44 @@ describe("SubjectHub", () => {
     expect(container.querySelector('a[href="/niveau/$parcoursId"]')).not.toBeNull();
   });
 
+  // 2026-11-14 — à 390 px la jauge d'étoiles, qui ne rétrécit pas, prenait toute la rangée :
+  // le titre, tronqué à zéro, disparaissait et la page listait « Chapitre 1, Chapitre 2… ».
+  it("l'en-tête d'un chapitre se replie sur téléphone : le titre garde sa rangée, la jauge passe dessous", () => {
+    render(
+      <SubjectHub
+        subject={subject}
+        chapters={chapters}
+        exercises={exercises}
+        isAuthenticated={false}
+      />,
+    );
+    const toggle = screen.getByTestId("chapter-toggle-c1");
+    expect(toggle).toHaveClass("flex-wrap");
+    const title = screen.getByText("Les nombres");
+    expect(title).not.toHaveClass("truncate");
+    expect(title).toHaveClass("line-clamp-2", "sm:line-clamp-1");
+    const gauge = toggle.querySelector('[role="img"]')?.closest("span.order-last");
+    expect(gauge).toHaveClass("basis-full", "sm:basis-auto", "sm:order-none");
+  });
+
+  // Une matière en arabe est posée de droite à gauche ; ses libellés d'interface, eux,
+  // peuvent être en français. Sans `bidi-plaintext`, « Pourquoi ? » s'affichait
+  // « ? Pourquoi » et « 1. Cours », « Cours .1 ».
+  it("la page porte `bidi-plaintext`, et chaque titre de contenu déclare son propre sens", () => {
+    const { container } = render(
+      <SubjectHub
+        subject={{ ...subject, name_fr: "الرياضيات", content_language: "ar" }}
+        chapters={[{ id: "c1", title: "الأعداد الصحيحة", description: null }]}
+        exercises={exercises}
+        isAuthenticated={false}
+      />,
+    );
+    const shell = container.querySelector(".bidi-plaintext");
+    expect(shell).toHaveAttribute("dir", "rtl");
+    expect(screen.getByText("الأعداد الصحيحة")).toHaveAttribute("dir", "rtl");
+    expect(screen.getByRole("heading", { level: 1 })).toHaveAttribute("dir", "rtl");
+  });
+
   it("anonymous: every unlocked exercise links to public practice — quiz included", () => {
     const { container } = render(
       <SubjectHub

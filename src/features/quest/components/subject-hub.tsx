@@ -349,19 +349,25 @@ export function SubjectHub({
           onClick={() => toggle(c.id)}
           aria-expanded={open}
           data-testid={`chapter-toggle-${c.id}`}
-          className="flex w-full items-center gap-3 px-4 py-3 text-start transition hover:bg-secondary/50 [@media(pointer:coarse)]:min-h-11"
+          // Sur téléphone, deux rangées : le numéro, le TITRE et le chevron, puis la jauge
+          // dessous. Sur une seule rangée la jauge (qui ne rétrécit pas) prenait toute la
+          // largeur et le titre, tronqué à zéro, disparaissait : la page listait
+          // « Chapitre 1, Chapitre 2… » sans dire de quoi (constat du 2026-11-14, 390 px).
+          className="flex w-full flex-wrap items-center gap-x-3 gap-y-1.5 px-4 py-3 text-start transition hover:bg-secondary/50 [@media(pointer:coarse)]:min-h-11"
         >
           <span className="shrink-0 text-2xs font-bold uppercase tracking-wider text-muted-foreground">
             {t.public.subject.chapter.replace("{n}", String(ci + 1))}
           </span>
           <span
-            className="min-w-0 flex-1 truncate font-display text-base font-bold"
+            className="line-clamp-2 min-w-0 flex-1 font-display text-base leading-snug font-bold sm:line-clamp-1"
             lang={contentLang}
             dir={isRtlText(c.title) ? "rtl" : "ltr"}
           >
             {c.title}
           </span>
-          <ChapterStarsChip progress={chapterProgress} rungs={rungs} locked={!unlocked} />
+          <span className="order-last flex basis-full sm:order-none sm:basis-auto">
+            <ChapterStarsChip progress={chapterProgress} rungs={rungs} locked={!unlocked} />
+          </span>
           <ChevronDown
             className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`}
           />
@@ -530,7 +536,9 @@ export function SubjectHub({
   };
 
   return (
-    <PageShell dir={isRtl ? "rtl" : "ltr"}>
+    // `bidi-plaintext` : la page suit le sens du contenu, pas ses libellés d'interface
+    // (voir `styles.css`). Chaque titre de chapitre et de mission déclare déjà son `dir`.
+    <PageShell dir={isRtl ? "rtl" : "ltr"} className="bidi-plaintext">
       <header className="mb-6">
         {parcours && (
           <BackLink to="/niveau/$parcoursId" params={{ parcoursId: parcours.id }} className="mb-0">

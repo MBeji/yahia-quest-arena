@@ -145,7 +145,9 @@ export function AiLauncher({ authenticated }: { authenticated: boolean }) {
         // `print:hidden` : la bulle est `fixed`, donc à l'impression elle se
         // tamponne sur CHAQUE page du PDF, par-dessus le cours. Un élève connecté
         // qui imprime son chapitre n'imprime pas ses boutons.
-        className={`fixed bottom-[calc(8.5rem+env(safe-area-inset-bottom))] end-4 z-40 inline-flex items-center gap-2 rounded-full border px-4 py-2.5 text-sm font-semibold shadow-gold backdrop-blur-md transition hover:scale-105 print:hidden lg:bottom-[calc(4.75rem+env(safe-area-inset-bottom))] ${
+        // Sous `lg` elle est seule au-dessus de la barre d'onglets (le signalement de bug
+        // est passé dans le menu des réglages) ; dès `lg` elle surmonte sa pastille.
+        className={`fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] end-4 z-40 inline-flex items-center gap-2 rounded-full border px-4 py-2.5 text-sm font-semibold shadow-gold backdrop-blur-md transition hover:scale-105 print:hidden lg:bottom-[calc(4.75rem+env(safe-area-inset-bottom))] ${
           anyOpen
             ? "border-[color:var(--gold)]/40 bg-surface-3 text-champagne hover:text-[color:var(--gold)]"
             : "border-border/50 bg-surface-2 text-muted-foreground hover:text-foreground"

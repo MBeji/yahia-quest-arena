@@ -309,13 +309,20 @@ function Dashboard() {
         {/* HERO HEADER */}
         <motion.div
           {...entrance(prefersReduced, "rise")}
-          className="relative overflow-hidden rounded-3xl border border-[color:var(--gold)]/30 bg-surface-2 p-6 backdrop-blur-xl shadow-card sm:p-8"
+          className="relative overflow-hidden rounded-3xl border border-[color:var(--gold)]/30 bg-surface-2 p-4 backdrop-blur-xl shadow-card sm:p-8"
         >
           {/* Refined premium hairline: a single gold filet across the top edge. */}
           <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-[color:var(--gold)]/50 to-transparent" />
+          {/* Un seul halo : le second, derrière le texte d'un en-tête devenu compact, le
+              salissait plus qu'il ne l'éclairait. */}
           <div className="absolute -end-10 -top-10 h-48 w-48 rounded-full bg-[color:var(--gold)]/30 blur-3xl" />
-          <div className="absolute -bottom-10 -start-10 h-48 w-48 rounded-full bg-[color:var(--gold)]/20 blur-3xl" />
-          <div className="relative grid gap-6 sm:grid-cols-[auto_1fr_auto] sm:items-center">
+          {/* Sur téléphone l'avatar se range À CÔTÉ du nom (il était au-dessus, centré) et les
+              pastilles passent dessous, pleine largeur : l'en-tête faisait 400 px sur un écran
+              de 844 et repoussait « Continuer » hors de l'écran (constat du 2026-11-14). Dès
+              `sm`, la composition d'origine : avatar · identité · plus longue série — l'avatar
+              et la série tiennent les deux rangées (`sm:row-span-2`), les pastilles se placent
+              seules sous le nom. */}
+          <div className="relative grid grid-cols-[auto_1fr] items-center gap-4 sm:grid-cols-[auto_1fr_auto] sm:gap-x-6 sm:gap-y-0">
             <HeroAvatar
               avatarSlug={profile.avatar_slug}
               frameSlug={(profile as { frame_slug?: string | null }).frame_slug ?? null}
@@ -328,6 +335,17 @@ function Dashboard() {
               <h1 className="font-display text-2xl font-bold break-words sm:text-3xl md:text-4xl">
                 {profile.display_name}
               </h1>
+            </div>
+            <div className="hidden sm:row-span-2 sm:block">
+              <div className="text-end text-xs uppercase tracking-widest text-muted-foreground">
+                {t.dashboard.longestStreak}
+              </div>
+              <div className="text-end font-display text-2xl font-bold text-flame-ink">
+                {profile.longest_streak}{" "}
+                {profile.longest_streak > 1 ? t.dashboard.days : t.dashboard.day}
+              </div>
+            </div>
+            <div className="col-span-2 min-w-0 sm:col-span-1">
               <HeroStatChips
                 level={profile.level}
                 currentStreak={profile.current_streak}
@@ -348,24 +366,12 @@ function Dashboard() {
                 <GoldProgress value={xpPct} aria-label={t.dashboard.xpProgress} />
               </div>
             </div>
-            <div className="hidden sm:block">
-              <div className="text-end text-xs uppercase tracking-widest text-muted-foreground">
-                {t.dashboard.longestStreak}
-              </div>
-              <div className="text-end font-display text-2xl font-bold text-flame-ink">
-                {profile.longest_streak}d
-              </div>
-            </div>
           </div>
         </motion.div>
 
         {/* Bannière de rentrée (étude 22, R-4) — proposée, jamais imposée : elle n'apparaît que
             dans la fenêtre du 1ᵉʳ septembre au 31 octobre, et seulement si le choix de classe
             précède cette rentrée. Aucune promotion automatique n'existe (D-6). */}
-        {/* Guide intégré : à la première visite, ce que fait cet écran en trois
-            lignes. Dans la page, jamais en surimpression ; fermé une fois pour toutes. */}
-        <GuideIntroCard screen="dashboard" className="mt-6" />
-
         {data.promotionSuggestion && (
           <BackToSchoolBanner
             suggestion={data.promotionSuggestion}
@@ -395,6 +401,14 @@ function Dashboard() {
           dailyGoal={ring?.goal ?? 100}
           streak={profile.current_streak}
         />
+
+        {/* Guide intégré : à la première visite, ce que fait cet écran en trois
+            lignes. Dans la page, jamais en surimpression ; fermé une fois pour toutes.
+            SOUS la bande « Continuer », pas au-dessus : la carte explique ce bouton, et
+            placée avant lui elle le repoussait à 1 006 px sur téléphone — on lisait le
+            mode d'emploi d'un bouton qu'on ne voyait pas (même correction que la page
+            matière, relevé du 2026-11-12, C-7). */}
+        <GuideIntroCard screen="dashboard" className="mt-6" />
 
         {/* é31 lot 8 (US-12, R-21) — le calendrier scolaire : la seule chose datée
             du produit était une suggestion de changement de classe. La bannière

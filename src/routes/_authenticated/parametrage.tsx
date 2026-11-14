@@ -122,7 +122,10 @@ function Row({ label, hint, children }: { label: string; hint?: string; children
   return (
     <div className="flex min-h-11 flex-wrap items-center justify-between gap-2 border-t border-border/50 py-2.5 first:border-t-0">
       <span className="text-sm text-muted-foreground">{label}</span>
-      <span className="flex min-w-0 items-center gap-2 text-sm font-semibold text-foreground">
+      {/* `flex-wrap` : une valeur longue et ses actions passent à la ligne au lieu de se
+          partager une rangée — le code alliance s'y coupait en trois lignes, et « Inviter
+          mon parent » aussi (constat du 2026-11-14, 390 px). */}
+      <span className="flex min-w-0 flex-wrap items-center justify-end gap-2 text-sm font-semibold text-foreground">
         {children}
       </span>
       {hint && <span className="basis-full text-xs font-normal text-muted-foreground">{hint}</span>}
@@ -131,7 +134,7 @@ function Row({ label, hint, children }: { label: string; hint?: string; children
 }
 
 const ACTION_CLASS =
-  "inline-flex min-h-11 items-center gap-1.5 rounded-lg border border-[color:var(--gold)]/40 px-3 py-1.5 text-xs font-semibold text-[color:var(--gold)] transition hover:bg-[color:var(--gold)]/10";
+  "inline-flex min-h-11 items-center gap-1.5 whitespace-nowrap rounded-lg border border-[color:var(--gold)]/40 px-3 py-1.5 text-xs font-semibold text-[color:var(--gold)] transition hover:bg-[color:var(--gold)]/10";
 
 /**
  * Le pseudo — le seul réglage de cette page qui s'écrit au lieu de se choisir.
@@ -407,7 +410,9 @@ function ParametragePage() {
               label={t.settings.allianceCode}
               hint={`${t.settings.allianceHint} ${inviteCopy.hint}`}
             >
-              <span className="font-mono text-xs">{allianceCode}</span>
+              <span className="font-mono text-xs break-all" data-testid="alliance-code">
+                {allianceCode}
+              </span>
               <button
                 type="button"
                 onClick={async () => {

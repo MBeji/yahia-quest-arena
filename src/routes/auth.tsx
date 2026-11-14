@@ -417,7 +417,7 @@ function AuthPage() {
           <div className="grid h-10 w-10 place-items-center rounded-lg bg-[image:var(--gradient-gold)] shadow-gold">
             <CrownMark className="h-6 w-6 text-primary-foreground" />
           </div>
-          <span className="font-display text-xl font-bold tracking-wider">
+          <span className="font-brand text-xl font-bold tracking-wider">
             Na9ra <span className="text-gradient-gold">Nal3ab</span>
           </span>
         </Link>

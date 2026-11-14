@@ -14,15 +14,30 @@ import {
 import { reportBug } from "../bug-report.server";
 
 /**
- * Floating "Signaler un bug" launcher, mounted globally during the beta phase.
- * Opens a small dialog with a free-text field; the current route is attached
- * automatically so admins know where the problem happened. Sits above the
- * mobile bottom tab bar and flips side in RTL.
+ * "Signaler un bug", mounted globally during the beta phase: a small dialog with a
+ * free-text field; the current route is attached automatically so admins know where
+ * the problem happened.
+ *
+ * Deux portes, une seule fenêtre (2026-11-14). L'état d'ouverture appartient à la
+ * coquille, parce que la porte dépend de l'écran :
+ *   - dès `lg`, la pastille flottante (`floating`), en bas de l'écran côté fin ;
+ *   - sous `lg`, une ligne du menu des réglages (`SettingsMenu`, `onReportBug`).
+ *     La pastille y recouvrait le contenu : deux boutons flottants empilés (elle et
+ *     la bulle du Prof) au-dessus de la barre d'onglets, par-dessus les cartes.
+ * `floating` à `false` sur un écran immersif (quête, cours, examen) : aucune pastille,
+ * à aucune largeur — la ligne du menu, elle, reste, et c'est là qu'un bug se signale.
  */
-export function BugReportLauncher() {
+export function BugReportLauncher({
+  open,
+  onOpenChange: setOpen,
+  floating = true,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  floating?: boolean;
+}) {
   const t = useT();
   const send = useServerFn(reportBug);
-  const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
 
   const mutation = useMutation({
@@ -45,16 +60,17 @@ export function BugReportLauncher() {
 
   return (
     <>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        aria-label={t.bugReport.launcherLabel}
-        title={t.bugReport.launcherLabel}
-        className="fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] end-4 z-40 inline-flex items-center gap-2 rounded-full border border-[color:var(--gold)]/40 bg-surface-3 px-4 py-2.5 text-sm font-semibold text-champagne shadow-gold backdrop-blur-md transition hover:scale-105 hover:text-[color:var(--gold)] lg:bottom-[calc(1.25rem+env(safe-area-inset-bottom))]"
-      >
-        <Bug className="h-4 w-4 shrink-0" aria-hidden="true" />
-        <span className="hidden sm:inline">{t.bugReport.launcherLabel}</span>
-      </button>
+      {floating && (
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          data-testid="bug-report-floating"
+          className="fixed end-4 bottom-[calc(1.25rem+env(safe-area-inset-bottom))] z-40 hidden items-center gap-2 rounded-full border border-[color:var(--gold)]/40 bg-surface-3 px-4 py-2.5 text-sm font-semibold text-champagne shadow-gold backdrop-blur-md transition hover:scale-105 hover:text-[color:var(--gold)] lg:inline-flex print:hidden"
+        >
+          <Bug className="h-4 w-4 shrink-0" aria-hidden="true" />
+          {t.bugReport.launcherLabel}
+        </button>
+      )}
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>

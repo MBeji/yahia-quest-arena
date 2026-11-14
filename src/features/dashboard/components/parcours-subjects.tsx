@@ -115,10 +115,24 @@ export function ParcoursSubjects({
                   >
                     {s.name_fr}
                   </span>
-                  {s.attribute && (
-                    <span className="block truncate text-xs text-muted-foreground">
-                      {attributeLabel(t, s.attribute)}
+                  {/* Ce que la matière couvre, quand le catalogue le dit — c'est ce qu'un
+                      parent cherche sous « الرياضيات ». L'attribut de jeu (« Force »,
+                      « Sagesse ») ne reste que faute de description : il ne dit rien à un
+                      visiteur, et le hub de matière l'a déjà retiré (audit §D-3). */}
+                  {s.description ? (
+                    <span
+                      className="mt-0.5 line-clamp-2 text-xs text-muted-foreground"
+                      lang={s.content_language ?? undefined}
+                      dir={isRtlText(s.description) ? "rtl" : "ltr"}
+                    >
+                      {s.description}
                     </span>
+                  ) : (
+                    s.attribute && (
+                      <span className="block truncate text-xs text-muted-foreground">
+                        {attributeLabel(t, s.attribute)}
+                      </span>
+                    )
                   )}
                 </span>
                 <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground rtl:-scale-x-100" />

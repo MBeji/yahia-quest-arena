@@ -37,6 +37,10 @@ export function SealMark({
 }) {
   const box = size === "md" ? "h-14 w-14" : "h-10 w-10";
   const glyph = size === "md" ? "text-xs" : "text-2xs";
+  // Deux rangées EXPLICITES au-delà de deux étoiles. Le retour à la ligne était laissé au
+  // navigateur (`max-w-[80%]`), qui ne coupe pas toujours une suite d'émojis : trois et
+  // quatre étoiles débordaient alors du disque (constat du 2026-11-14, Chromium).
+  const rows = star > 2 ? ["⭐".repeat(2), "⭐".repeat(star - 2)] : ["⭐".repeat(star)];
 
   return (
     <span
@@ -59,8 +63,10 @@ export function SealMark({
     >
       {/* Les étoiles du cachet : autant que le rang, sur deux lignes au-delà de
           deux, pour qu'un sceau ⭐⭐⭐⭐ reste un disque et non une barre. */}
-      <span aria-hidden className={cn("max-w-[80%] text-center font-bold", glyph)}>
-        {"⭐".repeat(star)}
+      <span aria-hidden className={cn("flex flex-col items-center gap-0.5 font-bold", glyph)}>
+        {rows.map((row, index) => (
+          <span key={index}>{row}</span>
+        ))}
       </span>
     </span>
   );

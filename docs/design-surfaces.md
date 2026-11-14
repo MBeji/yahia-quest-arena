@@ -85,6 +85,55 @@ et `html.reference` (clair) — puis s'expose à Tailwind dans `@theme inline`. 
 seul côté sert l'encre d'un thème sur le fond de l'autre : c'est le bug classique de tout design
 system à deux thèmes, et `src/features/quest/__tests__/surface-tokens-css.test.ts` l'épingle.
 
+## Typographie : une famille pour tout le texte, une face pour le logotype
+
+Depuis le 2026-11-14, **Space Grotesk écrit tout le texte de l'interface, titres compris**
+(`--font-display` et `--font-sans` désignent la même famille ; un titre se distingue par sa
+graisse, son corps et son interlettrage resserré, pas par une autre face). **Orbitron n'écrit
+plus que le logotype « Na9ra Nal3ab »**, par l'utilitaire `font-brand` : en-tête public, en-tête
+connecté, écran d'accès, filigrane d'impression.
+
+Pourquoi les titres ont quitté Orbitron, constaté sur les écrans réels :
+
+1. **Elle se lisait mal là où on lit le plus.** Zéro barré, « 1 » et « 7 » ambigus : « 1ère
+   année », « 0 / 200 XP », « 6 718 missions » demandaient un effort, sur une plateforme dont
+   la moitié des titres porte un chiffre.
+2. **Elle n'a pas d'arabe.** Un titre arabe retombait sur la police du système : sur la même
+   page, le titre de la matière et celui de la section n'avaient pas la même écriture.
+3. **Elle datait le produit.** Une face de science-fiction sur « Politique de confidentialité »
+   ou « Rapport de suivi » : ce que voit un parent arrivé des réseaux.
+
+Règles qui en découlent :
+
+- `font-display` reste la classe d'un titre (elle porte l'interlettrage) : ne pas la retirer
+  des écrans, ne pas la remplacer par `font-sans`.
+- `font-brand` ne se pose **que** sur le logotype. Jamais sur un titre, jamais sur un chiffre.
+- Le fichier Orbitron reste préchargé : le logotype est dans l'en-tête de chaque page.
+
+`src/__tests__/self-hosted-fonts.test.ts` épingle les deux rôles.
+
+## Le sens d'écriture d'un libellé sur un écran posé dans le sens du contenu
+
+La page d'une matière en arabe est posée de droite à gauche — c'est son contenu qui décide.
+Mais elle porte aussi les libellés de l'interface, qui peuvent être dans une autre écriture :
+sous une interface française, « Pourquoi ? » s'y affichait « ? Pourquoi », « 1. Cours »
+devenait « Cours .1 », et l'écran de résultat écrivait « bonnes réponses · 0 % 5 / 0 ». La
+ponctuation et les chiffres, neutres, prenaient le sens du bloc.
+
+Deux utilitaires, dans `src/styles.css` :
+
+- **`bidi-plaintext`**, sur le conteneur qui porte le `dir` du contenu : chaque libellé choisit
+  son sens d'écriture d'après sa première lettre, et garde l'alignement de l'écran. Il
+  **n'atteint jamais un nœud qui déclare son `dir`**, ni ce qu'il contient — un énoncé arabe
+  qui commence par un symbole latin doit rester de droite à gauche. Donc à ne poser que là où
+  chaque nœud de contenu déclare le sien : le hub de matière, l'écran de résultat (dont la
+  correction est enveloppée dans un `dir` explicite).
+- **`bidi-label`**, la même règle pour UN libellé, sur un écran dont le contenu hérite le sens
+  de l'écran (le lecteur de quête : l'énoncé et ses options n'ont pas de `dir` propre).
+
+Écrire un nouveau libellé d'interface sur un tel écran : ne lui donner **aucun** `dir`. Écrire
+un nouveau nœud de contenu : lui donner le sien (`dir={isRtlText(texte) ? "rtl" : "ltr"}`).
+
 ## La marque : une couronne, une seule
 
 Le logo de Na9ra Nal3ab est une **couronne dorée**. Elle vivait déjà dans tout ce que

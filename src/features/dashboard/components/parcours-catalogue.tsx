@@ -79,7 +79,9 @@ function ParcoursCard({
 }) {
   const t = useT();
   const soon = parcours.status === "coming_soon";
-  const cls = `flex items-center gap-3 rounded-2xl border p-4 text-start transition ${
+  // `min-w-0` : sans lui la carte, élément de grille, ne descend jamais sous la largeur de
+  // son libellé — « 1st year of basic education » poussait la page de 22 px à 390 px.
+  const cls = `flex min-w-0 items-center gap-3 rounded-2xl border p-4 text-start transition ${
     highlight ? "border-primary/40 bg-primary/[0.04]" : "border-border bg-card"
   } ${soon ? "opacity-70" : "hover:border-primary/60 hover:shadow-sm"}`;
 
@@ -94,7 +96,7 @@ function ParcoursCard({
       </span>
       <span className="min-w-0 flex-1">
         <span className="flex items-center gap-2">
-          <span className="truncate font-display text-base font-bold">{label}</span>
+          <span className="min-w-0 font-display text-base leading-snug font-bold">{label}</span>
           {badge && (
             <span className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-primary">
               {badge}
@@ -154,7 +156,7 @@ function LyceeYearRow({ group }: { group: LyceeYearGroup }) {
     <Link
       to="/programme/lycee/$annee"
       params={{ annee: group.year }}
-      className={`flex items-center gap-3 rounded-2xl border p-4 text-start transition hover:shadow-sm ${
+      className={`flex min-w-0 items-center gap-3 rounded-2xl border p-4 text-start transition hover:shadow-sm ${
         isBac
           ? "border-primary/40 bg-primary/[0.04] hover:border-primary/60"
           : "border-border bg-card hover:border-primary/60"

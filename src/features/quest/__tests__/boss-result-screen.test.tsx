@@ -145,3 +145,42 @@ describe("QuestResultScreen — bilan du combat de boss", () => {
     expect(screen.queryByTestId("boss-speed-bonus")).not.toBeInTheDocument();
   });
 });
+
+// Relevé du 2026-11-12, C-8 — sous une matière en arabe l'écran est posé de droite à gauche,
+// et ses libellés d'interface, en français, s'y lisaient à l'envers (« bonnes réponses ·
+// 0 % 5 / 0 »). `bidi-plaintext` les redresse SANS toucher au contenu.
+describe("QuestResultScreen — libellés d'interface sur une matière en arabe", () => {
+  it("l'écran porte `bidi-plaintext` et le sens de la matière", () => {
+    const { container } = renderScreen({ isRtl: true, boss: null });
+    const shell = container.querySelector(".bidi-plaintext");
+    expect(shell).toHaveAttribute("dir", "rtl");
+  });
+
+  it("le bilan du boss — des libellés d'interface — ne force plus son sens", () => {
+    renderScreen({ isRtl: true });
+    expect(screen.getByTestId("boss-result")).not.toHaveAttribute("dir");
+  });
+
+  it("la correction déclare son `dir` : énoncés et explications restent du contenu", () => {
+    renderScreen({
+      isRtl: true,
+      boss: null,
+      result: result({
+        reviewHidden: false,
+        review: [
+          {
+            questionId: "q1",
+            prompt: "PGCD(12, 18) ما هو",
+            isCorrect: false,
+            selectedChoice: "A",
+            correctChoice: "B",
+            explanation: null,
+          },
+        ] as unknown as PlayerResult["review"],
+      }),
+    });
+    const wrapper = screen.getByTestId("quest-review-direction");
+    expect(wrapper).toHaveAttribute("dir", "rtl");
+    expect(wrapper).toContainElement(screen.getByTestId("review-item"));
+  });
+});

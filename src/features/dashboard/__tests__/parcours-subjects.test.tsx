@@ -41,6 +41,32 @@ describe("ParcoursSubjects", () => {
     expect(container.querySelector('a[href="/programme"]')).not.toBeNull();
   });
 
+  // 2026-11-14 — sous « الرياضيات », la page écrivait « Force » : l'attribut de jeu, qui ne
+  // dit rien à un parent. Elle écrit ce que la matière couvre, quand le catalogue le dit.
+  it("écrit sous la matière ce qu'elle couvre, et garde l'attribut de jeu faute de description", () => {
+    render(
+      <ParcoursSubjects
+        parcours={{ name_fr: "7ème année de base", status: "available", kind: "scolaire" }}
+        subjects={[
+          {
+            id: "math",
+            name_fr: "الرياضيات",
+            attribute: "Force",
+            description: "الأنشطة العددية والهندسية",
+            content_language: "ar",
+          },
+          { ...subjects[0], id: "s1" },
+        ]}
+      />,
+    );
+    const covered = screen.getByText("الأنشطة العددية والهندسية");
+    expect(covered).toHaveAttribute("dir", "rtl");
+    expect(covered).toHaveAttribute("lang", "ar");
+    expect(screen.queryByText("Force")).toBeNull();
+    // Sans description, l'attribut reste : mieux qu'une ligne vide.
+    expect(screen.getByText("Sciences")).toBeInTheDocument();
+  });
+
   it("links back to extras for a libre track", () => {
     const { container } = render(
       <ParcoursSubjects

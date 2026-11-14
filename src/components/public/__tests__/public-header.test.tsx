@@ -11,15 +11,18 @@ vi.mock("@tanstack/react-router", () => ({
     children,
     to,
     onClick,
+    className,
   }: {
     children: React.ReactNode;
     to: string;
     onClick?: () => void;
+    className?: string;
   }) =>
     React.createElement(
       "a",
       {
         href: to,
+        className,
         onClick: (e: React.MouseEvent) => {
           e.preventDefault();
           onClick?.();
@@ -355,5 +358,34 @@ describe("PublicHeader — « Suivi parent » n'est pas la porte d'un élève (�
     const { container } = renderHeader();
 
     expect(suiviLinks(container)).toHaveLength(2);
+  });
+});
+
+// 2026-11-14 — à 1440 px, « Test de niveau » et « Suivi parent » se coupaient en deux lignes
+// et la signature arabe aussi : la barre du haut n'avait pas la place de ses liens.
+describe("PublicHeader — aucun lien ne se coupe en deux lignes", () => {
+  beforeEach(() => {
+    mockUseAuth.mockReturnValue({ user: null, session: null, loading: false });
+    mockUseMyRole.mockReturnValue({ role: null });
+  });
+
+  it("chaque lien de navigation tient sur une ligne, au bureau comme sur la rangée de téléphone", () => {
+    const { container } = renderHeader();
+    const links = [...container.querySelectorAll("nav a")];
+    // Quatre destinations × deux rangées (barre du haut dès `xl`, rangée défilante en dessous).
+    expect(links).toHaveLength(8);
+    for (const link of links) expect(link).toHaveClass("whitespace-nowrap");
+  });
+
+  it("la signature arabe de la marque non plus", () => {
+    renderHeader();
+    expect(screen.getByText("نقرا نلعب")).toHaveClass("whitespace-nowrap");
+  });
+
+  it("la barre unique commence à `xl` : en dessous elle n'a pas la place de ses quatre liens", () => {
+    const { container } = renderHeader();
+    const [desktopNav, phoneNav] = [...container.querySelectorAll("nav")];
+    expect(desktopNav).toHaveClass("hidden", "xl:flex");
+    expect(phoneNav.closest(".xl\\:hidden")).not.toBeNull();
   });
 });

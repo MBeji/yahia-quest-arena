@@ -8,8 +8,15 @@ vi.mock("@tanstack/react-router", () => ({
     (Comp: React.ElementType) =>
     ({ to, params: _params, ...rest }: { to: string; params?: unknown }) =>
       React.createElement(Comp, { ...rest, href: to }),
-  Link: ({ children, to }: { children: React.ReactNode; to: string }) =>
-    React.createElement("a", { href: to }, children),
+  Link: ({
+    children,
+    to,
+    className,
+  }: {
+    children: React.ReactNode;
+    to: string;
+    className?: string;
+  }) => React.createElement("a", { href: to, className }, children),
 }));
 
 import {
@@ -77,6 +84,18 @@ describe("ProgrammeCatalogue", () => {
     expect(screen.getByText(/Bientôt disponible/)).toBeInTheDocument();
     // a tail CTA points to the extras catalogue
     expect(container.querySelector('a[href="/extras"]')).not.toBeNull();
+  });
+
+  // 2026-11-14 — en anglais et en arabe, à 390 px, la page débordait de 22 px : la carte,
+  // élément de grille, ne descendait pas sous la largeur de son libellé tronqué
+  // (« 1st year of basic education »). Le libellé se replie, la carte peut rétrécir.
+  it("une carte de classe peut rétrécir et son libellé se replier — jamais de débordement", () => {
+    const { container } = render(<ProgrammeCatalogue parcours={parcours} />);
+    const card = container.querySelector('a[href="/niveau/$parcoursId"]');
+    expect(card).toHaveClass("min-w-0");
+    const label = screen.getByText("1ère année de base");
+    expect(label).toHaveClass("min-w-0");
+    expect(label).not.toHaveClass("truncate");
   });
 
   it("shows the real « N matières » volumetry on an available class (étude 15 lot 8)", () => {

@@ -48,7 +48,9 @@ export function SubjectSeals({ progress }: { progress: SubjectProgress | null })
         {STAR_TIERS.map((star) => (
           <SealMark key={star} star={star} earned={sealStar >= star} label={sealLabel(star)} />
         ))}
-        <div className="min-w-0 flex-1 text-sm">
+        {/* Une base de 14 rem : sur téléphone le texte passe SOUS les quatre cachets au
+            lieu de se loger dans les 60 px restants, un mot par ligne. */}
+        <div className="min-w-0 flex-[1_1_14rem] text-sm">
           {sealStar > 0 ? (
             <p className="font-bold text-(--gold)" data-testid="seal-current">
               {sealLabel(sealStar)}

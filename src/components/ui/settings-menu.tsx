@@ -1,6 +1,6 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { ChevronRight, LogOut, Settings } from "lucide-react";
+import { Bug, ChevronRight, LogOut, Settings } from "lucide-react";
 
 import { useT } from "@/lib/i18n";
 import { ThemeChoice, LocaleChoice, SoundToggles } from "@/components/ui/settings-controls";
@@ -22,13 +22,19 @@ import { ThemeChoice, LocaleChoice, SoundToggles } from "@/components/ui/setting
  * le passe pas et n'obtient que les réglages rapides. Les trois providers
  * (thème, langue, son) vivant à la racine, un visiteur anonyme peut désormais
  * couper la musique — ce que l'ancien header public ne permettait pas.
+ *
+ * `onReportBug` (coquille connectée) ajoute « Signaler un bug » sous `lg` : c'est la
+ * porte du signalement sur téléphone et tablette, où une pastille flottante
+ * recouvrait le contenu. Dès `lg` la pastille revient et la ligne s'efface.
  */
 export function SettingsMenu({
   className = "",
   onSignOut,
+  onReportBug,
 }: {
   className?: string;
   onSignOut?: () => void;
+  onReportBug?: () => void;
 }) {
   const t = useT();
   const [open, setOpen] = useState(false);
@@ -88,6 +94,24 @@ export function SettingsMenu({
             <LocaleChoice />
           </div>
           <SoundToggles />
+
+          {onReportBug && (
+            <div className="lg:hidden">
+              <div className="my-1 border-t border-border/60" />
+              <button
+                type="button"
+                data-testid="settings-report-bug"
+                onClick={() => {
+                  setOpen(false);
+                  onReportBug();
+                }}
+                className="flex min-h-11 w-full items-center gap-2.5 rounded-lg px-2 py-2 text-sm text-foreground transition hover:bg-accent"
+              >
+                <Bug className="h-4 w-4 shrink-0" />
+                {t.bugReport.launcherLabel}
+              </button>
+            </div>
+          )}
 
           {onSignOut && (
             <>
