@@ -48,8 +48,12 @@ const ctxHolder = vi.hoisted(() => ({
 }));
 
 import {
+  claimPlacementSessions,
   finishPlacementSession,
+  getMyPlacementOverview,
   getPlacementSession,
+  getPlacementSubject,
+  listPlacementSubjects,
   placementErrorCode,
   startPlacementSession,
 } from "../placement.server";
@@ -179,5 +183,153 @@ describe("placement.server", () => {
       getPlacementSession({ data: { sessionId: "nope", token: null } }),
     ).rejects.toThrow();
     expect(rpc).not.toHaveBeenCalled();
+  });
+});
+
+/**
+ * Les quatre lectures que rien n'appelait (couverture 69 %) : l'entrée par classe, le lien
+ * partagé, le rattachement des tests de l'appareil au compte, et la carte du Hall. Plus le refus
+ * de cadence de la borne durable (PT429, audit S-1), traduit depuis #1291.
+ */
+describe("placement.server — les lectures d'entrée et du Hall", () => {
+  const TOKEN = "33333333-3333-4333-8333-333333333333";
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    ctxHolder.context.userId = null;
+  });
+
+  it("listSubjects : les matières testables d'une classe, langue par défaut comprise", async () => {
+    rpc.mockResolvedValue({
+      data: [
+        {
+          id: "math",
+          nameFr: "Mathématiques",
+          contentLanguage: null,
+          chapters: "6",
+          questions: 40,
+        },
+      ],
+      error: null,
+    });
+
+    await expect(listPlacementSubjects({ data: { parcoursId: "concours-9eme" } })).resolves.toEqual(
+      [{ id: "math", nameFr: "Mathématiques", contentLanguage: null, chapters: 6, questions: 40 }],
+    );
+    expect(rpc).toHaveBeenCalledWith("list_placement_subjects", { p_parcours_id: "concours-9eme" });
+  });
+
+  it("listSubjects : une forme inattendue est une panne nommée, pas une liste à moitié remplie", async () => {
+    rpc.mockResolvedValue({ data: [{ id: "math" }], error: null });
+
+    await expect(listPlacementSubjects({ data: { parcoursId: "concours-9eme" } })).rejects.toThrow(
+      "Réponse inattendue du serveur du test.",
+    );
+  });
+
+  it("getSubject : la carte d'un lien partagé, et null pour une matière inconnue", async () => {
+    rpc.mockResolvedValueOnce({
+      data: { ...subject, testable: true, questions: "40", chapters: 6 },
+      error: null,
+    });
+    await expect(getPlacementSubject({ data: { subjectId: "math" } })).resolves.toEqual({
+      ...subject,
+      testable: true,
+      questions: 40,
+      chapters: 6,
+    });
+
+    rpc.mockResolvedValueOnce({ data: null, error: null });
+    await expect(getPlacementSubject({ data: { subjectId: "inconnue" } })).resolves.toBeNull();
+  });
+
+  it("claim : rattache les tests de l'appareil et ne compte que ce qui l'a été", async () => {
+    ctxHolder.context.userId = "u1";
+    rpc.mockResolvedValue({ data: { claimed: [bilan.id] }, error: null });
+
+    await expect(claimPlacementSessions({ data: { tokens: [TOKEN] } })).resolves.toEqual({
+      claimed: [bilan.id],
+    });
+    expect(rpc).toHaveBeenCalledWith("claim_placement_sessions", { p_tokens: [TOKEN] });
+    expect(rateLimited).toHaveBeenCalledWith(expect.anything(), "placement_claim_u1", 10, 60_000);
+  });
+
+  it("claim : une rafale est refusée avant d'appeler la base", async () => {
+    ctxHolder.context.userId = "u1";
+    rateLimited.mockResolvedValueOnce(true);
+
+    await expect(claimPlacementSessions({ data: { tokens: [TOKEN] } })).rejects.toThrow(
+      /Trop de requêtes/,
+    );
+    expect(rpc).not.toHaveBeenCalled();
+  });
+
+  it("claim : refuse une liste vide ou un jeton qui n'est pas un uuid", async () => {
+    ctxHolder.context.userId = "u1";
+    await expect(claimPlacementSessions({ data: { tokens: [] } })).rejects.toThrow();
+    await expect(claimPlacementSessions({ data: { tokens: ["pas-un-uuid"] } })).rejects.toThrow();
+    expect(rpc).not.toHaveBeenCalled();
+  });
+
+  it("overview : le dernier bilan par matière, chapitres à revoir par défaut vides", async () => {
+    ctxHolder.context.userId = "u1";
+    rpc.mockResolvedValue({
+      data: [
+        {
+          sessionId: bilan.id,
+          subjectId: "math",
+          subjectNameFr: "Mathématiques",
+          scoreOn20: "14",
+          band: "en-route",
+          finishedAt: bilan.finishedAt,
+        },
+      ],
+      error: null,
+    });
+
+    await expect(getMyPlacementOverview()).resolves.toEqual([
+      {
+        sessionId: bilan.id,
+        subjectId: "math",
+        subjectNameFr: "Mathématiques",
+        contentLanguage: "fr",
+        scoreOn20: 14,
+        band: "en-route",
+        finishedAt: bilan.finishedAt,
+        chaptersToReview: [],
+      },
+    ]);
+  });
+
+  it("overview : une bande hors du domaine fait échouer la lecture", async () => {
+    ctxHolder.context.userId = "u1";
+    rpc.mockResolvedValue({
+      data: [
+        {
+          sessionId: bilan.id,
+          subjectId: "math",
+          subjectNameFr: "Mathématiques",
+          scoreOn20: 14,
+          band: "excellent",
+          finishedAt: bilan.finishedAt,
+        },
+      ],
+      error: null,
+    });
+
+    await expect(getMyPlacementOverview()).rejects.toThrow(
+      "Réponse inattendue du serveur du test.",
+    );
+  });
+
+  it("start : un refus de la borne durable (PT429) se dit « trop de requêtes », pas une panne", async () => {
+    rpc.mockResolvedValue({
+      data: null,
+      error: { code: "PT429", message: "RATE_LIMITED", details: null, hint: null },
+    });
+
+    await expect(startPlacementSession({ data: { subjectId: "math" } })).rejects.toThrow(
+      /Trop de requêtes/,
+    );
   });
 });
