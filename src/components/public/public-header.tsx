@@ -8,9 +8,14 @@ import { AccountHud } from "@/components/account-hud";
 import { GuideButton } from "@/components/guide/guide-button";
 import { useStickyHeaderOffset } from "@/components/public/use-sticky-header-offset";
 
-/** Un lien de la rangée de navigation sous `lg` : 44 px de haut, la garde tactile. */
-const PHONE_NAV_LINK =
-  "inline-flex min-h-11 shrink-0 items-center whitespace-nowrap rounded-lg px-2.5 text-sm font-medium text-muted-foreground transition hover:text-foreground";
+/** L'onglet de la page où l'on est : encre de marque, graisse de titre. Le routeur pose
+ * `data-status="active"` (et `aria-current="page"`) sur le lien de la route courante. */
+const NAV_CURRENT = "data-[status=active]:font-semibold data-[status=active]:text-primary";
+/** Un lien de la rangée de navigation sous `xl` : 44 px de haut, la garde tactile. */
+const PHONE_NAV_LINK = `inline-flex min-h-11 shrink-0 items-center whitespace-nowrap rounded-lg px-2.5 text-sm font-medium text-muted-foreground transition hover:text-foreground ${NAV_CURRENT}`;
+/** Un lien de la barre du haut, dès `xl`. `whitespace-nowrap` : « Test de niveau » et
+ * « Suivi parent » se coupaient en deux lignes à 1440 px (constat du 2026-11-14). */
+const DESKTOP_NAV_LINK = `inline-flex items-center whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition hover:bg-foreground/5 hover:text-foreground [@media(pointer:coarse)]:min-h-11 ${NAV_CURRENT}`;
 /** Les deux entrées du compte dans la barre du haut — partagées avec leur réserve
  * invisible, pour que la place prise pendant la lecture de la session soit EXACTEMENT
  * celle des liens qui arrivent. `whitespace-nowrap` : sur deux lignes, « Créer mon
@@ -65,7 +70,10 @@ export function PublicHeader() {
     >
       {/* Sous 360 px (iPhone SE 1re génération, petits Android) la barre débordait déjà de
           6 à 11 px : marge et marque y sont resserrées pour que tout tienne sur la ligne. */}
-      <div className="mx-auto flex max-w-5xl items-center justify-between gap-2 px-4 py-2 max-[359px]:gap-1 max-[359px]:px-2 sm:gap-3 sm:px-6 sm:py-3">
+      {/* `max-w-7xl`, comme la coquille connectée : la marque ne change pas de place quand
+          un élève passe de son Hall au catalogue. À `max-w-5xl` la barre du haut n'avait
+          pas la place de ses liens — ils passaient sur deux lignes. */}
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 px-4 py-2 max-[359px]:gap-1 max-[359px]:px-2 sm:gap-3 sm:px-6 sm:py-3">
         <div className="flex items-center gap-3 sm:gap-6">
           {/* Brand = home. AUTH-AWARE destination: a signed-in visitor who reached
               this public shell via the converged « Découvrir » nav is sent back to
@@ -77,7 +85,7 @@ export function PublicHeader() {
             // 44 px de haut : la marque est le premier lien que le pouce cherche.
             className="flex min-h-11 items-center gap-2"
           >
-            <span className="font-display text-lg font-bold tracking-tight whitespace-nowrap text-primary max-[359px]:text-base">
+            <span className="font-brand text-lg font-bold tracking-tight whitespace-nowrap text-primary max-[359px]:text-base">
               Na9ra Nal3ab
             </span>
             {/* Le nom accessible COMMENCE par la marque visible, puis dit où mène le lien.
@@ -89,39 +97,27 @@ export function PublicHeader() {
               lang="ar"
               dir="rtl"
               aria-hidden="true"
-              className="hidden font-brand-ar text-sm font-semibold text-muted-foreground sm:inline"
+              className="hidden font-brand-ar text-sm font-semibold whitespace-nowrap text-muted-foreground sm:inline"
             >
               نقرا نلعب
             </span>
           </Link>
-          <nav className="hidden items-center gap-1 lg:flex" aria-label={t.public.header.navAria}>
-            <Link
-              to="/programme"
-              className="inline-flex items-center rounded-lg px-2.5 py-2 text-sm font-medium text-muted-foreground transition hover:text-foreground sm:px-3 [@media(pointer:coarse)]:min-h-11"
-            >
+          <nav className="hidden items-center gap-1 xl:flex" aria-label={t.public.header.navAria}>
+            <Link to="/programme" className={DESKTOP_NAV_LINK}>
               {t.public.header.programme}
             </Link>
-            <Link
-              to="/extras"
-              className="inline-flex items-center rounded-lg px-2.5 py-2 text-sm font-medium text-muted-foreground transition hover:text-foreground sm:px-3 [@media(pointer:coarse)]:min-h-11"
-            >
+            <Link to="/extras" className={DESKTOP_NAV_LINK}>
               {t.public.header.extras}
             </Link>
             {/* Le test de niveau (étude 39) : la porte d'entrée partageable, visible de partout —
                 un visiteur qui arrive par un cours doit pouvoir la trouver sans l'accueil. */}
-            <Link
-              to="/test-de-niveau"
-              className="inline-flex items-center rounded-lg px-2.5 py-2 text-sm font-medium text-muted-foreground transition hover:text-foreground sm:px-3 [@media(pointer:coarse)]:min-h-11"
-            >
+            <Link to="/test-de-niveau" className={DESKTOP_NAV_LINK}>
               {t.public.header.placement}
             </Link>
             {/* Suivi parent — sans compte : discoverable depuis le catalogue,
                 plus seulement depuis le bloc famille de la landing (audit §C-4). */}
             {showParentTracking && (
-              <Link
-                to="/suivi"
-                className="inline-flex items-center rounded-lg px-2.5 py-2 text-sm font-medium text-muted-foreground transition hover:text-foreground sm:px-3 [@media(pointer:coarse)]:min-h-11"
-              >
+              <Link to="/suivi" className={DESKTOP_NAV_LINK}>
                 {t.public.header.parentTracking}
               </Link>
             )}
@@ -177,52 +173,59 @@ export function PublicHeader() {
           )}
         </div>
       </div>
-      {/* Navigation du catalogue sous `lg` : UNE rangée, jamais deux.
+      {/* Navigation du catalogue sous `xl` : UNE rangée, jamais deux.
           - Elle s'enroulait sur deux lignes sur téléphone (et trois en anglais à 320 px) :
             l'en-tête prenait 150 à 166 px d'un écran de 780, et « Valider » passait sous
             la ligne de flottaison d'une question. Les liens du catalogue défilent
             désormais à l'horizontale ; le dernier, coupé par le bord, dit qu'il y en a
-            d'autres. Mesuré à 360 px : 166 → 105 px.
+            d'autres — et le fondu de `scroll-fade-end` dit que la coupe est voulue.
+            Mesuré à 360 px : 166 → 105 px.
           - « Connexion » ne défile PAS : épinglée en fin de rangée, toujours visible sous
-            `sm` (dès `sm`, c'est la barre du haut qui la porte). Sa place est réservée
+            `sm` (dès `sm`, c'est la barre du haut qui la porte), derrière un filet qui la
+            sépare des liens qui défilent. Sa place est réservée
             pendant la lecture de la session, comme celle de « Créer mon compte ».
           - Chaque lien fait 44 px de haut : la garde tactile. */}
-      <div className="flex items-center gap-1 border-t border-border px-4 sm:px-6 lg:hidden">
-        <nav
-          className="flex min-w-0 flex-1 items-center gap-x-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-          aria-label={t.public.header.navAria}
-        >
-          <Link to="/programme" className={PHONE_NAV_LINK}>
-            {t.public.header.programme}
-          </Link>
-          <Link to="/extras" className={PHONE_NAV_LINK}>
-            {t.public.header.extras}
-          </Link>
-          <Link to="/test-de-niveau" className={PHONE_NAV_LINK}>
-            {t.public.header.placement}
-          </Link>
-          {showParentTracking && (
-            <Link to="/suivi" className={PHONE_NAV_LINK}>
-              {t.public.header.parentTracking}
+      <div className="border-t border-border xl:hidden">
+        <div className="mx-auto flex max-w-7xl items-center gap-1 px-4 sm:px-6">
+          <nav
+            className="scroll-fade-end -ms-2.5 flex min-w-0 flex-1 items-center gap-x-1 overflow-x-auto pe-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            aria-label={t.public.header.navAria}
+          >
+            <Link to="/programme" className={PHONE_NAV_LINK}>
+              {t.public.header.programme}
             </Link>
-          )}
-        </nav>
-        {loading ? (
-          <span aria-hidden="true" className={`${PHONE_NAV_LINK} invisible sm:hidden`}>
-            {t.public.header.login}
-          </span>
-        ) : (
-          !isAuthed && (
-            <Link
-              to="/login"
-              onClick={() => rememberCurrentPage()}
-              data-testid="header-login-phone"
-              className={`${PHONE_NAV_LINK} sm:hidden`}
+            <Link to="/extras" className={PHONE_NAV_LINK}>
+              {t.public.header.extras}
+            </Link>
+            <Link to="/test-de-niveau" className={PHONE_NAV_LINK}>
+              {t.public.header.placement}
+            </Link>
+            {showParentTracking && (
+              <Link to="/suivi" className={PHONE_NAV_LINK}>
+                {t.public.header.parentTracking}
+              </Link>
+            )}
+          </nav>
+          {loading ? (
+            <span
+              aria-hidden="true"
+              className={`${PHONE_NAV_LINK} invisible border-s border-transparent ps-3 sm:hidden`}
             >
               {t.public.header.login}
-            </Link>
-          )
-        )}
+            </span>
+          ) : (
+            !isAuthed && (
+              <Link
+                to="/login"
+                onClick={() => rememberCurrentPage()}
+                data-testid="header-login-phone"
+                className={`${PHONE_NAV_LINK} rounded-none border-s border-border ps-3 sm:hidden`}
+              >
+                {t.public.header.login}
+              </Link>
+            )
+          )}
+        </div>
       </div>
     </header>
   );

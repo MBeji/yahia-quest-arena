@@ -45,6 +45,28 @@ describe("Fontes auto-hébergées (levier 06)", () => {
     expect(ROOT_ROUTE).toContain('crossOrigin: "anonymous"');
   });
 
+  // 2026-11-14 — Orbitron écrivait tous les titres : une face de science-fiction, au zéro
+  // barré, sans glyphes arabes. Elle ne porte plus que le logotype.
+  it("écrit les titres dans la famille du texte ; Orbitron n'écrit que le logotype", () => {
+    const token = (name: string) => new RegExp(`${name}:\\s*([^;]+);`).exec(CSS)?.[1] ?? "";
+    expect(token("--font-display")).toContain("Space Grotesk");
+    expect(token("--font-display")).not.toContain("Orbitron");
+    expect(token("--font-brand")).toMatch(/^"Orbitron"/);
+  });
+
+  it("pose `font-brand` sur le logotype des deux coquilles et de l'écran d'accès", () => {
+    for (const file of [
+      "src/components/public/public-header.tsx",
+      "src/routes/_authenticated.tsx",
+      "src/routes/auth.tsx",
+    ]) {
+      const source = readFileSync(resolve(ROOT, file), "utf-8");
+      const wordmark = /className="([^"]*)"[^>]*>\s*Na9ra/.exec(source)?.[1] ?? "";
+      expect(wordmark, `${file} : logotype sans font-brand`).toContain("font-brand");
+      expect(wordmark).not.toContain("font-display");
+    }
+  });
+
   it("ne charge plus rien depuis Google : ni feuille, ni preconnect", () => {
     expect(ROOT_ROUTE).not.toContain("fonts.googleapis.com");
     expect(ROOT_ROUTE).not.toContain("fonts.gstatic.com");

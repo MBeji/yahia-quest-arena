@@ -11,7 +11,9 @@ import { QUIZ_PASS_THRESHOLD_PCT } from "@/shared/constants/gamification";
 export function QuizContractHint({ className = "" }: { className?: string }) {
   const t = useT();
   return (
-    <p className={`text-xs text-muted-foreground ${className}`}>
+    // `bidi-label` : sous une matière en arabe l'écran est posé de droite à gauche, et cette
+    // phrase d'interface, en français, y commençait par son point final.
+    <p className={`bidi-label text-xs text-muted-foreground ${className}`}>
       🧠 {t.quest.quizContract.replace("{pct}", String(QUIZ_PASS_THRESHOLD_PCT))}
     </p>
   );

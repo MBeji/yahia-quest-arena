@@ -123,6 +123,21 @@ describe("SealMark", () => {
     expect(screen.getByTestId("seal-mark")).toHaveAttribute("data-star", "3");
   });
 
+  // Constat du 2026-11-14 : le retour à la ligne était laissé au navigateur, qui ne coupe pas
+  // une suite d'émojis — trois et quatre étoiles débordaient du disque de 56 px.
+  it.each([
+    [1, ["⭐"]],
+    [2, ["⭐⭐"]],
+    [3, ["⭐⭐", "⭐"]],
+    [4, ["⭐⭐", "⭐⭐"]],
+  ] as const)("range %i étoile(s) en rangées de deux au plus", (star, rows) => {
+    render(<SealMark star={star} earned label="Sceau" />);
+    const drawn = [...screen.getByTestId("seal-mark").querySelectorAll("[aria-hidden] > span")].map(
+      (row) => row.textContent,
+    );
+    expect(drawn).toEqual(rows);
+  });
+
   it("distingue l'acquis de l'attente — jamais un état « perdu »", () => {
     const { rerender } = render(<SealMark star={1} earned label="Sceau ⭐" />);
     expect(screen.getByTestId("seal-mark")).toHaveAttribute("data-earned", "true");

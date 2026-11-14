@@ -192,7 +192,7 @@ function AuthenticatedLayout() {
             </div>
             {/* Masquée À L'ŒIL sous `sm`, jamais au lecteur d'écran : un `hidden` retirait
                 aussi le nom du lien, qui n'était plus qu'une image muette sur téléphone. */}
-            <span className="sr-only font-display text-base font-bold tracking-wider sm:not-sr-only">
+            <span className="sr-only font-brand text-base font-bold tracking-wider sm:not-sr-only">
               Na9ra <span className="text-gradient-gold">Nal3ab</span>
             </span>
           </Link>

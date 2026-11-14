@@ -166,7 +166,12 @@ export function QuestResultScreen({
     ) : null;
 
   return (
-    <PageShell width="narrow" className="py-12" dir={isRtl ? "rtl" : undefined}>
+    // `bidi-plaintext` (voir `styles.css`) : sous une matière en arabe l'écran est posé de
+    // droite à gauche, et ses libellés d'interface, en français, se lisaient à l'envers —
+    // « bonnes réponses · 0 % 5 / 0 », le point final en tête (relevé du 2026-11-12, C-8).
+    // Les libellés de quête, dans la langue du contenu, déclarent leur `dir` ; la
+    // correction aussi, plus bas : ni les uns ni l'autre ne sont touchés.
+    <PageShell width="narrow" className="bidi-plaintext py-12" dir={isRtl ? "rtl" : undefined}>
       {rewards && showConfetti && <Confetti />}
       {rewards && (
         <LevelUpCelebration
@@ -236,7 +241,6 @@ export function QuestResultScreen({
             <div
               className="mt-4 rounded-2xl border border-destructive/40 bg-destructive/10 p-4"
               data-testid="boss-result"
-              dir={isRtl ? "rtl" : undefined}
             >
               <div className="font-display text-lg font-bold text-destructive">
                 {boss.rank === "critical"
@@ -283,7 +287,9 @@ export function QuestResultScreen({
                 <Link
                   to="/chapitre/$chapterId"
                   params={{ chapterId }}
-                  className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-[image:var(--gradient-gold)] px-4 py-2 text-xs font-bold text-primary-foreground shadow-gold hover:scale-105 [@media(pointer:coarse)]:min-h-11"
+                  // Un bloc centré SOUS la phrase : en `inline-flex` le bouton se logeait au
+                  // milieu d'elle et la coupait en deux.
+                  className="mx-auto mt-3 flex w-fit items-center gap-1.5 rounded-lg bg-[image:var(--gradient-gold)] px-4 py-2 text-xs font-bold text-primary-foreground shadow-gold hover:scale-105 [@media(pointer:coarse)]:min-h-11"
                 >
                   <BookOpen className="h-4 w-4" /> {QL.review}
                 </Link>
@@ -396,25 +402,29 @@ export function QuestResultScreen({
           {!isQuiz && reviewVideo}
 
           {!isQuiz && !result.reviewHidden && result.review.length > 0 && (
-            <QuestReviewList
-              review={result.review}
-              labels={{
-                questReview: t.quest.questReview,
-                questionN: t.quest.questionN,
-                passed: t.quest.passed,
-                needsWork: t.quest.needsWork,
-                yourAnswer: t.quest.yourAnswer,
-                correctAnswer: t.quest.correctAnswer,
-                reviewMistakeTitle: t.quest.reviewMistakeTitle,
-                reviewCourseCta: t.quest.reviewCourseCta,
-              }}
-              resolvePrompt={resolvePrompt}
-              getDisplayChoice={getDisplayChoice}
-              resolveMisconceptionLabel={resolveMisconceptionLabel}
-              onTrain={onTrain}
-              trainLabel={t.quest.reviewTrainCta}
-              renderTutor={renderTutor}
-            />
+            // Le `dir` EXPLICITE sort la correction de `bidi-plaintext` : énoncés, réponses
+            // et explications sont du contenu, qui garde le sens de la matière.
+            <div dir={isRtl ? "rtl" : "ltr"} data-testid="quest-review-direction">
+              <QuestReviewList
+                review={result.review}
+                labels={{
+                  questReview: t.quest.questReview,
+                  questionN: t.quest.questionN,
+                  passed: t.quest.passed,
+                  needsWork: t.quest.needsWork,
+                  yourAnswer: t.quest.yourAnswer,
+                  correctAnswer: t.quest.correctAnswer,
+                  reviewMistakeTitle: t.quest.reviewMistakeTitle,
+                  reviewCourseCta: t.quest.reviewCourseCta,
+                }}
+                resolvePrompt={resolvePrompt}
+                getDisplayChoice={getDisplayChoice}
+                resolveMisconceptionLabel={resolveMisconceptionLabel}
+                onTrain={onTrain}
+                trainLabel={t.quest.reviewTrainCta}
+                renderTutor={renderTutor}
+              />
+            </div>
           )}
         </div>
       </motion.div>
