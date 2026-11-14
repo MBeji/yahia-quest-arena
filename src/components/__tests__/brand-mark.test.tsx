@@ -10,14 +10,19 @@ import { CrownMark } from "../brand-mark";
  * La marque, enfin portée par l'interface.
  *
  * L'application dessinait une `Sparkles` de lucide dans son en-tête, sur l'écran
- * d'authentification et dans l'avatar du héros — alors que le favicon, les trois
- * icônes PWA et la page hors-ligne montraient tous une COURONNE dorée. Le logo de
- * l'onglet ne ressemblait pas à l'en-tête qu'il ouvrait.
+ * d'authentification et dans l'avatar du héros — alors que la page hors-ligne
+ * montrait une COURONNE dorée.
  *
- * Ce fichier tient les deux invariants qui empêchent cet écart de revenir :
+ * Depuis le 2026-11-14 (arbitrage du propriétaire), la marque a deux visages voulus :
+ * DEHORS — l'onglet, les icônes d'installation, les réseaux — le monogramme « N9 »
+ * vert des pages publiques ; DEDANS — l'interface connectée et la page hors-ligne —
+ * la couronne, emblème du jeu. La référence du tracé est donc `public/offline.html`,
+ * plus `public/favicon.svg`.
  *
- *   1. ⭐ le tracé du composant est CELUI du favicon, primitive par primitive —
- *      une seule couronne dans le produit, pas deux silhouettes à faire diverger ;
+ * Ce fichier tient les deux invariants qui empêchent la couronne de diverger :
+ *
+ *   1. ⭐ le tracé du composant est CELUI de la page hors-ligne, primitive par
+ *      primitive — une seule couronne dans le produit, pas deux silhouettes ;
  *   2. le `viewBox` reste la boîte englobante EXACTE de ce tracé : il est serré à
  *      dessein (l'original porte les marges d'une icône d'application), et le
  *      resserrer à la main est précisément le geste qui rogne le dessin en silence.
@@ -82,19 +87,24 @@ function boundingBox(svg: SVGSVGElement) {
 }
 
 describe("CrownMark — la couronne de la marque", () => {
-  it("⭐ dessine EXACTEMENT la couronne du favicon, pas une seconde silhouette", () => {
-    const favicon = readFileSync(join(process.cwd(), "public/favicon.svg"), "utf8");
-    const expected = shapesOfSvgSource(favicon);
+  it("⭐ dessine EXACTEMENT la couronne de la page hors-ligne, pas une seconde silhouette", () => {
+    const offline = readFileSync(join(process.cwd(), "public/offline.html"), "utf8");
+    const crown = /<svg[^>]*class="crown"[\s\S]*?<\/svg>/.exec(offline)?.[0] ?? "";
+    const expected = shapesOfSvgSource(crown);
     const actual = shapesOfSvgSource(renderCrown().outerHTML);
 
-    // Le favicon pose aussi la plaque de fond de l'icône (`<rect width="512" …>`),
-    // qui n'a pas de sens dans l'interface : on compare la couronne seule.
-    const crownRects = expected.rects.filter((r) => !r.startsWith("x= "));
-
     expect(actual.paths).toEqual(expected.paths);
-    expect(actual.rects).toEqual(crownRects);
+    expect(actual.rects).toEqual(expected.rects);
     expect(actual.circles).toEqual(expected.circles);
     expect(actual.paths.length).toBeGreaterThan(0);
+  });
+
+  it("l'icône extérieure est le monogramme N9 vert, plus la couronne", () => {
+    const favicon = readFileSync(join(process.cwd(), "public/favicon.svg"), "utf8");
+    const crownPath = shapesOfSvgSource(renderCrown().outerHTML).paths[0];
+
+    expect(favicon).toContain('fill="#0f6e56"');
+    expect(shapesOfSvgSource(favicon).paths).not.toContain(crownPath);
   });
 
   it("⭐ garde un `viewBox` collé à la boîte englobante du tracé", () => {
