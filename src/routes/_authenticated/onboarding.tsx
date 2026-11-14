@@ -192,17 +192,19 @@ function ParcoursCard({
   const isComingSoon = parcours.status === "coming_soon";
   const label = parcoursName(parcours, locale);
 
+  // Une LIGNE par classe, pas une affiche : treize cartes de 110 px faisaient 2 200 px à
+  // faire défiler sur téléphone pour atteindre le Baccalauréat (constat du 2026-11-14).
   const header = (
-    <div className="flex items-start gap-4">
+    <div className="flex items-center gap-3">
       <div
-        className="rounded-xl p-3"
+        className="shrink-0 rounded-xl p-2.5"
         style={{ background: `color-mix(in oklab, ${color} 20%, transparent)` }}
       >
-        <Icon className="h-6 w-6" style={{ color }} />
+        <Icon className="h-5 w-5" style={{ color }} />
       </div>
-      <div className="flex-1">
+      <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-2">
-          <h3 className="font-display text-lg font-bold">{label}</h3>
+          <h3 className="font-display text-base leading-snug font-bold">{label}</h3>
           {isComingSoon && (
             <span className="inline-flex items-center gap-1 rounded-full bg-muted/40 px-2 py-0.5 text-xs font-semibold text-muted-foreground">
               <Clock className="h-3 w-3" /> {t.parcoursInterest.underConstruction}
@@ -220,7 +222,7 @@ function ParcoursCard({
   // markup — a real button can't nest inside the selectable motion.button).
   if (isComingSoon) {
     return (
-      <div className="relative rounded-2xl border-2 border-[color:var(--gold)]/30 bg-surface-2 p-6 text-start">
+      <div className="relative rounded-2xl border border-[color:var(--gold)]/30 bg-surface-2 p-3.5 text-start">
         {header}
         {interest && (
           <ParcoursInterestButton
@@ -251,7 +253,7 @@ function ParcoursCard({
       whileHover={isSaving ? undefined : { scale: 1.02 }}
       whileTap={isSaving ? undefined : { scale: 0.98 }}
       aria-label={label}
-      className="relative w-full rounded-2xl border-2 border-[color:var(--gold)]/30 bg-surface-2 p-6 text-start transition-all hover:border-[color:var(--gold)]/60 disabled:opacity-60"
+      className="relative w-full rounded-2xl border border-[color:var(--gold)]/30 bg-surface-2 p-3.5 text-start transition-all hover:border-[color:var(--gold)]/60 disabled:opacity-60"
     >
       {header}
     </motion.button>
@@ -274,14 +276,14 @@ function LyceeYearCard({ group, onOpen }: { group: LyceeYearGroup; onOpen: () =>
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       aria-label={label}
-      className="w-full rounded-2xl border-2 border-[color:var(--gold)]/30 bg-surface-2 p-6 text-start transition-all hover:border-[color:var(--gold)]/60"
+      className="w-full rounded-2xl border border-[color:var(--gold)]/30 bg-surface-2 p-3.5 text-start transition-all hover:border-[color:var(--gold)]/60"
     >
-      <div className="flex items-center gap-4">
-        <div className="rounded-xl bg-[color:var(--gold)]/15 p-3">
-          <Icon className="h-6 w-6 text-[color:var(--gold)]" />
+      <div className="flex items-center gap-3">
+        <div className="shrink-0 rounded-xl bg-[color:var(--gold)]/15 p-2.5">
+          <Icon className="h-5 w-5 text-[color:var(--gold)]" />
         </div>
-        <div className="flex-1">
-          <h3 className="font-display text-lg font-bold">{label}</h3>
+        <div className="min-w-0 flex-1">
+          <h3 className="font-display text-base leading-snug font-bold">{label}</h3>
           <p className="mt-0.5 text-xs text-muted-foreground">{meta}</p>
         </div>
         <ChevronRight className="h-5 w-5 shrink-0 text-[color:var(--gold)] rtl:-scale-x-100" />
@@ -363,11 +365,11 @@ function ParcoursStep({
       </div>
 
       {isPending ? (
-        <div className="grid gap-4">
-          {[0, 1, 2].map((i) => (
+        <div className="grid gap-2.5 sm:grid-cols-2">
+          {[0, 1, 2, 3].map((i) => (
             <div
               key={i}
-              className="h-[88px] animate-pulse rounded-2xl border-2 border-[color:var(--gold)]/30 bg-surface-2"
+              className="h-[70px] animate-pulse rounded-2xl border border-[color:var(--gold)]/30 bg-surface-2"
             />
           ))}
         </div>
@@ -380,7 +382,7 @@ function ParcoursStep({
           {t.explorer.empty}
         </div>
       ) : isSchool && lyceeGroup ? (
-        <div className="grid gap-4">
+        <div className="grid gap-2.5 sm:grid-cols-2">
           {lyceeGroup.sections.map((p) => (
             <ParcoursCard
               key={p.id}
@@ -398,7 +400,7 @@ function ParcoursStep({
               <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 {cycleLabel(group.cycle)}
               </h3>
-              <div className="grid gap-4">
+              <div className="grid gap-2.5 sm:grid-cols-2">
                 {group.cycle === "secondaire"
                   ? lyceeYears.map((g) => {
                       const direct = g.direct;
@@ -432,7 +434,7 @@ function ParcoursStep({
           ))}
         </div>
       ) : (
-        <div className="grid gap-4">
+        <div className="grid gap-2.5 sm:grid-cols-2">
           {visible.map((p) => (
             <ParcoursCard
               key={p.id}

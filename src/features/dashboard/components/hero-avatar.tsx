@@ -39,18 +39,20 @@ export function HeroAvatar({
   const tier = clampAvatarTier(avatarTier);
 
   return (
-    <div className="flex flex-col items-center gap-1">
+    // `sm:row-span-2` : dans la grille de l'en-tête du Hall, l'avatar tient les deux rangées
+    // (identité, pastilles) dès `sm` ; sur téléphone il n'occupe que la première.
+    <div className="flex flex-col items-center gap-1 sm:row-span-2">
       <div
         data-testid="hero-avatar"
         data-frame={isHeroFrame(frameSlug) ? frameSlug : undefined}
-        className={`grid h-20 w-20 place-items-center rounded-2xl bg-[image:var(--gradient-gold)] shadow-gold animate-pulse-neon ${ring}`}
+        className={`grid size-14 place-items-center rounded-2xl bg-[image:var(--gradient-gold)] shadow-gold animate-pulse-neon sm:size-20 ${ring}`}
       >
         {emoji ? (
           <span className="text-4xl leading-none" role="img" aria-label={avatarSlug ?? "avatar"}>
             {emoji}
           </span>
         ) : (
-          <CrownMark className="h-11 w-11 text-primary-foreground" />
+          <CrownMark className="size-8 text-primary-foreground sm:size-11" />
         )}
       </div>
       {/* Le palier, enfin visible — et borné : `award_xp` le plafonne à 6. */}

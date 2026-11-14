@@ -1,5 +1,5 @@
 import { createFileRoute, Outlet, Link, useNavigate, useLocation } from "@tanstack/react-router";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import {
@@ -42,6 +42,9 @@ function AuthenticatedLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const t = useT();
+  // La fenêtre « Signaler un bug » a deux portes (pastille dès `lg`, menu des réglages
+  // en dessous) : son état vit ici, au-dessus des deux.
+  const [bugReportOpen, setBugReportOpen] = useState(false);
 
   // User role + active parcours for conditional nav and the onboarding guard.
   // Shared with every /admin guard via useMyRole — see that hook for why a single
@@ -263,7 +266,7 @@ function AuthenticatedLayout() {
                 y compris pendant une quête ou un cours (écrans immersifs). */}
             <GuideButton />
             <AccountHud to={hub} />
-            <SettingsMenu onSignOut={signOut} />
+            <SettingsMenu onSignOut={signOut} onReportBug={() => setBugReportOpen(true)} />
           </div>
         </div>
       </header>
@@ -278,10 +281,15 @@ function AuthenticatedLayout() {
       >
         <Outlet />
       </main>
-      {/* Beta-phase bug launcher — floats above the content. Hidden on immersive
-          screens (quest/dungeon/lesson/onboarding) so it never overlaps an
-          in-screen sticky CTA. */}
-      {!immersive && <BugReportLauncher />}
+      {/* Beta-phase bug report. Dès `lg` une pastille flottante, sauf sur les écrans
+          immersifs (quête, cours, onboarding, examen) où elle recouvrirait un bouton
+          collé en bas ; sous `lg` c'est une ligne du menu des réglages, sur tous les
+          écrans — la fenêtre, elle, est toujours montée. */}
+      <BugReportLauncher
+        open={bugReportOpen}
+        onOpenChange={setBugReportOpen}
+        floating={!immersive}
+      />
       {/* La bulle IA — permanente, y compris grisée (arbitrage du 2026-08-27,
           qui renverse R-1 d'é29). Elle se tait d'elle-même sur les épreuves
           notées : l'autre moitié de R-1 est une règle d'anti-triche, pas de

@@ -19,7 +19,7 @@ vi.mock("@tanstack/react-router", () => ({
 import { I18nProvider } from "@/lib/i18n";
 import { SettingsMenu } from "../settings-menu";
 
-const renderMenu = (props: { onSignOut?: () => void } = {}) =>
+const renderMenu = (props: { onSignOut?: () => void; onReportBug?: () => void } = {}) =>
   render(
     <I18nProvider>
       <SettingsMenu {...props} />
@@ -112,5 +112,31 @@ describe("SettingsMenu — le point d'entrée unique des réglages", () => {
     expect(screen.getByTestId("settings-menu")).toBeInTheDocument();
     await userEvent.keyboard("{Escape}");
     expect(screen.queryByTestId("settings-menu")).toBeNull();
+  });
+});
+
+// 2026-11-14 — sur téléphone, la pastille flottante « Signaler un bug » recouvrait le
+// contenu (deux boutons empilés au-dessus de la barre d'onglets). Sa porte y est
+// désormais une ligne de ce menu ; dès `lg`, la pastille revient et la ligne s'efface.
+describe("SettingsMenu — « Signaler un bug » sous `lg`", () => {
+  it("n'existe pas sans `onReportBug` : la coquille publique n'a pas de signalement", async () => {
+    renderMenu();
+    await open();
+    expect(screen.queryByTestId("settings-report-bug")).toBeNull();
+  });
+
+  it("appelle la coquille et referme le panneau — la fenêtre s'ouvre à sa place", async () => {
+    const onReportBug = vi.fn();
+    renderMenu({ onSignOut: vi.fn(), onReportBug });
+    await open();
+    await userEvent.click(screen.getByTestId("settings-report-bug"));
+    expect(onReportBug).toHaveBeenCalledTimes(1);
+    await waitFor(() => expect(screen.queryByTestId("settings-menu")).toBeNull());
+  });
+
+  it("s'efface dès `lg`, où la pastille flottante reprend la main", async () => {
+    renderMenu({ onReportBug: vi.fn() });
+    await open();
+    expect(screen.getByTestId("settings-report-bug").parentElement).toHaveClass("lg:hidden");
   });
 });
