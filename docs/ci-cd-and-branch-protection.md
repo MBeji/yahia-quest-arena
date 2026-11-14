@@ -306,8 +306,10 @@ déploiement réussi.
 
 Vécu le 2026-11-12 : onze sessions en parallèle ont épuisé le plafond en une heure. Chaque push
 créait un aperçu, chaque fusion sur `main` remettait à jour toutes les PR armées (un aperçu de
-plus par PR), et le dépôt est relié à **deux** projets Vercel (`na9ranal3ab`, qui sert la
-production, et `yahia-quest-arena`) — chaque événement comptait double.
+plus par PR), et le dépôt était relié à **deux** projets Vercel (`na9ranal3ab`, qui sert la
+production, et `yahia-quest-arena`) — chaque événement comptait double. Le second projet, sans
+domaine propre ni variables, a été supprimé par le propriétaire le 2026-11-13 : le dépôt n'est
+plus relié qu'à `na9ranal3ab`.
 
 Ce qui en découle :
 
@@ -315,15 +317,15 @@ Ce qui en découle :
   `claude/**`, `codex/**`, `copilot/**`, `dependabot/**`, `wip/**`, `draft/**`, `rescue/**`).
   Personne ne les ouvrait : une PR fusionne en cinq minutes, et la CI ne teste jamais un aperçu
   Vercel. `main` n'est dans aucune règle, donc déploie toujours ; une branche `humain/**` garde
-  son aperçu. Il reste deux déploiements par fusion (un par projet) : ~50 fusions par jour.
+  son aperçu. Il reste un déploiement par fusion : ~100 fusions par jour.
 - **Constater avant de croire** : `vercel-diagnose.yml` (dispatch, lecture seule) imprime le
   dernier déploiement `READY` de production et son commit. « Fusionné » ne veut pas dire « en
   ligne ».
 - **Pendant un gel du déploiement, une migration ne doit rien changer que le code en ligne
   appelle** : la base avance, le code non. Objets neufs seulement ; toute modification d'une
   fonction, d'un droit ou d'une table existante attend la reprise.
-- Lever le plafond (plan payant) ou supprimer le projet Vercel en double est un geste du
-  propriétaire.
+- Lever le plafond (plan payant) est un geste du propriétaire. Ne pas relier le dépôt à un
+  second projet Vercel : chaque fusion y compterait de nouveau double.
 
 ## When the chain ships something broken (rollback)
 
