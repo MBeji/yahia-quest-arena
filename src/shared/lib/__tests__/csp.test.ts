@@ -79,6 +79,8 @@ describe("buildContentSecurityPolicy", () => {
       "https://*.analytics.google.com",
       // gtag émet aussi vers /g/collect sur ce domaine (signaux Google / régions).
       "https://www.google.com",
+      // La balise des signaux Google (décision du propriétaire, 2026-11-13).
+      "https://stats.g.doubleclick.net",
     ];
     for (const csp of [buildContentSecurityPolicy(), buildContentSecurityPolicy("n")]) {
       const scriptSrc = csp.split("; ").find((d) => d.startsWith("script-src "));
@@ -91,6 +93,10 @@ describe("buildContentSecurityPolicy", () => {
       // Rester étroit : couvrir `www.google.com` ne doit jamais devenir un joker
       // sur toute propriété Google.
       expect(sources).not.toContain("https://*.google.com");
+      // Même règle pour DoubleClick : l'hôte exact des signaux, jamais le réseau entier.
+      expect(sources.filter((source) => source.includes("doubleclick"))).toEqual([
+        "https://stats.g.doubleclick.net",
+      ]);
     }
   });
 

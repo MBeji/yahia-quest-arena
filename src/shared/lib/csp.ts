@@ -46,12 +46,17 @@ export function buildContentSecurityPolicy(nonce?: string, scriptHashes: string[
   //   • `www.google.com` reçoit lui aussi /g/collect (signaux Google, endpoints
   //     régionaux). Listé étroitement : ne jamais élargir en `*.google.com`, qui
   //     ouvrirait toute propriété Google comme destination de fetch.
+  //   • `stats.g.doubleclick.net` reçoit la balise des signaux Google : refusée sur
+  //     toutes les pages jusqu'au 2026-11-13 (constat en production de l'axe
+  //     Performance). Ajout décidé par le propriétaire le 2026-11-13 — l'HÔTE EXACT,
+  //     jamais `*.doubleclick.net`, qui ouvrirait tout le réseau publicitaire.
   const gaCollect = [
     "https://www.google-analytics.com",
     "https://*.google-analytics.com",
     "https://analytics.google.com",
     "https://*.analytics.google.com",
     "https://www.google.com",
+    "https://stats.g.doubleclick.net",
   ].join(" ");
   // With a nonce, `'self'` still allows the hashed /assets/*.js chunks (we do
   // not use 'strict-dynamic', so host-source allowlisting stays effective);
