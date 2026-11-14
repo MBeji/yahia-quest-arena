@@ -1,14 +1,13 @@
 /**
- * La marque de Na9ra Nal3ab : une COURONNE.
+ * La marque de Na9ra Nal3ab DANS l'interface connectée : une COURONNE.
  *
- * Elle existait déjà partout où l'application se montre HORS de l'interface —
- * `public/favicon.svg`, les trois icônes PWA (`public/icons/*.png`) et la page
- * hors-ligne dessinent tous la même couronne dorée. L'interface, elle, affichait
- * une `Sparkles` de lucide : l'application ne portait nulle part son propre logo,
- * et l'onglet du navigateur ne ressemblait pas à l'en-tête qu'il ouvrait.
+ * Deux visages voulus depuis le 2026-11-14 (arbitrage du propriétaire) : dehors —
+ * `public/favicon.svg`, les icônes d'installation (`public/icons/*.png`), les
+ * réseaux — le monogramme « N9 » vert des pages publiques, celui que voit le
+ * parent ; dedans — cette couronne, emblème du jeu, et la page hors-ligne.
  *
- * Le tracé est donc RECOPIÉ À L'IDENTIQUE de `public/favicon.svg` — une seule
- * couronne dans le produit, jamais deux silhouettes à faire diverger.
+ * Le tracé est RECOPIÉ À L'IDENTIQUE de la couronne de `public/offline.html` — une
+ * seule couronne dans le produit, jamais deux silhouettes à faire diverger.
  *
  * ⚠️ Le `viewBox` est serré sur la boîte englobante du tracé (x 100→412,
  * y 171→398), pas sur le carré de 512 de l'original : ces marges sont celles

@@ -98,11 +98,18 @@ La marque se dessine donc désormais en **un seul endroit** : `src/components/br
 (`<CrownMark className="…" />`). Deux règles tiennent, et
 `src/components/__tests__/brand-mark.test.tsx` fait échouer le gate sur chacune :
 
-1. **le tracé est celui du favicon**, primitive par primitive. Une couronne dans le produit,
-   jamais deux silhouettes à faire diverger — le test compare les deux fichiers ;
-2. **le `viewBox` est la boîte englobante EXACTE du tracé** (serrée, là où le favicon porte les
+1. **le tracé est celui de la page hors-ligne** (`public/offline.html`), primitive par
+   primitive. Une couronne dans le produit, jamais deux silhouettes à faire diverger — le test
+   compare les deux fichiers ;
+2. **le `viewBox` est la boîte englobante EXACTE du tracé** (serrée, là où l'original porte les
    marges d'une icône d'application). Toucher au tracé sans la recalculer rogne le dessin en
    silence, à une taille où personne ne le remarque.
+
+**Deux visages voulus (arbitrage du 2026-11-14).** Dehors — `public/favicon.svg`, les quatre
+icônes de `public/icons/` et les comptes Facebook et Instagram — la marque est le monogramme
+**« N9 »** blanc et ambre sur le vert des pages publiques (`#0f6e56`) : c'est ce que voit le
+parent qui arrive des réseaux. Dedans — l'interface connectée et la page hors-ligne — la
+couronne reste l'emblème du jeu. Le favicon n'est donc plus la référence du tracé de la couronne.
 
 Le composant ne code aucune couleur : l'encre vient de `currentColor` (donc du `text-…` de
 l'appelant) et la lueur du conteneur (`shadow-gold`), comme pour l'icône qu'elle remplace.
