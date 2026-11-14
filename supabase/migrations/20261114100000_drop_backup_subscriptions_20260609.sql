@@ -1,0 +1,27 @@
+-- =========================================================
+-- Supprime public._backup_subscriptions_20260609 — reliquat de prod HORS chaîne.
+-- ---------------------------------------------------------
+-- Créée à la main en prod le jour de 20260609000000_remove_legacy_subscription
+-- (copie des colonnes profiles.subscription_* avant leur DROP), jamais par une
+-- migration. Relevé du 2026-11-14 :
+--   • RLS désactivé — seule table de `public` dans ce cas (conseiller Supabase :
+--     `rls_disabled`, niveau critical) ;
+--   • anon et authenticated : SELECT, INSERT, UPDATE, DELETE, TRUNCATE,
+--     REFERENCES, TRIGGER — lisible ET modifiable avec la clé publique du site ;
+--   • 5 lignes (id utilisateur, type, dates d'abonnement), aucune vue, FK,
+--     trigger, policy ni publication n'en dépend ; aucun code (src, scripts,
+--     supabase) ne la lit.
+--
+-- Pourquoi DROP plutôt que fermer : la sauvegarde n'a plus de valeur. Le backfill
+-- 20260608122000 a reporté chaque abonnement dans parcours_entitlements — vérifié
+-- ligne à ligne le 2026-11-14 : granted_at et expires_at y sont identiques pour
+-- les 5 utilisateurs. Seul le libellé monthly/annual n'y figure pas, sans usage
+-- en phase gratuite. Le pg_dump que db-migrate-prod.yml prend AVANT d'appliquer
+-- cette migration garde de toute façon une copie (artefact, 14 jours).
+--
+-- DoD §7 : migration destructive livrée seule (aucun code ne lit la table, donc
+-- aucun chemin à retirer d'abord). `IF EXISTS` : sans effet sur une chaîne
+-- rejouée à neuf (db:check-chain, pgTAP), où la table n'a jamais existé.
+-- =========================================================
+
+DROP TABLE IF EXISTS public._backup_subscriptions_20260609;

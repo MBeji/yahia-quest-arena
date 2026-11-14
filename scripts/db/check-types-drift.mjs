@@ -33,7 +33,8 @@ export const DEFAULT_TYPES_FILE = "src/shared/integrations/supabase/types.ts";
 /**
  * Objets que `types.ts` peut porter SANS que la chaîne les crée — chacun avec sa raison.
  * Vide aujourd'hui : `_backup_subscriptions_20260609`, reliquat de prod hors chaîne et
- * référencé nulle part, est sorti des types à la régénération du 2026-09-13.
+ * référencé nulle part, est sorti des types à la régénération du 2026-09-13, puis de la
+ * prod par la migration 20261114100000.
  * @type {Record<"tables"|"views"|"functions"|"enums", string[]>}
  */
 export const ALLOWED_EXTRA = { tables: [], views: [], functions: [], enums: [] };
