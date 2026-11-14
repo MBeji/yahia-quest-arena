@@ -93,7 +93,13 @@ export default defineConfig(async ({ command, mode }) => {
   plugins.push(
     tanstackStart({
       importProtection: {
-        behavior: "error",
+        // Le BUILD refuse (c'est lui le gate : CI et déploiement). En dev, un import refusé
+        // devient un module factice qui se plaint si on s'en sert. Avec "error" des deux
+        // côtés, `npm run dev` ne s'hydratait plus depuis #1322 : `seedOnServer` importe
+        // `@tanstack/react-start/server` à la demande, dans une branche que le build élimine
+        // du bundle client (`import.meta.env.SSR`) — mais le serveur de dev n'élimine rien,
+        // voyait l'import depuis le graphe client et refusait de servir l'entrée.
+        behavior: { dev: "mock", build: "error" },
         client: { files: ["**/server/**"], specifiers: ["server-only"] },
       },
       // Redirect the bundled server entry to src/server.ts (our SSR error wrapper).
