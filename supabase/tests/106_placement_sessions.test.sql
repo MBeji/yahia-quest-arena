@@ -21,7 +21,7 @@
 
 BEGIN;
 CREATE EXTENSION IF NOT EXISTS pgtap;
-SELECT plan(48);
+SELECT plan(49);
 
 -- ---------------------------------------------------------
 -- Décor
@@ -343,6 +343,19 @@ SELECT is(
   (SELECT public.get_placement_session((j ->> 'id')::uuid, (j ->> 'token')::uuid) ->> 'status' FROM f39_start),
   'completed',
   'la relecture par jeton rend le bilan'
+);
+
+-- Le retour d'inscription : connecté, le test pas encore rattaché, relu par son jeton. La
+-- comparaison `user_id = auth.uid()` vaut NULL (user_id est NULL) : le bilan doit rester
+-- verrouillé, jamais `insightsLocked: null` — que le serveur refuse (« Impossible de charger »).
+RESET ROLE;
+SET LOCAL "request.jwt.claims" = '{"sub":"f3900000-0000-4000-8000-000000000001","role":"authenticated"}';
+SET LOCAL ROLE authenticated;
+
+SELECT is(
+  (SELECT public.get_placement_session((j ->> 'id')::uuid, (j ->> 'token')::uuid) -> 'insightsLocked' FROM f39_start),
+  'true'::jsonb,
+  '⭐ connecté mais pas encore rattaché : la relecture par jeton rend insightsLocked = true, jamais null'
 );
 
 -- =========================================================
