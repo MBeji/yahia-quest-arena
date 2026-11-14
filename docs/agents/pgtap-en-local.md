@@ -218,11 +218,14 @@ Les trois se règlent **dans la base de génération**, jamais à la main dans l
   `extensions` : ses ~200 fonctions (`col_is_null`, `_todo`, `finish`…) entrent alors dans les
   types. Générer depuis une base **séparée** — shim sans pgTAP, extensions dans `extensions` —
   et garder la base pgTAP pour `pg_prove`.
-- **Ce que la prod porte hors migrations.** Ici `_backup_subscriptions_20260609`, laissé par la
-  suppression des abonnements et référencé nulle part : la chaîne de migrations ne le reproduit
-  pas, donc une génération « propre » le **supprimerait** des types. Le recréer dans la base de
-  génération avant de générer. C'est le contrôle qui compte : `diff` contre le fichier committé,
-  et **rien ne doit disparaître** qui ne soit expliqué.
+- **Ce que la prod porte hors migrations.** Une table créée à la main en prod n'est pas dans la
+  chaîne, donc une génération « propre » la **supprime** des types. C'est le contrôle qui
+  compte : `diff` contre le fichier committé, et **rien ne doit disparaître** qui ne soit
+  expliqué. Le seul cas connu, `_backup_subscriptions_20260609` (laissé par la suppression des
+  abonnements, RLS désactivé, lisible et modifiable par `anon`), est sorti des types le
+  2026-09-13 et **supprimé de la prod** par `20261114100000_drop_backup_subscriptions_20260609.sql`
+  — la bonne issue pour un fantôme de ce genre : le supprimer par une migration, pas le
+  recréer dans la base de génération.
 
 Reste des écarts de **mise en forme** (prettier ré-enveloppe des objets selon les sauts de ligne
 de la source) : sans portée, mais ils gonflent le diff — le relire par `grep '^-[^-]'` plutôt
