@@ -78,6 +78,10 @@ vi.mock("@/components/ui/settings-menu", () => ({ SettingsMenu: () => null }));
 vi.mock("@/components/ui/network-banner", () => ({ NetworkBanner: () => null }));
 vi.mock("@/components/visual/gold-ambient", () => ({ GoldAmbient: () => null }));
 vi.mock("@/components/account-hud", () => ({ AccountHud: () => null }));
+// La barre d'onglets a ses propres tests ; ici on observe seulement QUAND la coquille la monte.
+vi.mock("@/components/student-tab-bar", () => ({
+  StudentTabBar: () => React.createElement("nav", { "data-testid": "student-tab-bar" }),
+}));
 vi.mock("@/lib/i18n", () => ({
   useT: () => ({
     common: { loading: "…", backToHall: "" },
@@ -160,5 +164,20 @@ describe("coquille connectée — le retour au point de départ (é38 lot 1, R-4
 
     expect(navigate).toHaveBeenCalledWith({ to: "/auth", search: { mode: "login" } });
     expect(peekReturnTo()).toBeNull();
+  });
+});
+
+describe("coquille connectée — la barre d'onglets", () => {
+  it("se monte pour un élève, hors écran immersif", async () => {
+    authState = { user: { id: "u1" }, loading: false };
+    const { queryByTestId } = await renderShell();
+    expect(queryByTestId("student-tab-bar")).not.toBeNull();
+  });
+
+  it("se retire pendant une quête : le bouton du bas appartient à la question", async () => {
+    authState = { user: { id: "u1" }, loading: false };
+    currentLocation = { pathname: "/quest/e1", searchStr: "" };
+    const { queryByTestId } = await renderShell();
+    expect(queryByTestId("student-tab-bar")).toBeNull();
   });
 });
