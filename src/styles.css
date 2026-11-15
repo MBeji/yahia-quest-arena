@@ -831,6 +831,22 @@ html.reference *:focus-visible {
   position: absolute;
   inset-inline-start: 0;
 }
+/* Une ligne qui APPARTIENT à un item sans le continuer — un exemple posé sous sa règle, une
+   sous-puce. Elle reste dans son `<li>` (rendue à part, elle coupait la liste en deux), sur sa
+   propre ligne. */
+.lesson-content .lesson-li__more {
+  display: block;
+  margin-top: 0.3rem;
+}
+.lesson-content .lesson-li__more--bullet {
+  position: relative;
+  padding-inline-start: 1rem;
+}
+.lesson-content .lesson-li__more--bullet::before {
+  content: "–";
+  position: absolute;
+  inset-inline-start: 0;
+}
 .lesson-content .lesson-table {
   /* `display:block` + `overflow-x:auto` turns a wide markdown table into its own
      horizontally-scrollable region so several columns / long cells never break the

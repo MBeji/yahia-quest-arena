@@ -138,6 +138,38 @@ const LEADING_SIGN_LETTER =
   /^[^A-Za-z\u0391-\u03A9\u03B1-\u03C9]*?(?<![\d)])[−–+][A-Za-z\u0391-\u03A9\u03B1-\u03C9]/u;
 
 /**
+ * Une GRANDEUR — un nombre, une espace, une unité SI écrite en lettres latines : `1,5 kg`,
+ * `12 cm`, `60 km/h`, `37 °C`, `2 h 30 min`. Les unités restent internationales dans toutes les
+ * langues (`math-and-notation.md`), donc gauche-à-droite ; or l'espace qui sépare le nombre de
+ * son unité est un neutre entre un chiffre (qui compte comme droite-à-gauche, règle N1) et une
+ * lettre latine : il prend le sens de la phrase et RETOURNE la grandeur. Mesuré dans Chromium,
+ * `dir=rtl` (2026-11-15, sur une capture du propriétaire) :
+ *
+ *   - `اللحم: 1,5 kg، فقد` se dessinait `kg 1,5` — l'unité avant le nombre ;
+ *   - `وحرارته 37 °C.` se dessinait `C° 37` — le symbole lui-même coupé en deux, à l'envers ;
+ *   - `الطول 5 cm + 3 cm = 8 cm` se dessinait `cm + 3 cm = 8 cm 5` — le premier terme rejeté à
+ *     l'autre bout de la chaîne (la lettre de la première unité fait basculer toute la suite
+ *     gauche-à-droite, règle W7, mais pas le nombre qui la précède).
+ *
+ * Sur le corpus, 21 455 grandeurs dans des chaînes arabes : 15 406 étaient déjà dans un isolat
+ * (une lettre, un signe ou une parenthèse voisine le déclenchait) et se lisaient `1,5 kg` ;
+ * 6 049 étaient laissées au navigateur et se lisaient `kg 1,5`. Dans la phrase de la capture,
+ * `−3 °C` (signé, donc isolé) et `1,5 kg` (non signé) se suivaient dans deux sens opposés.
+ * Une grandeur est désormais toujours un atome de notation, comme l'est déjà une grandeur signée.
+ *
+ * La liste des unités est FERMÉE (préfixe SI + unité de base, plus quelques unités seules) :
+ * un mot latin qui suit un nombre (`2 mots`, `3 et`) n'en est pas une. L'unité ne doit être
+ * suivie ni d'une lettre ni d'un chiffre. Les unités en écriture ARABE (`12 صم²`, `10 مي`) ne
+ * sont pas concernées : elles coupent le segment, et le navigateur les range déjà bien.
+ */
+const SI_UNIT =
+  "(?:°[CF]|(?:da|[µnmcdhkMG])?(?:mol|Wh|Hz|Pa|[mgLlsVAWNJCFΩT])|min|bar|dB|tr|[htK])(?:⁻?[¹²³])?";
+const QUANTITY = new RegExp(
+  `(?<![A-Za-z\\d.,])\\d[\\d.,\\u00A0\\u202F]*(?:[–-]\\d[\\d.,]*)?[ \\u00A0\\u202F]${SI_UNIT}(?:[/·.]${SI_UNIT})*(?![A-Za-z\\u00C0-\\u024F\\d])`,
+  "u",
+);
+
+/**
  * A point or a variable carrying a prime — `M'`, `A″`, `x'` — is a mathematical atom even alone:
  * inside RTL prose its apostrophe is a neutral character that takes the right-to-left direction
  * and lands on the wrong side of the letter (`M'` drawn `'M`). Only a SINGLE letter qualifies
@@ -188,7 +220,8 @@ export function signedNumber(value: number): string {
  * missing digit (`2▢4`, see {@link GAP_NUMBER_RE}) on its own — so it renders left-to-right even inside RTL prose.
  * Runs that are plain arithmetic, units or bare numbers are left alone — the
  * native bidi algorithm already orders them correctly, and isolating them would
- * reverse them. Text with no Arabic at all is returned unchanged — LTR content
+ * reverse them — except a quantity carrying a LATIN unit ({@link QUANTITY}), which the native
+ * algorithm does reverse. Text with no Arabic at all is returned unchanged — LTR content
  * (French/English) has no reordering bug.
  *
  * The Latin punctuation that BORDERS a formula (`.,;:` closing a sentence or
@@ -245,10 +278,18 @@ type Span = { text: string; math: boolean };
 function isolationSpans(piece: string): Span[] {
   const [lead, core, tail] = peelEdgePunctuation(piece);
   if (needsLtrIsolate(core)) {
+    // Les espaces de bord restent DEHORS, comme la ponctuation. Dans l'isolat, une espace
+    // d'attaque se dessine à son extrémité GAUCHE — c'est-à-dire, dans une phrase arabe, du côté
+    // de ce qui SUIT la formule : `بالقصرين: −3 °C، فقد` s'affichait `بالقصرين:−3 °C ، فقد`, le
+    // nombre collé aux deux points et une espace devant la virgule (mesuré dans Chromium,
+    // 2026-11-15). Le défaut ne se voyait pas quand la formule avait une espace de chaque côté :
+    // les deux s'échangeaient. Dehors, l'espace est un neutre entre deux forts droite-à-gauche et
+    // reste où l'auteur l'a écrite. `splitMathRuns` faisait déjà de même pour ses runs.
+    const [, before, body, after] = core.match(/^(\s*)([\s\S]*?)(\s*)$/u) as RegExpMatchArray;
     return [
-      { text: lead, math: false },
-      { text: core, math: true },
-      { text: tail, math: false },
+      { text: lead + before, math: false },
+      { text: body, math: true },
+      { text: after + tail, math: false },
     ].filter((span) => span.text);
   }
   const spans: Span[] = [];
@@ -309,12 +350,15 @@ function isolateTextGroup(texts: string[]): string[] {
   const joined = texts.join("");
   const isolated = isolateLtrRuns(joined);
   if (isolated === joined) return texts;
-  if (isolated.replaceAll(LRI, "").replaceAll(PDI, "") !== joined) return texts.map(isolateLtrRuns);
+  if (isolated.replaceAll(LRI, "").replaceAll(PDI, "") !== joined) {
+    return texts.map((text) => keepShortRunsTogether(isolateLtrRuns(text)));
+  }
   const out = texts.map(() => "");
   let piece = 0;
   let offset = 0;
   let previous = 0;
-  for (const char of isolated) {
+  // Même longueur, caractère pour caractère : la répartition par décalage ci-dessous tient.
+  for (const char of keepShortRunsTogether(isolated)) {
     if (char === PDI) {
       out[previous] += char;
       continue;
@@ -330,6 +374,31 @@ function isolateTextGroup(texts: string[]): string[] {
     }
   }
   return out;
+}
+
+/** NO-BREAK SPACE — une espace que le navigateur ne peut pas choisir pour passer à la ligne. */
+const NBSP = "\u00A0";
+
+/**
+ * Dans le HTML d'un COURS, une formule courte ne passe pas à la ligne en son milieu : les
+ * espaces d'un isolat d'au plus {@link NOWRAP_MAX} signes deviennent insécables.
+ *
+ * Un isolat `LRI … PDI` corrige l'ORDRE des signes, pas le retour à la ligne : coupée à une
+ * espace, la formule voit chaque moitié réordonnée pour sa propre ligne. Constaté le
+ * 2026-11-15 dans le cours « الأعداد الحقيقية » : `فيُكتب ℚ ⊂ ℝ` finissait une ligne sur `ℝ` et
+ * ouvrait la suivante sur `⊂ ℚ`. Les énoncés de quête ont leur remède — des éléments
+ * `.math-run` posés par React ({@link splitMathRuns}) ; le cours, lui, est une chaîne HTML où
+ * un isolat peut enjamber une balise d'emphase : pas d'élément à poser, mais l'espace
+ * insécable fait le même travail, et dans un isolat gauche-à-droite elle ne change l'ordre
+ * de rien. Au-delà du seuil (une chaîne de calcul de corrigé), la formule reste sécable :
+ * insécable, elle déborderait de l'écran.
+ */
+function keepShortRunsTogether(isolated: string): string {
+  return isolated.replace(
+    new RegExp(`${LRI}([^${LRI}${PDI}]*)${PDI}`, "gu"),
+    (run, body: string) =>
+      body.length <= NOWRAP_MAX ? `${LRI}${body.replaceAll(" ", NBSP)}${PDI}` : run,
+  );
 }
 
 /* --------------------------------------------------------------------------
@@ -398,7 +467,8 @@ function needsLtrIsolate(segment: string): boolean {
     SIGNED_NUMBER.test(segment) ||
     DIGIT_FIRST_FORMULA.test(segment) ||
     LEADING_SIGN_LETTER.test(segment) ||
-    PRIMED_LETTER.test(segment)
+    PRIMED_LETTER.test(segment) ||
+    QUANTITY.test(segment)
   );
 }
 

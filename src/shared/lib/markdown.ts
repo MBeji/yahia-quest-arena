@@ -106,9 +106,17 @@ function figureMarkup(token: string, index: number, caption: string | null, lang
  * affichaient leurs `_…_` et leurs `\` tels quels. L'italique souligné n'ouvre qu'après un
  * blanc ou une ponctuation ouvrante et ne ferme qu'avant un blanc ou une ponctuation : les
  * indices de formule (`S_D`, `t_u⃗`, `∫_{1/2}`) ne sont jamais pris pour de l'italique.
+ *
+ * Ce qui SUIT le souligné ouvrant peut être une lettre, un chiffre, un guillemet ou une
+ * parenthèse ouvrante, ou un gras (`<strong>`, déjà émis à ce stade). La règle n'acceptait
+ * qu'une lettre ou un chiffre : un exemple cité (`_« Faut-il vraiment… »_`, `_"Where do you
+ * live?"_`) ou qui s'ouvre sur un mot en gras (`_**Certes**, la réforme…_`) gardait ses deux
+ * soulignés à l'écran — ~1 950 passages dans 135 cours, surtout de français et d'anglais
+ * (mesuré le 2026-11-15). C'est le caractère qui PRÉCÈDE le souligné qui protège les indices
+ * de formule, et il n'a pas changé ; un blanc à compléter (`___`) n'ouvre toujours rien.
  */
 const UNDERSCORE_ITALIC =
-  /(^|[\s([«"'“‘’—–-])_(?=[\p{L}\p{N}])([^_\n]*?[^\s_])_(?=$|[\s.,;:!?)\]»"'”’…—–-])/gmu;
+  /(^|[\s([«"'“‘’—–-])_(?=[\p{L}\p{N}«"“‘([¿¡]|<strong>)([^_\n]*?[^\s_])_(?=$|[\s.,;:!?)\]»"'”’…—–-])/gmu;
 /** Un `\*` ou `\_` d'auteur (échappement Markdown) : mis à l'abri du formatage, rendu nu. */
 const ESCAPED_MARK = /\\([*_])/g;
 const SHELTER: Record<string, string> = { "*": "\uE000", _: "\uE001" };
@@ -255,14 +263,155 @@ function joinQuoteParagraphs(lines: string[]): string[] {
   return out;
 }
 
+/** Une clôture de bloc de code : ce qu'elle enferme garde ses lignes telles qu'écrites. */
+const CODE_FENCE = /^\s*```/;
+/** Une ligne que le rendu transforme en `<li>` : une puce `- ` ou un numéro `1. `, en colonne 0. */
+const LIST_ITEM = /^(?:- |\d+\. )/;
+/** Une ligne en retrait : sous un item de liste, elle lui appartient. */
+const INDENTED = /^[ \t]+\S/;
+/** Une sous-puce (`  - …`) ou un sous-numéro (`   1. …`) sous un item. */
+const NESTED_BULLET = /^[ \t]+[-*+][ \t]+(.*)$/;
+const NESTED_NUMBER = /^[ \t]+\d+\.[ \t]/;
 /**
- * Le pipeline historique, appliqué à un segment. Inchangé dans son comportement : c'est ce
- * qui garantit qu'aucune assertion des tests existants (échappement, listes, tableaux,
- * figures, RTL) ne bouge. Seul le compteur de `##` devient partagé, pour que les ancres
- * restent uniques d'un segment à l'autre.
+ * Sentinelles privées (comme {@link SHELTER}) : dans la ligne d'un item, elles marquent où
+ * commence une ligne qui lui appartient sans le continuer — un exemple posé dessous, une
+ * sous-puce. Elles deviennent des `<span class="lesson-li__more">` une fois le `<li>` émis.
  */
-function renderChunk(lines: string[], ctx: Ctx): string {
-  let html = escapeHtml(lines.join("\n"))
+const SUB_LINE = "\uE002";
+const SUB_BULLET = "\uE003";
+
+/**
+ * Longueur à partir de laquelle une ligne inachevée se lit comme un RENVOI À LA LIGNE de
+ * l'auteur et non comme une ligne voulue. Voir {@link isWidthWrap}.
+ */
+const WRAP_MIN = 75;
+/** Fin de phrase, de proposition annoncée ou d'élément : rien n'y « continue » à la ligne suivante. */
+const SENTENCE_END = /[.!?؟:…✓✗)\]»”"][\s*_]*$/u;
+
+/**
+ * La ligne a-t-elle été coupée parce qu'elle était PLEINE (la suivante la continue), ou parce
+ * que l'auteur voulait une ligne (la suivante est un autre paragraphe) ?
+ *
+ * Le rendu faisait de CHAQUE ligne du fichier un paragraphe. Or la moitié du corpus est écrite
+ * avec des paragraphes renvoyés à la ligne vers 100 signes : 483 cours sur 968, ~20 000 lignes
+ * de continuation (constat du 2026-11-15, sur une capture du propriétaire — une phrase arabe
+ * coupée en quatre paragraphes, au milieu d'une proposition). Markdown standard recollerait
+ * toute ligne à la précédente ; ce serait trop : le reste du corpus a été écrit CONTRE le rendu
+ * ligne à ligne, et compte sur lui — paires d'exemples (`_Direct:_ …` / `_Reported:_ …`),
+ * égalités posées une par ligne, vers, répliques.
+ *
+ * Mesuré sur les 7 394 paires de lignes de prose consécutives du corpus, deux populations se
+ * séparent nettement :
+ *   - la ligne finit EN COURS de phrase (4 689) : 95 % font 80 à 109 signes — des renvois ;
+ *     44 seulement font moins de 70 signes, et ce sont des lignes voulues (une égalité, un
+ *     exemple suivi d'une parenthèse) ;
+ *   - la ligne finit sur une ponctuation finale (2 705) : toutes longueurs — une phrase par
+ *     ligne, voulue, ou de longs paragraphes écrits l'un sous l'autre.
+ * D'où la règle : une ligne d'au moins {@link WRAP_MIN} signes qui ne finit pas une phrase est
+ * continuée par la suivante. Un renvoi tombé pile en fin de phrase reste coupé là — deux
+ * paragraphes au lieu d'un, à une frontière de phrase : c'est le rendu d'hier, sans dommage.
+ * Un saut forcé ({@link HARD_BREAK}) n'est jamais un renvoi.
+ */
+function isWidthWrap(line: string): boolean {
+  return line.length >= WRAP_MIN && !HARD_BREAK.test(line) && !SENTENCE_END.test(line.trimEnd());
+}
+
+/**
+ * Recolle ce que l'auteur a renvoyé à la ligne, AVANT tout rendu.
+ *
+ *  - Prose : une ligne continue la précédente si celle-ci est un renvoi ({@link isWidthWrap}).
+ *  - Liste : une ligne en retrait sous un item lui APPARTIENT. Rendue à part, elle sortait de la
+ *    liste — le texte de l'item coupé en deux, la suite dans un paragraphe dessous, et la liste
+ *    rouverte après elle (538 listes numérotées et 133 listes à puces se referment sur le
+ *    corpus). 1 131 lignes, dont 1 042 sont des renvois (recollés d'une espace) ; les autres —
+ *    un exemple sous sa règle, une sous-puce — restent sur leur ligne, DANS l'item.
+ *  - Jamais dans un bloc de code, ni vers ou depuis une construction de bloc (titre, tableau,
+ *    formule `$$`, trait, figure, citation).
+ */
+function joinSoftBreaks(lines: string[]): string[] {
+  const out: string[] = [];
+  let kind: "prose" | "item" | null = null;
+  // La dernière ligne PHYSIQUE du paragraphe ou de l'item en cours : c'est elle qu'on juge.
+  let last = "";
+  let fenced = false;
+  for (const line of lines) {
+    if (CODE_FENCE.test(line)) {
+      fenced = !fenced;
+      out.push(line);
+      kind = null;
+      continue;
+    }
+    if (fenced || line.trim() === "") {
+      out.push(line);
+      kind = null;
+      continue;
+    }
+    if (kind === "item" && INDENTED.test(line)) {
+      const bullet = NESTED_BULLET.exec(line);
+      const own = bullet !== null || NESTED_NUMBER.test(line) || !isWidthWrap(last);
+      // Une espace de part et d'autre de la sentinelle : pour l'emphase (`_exemple._` en fin
+      // de ligne), elle vaut une fin de ligne — sans elle l'italique ne se fermait plus.
+      const glue = bullet ? ` ${SUB_BULLET} ` : own ? ` ${SUB_LINE} ` : " ";
+      out[out.length - 1] =
+        `${out[out.length - 1].trimEnd()}${glue}${bullet ? bullet[1] : line.trim()}`;
+      last = line;
+      continue;
+    }
+    if (BLOCK_START.test(line) || QUOTE_LINE.test(line)) {
+      out.push(line);
+      kind = LIST_ITEM.test(line) ? "item" : null;
+      last = line;
+      continue;
+    }
+    if (kind === "prose" && isWidthWrap(last)) {
+      out[out.length - 1] = `${out[out.length - 1].trimEnd()} ${line.trimStart()}`;
+    } else {
+      out.push(line);
+    }
+    kind = "prose";
+    last = line;
+  }
+  return out;
+}
+
+/**
+ * Une ligne déjà rendue en BLOC par {@link renderChunk} — elle ouvre ou ferme un titre, une
+ * citation, une formule, un trait, un tableau ou une liste : elle n'est pas un paragraphe.
+ *
+ * Le test était « la ligne commence par une balise » (`/^<[a-z]/`), et il se trompait dans
+ * les deux sens (constaté le 2026-11-15 dans le HTML servi en production) :
+ *   - une ligne qui commence par du GRAS ou de l'ITALIQUE (`<strong>`, `<em>`) n'était pas un
+ *     paragraphe. Deux définitions écrites l'une sous l'autre (`**Terme** : …`), une paire
+ *     d'exemples (`_Direct:_ …` / `_Reported:_ …`) se fondaient en une seule ligne de texte ;
+ *   - une balise FERMANTE (`</ul>`, `</table>`), seule sur sa ligne, en devenait un :
+ *     `<p></ul></p>`, que le navigateur répare en paragraphes vides — un blanc de trop après
+ *     chaque liste et chaque tableau, et un HTML différent entre le serveur et le navigateur.
+ */
+const BLOCK_LINE = /^<\/?(?:h[1-3]|blockquote|div|hr|table|tr|ul|ol|li)\b|^<!--/;
+
+/** Le corps d'un `<li>` : son texte, puis chaque ligne qui lui appartient, sur sa propre ligne. */
+function listItemBody(item: string): string {
+  const [text, ...more] = item.split(/(?=[\uE002\uE003])/u);
+  return (
+    (more.length ? text.trimEnd() : text) +
+    more
+      .map((part) => {
+        const className =
+          part[0] === SUB_BULLET ? "lesson-li__more lesson-li__more--bullet" : "lesson-li__more";
+        return `<span class="${className}">${part.slice(1).trim()}</span>`;
+      })
+      .join("")
+  );
+}
+
+/**
+ * Le pipeline historique, appliqué à un segment : échappement d'abord, puis les seules balises
+ * que ce module émet (R-1). Le compteur de `##` est partagé, pour que les ancres restent
+ * uniques d'un segment à l'autre. `resolved` : les lignes sont déjà celles qu'on veut rendre
+ * (une carte de résumé, qui a jugé ses renvois sur ses lignes d'origine).
+ */
+function renderChunk(lines: string[], ctx: Ctx, resolved = false): string {
+  let html = escapeHtml((resolved ? lines : joinSoftBreaks(lines)).join("\n"))
     .replace(ESCAPED_MARK, (_m, c: string) => SHELTER[c])
     // Headings
     .replace(/^### (.+)$/gm, '<h3 class="lesson-h3">$1</h3>')
@@ -295,8 +444,15 @@ function renderChunk(lines: string[], ctx: Ctx): string {
       return `<tr>${cells.map((c) => `<td>${c}</td>`).join("")}</tr>`;
     })
     // Lists (simple)
-    .replace(/^- (.+)$/gm, '<li class="lesson-li">$1</li>')
-    .replace(/^(\d+)\. (.+)$/gm, '<li class="lesson-li lesson-oli">$2</li>');
+    .replace(
+      /^- (.+)$/gm,
+      (_match, item: string) => `<li class="lesson-li">${listItemBody(item)}</li>`,
+    )
+    .replace(
+      /^(\d+)\. (.+)$/gm,
+      (_match, _n: string, item: string) =>
+        `<li class="lesson-li lesson-oli">${listItemBody(item)}</li>`,
+    );
 
   // Le séparateur d'alignement (`|---|`) tombe AVANT le wrap, et l'ordre est tout le sujet :
   // tant qu'il reste sur sa ligne, il coupe la série de `<tr>` consécutifs, l'en-tête part
@@ -316,23 +472,31 @@ function renderChunk(lines: string[], ctx: Ctx): string {
   );
   // Un séparateur orphelin (tableau malformé, sans ligne au-dessus) disparaît quand même.
   html = html.replace(/<!--table-sep-->\n?/g, "");
+  // La balise fermante d'une liste ou d'un tableau reste SEULE sur sa ligne. Le groupe avale le
+  // saut de ligne qui suit sa dernière rangée : le texte de la ligne suivante se retrouvait
+  // collé derrière `</ul>`, sur la même ligne — donc jamais un paragraphe.
+  const wrap = (open: string, close: string) => (rows: string) =>
+    `${open}${rows}${close}${rows.endsWith("\n") ? "\n" : ""}`;
   // Wrap consecutive <tr> in table
-  html = html.replace(/((?:<tr>.*<\/tr>\n?)+)/g, '<table class="lesson-table">$1</table>');
+  html = html.replace(/((?:<tr>.*<\/tr>\n?)+)/g, wrap('<table class="lesson-table">', "</table>"));
 
   // Wrap consecutive ordered <li> (class includes "lesson-oli") in <ol>
   html = html.replace(
     /((?:<li class="lesson-li lesson-oli">.*<\/li>\n?)+)/g,
-    '<ol class="lesson-ol">$1</ol>',
+    wrap('<ol class="lesson-ol">', "</ol>"),
   );
   // Wrap consecutive unordered <li> (exact "lesson-li") in <ul>
-  html = html.replace(/((?:<li class="lesson-li">.*<\/li>\n?)+)/g, '<ul class="lesson-ul">$1</ul>');
+  html = html.replace(
+    /((?:<li class="lesson-li">.*<\/li>\n?)+)/g,
+    wrap('<ul class="lesson-ul">', "</ul>"),
+  );
 
-  // Paragraphs: lines not starting with HTML tags
+  // Paragraphs: toute ligne qui n'ouvre ni ne ferme un BLOC émis plus haut.
   return unshelter(html)
     .split("\n")
     .map((line) => {
       if (!line.trim()) return "";
-      if (/^<[a-z]/.test(line) || /^<!--/.test(line)) return line;
+      if (BLOCK_LINE.test(line)) return line;
       return `<p>${line}</p>`;
     })
     .join("\n");
@@ -512,9 +676,12 @@ function renderCard(text: string, children: string[], ctx: Ctx): string {
   const head = title ? `<h3 class="lesson-card__title">${escapeHtml(title)}</h3>` : "";
   // L'essence et les sous-puces (exemples) forment le corps de la carte : elles lui
   // appartiennent, elles ne sont pas des cartes sœurs.
+  // `resolved` : les renvois à la ligne ont été jugés par `renderSummary`, sur les lignes
+  // d'origine — ici l'essence a perdu son titre, sa longueur ne dit plus rien.
   const inner = renderChunk(
     [essence, ...children].filter((line) => line.trim().length > 0),
     ctx,
+    true,
   );
 
   return `<li class="${className}"><div class="lesson-card__body">${head}${inner}</div></li>`;
@@ -557,13 +724,22 @@ export function renderSummary(md: string, opts: { lang?: ContentLang } = {}): Re
 
     // Les lignes indentées qui suivent (27 résumés en ont) sont les exemples de CETTE
     // carte : on les dé-indente et on les lui rattache, au lieu d'en faire des cartes.
+    // Une ligne en retrait qui CONTINUE la précédente (renvoi à la ligne de l'auteur,
+    // {@link isWidthWrap}) s'y recolle : la carte montrait sa phrase coupée en deux paragraphes.
+    let text = bullet[1];
     const children: string[] = [];
     let j = i + 1;
     while (j < lines.length && CARD_CHILD.test(lines[j])) {
-      children.push(lines[j].replace(/^[ \t]+/, ""));
+      const child = lines[j].replace(/^[ \t]+/, "");
+      if (isWidthWrap(lines[j - 1]) && !BLOCK_START.test(child)) {
+        if (children.length) children[children.length - 1] += ` ${child}`;
+        else text += ` ${child}`;
+      } else {
+        children.push(child);
+      }
       j++;
     }
-    cards.push(renderCard(bullet[1], children, ctx));
+    cards.push(renderCard(text, children, ctx));
     i = j - 1;
   }
 

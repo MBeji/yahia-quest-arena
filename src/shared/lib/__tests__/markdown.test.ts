@@ -84,6 +84,37 @@ describe("renderLesson", () => {
       expect(result).not.toContain("_");
     });
 
+    // 2026-11-15 — un exemple cité ou qui s'ouvre sur un mot en gras gardait ses soulignés à
+    // l'écran : ~1 950 passages dans 135 cours, surtout de français et d'anglais.
+    it("renders underscore italic that opens on a quote, a bracket or a bold word", () => {
+      const result = html(
+        [
+          "_« Faut-il vraiment rappeler que la liberté n'a pas de prix ? »_ → question rhétorique.",
+          "",
+          '_"Where do you live?"_ becomes reported speech.',
+          "",
+          "_**Certes**, la réforme a un coût ; **mais** il est dérisoire._ → concession.",
+          "",
+          "_(a plan I already made)_",
+        ].join("\n"),
+      );
+      expect(result).toContain(
+        "<em>« Faut-il vraiment rappeler que la liberté n'a pas de prix ? »</em>",
+      );
+      expect(result).toContain('<em>"Where do you live?"</em>');
+      expect(result).toContain(
+        "<em><strong>Certes</strong>, la réforme a un coût ; <strong>mais</strong> il est dérisoire.</em>",
+      );
+      expect(result).toContain("<em>(a plan I already made)</em>");
+      expect(result).not.toContain("_");
+    });
+
+    it("leaves a fill-in blank alone", () => {
+      const result = html("Complète : il ___ parti, puis elle ___ arrivée.");
+      expect(result).not.toContain("<em>");
+      expect(result).toContain("il ___ parti");
+    });
+
     it("leaves formula subscripts alone", () => {
       const result = html("L'aire S_D vaut 4, t_u(M) = M' et ∫_{1} f + ∫_{2} g.");
       expect(result).not.toContain("<em>");
@@ -232,6 +263,39 @@ describe("renderLesson", () => {
     it("does not wrap HTML tags in <p>", () => {
       const result = html("# Heading");
       expect(result).not.toContain("<p><h1");
+    });
+
+    // 2026-11-15, constaté dans le HTML servi en production : une ligne qui commence par du
+    // gras ou de l'italique n'était pas un paragraphe — deux définitions écrites l'une sous
+    // l'autre se fondaient en une seule ligne de texte.
+    it("fait un paragraphe d'une ligne qui commence par du gras ou de l'italique", () => {
+      const result = html(
+        "**المشبَّهُ**: الشّيءُ الذي نتحدّثُ عنه.\n**المشبَّهُ به**: الشّيءُ الذي نشبّهُ به.\n_Direct:_ exemple.",
+      );
+      expect(result.match(/<p>/g)).toHaveLength(3);
+      expect(result).toContain("<p><strong>المشبَّهُ</strong>: الشّيءُ الذي نتحدّثُ عنه.</p>");
+      expect(result).toContain("<p><em>Direct:</em> exemple.</p>");
+    });
+
+    // Même constat : `<p></ul></p>` derrière chaque liste, que le navigateur répare en
+    // paragraphes vides — un blanc de trop, et un HTML différent entre serveur et navigateur.
+    it("n'enveloppe jamais la balise fermante d'une liste ou d'un tableau", () => {
+      const result = renderLesson(
+        "- un\n- deux\n\nSuite.\n\n| a | b |\n|---|---|\n| 1 | 2 |\n\nFin.",
+      );
+      expect(result.html).not.toMatch(/<p>\s*<\/(?:ul|ol|table)>/);
+      expect(result.html).not.toContain("<p></p>");
+      expect(result.html).toContain("<p>Suite.</p>");
+      expect(result.html).toContain("<p>Fin.</p>");
+    });
+
+    it("fait un paragraphe du texte qui suit une liste ou un tableau sans ligne vide", () => {
+      expect(html("- un\n- deux\nUne phrase qui suit la liste.")).toContain(
+        "<p>Une phrase qui suit la liste.</p>",
+      );
+      expect(html("| a | b |\nUne phrase qui suit le tableau.")).toContain(
+        "<p>Une phrase qui suit le tableau.</p>",
+      );
     });
 
     it("removes empty lines", () => {
@@ -389,7 +453,10 @@ describe("renderLesson — blocs pédagogiques", () => {
         "> وثلاثون مليونًا…»، وهو عدد أكبر بمئة مرّة. الأصناف تُقرأ من اليمين: 2 | 305 | 040.",
       ].join("\n");
       const block = renderLesson(md, { lang: "ar" }).html.split('lesson-blk--piege">')[1];
-      expect(block).not.toContain("<p>");
+      // UN paragraphe — et c'en est un, même s'il commence par du gras : nu, il restait collé
+      // au libellé du bloc (« تحذير » puis « الخطأ الشائع » sans espace, sur la même ligne).
+      expect(block.match(/<p>/g)).toHaveLength(1);
+      expect(block).toContain("</span><p><strong>");
       expect(block).not.toContain("\n");
       expect(block).toContain("يقرأ «مئتان وثلاثون مليونًا…»");
     });
@@ -708,5 +775,156 @@ describe("renderSummary — le résumé ne pose pas de question (é35 R-21)", ()
     const out = renderSummary("- **Concept** : essence\n\n::: verifie\nQ\n---\nR\n:::").html;
     expect(out).not.toContain("<details");
     expect(out).toContain('<ul class="lesson-cards">');
+  });
+});
+
+// Capture du propriétaire, 2026-11-15 — cours « الأعداد الحقيقية » (9ᵉ) : une phrase arabe
+// coupée en quatre paragraphes, au milieu d'une proposition. Le rendu faisait un paragraphe de
+// CHAQUE ligne du fichier, et la moitié du corpus renvoie ses paragraphes à la ligne vers
+// 100 signes (483 cours sur 968).
+describe("renderLesson — les renvois à la ligne de l'auteur", () => {
+  const paragraphs = (md: string) => html(md).match(/<p>[\s\S]*?<\/p>/g) ?? [];
+  // Le paragraphe de la capture, tel qu'il est écrit dans le corpus.
+  const WRAPPED = [
+    "عُدَّ تلاميذ قسمك: 28. عدد صحيح طبيعي، ولا حاجة إلى غيره. لكن سجّل درجة الحرارة في ليلة شتاء",
+    "بالقصرين: −3 °C، فقد خرجتَ من ℕ. زِن كيلوغرامًا ونصفًا من اللحم: 1,5 kg، فقد خرجتَ من ℤ. اقسم",
+    "رغيفًا على ثلاثة: 1/3، وقد خرجتَ من العشريّات. فهل ينتهي الأمر هنا، أم يوجد عدد لا يُكتب حتى",
+    "على شكل كسر؟",
+  ].join("\n");
+
+  it("recolle un paragraphe renvoyé à la ligne : une phrase, un paragraphe", () => {
+    const out = paragraphs(WRAPPED);
+    expect(out).toHaveLength(1);
+    expect(out[0]).toContain("في ليلة شتاء بالقصرين");
+    expect(out[0]).toContain("اقسم رغيفًا على ثلاثة");
+    expect(out[0]).toContain("حتى على شكل كسر؟");
+  });
+
+  it("garde une ligne par phrase quand l'auteur l'a voulu — la ligne finit sa phrase", () => {
+    const md = [
+      "**Non, il l'infirme** : il montre une limite du travail en groupe et s'oppose donc à la thèse.",
+      "Un argument qui la confirmerait : chacun explique aux autres ce qu'il a compris.",
+    ].join("\n");
+    expect(paragraphs(md)).toHaveLength(2);
+  });
+
+  it("garde les lignes courtes : paires d'exemples, égalités, répliques", () => {
+    expect(
+      paragraphs('_Direct:_ _"Where do you live?"_\n_Reported:_ _He asked me **where I lived**._'),
+    ).toHaveLength(2);
+    expect(paragraphs("f(x) = 5x + 3\nما صورة العدد −2؟ وما سابقة العدد 18؟")).toHaveLength(2);
+    expect(
+      paragraphs(
+        "• échanger deux de ses vecteurs change son orientation ;\n• une permutation la conserve ;",
+      ),
+    ).toHaveLength(2);
+  });
+
+  it("ne recolle pas après deux points : la ligne suivante est ce qu'ils annoncent", () => {
+    const md = [
+      "المقام المشترك 8: 3/4 = 6/8، و 1/2 = 4/8، و 5/8 يبقى كما هو. تنازليًّا نبدأ بالبسط الأكبر:",
+      "6 > 5 > 4، إذن 3/4 > 5/8 > 1/2.",
+    ].join("\n");
+    expect(paragraphs(md)).toHaveLength(2);
+  });
+
+  it("respecte un saut de ligne forcé, même sur une ligne longue et inachevée", () => {
+    const long =
+      "Une ligne assez longue pour ressembler à un renvoi, mais que son auteur a terminée par un saut forcé";
+    expect(paragraphs(`${long}\\\nla suite`)).toHaveLength(2);
+    expect(paragraphs(`${long}  \nla suite`)).toHaveLength(2);
+    expect(paragraphs(`${long}\nla suite`)).toHaveLength(1);
+  });
+
+  it("ne recolle rien à un titre, un tableau, une formule ou un trait", () => {
+    const long =
+      "Une ligne assez longue pour ressembler à un renvoi à la ligne, et qui ne finit pas sa phrase";
+    const out = html(`## Titre\n${long}\n| a | b |\n${long}\n$$x = 1$$\n${long}\n---\n${long}`);
+    expect(out.match(/<p>/g)).toHaveLength(4);
+    expect(out).toContain(">Titre</h2>");
+    expect(out).toContain('<div class="lesson-math">x = 1</div>');
+  });
+
+  it("laisse un bloc de code ligne à ligne", () => {
+    const code = [
+      "```pascal",
+      "While (c1 <= n1) And (c2 <= n2) And (trouve = False) And (fin_de_fichier = False) Do",
+      "  Begin",
+      "```",
+    ].join("\n");
+    expect(html(code)).toContain("Do</p>\n<p>  Begin</p>");
+  });
+
+  // Un gras ouvert sur une ligne et fermé sur la suivante gardait ses astérisques à l'écran.
+  it("rend le gras qui enjambe un renvoi à la ligne", () => {
+    const md = [
+      "Le pronom relatif se choisit d'après la construction du verbe de la subordonnée, **jamais",
+      "d'après l'antécédent seul**.",
+    ].join("\n");
+    const out = html(md);
+    expect(out).toContain("<strong>jamais d'après l'antécédent seul</strong>.");
+    expect(out).not.toContain("*");
+  });
+
+  it("recolle aussi dans un bloc `:::` et dans la réponse d'un `verifie`", () => {
+    const body = WRAPPED.split("\n").slice(0, 2).join("\n");
+    const out = html(`::: definition\n${body}\n:::`);
+    expect(out.match(/<p>/g)).toHaveLength(1);
+    expect(out).toContain("lesson-blk--definition");
+  });
+});
+
+describe("renderLesson — ce qui appartient à un item de liste y reste", () => {
+  const ITEM =
+    "- **الدّورة الدّمويّة الكبرى**: مسار الدّم من القلب إلى بقيّة أعضاء الجسم ومنها إلى القلب، حيث يضخّ";
+
+  it("recolle la suite d'un item renvoyé à la ligne : un item, une liste", () => {
+    const out = html(
+      `${ITEM}\n  البطين الأيسر الدّم المؤكسج.\n- **الصّغرى**: من القلب إلى الرّئتين.`,
+    );
+    expect(out.match(/<ul class="lesson-ul">/g)).toHaveLength(1);
+    expect(out.match(/<li class="lesson-li">/g)).toHaveLength(2);
+    expect(out).toContain("حيث يضخّ البطين الأيسر الدّم المؤكسج.</li>");
+    expect(out).not.toContain("<p>");
+  });
+
+  it("garde sous son item, sur sa propre ligne, un exemple qui ne le continue pas", () => {
+    const out = html(
+      "- **Auxiliaire ÊTRE** → le participe s'accorde avec le **sujet**.\n  _Elles **sont parties**._\n- **Auxiliaire AVOIR** → pas d'accord avec le sujet.",
+    );
+    expect(out.match(/<ul class="lesson-ul">/g)).toHaveLength(1);
+    expect(out).toContain(
+      '<strong>sujet</strong>.<span class="lesson-li__more"><em>Elles <strong>sont parties</strong>.</em></span></li>',
+    );
+  });
+
+  it("range une sous-puce dans son item, sans son tiret", () => {
+    const out = html(
+      "- Les états de la matière :\n  - solide\n  - liquide\n- Les changements d'état.",
+    );
+    expect(out.match(/<ul class="lesson-ul">/g)).toHaveLength(1);
+    expect(out).toContain(
+      'matière :<span class="lesson-li__more lesson-li__more--bullet">solide</span><span class="lesson-li__more lesson-li__more--bullet">liquide</span></li>',
+    );
+  });
+
+  it("garde une liste numérotée d'un seul tenant quand ses items sont renvoyés à la ligne", () => {
+    const out = html(
+      [
+        "1. نحسب الترتيب بتعويض 3 في إحدى الدالتَين ثمّ نتحقّق بالدالّة الأخرى حتّى نتأكّد من أنّ النقطة",
+        "   مشتركة بين المستقيمين.",
+        "2. نستنتج إحداثيّتي نقطة التقاطع.",
+        "3. نكتب الجواب.",
+      ].join("\n"),
+    );
+    expect(out.match(/<ol class="lesson-ol">/g)).toHaveLength(1);
+    expect(out.match(/lesson-oli/g)).toHaveLength(3);
+    expect(out).toContain("أنّ النقطة مشتركة بين المستقيمين.</li>");
+  });
+
+  it("une ligne NON indentée après une liste reste un paragraphe à part", () => {
+    const out = html("- un\n- deux\nUne phrase qui suit la liste.");
+    expect(out).toContain("</ul>");
+    expect(out).toContain("<p>Une phrase qui suit la liste.</p>");
   });
 });
