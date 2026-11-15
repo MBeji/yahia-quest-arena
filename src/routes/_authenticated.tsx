@@ -14,17 +14,20 @@ import { getOpenReportsCount } from "@/features/content-report";
 import { BetaBadge, BugReportLauncher, getOpenBugsCount } from "@/features/bug-report";
 import { AiLauncher } from "@/features/ai/components/ai-launcher";
 import { useClaimPlacementSessions } from "@/features/placement";
-import { LayoutDashboard, Map, Compass, Swords, ClipboardList, Shield } from "lucide-react";
+import { ClipboardList, Shield } from "lucide-react";
 import { supabase } from "@/shared/integrations/supabase/client";
 import { toast } from "sonner";
 import { useT } from "@/lib/i18n";
 import { rememberReturnTo } from "@/shared/lib/return-to";
+import { isImmersiveAppPath } from "@/shared/lib/immersive-paths";
 import { NetworkBanner } from "@/components/ui/network-banner";
 import { SettingsMenu } from "@/components/ui/settings-menu";
 import { GoldAmbient } from "@/components/visual/gold-ambient";
 import { AccountHud } from "@/components/account-hud";
 import { GuideButton } from "@/components/guide/guide-button";
 import { CrownMark } from "@/components/brand-mark";
+import { StudentTabBar } from "@/components/student-tab-bar";
+import { TAB_BAR_CLEARANCE, studentNavItems } from "@/components/student-nav";
 // é40 lot 3 (R-13) — importé pour son EFFET : le module retient `beforeinstallprompt`, que le
 // navigateur n'émet qu'une fois par page, bien avant l'écran de résultat qui s'en servira.
 import "@/shared/lib/install-signals";
@@ -152,17 +155,10 @@ function AuthenticatedLayout() {
     navigate({ to: "/" });
   }
 
-  // Single source of truth for the primary STUDENT destinations — rendered both
-  // inline in the desktop top nav and in the mobile bottom tab bar. Étude 15,
-  // lot 5 (D-4): the three competitive screens (Donjon · Duels · Classement) are
-  // grouped under a single « Arène » entry (the /arene pole), so the bar drops
-  // from 6 to 4 items — no more desktop overflow, no more crowded phone tab bar.
-  const primaryNav = [
-    { to: "/dashboard", Icon: LayoutDashboard, label: t.layout.heroesHall },
-    { to: "/parcours", Icon: Map, label: t.layout.parcours },
-    { to: "/programme", Icon: Compass, label: t.layout.themes },
-    { to: "/arene", Icon: Swords, label: t.layout.arena },
-  ] as const;
+  // The primary STUDENT destinations — one list (`studentNavItems`), rendered inline in the
+  // desktop top nav here and by the bottom tab bar (`StudentTabBar`), which the public
+  // shell mounts too for a signed-in student.
+  const primaryNav = studentNavItems(t);
   // The parent gets a dedicated, minimal shell (D-4 / audit §F-1): its ONLY
   // destination (Suivi) — never the game nav, never a crowded bottom bar.
   const isParent = userRole === "parent";
@@ -173,10 +169,8 @@ function AuthenticatedLayout() {
   // an in-screen sticky CTA (quiz submit, lesson nav, onboarding). The Dungeon
   // LOBBY is no longer immersive (D-4 / audit §E-1): the nav stays until a run
   // actually starts — consistent with duel matches, which already keep the nav.
-  // `examen/` porte sa barre oblique à dessein : seule la PASSATION
-  // (`/examen/$examId`, avec sa barre de rendu collée en bas) est immersive.
-  // Sans elle, `/examens` — la liste — perdrait aussi ses onglets de navigation.
-  const immersive = /^\/(quest|lesson|onboarding|examen\/)/.test(location.pathname);
+  // La liste des écrans immersifs vit dans `immersive-paths.ts`.
+  const immersive = isImmersiveAppPath(location.pathname);
 
   return (
     <div className="app-shell relative min-h-[100dvh] bg-black-deep">
@@ -276,7 +270,7 @@ function AuthenticatedLayout() {
         className={
           immersive || !showPrimaryNav
             ? "relative z-10 pb-[env(safe-area-inset-bottom)]"
-            : "relative z-10 pb-[calc(4.5rem+env(safe-area-inset-bottom))] lg:pb-[env(safe-area-inset-bottom)]"
+            : `relative z-10 ${TAB_BAR_CLEARANCE}`
         }
       >
         <Outlet />
@@ -300,23 +294,7 @@ function AuthenticatedLayout() {
           desktop (lg) where the top nav carries the same destinations, on
           immersive screens to avoid overlapping their in-screen CTAs, and for
           parents (their Suivi-only shell lives in the top bar — D-4). */}
-      {!immersive && showPrimaryNav && (
-        <nav className="fixed inset-x-0 bottom-0 z-30 flex items-stretch justify-around border-t border-[color:var(--gold)]/15 bg-surface-3 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl lg:hidden">
-          {primaryNav.map(({ to, Icon, label }) => (
-            <Link
-              key={to}
-              to={to}
-              aria-label={label}
-              title={label}
-              className="flex min-h-[52px] flex-1 flex-col items-center justify-center gap-0.5 px-1 py-1.5 text-[10px] font-semibold leading-tight text-muted-foreground transition"
-              activeProps={{ className: "text-[color:var(--gold)]" }}
-            >
-              <Icon className="h-5 w-5 shrink-0" />
-              <span className="max-w-full truncate">{label}</span>
-            </Link>
-          ))}
-        </nav>
-      )}
+      {!immersive && showPrimaryNav && <StudentTabBar />}
     </div>
   );
 }
