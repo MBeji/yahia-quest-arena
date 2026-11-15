@@ -11,6 +11,9 @@ import { isMathExpression } from "@/shared/lib/utils";
 const LRI = "⁦";
 const PDI = "⁩";
 
+/** Les espaces d'une formule courte, dans le HTML d'un cours : insécables (U+00A0). */
+const nb = (text: string) => text.replaceAll(" ", "\u00A0");
+
 describe("isolateLtrRuns", () => {
   // Un exposant NÉGATIF n'a ni parenthèse ni relation pour l'ancrer : sans isolation,
   // `10⁻⁴` seul dans une phrase arabe se rend `⁴⁻10`. Le moins en exposant (U+207B) n'est
@@ -26,20 +29,20 @@ describe("isolateLtrRuns", () => {
 
   it("wraps a square-root expression embedded in Arabic prose", () => {
     // The space + formula form one non-Arabic run; the radical stays left of 64.
-    expect(isolateLtrRuns("ما قيمة √64 ؟")).toBe(`ما قيمة${LRI} √64 ${PDI}؟`);
+    expect(isolateLtrRuns("ما قيمة √64 ؟")).toBe(`ما قيمة ${LRI}√64${PDI} ؟`);
   });
 
   it("wraps a multi-term equation as a single LTR run", () => {
     const out = isolateLtrRuns("الناتج √50 = √(25 × 2) = 5√2 إذن");
-    expect(out).toContain(`${LRI} √50 = √(25 × 2) = 5√2 ${PDI}`);
+    expect(out).toContain(` ${LRI}√50 = √(25 × 2) = 5√2${PDI} `);
   });
 
   it("isolates each formula separately across Arabic punctuation", () => {
     // The Arabic comma keeps the two formulas in distinct runs.
     const out = isolateLtrRuns("أمثلة: √9 = 3، √16 = 4.");
     expect((out.match(new RegExp(LRI, "g")) ?? []).length).toBe(2);
-    expect(out).toContain(`:${LRI} √9 = 3${PDI}`);
-    expect(out).toContain(`${LRI} √16 = 4${PDI}.`);
+    expect(out).toContain(`: ${LRI}√9 = 3${PDI}`);
+    expect(out).toContain(` ${LRI}√16 = 4${PDI}.`);
   });
 
   // Le point qui ferme la phrase et les deux-points qui ouvrent l'énoncé sont de la
@@ -48,18 +51,18 @@ describe("isolateLtrRuns", () => {
   // l'extrémité gauche de la ligne qui termine la phrase (dette relevée par les audits
   // du gisement : 420 énoncés de maths publiés sur 1 394).
   it("laisse la ponctuation latine qui borde une formule hors de l'isolat", () => {
-    expect(isolateLtrRuns("المجال هو [−3 ; −1].")).toBe(`المجال هو${LRI} [−3 ; −1]${PDI}.`);
-    expect(isolateLtrRuns("الطول هو √5.")).toBe(`الطول هو${LRI} √5${PDI}.`);
+    expect(isolateLtrRuns("المجال هو [−3 ; −1].")).toBe(`المجال هو ${LRI}[−3 ; −1]${PDI}.`);
+    expect(isolateLtrRuns("الطول هو √5.")).toBe(`الطول هو ${LRI}√5${PDI}.`);
     expect(isolateLtrRuns("حلّ (x − 4)(x + 2) = 0, ثمّ")).toBe(
-      `حلّ${LRI} (x − 4)(x + 2) = 0${PDI}, ثمّ`,
+      `حلّ ${LRI}(x − 4)(x + 2) = 0${PDI}, ثمّ`,
     );
     // La virgule arabe n'est pas latine : elle coupe déjà le segment, rien ne change.
     expect(isolateLtrRuns("حلّ (x − 4)(x + 2) = 0 ، ثمّ")).toBe(
-      `حلّ${LRI} (x − 4)(x + 2) = 0 ${PDI}، ثمّ`,
+      `حلّ ${LRI}(x − 4)(x + 2) = 0${PDI} ، ثمّ`,
     );
     // Le point d'un décimal et le contenu de la formule ne sont jamais retirés.
-    expect(isolateLtrRuns("القيمة .5 √2 هنا")).toContain(`${LRI} .5 √2 ${PDI}`);
-    expect(isolateLtrRuns("العدد 3.5 √2 هنا")).toContain(`${LRI} 3.5 √2 ${PDI}`);
+    expect(isolateLtrRuns("القيمة .5 √2 هنا")).toContain(` ${LRI}.5 √2${PDI} `);
+    expect(isolateLtrRuns("العدد 3.5 √2 هنا")).toContain(` ${LRI}3.5 √2${PDI} `);
   });
 
   // Le « ( » qui ouvre un membre de phrase ARABE après une formule restait dans l'isolat, à
@@ -67,12 +70,12 @@ describe("isolateLtrRuns", () => {
   // explications de maths de 35 missions d'examen sur 38, par les audits du gisement).
   it("laisse hors de l'isolat la parenthèse qui ouvre ou ferme un membre de phrase arabe", () => {
     expect(isolateLtrRuns("لأنّ 12 + 8√2 = 5√2 (تقريبًا) دائمًا")).toContain(
-      `${LRI} 12 + 8√2 = 5√2${PDI} (`,
+      ` ${LRI}12 + 8√2 = 5√2${PDI} (`,
     );
-    expect(isolateLtrRuns("(الجذر) √2 = 1,41 تقريبًا")).toContain(`)${LRI} √2 = 1,41 ${PDI}`);
+    expect(isolateLtrRuns("(الجذر) √2 = 1,41 تقريبًا")).toContain(`) ${LRI}√2 = 1,41${PDI} `);
     // Une parenthèse qui a sa compagne DANS la formule fait partie de la formule.
     expect(isolateLtrRuns("الناتج (x − 4)(x + 2) = 0 صحيح")).toContain(
-      `${LRI} (x − 4)(x + 2) = 0 ${PDI}`,
+      ` ${LRI}(x − 4)(x + 2) = 0${PDI} `,
     );
   });
 
@@ -84,15 +87,15 @@ describe("isolateLtrRuns", () => {
   // mot arabe — le membre de phrase se fermait AVANT sa formule. Relevé par la re-vérification du
   // lot L12 : une cinquantaine de chaînes des missions d'examen, près de 1 700 dans le corpus.
   it("laisse hors de l'isolat la parenthèse que la formule ferme", () => {
-    expect(isolateLtrRuns("(نعلم أنّ √9 = 3)")).toBe(`(نعلم أنّ${LRI} √9 = 3${PDI})`);
+    expect(isolateLtrRuns("(نعلم أنّ √9 = 3)")).toBe(`(نعلم أنّ ${LRI}√9 = 3${PDI})`);
     // La compagne est dans un AUTRE segment : une parenthèse équilibrée reste dans la formule.
-    expect(isolateLtrRuns("(نعلم أنّ (x + 3) = 5 √9)")).toContain(`${LRI} (x + 3) = 5 √9${PDI})`);
+    expect(isolateLtrRuns("(نعلم أنّ (x + 3) = 5 √9)")).toContain(` ${LRI}(x + 3) = 5 √9${PDI})`);
     // Un nombre seul ne demande aucun isolat : le « ) » de prose ne suffit plus à l'isoler.
     expect(isolateLtrRuns("ينطلق (من 11 إلى 99)")).toBe("ينطلق (من 11 إلى 99)");
   });
 
   it("laisse hors de l'isolat la parenthèse que la formule ouvre", () => {
-    expect(isolateLtrRuns("ثمّ (√9 = 3 ثمّ نجد)")).toBe(`ثمّ (${LRI}√9 = 3 ${PDI}ثمّ نجد)`);
+    expect(isolateLtrRuns("ثمّ (√9 = 3 ثمّ نجد)")).toBe(`ثمّ (${LRI}√9 = 3${PDI} ثمّ نجد)`);
     expect(isolateLtrRuns("الفقرة (2: التكنولوجيا)")).toBe("الفقرة (2: التكنولوجيا)");
   });
 
@@ -106,10 +109,10 @@ describe("isolateLtrRuns", () => {
       `${LRI}(80 + 100) ÷ 2 = 90${PDI} ✓ (والفرق بين مركزين متتاليين 20)`,
     );
     expect(isolateLtrRuns("(−3) × (−4) = 12 (سالب × سالب = موجب)، ثمّ 12 + (−2) = 10.")).toBe(
-      `${LRI}(−3) × (−4) = 12${PDI} (سالب × سالب = موجب)، ثمّ${LRI} 12 + (−2) = 10${PDI}.`,
+      `${LRI}(−3) × (−4) = 12${PDI} (سالب × سالب = موجب)، ثمّ ${LRI}12 + (−2) = 10${PDI}.`,
     );
     expect(isolateLtrRuns("نجد (x + 2)(x − 2) = x² − 4 (الفرق بين مربّعين)")).toBe(
-      `نجد${LRI} (x + 2)(x − 2) = x² − 4${PDI} (الفرق بين مربّعين)`,
+      `نجد ${LRI}(x + 2)(x − 2) = x² − 4${PDI} (الفرق بين مربّعين)`,
     );
     // La « ) » finale referme une « ( » du segment : elle en fait partie, même quand une
     // fermante de prose la précède et fait pencher le total.
@@ -123,24 +126,24 @@ describe("isolateLtrRuns", () => {
   // UN AUTRE segment est de la prose, où qu'elle tombe ; les deux moitiés se jugent séparément.
   it("laisse hors de l'isolat la parenthèse que le texte arabe ferme ou ouvre au milieu d'un segment", () => {
     expect(isolateLtrRuns("(بوحدة OI) : AB = |−2 − (−√2)| = |√2 − 2|")).toBe(
-      `(بوحدة OI) :${LRI} AB = |−2 − (−√2)| = |√2 − 2|${PDI}`,
+      `(بوحدة OI) : ${LRI}AB = |−2 − (−√2)| = |√2 − 2|${PDI}`,
     );
     expect(isolateLtrRuns("إذن BI = (√13 − 3)/2 cm ✓ (≈ 0,30 وهو العدد b) ثمّ")).toBe(
-      `إذن${LRI} BI = (√13 − 3)/2 cm${PDI} ✓ (≈ 0,30 وهو العدد b) ثمّ`,
+      `إذن ${LRI}BI = (√13 − 3)/2 cm${PDI} ✓ (≈ 0,30 وهو العدد b) ثمّ`,
     );
     // `2 = 2ab` s'ouvre par un nombre et porte des lettres : il est isolé lui aussi
     // (rendu en `2ab = 2` avant le correctif des coefficients).
     expect(isolateLtrRuns("(نعلم أنّ 2 = 2ab) = (b − a)² ✓ ثمّ")).toBe(
-      `(نعلم أنّ${LRI} 2 = 2ab${PDI})${LRI} = (b − a)²${PDI} ✓ ثمّ`,
+      `(نعلم أنّ ${LRI}2 = 2ab${PDI}) ${LRI}= (b − a)²${PDI} ✓ ثمّ`,
     );
     // Deux membres de phrase arabes séparés par un signe : plus rien à isoler.
     const lines = "(المستقيم 1) ⊥ (المستقيم 2)";
     expect(isolateLtrRuns(lines)).toBe(lines);
     // Des crochets bien appariés ne retiennent pas la parenthèse ; une demi-droite, si.
     expect(isolateLtrRuns("متوازي أضلاع ([AE] ∥ [CG] و AE = CG) وله")).toBe(
-      `متوازي أضلاع (${LRI}[AE] ∥ [CG] ${PDI}و AE = CG) وله`,
+      `متوازي أضلاع (${LRI}[AE] ∥ [CG]${PDI} و AE = CG) وله`,
     );
-    expect(isolateLtrRuns("(المستقيم [OI) حيث EM = 1)")).toContain(`${LRI} [OI) ${PDI}`);
+    expect(isolateLtrRuns("(المستقيم [OI) حيث EM = 1)")).toContain(` ${LRI}[OI)${PDI} `);
   });
 
   // Une fermante d'attaque et une ouvrante de queue sont de la prose même quand le segment
@@ -149,14 +152,14 @@ describe("isolateLtrRuns", () => {
     const text = "(مثل: علّم، كسّر). (تمرين «صيد الخطأ».) الخطأ";
     expect(isolateLtrRuns(text)).toBe(text);
     expect(isolateLtrRuns("(الجذر) √2 = 1,41 (تقريبًا)")).toBe(
-      `(الجذر)${LRI} √2 = 1,41${PDI} (تقريبًا)`,
+      `(الجذر) ${LRI}√2 = 1,41${PDI} (تقريبًا)`,
     );
   });
 
   // `[OI)` est une demi-droite, `]2 ; 5)` un intervalle : la parenthèse s'apparie à un crochet.
   it("ne retire aucune parenthèse d'un segment à crochets (demi-droite, intervalle)", () => {
-    expect(isolateLtrRuns("المستقيم [OI) حيث EM = 1")).toContain(`${LRI} [OI) ${PDI}`);
-    expect(isolateLtrRuns("المجال ]2 ; 5) صحيح")).toContain(`${LRI} ]2 ; 5) ${PDI}`);
+    expect(isolateLtrRuns("المستقيم [OI) حيث EM = 1")).toContain(` ${LRI}[OI)${PDI} `);
+    expect(isolateLtrRuns("المجال ]2 ; 5) صحيح")).toContain(` ${LRI}]2 ; 5)${PDI} `);
   });
 
   it("n'isole pas un titre dont la seule parenthèse est de la prose", () => {
@@ -193,13 +196,13 @@ describe("isolateLtrRuns", () => {
   });
 
   it("isolates comparisons even when escaped to HTML entities", () => {
-    expect(isolateLtrRuns("حيث b &gt; 0 دائمًا")).toContain(`${LRI} b &gt; 0 ${PDI}`);
+    expect(isolateLtrRuns("حيث b &gt; 0 دائمًا")).toContain(` ${LRI}b &gt; 0${PDI} `);
   });
 
   it("isolates direction-sensitive relations and arrows", () => {
     // Bidi-mirrored set relations and arrows would otherwise flip in RTL.
-    expect(isolateLtrRuns("المجموعة A ⊂ B")).toContain(`${LRI} A ⊂ B${PDI}`);
-    expect(isolateLtrRuns("السهم x → y معرّف")).toContain(`${LRI} x → y ${PDI}`);
+    expect(isolateLtrRuns("المجموعة A ⊂ B")).toContain(` ${LRI}A ⊂ B${PDI}`);
+    expect(isolateLtrRuns("السهم x → y معرّف")).toContain(` ${LRI}x → y${PDI} `);
   });
 
   // #1117 — la famille des relations d'ensemble se traite EN BLOC. `⊄` ou `∋` oublié,
@@ -208,8 +211,8 @@ describe("isolateLtrRuns", () => {
   it.each(["∈", "∉", "∋", "∌", "⊂", "⊃", "⊄", "⊅", "⊆", "⊇", "⊈", "⊉", "⊊", "⊋"])(
     "isolates the set relation %s even when it stands alone in Arabic prose",
     (rel) => {
-      expect(isolateLtrRuns(`الرمز ${rel}`)).toBe(`الرمز${LRI} ${rel}${PDI}`);
-      expect(isolateLtrRuns(`نكتب A ${rel} B هنا`)).toContain(`${LRI} A ${rel} B ${PDI}`);
+      expect(isolateLtrRuns(`الرمز ${rel}`)).toBe(`الرمز ${LRI}${rel}${PDI}`);
+      expect(isolateLtrRuns(`نكتب A ${rel} B هنا`)).toContain(` ${LRI}A ${rel} B${PDI} `);
     },
   );
 
@@ -273,10 +276,10 @@ describe("isolateLtrRuns", () => {
   // isolated. Written tight (`−5`, not `− 5`), so it is never confused with the
   // spaced binary minus of subtraction.
   it("isolates a bare tight signed number embedded in Arabic prose", () => {
-    expect(isolateLtrRuns("إذن −5 أقرب إلى الصفر")).toContain(`${LRI} −5 ${PDI}`);
-    expect(isolateLtrRuns("قيمة x = −2 دائمًا")).toContain(`${LRI} x = −2 ${PDI}`);
-    expect(isolateLtrRuns("الدوران +90° نحو اليمين")).toContain(`${LRI} +90° ${PDI}`);
-    expect(isolateLtrRuns("الحدّ −2x صغير")).toContain(`${LRI} −2x ${PDI}`);
+    expect(isolateLtrRuns("إذن −5 أقرب إلى الصفر")).toContain(` ${LRI}−5${PDI} `);
+    expect(isolateLtrRuns("قيمة x = −2 دائمًا")).toContain(` ${LRI}x = −2${PDI} `);
+    expect(isolateLtrRuns("الدوران +90° نحو اليمين")).toContain(` ${LRI}+90°${PDI} `);
+    expect(isolateLtrRuns("الحدّ −2x صغير")).toContain(` ${LRI}−2x${PDI} `);
   });
 
   // `∠` est Bidi_Mirrored, comme `⊄` (#1117) : dans une phrase arabe il restait au niveau
@@ -284,9 +287,9 @@ describe("isolateLtrRuns", () => {
   // s'affichait « ABy = 60°⦣ ». Remonté par l'audit du lot L12 (gisement é36).
   it.each(["∠", "∡", "∢"])("isolates the angle sign %s even on its own", (sign) => {
     expect(isolateLtrRuns(`يحقّق ${sign}ABy = 60° دائمًا`)).toContain(
-      `${LRI} ${sign}ABy = 60° ${PDI}`,
+      ` ${LRI}${sign}ABy = 60°${PDI} `,
     );
-    expect(isolateLtrRuns(`الرمز ${sign}`)).toBe(`الرمز${LRI} ${sign}${PDI}`);
+    expect(isolateLtrRuns(`الرمز ${sign}`)).toBe(`الرمز ${LRI}${sign}${PDI}`);
   });
 
   // Une formule MÊLÉE de chiffres et de lettres qui s'ouvre par un nombre sort à moitié
@@ -294,26 +297,26 @@ describe("isolateLtrRuns", () => {
   // nombre qui la suit en hérite (règle W7), mais le premier terme reste au niveau RTL.
   // `25 + k = 9` s'affichait `k = 9 + 25`, `1/b` s'affichait `b/1`.
   it("isolates a formula that opens with a number and carries a letter", () => {
-    expect(isolateLtrRuns("نجد 25 + k = 9 ثمّ نحلّ")).toContain(`${LRI} 25 + k = 9 ${PDI}`);
-    expect(isolateLtrRuns("ما مقلوب 1/b في أبسط كتابة")).toContain(`${LRI} 1/b ${PDI}`);
-    expect(isolateLtrRuns("احسب 3 − x ثمّ")).toContain(`${LRI} 3 − x ${PDI}`);
-    expect(isolateLtrRuns("المقدار 10 × 3^p صحيح")).toContain(`${LRI} 10 × 3^p ${PDI}`);
-    expect(isolateLtrRuns("نكتب 1/2 = x دائمًا")).toContain(`${LRI} 1/2 = x ${PDI}`);
+    expect(isolateLtrRuns("نجد 25 + k = 9 ثمّ نحلّ")).toContain(` ${LRI}25 + k = 9${PDI} `);
+    expect(isolateLtrRuns("ما مقلوب 1/b في أبسط كتابة")).toContain(` ${LRI}1/b${PDI} `);
+    expect(isolateLtrRuns("احسب 3 − x ثمّ")).toContain(` ${LRI}3 − x${PDI} `);
+    expect(isolateLtrRuns("المقدار 10 × 3^p صحيح")).toContain(` ${LRI}10 × 3^p${PDI} `);
+    expect(isolateLtrRuns("نكتب 1/2 = x دائمًا")).toContain(` ${LRI}1/2 = x${PDI} `);
   });
 
   it("isolates a sign glued to a letter that does not follow an operand", () => {
-    expect(isolateLtrRuns("العدد −x موجب")).toContain(`${LRI} −x ${PDI}`);
-    expect(isolateLtrRuns("نجد −x + 1 ثمّ")).toContain(`${LRI} −x + 1 ${PDI}`);
-    expect(isolateLtrRuns("نجد +b هنا")).toContain(`${LRI} +b ${PDI}`);
+    expect(isolateLtrRuns("العدد −x موجب")).toContain(` ${LRI}−x${PDI} `);
+    expect(isolateLtrRuns("نجد −x + 1 ثمّ")).toContain(` ${LRI}−x + 1${PDI} `);
+    expect(isolateLtrRuns("نجد +b هنا")).toContain(` ${LRI}+b${PDI} `);
   });
 
   // La coche « ✓ » qui conclut un calcul est de la PROSE : dans l'isolat gauche-à-droite elle se
   // retrouvait à droite de la formule, donc collée au mot arabe qui la précède et lue avant elle
   // (`… على ✓ (ACQ)`). Dehors, elle suit la formule dans le sens de lecture de la phrase.
   it("laisse la coche ✓ finale hors de l'isolat, comme la ponctuation de bord", () => {
-    expect(isolateLtrRuns("ومنه عمودي على (ACQ) ✓.")).toBe(`ومنه عمودي على${LRI} (ACQ)${PDI} ✓.`);
-    expect(isolateLtrRuns("فنجد √9 = 3 ✓ ثمّ")).toBe(`فنجد${LRI} √9 = 3${PDI} ✓ ثمّ`);
-    expect(isolateLtrRuns("الناتج (√2)² = 2 ✓، إذن")).toBe(`الناتج${LRI} (√2)² = 2${PDI} ✓، إذن`);
+    expect(isolateLtrRuns("ومنه عمودي على (ACQ) ✓.")).toBe(`ومنه عمودي على ${LRI}(ACQ)${PDI} ✓.`);
+    expect(isolateLtrRuns("فنجد √9 = 3 ✓ ثمّ")).toBe(`فنجد ${LRI}√9 = 3${PDI} ✓ ثمّ`);
+    expect(isolateLtrRuns("الناتج (√2)² = 2 ✓، إذن")).toBe(`الناتج ${LRI}(√2)² = 2${PDI} ✓، إذن`);
   });
 
   it("ne touche pas une coche qui ne suit pas une formule isolée", () => {
@@ -325,48 +328,48 @@ describe("isolateLtrRuns", () => {
   // Un COEFFICIENT devant la lettre ne change rien : `3 − 2x = x − 3` s'affichait
   // `2x = x − 3 − 3`, le premier terme restant au niveau RTL.
   it("isolates a digit-first formula whose letter hides behind a coefficient", () => {
-    expect(isolateLtrRuns("ومنه 3 − 2x = x − 3 ثمّ")).toContain(`${LRI} 3 − 2x = x − 3 ${PDI}`);
-    expect(isolateLtrRuns("نجد 5 + 2x = 11 ثمّ")).toContain(`${LRI} 5 + 2x = 11 ${PDI}`);
+    expect(isolateLtrRuns("ومنه 3 − 2x = x − 3 ثمّ")).toContain(` ${LRI}3 − 2x = x − 3${PDI} `);
+    expect(isolateLtrRuns("نجد 5 + 2x = 11 ثمّ")).toContain(` ${LRI}5 + 2x = 11${PDI} `);
     expect(isolateLtrRuns("نحسب 120 − 3g − 2g = 10 ثمّ")).toContain(
-      `${LRI} 120 − 3g − 2g = 10 ${PDI}`,
+      ` ${LRI}120 − 3g − 2g = 10${PDI} `,
     );
   });
 
   // Une lettre GRECQUE est une lettre : `π`, `α`, `θ` sont fortes gauche-à-droite comme `x`.
   // `3,14 − π` s'affichait `π − 3,14` (la différence à l'envers), `2 × π × r` de même.
   it("isolates a digit-first formula whose letter is Greek", () => {
-    expect(isolateLtrRuns("فالعدد 3,14 − π سالب")).toContain(`${LRI} 3,14 − π ${PDI}`);
-    expect(isolateLtrRuns("المحيط = 2 × π × r هو")).toContain(`${LRI} = 2 × π × r ${PDI}`);
-    expect(isolateLtrRuns("المحيط 2 × π × r هو")).toContain(`${LRI} 2 × π × r ${PDI}`);
-    expect(isolateLtrRuns("نكتب 6 − 2π ثمّ")).toContain(`${LRI} 6 − 2π ${PDI}`);
-    expect(isolateLtrRuns("القياس 90 − α بالدرجة")).toContain(`${LRI} 90 − α ${PDI}`);
+    expect(isolateLtrRuns("فالعدد 3,14 − π سالب")).toContain(` ${LRI}3,14 − π${PDI} `);
+    expect(isolateLtrRuns("المحيط = 2 × π × r هو")).toContain(` ${LRI}= 2 × π × r${PDI} `);
+    expect(isolateLtrRuns("المحيط 2 × π × r هو")).toContain(` ${LRI}2 × π × r${PDI} `);
+    expect(isolateLtrRuns("نكتب 6 − 2π ثمّ")).toContain(` ${LRI}6 − 2π${PDI} `);
+    expect(isolateLtrRuns("القياس 90 − α بالدرجة")).toContain(` ${LRI}90 − α${PDI} `);
   });
 
   // Le signe « ° » peut suivre le nombre : `30° = OI/OB` s'affichait `OI/OB = °30`.
   it("isolates a digit-first formula whose number carries a degree sign", () => {
-    expect(isolateLtrRuns("فنجد ظا 30° = OI/OB لأنّ")).toContain(`${LRI} 30° = OI/OB ${PDI}`);
-    expect(isolateLtrRuns("ومنه 45° + x = 90° ثمّ")).toContain(`${LRI} 45° + x = 90° ${PDI}`);
+    expect(isolateLtrRuns("فنجد ظا 30° = OI/OB لأنّ")).toContain(` ${LRI}30° = OI/OB${PDI} `);
+    expect(isolateLtrRuns("ومنه 45° + x = 90° ثمّ")).toContain(` ${LRI}45° + x = 90°${PDI} `);
   });
 
   it("isolates a sign glued to a Greek letter", () => {
-    expect(isolateLtrRuns("العدد −π سالب")).toContain(`${LRI} −π ${PDI}`);
+    expect(isolateLtrRuns("العدد −π سالب")).toContain(` ${LRI}−π${PDI} `);
   });
 
   it("still leaves a Greek letter that follows another letter or no number to the natural order", () => {
     // pas de signal : un mot arabe suivi du seul `π` n'est pas une formule ouverte par un nombre
     expect(isolateLtrRuns("العدد π غير ناطق")).toBe("العدد π غير ناطق");
     // `π` PRÉCÈDE le nombre : la lettre forte est déjà en tête, l'ordre natif est le bon
-    expect(isolateLtrRuns("حيث π + 3 يساوي")).not.toContain(`${LRI} π + 3`);
+    expect(isolateLtrRuns("حيث π + 3 يساوي")).not.toContain(` ${LRI}π + 3`);
   });
 
   // Un point ou une variable « primé » (`M'`, `A′`) est un atome mathématique même seul :
   // l'apostrophe est neutre, prend le sens RTL et tombe du mauvais côté de la lettre
   // (`M'` s'affichait `'M`).
   it("isolates a primed point or variable, alone or in a chain", () => {
-    expect(isolateLtrRuns("النقطة M' نظيرة M")).toContain(`${LRI} M' ${PDI}`);
-    expect(isolateLtrRuns("نظيرة A هي A′ ثمّ")).toContain(`${LRI} A′ ${PDI}`);
-    expect(isolateLtrRuns("المثلّث A'B'C' قائم")).toContain(`${LRI} A'B'C' ${PDI}`);
-    expect(isolateLtrRuns("ثمّ M'M'' = BC ✓")).toContain(`${LRI} M'M'' = BC${PDI} ✓`);
+    expect(isolateLtrRuns("النقطة M' نظيرة M")).toContain(` ${LRI}M'${PDI} `);
+    expect(isolateLtrRuns("نظيرة A هي A′ ثمّ")).toContain(` ${LRI}A′${PDI} `);
+    expect(isolateLtrRuns("المثلّث A'B'C' قائم")).toContain(` ${LRI}A'B'C'${PDI} `);
+    expect(isolateLtrRuns("ثمّ M'M'' = BC ✓")).toContain(` ${LRI}M'M'' = BC${PDI} ✓`);
   });
 
   it("leaves the apostrophes of French and English words alone", () => {
@@ -389,7 +392,74 @@ describe("isolateLtrRuns", () => {
       "نجد x = −a ثمّ نكمل",
       "المجموع 10 − 4 = 6 صحيح",
       "نجد 2x + 3 = 7 ثمّ نكمل",
-      "العدد 5 cm كبير",
+    ]) {
+      expect(isolateLtrRuns(s)).toBe(s);
+    }
+  });
+
+  // Capture du propriétaire, 2026-11-15 (cours « الأعداد الحقيقية », 9ᵉ) : `بالقصرين: −3 °C، فقد`
+  // s'affichait `بالقصرين:−3 °C ، فقد`. L'espace d'attaque, prise DANS l'isolat, se dessinait à
+  // son extrémité gauche — du côté de la virgule. Mesuré dans Chromium, `dir=rtl`.
+  it("laisse les espaces qui bordent une formule hors de l'isolat", () => {
+    expect(isolateLtrRuns("بالقصرين: −3 °C، فقد")).toBe(`بالقصرين: ${LRI}−3 °C${PDI}، فقد`);
+    expect(isolateLtrRuns("فنجد 25 + k = 9.")).toBe(`فنجد ${LRI}25 + k = 9${PDI}.`);
+    // Une espace de chaque côté : chacune reste à sa place, de part et d'autre de l'isolat.
+    expect(isolateLtrRuns("الناتج √64 = 8 إذن")).toBe(`الناتج ${LRI}√64 = 8${PDI} إذن`);
+  });
+
+  // Même capture : `اللحم: 1,5 kg، فقد` s'affichait `kg 1,5`, l'unité avant le nombre — et, dans la
+  // même phrase, `−3 °C` (signé, donc isolé) se lisait dans l'autre sens. Une grandeur est un
+  // atome de notation : 6 049 des 21 455 grandeurs du corpus arabe étaient laissées au navigateur.
+  it("isole une grandeur — un nombre et son unité SI latine", () => {
+    expect(isolateLtrRuns("اللحم: 1,5 kg، فقد")).toBe(`اللحم: ${LRI}1,5 kg${PDI}، فقد`);
+    expect(isolateLtrRuns("العدد 5 cm كبير")).toBe(`العدد ${LRI}5 cm${PDI} كبير`);
+    expect(isolateLtrRuns("طوله 12 cm وسرعته 60 km/h تقريبًا")).toBe(
+      `طوله ${LRI}12 cm${PDI} وسرعته ${LRI}60 km/h${PDI} تقريبًا`,
+    );
+    // `37 °C` se dessinait `C° 37` : le symbole lui-même coupé en deux.
+    expect(isolateLtrRuns("حرارة الجسم 37 °C تقريبًا")).toBe(
+      `حرارة الجسم ${LRI}37 °C${PDI} تقريبًا`,
+    );
+    for (const quantity of [
+      "250 mL",
+      "3,5 kg",
+      "9,8 m/s²",
+      "2,7 g/cm³",
+      "220 V",
+      "0,5 A",
+      "50 Hz",
+      "1 000 kWh",
+      "20–25 cm",
+      "2 h 30 min",
+      "24 µC",
+    ]) {
+      expect(isolateLtrRuns(`القيمة ${quantity} هنا`)).toBe(`القيمة ${LRI}${quantity}${PDI} هنا`);
+    }
+  });
+
+  // `الطول 5 cm + 3 cm = 8 cm` se dessinait `cm + 3 cm = 8 cm 5` : la lettre de la première unité
+  // fait basculer toute la suite gauche-à-droite (règle W7), mais pas le nombre qui la précède.
+  it("isole d'un seul tenant un calcul qui porte des unités latines", () => {
+    expect(isolateLtrRuns("الطول 5 cm + 3 cm = 8 cm إذن")).toBe(
+      `الطول ${LRI}5 cm + 3 cm = 8 cm${PDI} إذن`,
+    );
+    expect(isolateLtrRuns("المدّة 2 × 60 = 120 min فقط")).toBe(
+      `المدّة ${LRI}2 × 60 = 120 min${PDI} فقط`,
+    );
+  });
+
+  // La liste des unités est FERMÉE : un mot latin après un nombre n'est pas une unité, et les
+  // unités en écriture arabe, que le navigateur range déjà bien, ne sont pas concernées.
+  it("ne prend pas pour une grandeur un mot latin, une unité arabe ou un nombre nu", () => {
+    for (const s of [
+      "في الصفحة 12 du كتاب",
+      "الدرسان 3 et 4 معًا",
+      "نقرأ 2 mots فقط",
+      "المساحة 12 صم² كبيرة",
+      "المبلغ 10 مي + 2 مي",
+      "العدد 25 زوجي",
+      "النسبة 50 % من الكل",
+      "عددها 5 dans الجملة",
     ]) {
       expect(isolateLtrRuns(s)).toBe(s);
     }
@@ -397,7 +467,7 @@ describe("isolateLtrRuns", () => {
 
   // Une ponctuation de bord reste dehors, même quand la formule est isolée pour cette raison.
   it("écarte la ponctuation de bord d'une formule mêlée isolée", () => {
-    expect(isolateLtrRuns("فنجد 25 + k = 9.")).toBe(`فنجد${LRI} 25 + k = 9${PDI}.`);
+    expect(isolateLtrRuns("فنجد 25 + k = 9.")).toBe(`فنجد ${LRI}25 + k = 9${PDI}.`);
   });
 
   // Regression: subtraction/addition is written SPACED, so the sign is not glued
@@ -423,23 +493,23 @@ describe("isolateLtrRuns", () => {
     expect(isolateLtrRuns(chapter)).toBe(chapter);
     expect(isolateLtrRuns("الرياضيات (الجبر)")).toBe("الرياضيات (الجبر)");
     // Parentheses that DO contain LTR math content must still be isolated
-    expect(isolateLtrRuns("احسب (2√3 + 5) ثم")).toContain(`${LRI} (2√3 + 5) ${PDI}`);
+    expect(isolateLtrRuns("احسب (2√3 + 5) ثم")).toContain(` ${LRI}(2√3 + 5)${PDI} `);
   });
 
   // The three concours-défi énoncés from the reported screenshots now render as
   // contiguous LTR runs (no scramble): abs-value inequality, difference of
   // squares, and the signed-number find-the-error prompt.
   it("renders the reported ambiguous concours prompts as clean LTR runs", () => {
-    expect(isolateLtrRuns("كم عددًا يحقّق |x − 3| < 4؟")).toContain(`${LRI} |x − 3| < 4${PDI}`);
+    expect(isolateLtrRuns("كم عددًا يحقّق |x − 3| < 4؟")).toContain(` ${LRI}|x − 3| < 4${PDI}`);
     expect(isolateLtrRuns("قيمة (2√3 − √5)(2√3 + √5) هي")).toContain(
-      `${LRI} (2√3 − √5)(2√3 + √5) ${PDI}`,
+      ` ${LRI}(2√3 − √5)(2√3 + √5)${PDI} `,
     );
     const q6 = isolateLtrRuns("بما أنّ −5 < −2، فإنّ |−5| < |−2|، إذن −5 أقرب من −2");
-    expect(q6).toContain(`${LRI} −5 < −2${PDI}`);
-    expect(q6).toContain(`${LRI} |−5| < |−2|${PDI}`);
+    expect(q6).toContain(` ${LRI}−5 < −2${PDI}`);
+    expect(q6).toContain(` ${LRI}|−5| < |−2|${PDI}`);
     // the two trailing bare negatives are now isolated too (was the ambiguous case)
-    expect(q6).toContain(`${LRI} −5 ${PDI}`);
-    expect(q6).toContain(`${LRI} −2${PDI}`);
+    expect(q6).toContain(` ${LRI}−5${PDI} `);
+    expect(q6).toContain(` ${LRI}−2${PDI}`);
     expect((q6.match(new RegExp(LRI, "g")) ?? []).length).toBe(4);
   });
 
@@ -449,7 +519,7 @@ describe("isolateLtrRuns", () => {
   // fermant APRÈS la flèche (audits arabe 9ᵉ, chapitres 09 et 10).
   it("laisse les guillemets hors de l'isolat — numéro de phrase en tête de citation", () => {
     expect(isolateLtrRuns("«(1) في رأيي أنّ الصدقَ أساسُ الثقةِ. (2) فقد قالَ المثلُ.»")).toBe(
-      `«${LRI}(1)${PDI} في رأيي أنّ الصدقَ أساسُ الثقةِ.${LRI} (2) ${PDI}فقد قالَ المثلُ.»`,
+      `«${LRI}(1)${PDI} في رأيي أنّ الصدقَ أساسُ الثقةِ. ${LRI}(2)${PDI} فقد قالَ المثلُ.»`,
     );
     expect(isolateLtrRuns("قسِّمْ هذا النصَّ: «(1) يرى بعضُهم")).toBe(
       `قسِّمْ هذا النصَّ: «${LRI}(1)${PDI} يرى بعضُهم`,
@@ -470,7 +540,7 @@ describe("isolateLtrRuns", () => {
     expect(isolateLtrRuns("نكتب «A = 3√2» في الدفتر")).toBe(`نكتب «${LRI}A = 3√2${PDI}» في الدفتر`);
     // La flèche d'une formule reste dans l'isolat : seule la flèche nue entre deux phrases en sort.
     expect(isolateLtrRuns("المعادلة 2Al + 3Cl₂ → 2AlCl₃ موزونة")).toContain(
-      `${LRI} 2Al + 3Cl₂ → 2AlCl₃ ${PDI}`,
+      ` ${LRI}2Al + 3Cl₂ → 2AlCl₃${PDI} `,
     );
     expect(isolateLtrRuns("الانتقال 2 → 4 ممكن")).toContain(LRI);
   });
@@ -486,9 +556,29 @@ describe("isolateLtrRuns", () => {
 describe("isolateLtrRunsHtml", () => {
   it("isolates math inside text but never inside tag markup", () => {
     const out = isolateLtrRunsHtml('<li class="lesson-li">التعريف: √(a²) = |a|</li>');
-    expect(out).toBe(`<li class="lesson-li">التعريف:${LRI} √(a²) = |a|${PDI}</li>`);
+    expect(out).toBe(`<li class="lesson-li">التعريف: ${LRI}${nb("√(a²) = |a|")}${PDI}</li>`);
     // class attribute must be left intact
     expect(out).toContain('class="lesson-li"');
+  });
+
+  // 2026-11-15, cours « الأعداد الحقيقية » : `فيُكتب ℚ ⊂ ℝ` finissait une ligne sur `ℝ` et ouvrait
+  // la suivante sur `⊂ ℚ` — coupée à une espace, la formule voit chaque moitié réordonnée
+  // pour sa ligne. Dans le HTML d'un cours, une formule courte ne se coupe plus.
+  it("rend insécable une formule courte, et laisse sécable une longue chaîne de calcul", () => {
+    const short = isolateLtrRunsHtml("<p>قلب سلسلة الاحتواء، فيُكتب ℚ ⊂ ℝ. السلسلة تسير</p>");
+    expect(short).toBe(
+      `<p>قلب سلسلة الاحتواء، فيُكتب ${LRI}${nb("ℚ ⊂ ℝ")}${PDI}. السلسلة تسير</p>`,
+    );
+    // Les espaces HORS de l'isolat restent ordinaires : c'est là que la ligne se coupe.
+    expect(short).toContain(`فيُكتب ${LRI}`);
+
+    const chain = "√50 + √18 − √8 = 5√2 + 3√2 − 2√2 = (5 + 3 − 2)√2 = 6√2";
+    expect(chain.length).toBeGreaterThan(32);
+    expect(isolateLtrRunsHtml(`<p>نحسب ${chain} إذن</p>`)).toBe(
+      `<p>نحسب ${LRI}${chain}${PDI} إذن</p>`,
+    );
+    // `isolateLtrRuns` — la chaîne nue, hors cours — ne touche à aucune espace.
+    expect(isolateLtrRuns("فيُكتب ℚ ⊂ ℝ. السلسلة")).toBe(`فيُكتب ${LRI}ℚ ⊂ ℝ${PDI}. السلسلة`);
   });
 
   it("leaves pure-LTR (non-Arabic) html untouched", () => {
@@ -504,19 +594,21 @@ describe("isolateLtrRunsHtml", () => {
       "<li>فنأخذ المقابل: |√6 − 3| = −(√6 − 3) = <strong>3 − √6</strong>.</li>",
     );
     expect(out).toBe(
-      `<li>فنأخذ المقابل:${LRI} |√6 − 3| = −(√6 − 3) = <strong>3 − √6${PDI}</strong>.</li>`,
+      `<li>فنأخذ المقابل: ${LRI}${nb("|√6 − 3| = −(√6 − 3) = ")}<strong>${nb("3 − √6")}${PDI}</strong>.</li>`,
     );
   });
 
   it("isolates a bold formula standing alone between Arabic words", () => {
     expect(isolateLtrRunsHtml("<p>الجواب <strong>3 − √6</strong> وهو موجب</p>")).toBe(
-      `<p>الجواب${LRI} <strong>3 − √6</strong> ${PDI}وهو موجب</p>`,
+      // L'espace de bord reste hors de l'isolat : il s'ouvre donc devant le premier signe
+      // de la formule, dans la balise.
+      `<p>الجواب <strong>${LRI}${nb("3 − √6")}${PDI}</strong> وهو موجب</p>`,
     );
   });
 
   it("lets an isolate span an emphasis it does not start", () => {
     expect(isolateLtrRunsHtml("<p>إذن √50 = <em>5√2</em> فقط</p>")).toBe(
-      `<p>إذن${LRI} √50 = <em>5√2</em> ${PDI}فقط</p>`,
+      `<p>إذن ${LRI}${nb("√50 = ")}<em>5√2${PDI}</em> فقط</p>`,
     );
   });
 

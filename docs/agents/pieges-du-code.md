@@ -537,6 +537,41 @@ clic vers une page matière rendait 24 blocs de squelette, sans un mot, indéfin
   région, pas sur le bandeau). Et l'événement Playwright `framenavigated` part aussi sur un simple
   `pushState` : pour prouver « sans rechargement », poser un marqueur sur `window` et le relire.
 
+## Dans un cours, une ligne du fichier n'est pas un paragraphe — et aucun test ne le voyait
+
+Constaté le 2026-11-15 sur une capture du propriétaire (cours « الأعداد الحقيقية », 9ᵉ) : une
+phrase arabe coupée en quatre paragraphes, et dans la même phrase `بالقصرين:−3 °C ،` et `kg 1,5`.
+Quatre défauts du rendu (`src/shared/lib/markdown.ts`, `bidi.ts`), tous antérieurs, tous
+invisibles aux tests parce qu'aucun décor de test n'était écrit comme le corpus l'est :
+
+1. **Le rendu faisait un `<p>` de chaque ligne.** Or la moitié du corpus renvoie ses
+   paragraphes à la ligne vers 100 signes (483 cours sur 968). Markdown standard recollerait
+   tout ; ce serait trop, parce que le reste du corpus a été écrit _contre_ ce rendu et compte
+   sur lui (paires d'exemples, égalités posées une par ligne, répliques). La règle retenue,
+   mesurée sur les 7 394 paires de lignes de prose consécutives : **une ligne d'au moins
+   75 signes qui ne finit pas une phrase est continuée par la suivante** (`isWidthWrap`).
+2. **Une ligne en retrait sous un item sortait de sa liste** (1 131 lignes) : le texte de
+   l'item coupé en deux, la liste rouverte après. Elle reste désormais dans son `<li>`.
+3. **Une ligne qui commence par du gras ou de l'italique n'était pas un paragraphe**, et une
+   balise fermante seule sur sa ligne (`</ul>`) en devenait un : deux définitions fondues en
+   une ligne d'un côté, `<p></ul></p>` — que le navigateur répare en paragraphes vides — de
+   l'autre. Le test était « la ligne commence par une balise » ; c'est `BLOCK_LINE` désormais.
+4. **`_« exemple »_` et `_**Certes**, …_` gardaient leurs soulignés** (~1 950 passages) :
+   l'italique n'ouvrait que devant une lettre ou un chiffre.
+
+Et côté sens d'écriture : l'espace qui borde une formule isolée reste **hors** de l'isolat
+(dedans, elle se dessinait de l'autre côté de la formule), et une **grandeur** — un nombre et
+son unité SI latine — est toujours un atome gauche-à-droite (`QUANTITY` ; 6 049 grandeurs sur
+21 455 se lisaient `kg 1,5`). Dans le HTML d'un cours, une formule isolée courte (32 signes au
+plus) ne se coupe plus entre deux lignes : coupée, chaque moitié est réordonnée pour sa ligne.
+
+Pour qui écrit un cours : un saut de ligne voulu se marque en **finissant la phrase**, par une
+ligne vide, ou par un saut forcé (`\` en fin de ligne) — jamais en comptant sur le fait que
+« chaque ligne fait un paragraphe ». Pour qui touche au rendu : le juge est le **HTML servi**
+(`curl` de la page, puis le navigateur), et la comparaison ancien/nouveau sur le corpus entier
+— mot à mot, aucun mot ne doit disparaître. jsdom ne met rien en page : un test qui compte des
+`<p>` ne dit pas ce que l'élève voit.
+
 ## Règles laissées par les chantiers d'août-septembre 2026
 
 Sorties de `STATUS.md` le 2026-09-22 (son § 6 les portait) ; le détail et les mesures sont dans
