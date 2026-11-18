@@ -19,7 +19,8 @@ Applies to any rendering path that may transform text into HTML.
   produces — an author cannot inject markup, whatever they write. The pedagogical blocks of
   étude 18 (`::: definition …`, promoted `> ⚠️` callouts) are emitted from a line-level parser,
   never copied from the source. `ALLOWED_TAGS` therefore carries only inert elements
-  (`section`/`span`/`figure`/`figcaption`/`details`/`summary` alongside the original set) and
+  (`section`/`span`/`figure`/`figcaption`/`details`/`summary`/`del` alongside the original set — `del`,
+  added 2026-11-18, renders the author's `~~struck~~` wrong forms and carries no attribute) and
   `ALLOWED_ATTR` only inert attributes (`class`/`id`/`dir` plus `role`/`tabindex`/`aria-label`,
   which make a figure zoomable from the keyboard) — no `style`, no `href`, no `on*`. A directive
   with an unknown type degrades to a neutral block and an unclosed one is implicitly closed: a
