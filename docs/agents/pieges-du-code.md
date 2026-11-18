@@ -572,6 +572,31 @@ ligne vide, ou par un saut forcé (`\` en fin de ligne) — jamais en comptant s
 — mot à mot, aucun mot ne doit disparaître. jsdom ne met rien en page : un test qui compte des
 `<p>` ne dit pas ce que l'élève voit.
 
+### Suite du 2026-11-18 : un marqueur que le rendu ne connaît pas s'affiche tel quel
+
+Deux marqueurs de l'auteur n'étaient pas rendus : `~~barré~~` (affiché avec ses tildes) et le
+numéro d'une liste numérotée (jeté, remplacé par un éclair). Ce qu'il faut retenir en y touchant :
+
+- **Le barré est une balise de plus dans l'allowlist** (`del`, inerte, sans attribut). La
+  garantie n'est pas l'allowlist, c'est l'ordre des passes : le motif est reconnu sur du texte
+  **déjà échappé**, donc un `~~<script>~~` ressort `<del>&lt;script&gt;</del>`. Le miroir de
+  l'allowlist vit dans `markdown-ssr.test.ts` (rendu serveur, sans DOMPurify) : l'y ajouter, et
+  y poser le barré comme position d'attaque.
+- **Le numéro est celui de l'auteur, jamais recompté.** 26 listes sur 3 205 ne font pas
+  `1, 2, 3…` : 24 reprennent après un paragraphe, 2 sont voulues (`1, 5, 9`). Un compteur CSS
+  les afficherait depuis 1 ; `<li value>` n'est pas dans l'allowlist. Le numéro est donc du
+  texte, dans un `<span class="lesson-li__n">`.
+- **L'italique s'ouvre et se ferme contre les balises que le rendu pose** (`<strong>`,
+  `<del>`), pas contre du texte d'auteur : c'est ce qui laisse `**_x_**` et `~~_x_~~` en italique
+  sans prendre un indice de formule (`S_D`) pour de l'italique.
+- **Un corps de carte de résumé est une phrase.** `- **Titre** : 1. a · 2. b` ouvrait une liste
+  numérotée d'un item. `\.` (échappement Markdown standard) dit « ce numéro n'ouvre pas de
+  liste » ; `renderCard` l'applique au début du corps.
+- **Le juge reste le navigateur, sur de vrais chapitres** : c'est en mesurant le débordement
+  sur cinq cours, pour vérifier la pastille, qu'on a trouvé le sommaire qui élargissait la page
+  (`<ol class="grid">` sans colonne explicite : la piste est `auto`, et un titre `truncate` la
+  gonfle — `grid-cols-1`).
+
 ## Règles laissées par les chantiers d'août-septembre 2026
 
 Sorties de `STATUS.md` le 2026-09-22 (son § 6 les portait) ; le détail et les mesures sont dans

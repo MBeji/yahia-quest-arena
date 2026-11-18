@@ -114,13 +114,27 @@ function figureMarkup(token: string, index: number, caption: string | null, lang
  * soulignés à l'écran — ~1 950 passages dans 135 cours, surtout de français et d'anglais
  * (mesuré le 2026-11-15). C'est le caractère qui PRÉCÈDE le souligné qui protège les indices
  * de formule, et il n'a pas changé ; un blanc à compléter (`___`) n'ouvre toujours rien.
+ *
+ * L'italique peut aussi vivre DANS un gras ou un barré (`**_gras italique_**`,
+ * `~~_a powerful argument_~~`) : il s'ouvre alors juste après `<strong>` / `<del>` et se
+ * ferme juste avant leur balise fermante. Ces deux balises sont celles que le rendu vient
+ * d'émettre — jamais du texte d'auteur, déjà échappé — donc elles protègent les indices de
+ * formule aussi bien qu'un blanc. Sans cela, 363 gras et ~170 barrés du corpus (mesuré le
+ * 2026-11-18) montraient leurs soulignés à l'écran.
  */
 const UNDERSCORE_ITALIC =
-  /(^|[\s([«"'“‘’—–-])_(?=[\p{L}\p{N}«"“‘([¿¡]|<strong>)([^_\n]*?[^\s_])_(?=$|[\s.,;:!?)\]»"'”’…—–-])/gmu;
-/** Un `\*` ou `\_` d'auteur (échappement Markdown) : mis à l'abri du formatage, rendu nu. */
-const ESCAPED_MARK = /\\([*_])/g;
-const SHELTER: Record<string, string> = { "*": "\uE000", _: "\uE001" };
-const unshelter = (s: string) => s.replace(/\uE000/g, "*").replace(/\uE001/g, "_");
+  /(^|[\s([«"'“‘’—–-]|<strong>|<del>)_(?=[\p{L}\p{N}«"“‘([¿¡]|<strong>|<del>)([^_\n]*?[^\s_])_(?=$|[\s.,;:!?)\]»"'”’…—–-]|<\/strong>|<\/del>)/gmu;
+/**
+ * Un `\*`, `\_` ou `\.` d'auteur (échappement Markdown) : mis à l'abri du formatage, rendu nu.
+ * `\.` est la façon standard d'écrire un numéro qui n'ouvre PAS une liste (`1\. la répétition`).
+ */
+const ESCAPED_MARK = /\\([*_.])/g;
+const SHELTER: Record<string, string> = { "*": "\uE000", _: "\uE001", ".": "\uE004" };
+const unshelter = (s: string) =>
+  s
+    .replace(/\uE000/g, "*")
+    .replace(/\uE001/g, "_")
+    .replace(/\uE004/g, ".");
 
 const toPlainText = (s: string) =>
   unshelter(
@@ -423,6 +437,10 @@ function renderChunk(lines: string[], ctx: Ctx, resolved = false): string {
     .replace(/^# (.+)$/gm, '<h1 class="lesson-h1">$1</h1>')
     // Bold
     .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+    // Barré : la FORME FAUTIVE qu'on montre pour la refuser (`jamais ~~tu parle~~`) — les 197
+    // lignes du corpus, sans exception. Ni espace ni autre `~` collé aux tildes : un `~3 °C`
+    // (« environ ») ou un `~~ ~~` ne ferme rien.
+    .replace(/~~(?=[^\s~])(.+?)(?<=[^\s~])~~/g, "<del>$1</del>")
     // Italic
     .replace(/\*(.+?)\*/g, "<em>$1</em>")
     .replace(UNDERSCORE_ITALIC, "$1<em>$2</em>")
@@ -448,10 +466,14 @@ function renderChunk(lines: string[], ctx: Ctx, resolved = false): string {
       /^- (.+)$/gm,
       (_match, item: string) => `<li class="lesson-li">${listItemBody(item)}</li>`,
     )
+    // Le numéro est celui de l'AUTEUR, écrit en clair dans l'item — jamais recompté. Sur les
+    // 3 205 listes numérotées du corpus, 26 ne sont pas `1, 2, 3…` : 24 reprennent après un
+    // paragraphe (`5.`, `2. 3.`) et 2 sont voulues (`1, 5, 9`). Un compteur CSS les afficherait
+    // toutes depuis 1 ; `<li value>` n'est pas dans l'allowlist (`ALLOWED_ATTR` ne bouge pas).
     .replace(
       /^(\d+)\. (.+)$/gm,
-      (_match, _n: string, item: string) =>
-        `<li class="lesson-li lesson-oli">${listItemBody(item)}</li>`,
+      (_match, n: string, item: string) =>
+        `<li class="lesson-li lesson-oli"><span class="lesson-li__n">${n}</span>${listItemBody(item)}</li>`,
     );
 
   // Le séparateur d'alignement (`|---|`) tombe AVANT le wrap, et l'ordre est tout le sujet :
@@ -577,6 +599,10 @@ function finalize(body: string, figures: string[], lang: ContentLang): string {
           "p",
           "strong",
           "em",
+          // Le barré (`~~…~~`) : une balise de plus, INERTE et sans attribut — la surface
+          // d'injection ne bouge pas. Elle naît d'un motif que le rendu reconnaît sur du
+          // texte DÉJÀ échappé ; l'auteur ne peut pas en écrire une.
+          "del",
           "blockquote",
           "div",
           "hr",
@@ -669,7 +695,11 @@ function renderCard(text: string, children: string[], ctx: Ctx): string {
 
   const titled = CARD_TITLE.exec(body);
   const title = titled ? titled[1] : null;
-  const essence = titled ? titled[2] : body;
+  // L'essence est une PHRASE, jamais une liste : `**Substituts** : 1. la répétition · 2. …`
+  // ouvrait une liste numérotée d'un item dont le « 1. » restait en tête et les autres numéros
+  // dans le texte (la seule carte du corpus dans ce cas, french-1ere-sec/04). Le point est mis
+  // à l'abri — le chiffre et le point s'affichent tels que l'auteur les a écrits.
+  const essence = (titled ? titled[2] : body).replace(/^(\d+)\. /, "$1\\. ");
 
   const className = marked ? `lesson-card lesson-card--${marked.type}` : "lesson-card";
   // Le titre est du texte d'auteur : échappé, jamais interprété (R-1).
