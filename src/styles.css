@@ -816,7 +816,8 @@ html.reference *:focus-visible {
   );
   margin: 2rem 0;
 }
-.lesson-content .lesson-ul {
+.lesson-content .lesson-ul,
+.lesson-content .lesson-ol {
   list-style: none;
   padding: 0;
   margin: 0.75rem 0;
@@ -830,6 +831,43 @@ html.reference *:focus-visible {
   content: "⚡";
   position: absolute;
   inset-inline-start: 0;
+}
+/* Un item numéroté porte SON numéro (celui de l'auteur, écrit dans le `<span>`), dans une
+   pastille centrée sur la première ligne : l'éclair des puces n'a rien à faire devant un « 3 ».
+   La colonne est plus large pour que « 10 » ne touche pas le texte. */
+.lesson-content .lesson-oli {
+  padding-inline-start: 2.25rem;
+}
+.lesson-content .lesson-oli::before {
+  content: none;
+}
+.lesson-content .lesson-li__n {
+  position: absolute;
+  inset-inline-start: 0;
+  /* Centrée sur la première ligne, quelle que soit sa hauteur (`lh`), avec un repli. */
+  inset-block-start: 0.2rem;
+  inset-block-start: calc((1lh - 1.6rem) / 2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-width: 1.6rem;
+  height: 1.6rem;
+  padding-inline: 0.3rem;
+  border-radius: 9999px;
+  background: color-mix(in oklab, var(--primary) 10%, transparent);
+  color: var(--primary);
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+/* Le barré montre une forme fautive qu'on refuse (`jamais ~~tu parle~~`) : on doit encore
+   la LIRE. Le texte garde sa couleur ; c'est le trait, rouge et épais, qui dit « faux ». */
+.lesson-content del {
+  text-decoration-line: line-through;
+  text-decoration-color: var(--destructive);
+  text-decoration-thickness: 0.12em;
 }
 /* Une ligne qui APPARTIENT à un item sans le continuer — un exemple posé sous sa règle, une
    sous-puce. Elle reste dans son `<li>` (rendue à part, elle coupait la liste en deux), sur sa
