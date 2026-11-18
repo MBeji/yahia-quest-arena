@@ -1903,6 +1903,7 @@ export type Database = {
           id: string;
           question_ids: string[];
           result: Json | null;
+          scope: Json | null;
           started_at: string;
           status: string;
           subject_id: string;
@@ -1920,6 +1921,7 @@ export type Database = {
           id?: string;
           question_ids: string[];
           result?: Json | null;
+          scope?: Json | null;
           started_at?: string;
           status?: string;
           subject_id: string;
@@ -1937,6 +1939,7 @@ export type Database = {
           id?: string;
           question_ids?: string[];
           result?: Json | null;
+          scope?: Json | null;
           started_at?: string;
           status?: string;
           subject_id?: string;
@@ -4275,6 +4278,7 @@ export type Database = {
         }[];
       };
       list_mock_exams: { Args: { p_parcours_id?: string }; Returns: Json };
+      list_placement_chapters: { Args: { p_subject_id: string }; Returns: Json };
       list_placement_subjects: {
         Args: { p_parcours_id: string };
         Returns: Json;
@@ -4362,6 +4366,17 @@ export type Database = {
           p_row: Database["public"]["Tables"]["placement_sessions"]["Row"];
         };
         Returns: Json;
+      };
+      placement_chapter_ranks: {
+        Args: { p_subject_id: string };
+        Returns: {
+          chapter_id: string;
+          cum_questions: number;
+          display_order: number;
+          idx: number;
+          questions: number;
+          title: string;
+        }[];
       };
       placement_eligible_questions: {
         Args: { p_subject_id: string };
@@ -4854,7 +4869,11 @@ export type Database = {
         Returns: Json;
       };
       start_placement_session: {
-        Args: { p_audience?: string; p_subject_id: string };
+        Args: {
+          p_audience?: string;
+          p_subject_id: string;
+          p_through_chapter_id?: string;
+        };
         Returns: Json;
       };
       store_tutor_digest: {

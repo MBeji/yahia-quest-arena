@@ -21,7 +21,7 @@
 
 BEGIN;
 CREATE EXTENSION IF NOT EXISTS pgtap;
-SELECT plan(49);
+SELECT plan(58);
 
 -- ---------------------------------------------------------
 -- Décor
@@ -501,6 +501,92 @@ SELECT ok(
 );
 
 -- =========================================================
+-- 7bis. La portée (R-22) : le test suit l'avancement du programme.
+--       Décor : six chapitres de trois questions éligibles — le cumul atteint 5 au chapitre 2.
+-- =========================================================
+SET LOCAL "request.jwt.claims" = '';
+SET LOCAL ROLE anon;
+
+SELECT is(
+  (SELECT jsonb_agg((c ->> 'enough')::boolean ORDER BY (c ->> 'displayOrder')::int)
+     FROM jsonb_array_elements(public.list_placement_chapters('f39-subj')) AS c),
+  '[false, true, true, true, true, true]'::jsonb,
+  'R-22 : l''entrée liste les six chapitres testables ; le premier seul ne porte pas un test'
+);
+
+CREATE TEMP TABLE f39_scoped AS
+  SELECT public.start_placement_session('f39-subj', 'student', 'f3900000-0000-4000-8000-0000000000c3') AS j;
+GRANT SELECT ON f39_scoped TO PUBLIC;
+
+SELECT is(
+  (SELECT max((q ->> 'chapterOrder')::int) || '/' || count(DISTINCT q ->> 'chapterId') || '/' || count(*)
+     FROM f39_scoped, jsonb_array_elements(j -> 'questions') AS q),
+  '3/3/9',
+  '⭐ R-22 : « jusqu''au chapitre 3 » ne tire que les chapitres 1 à 3 — neuf questions, aucune d''après'
+);
+
+SELECT is(
+  (SELECT (j -> 'scope') - 'upcoming' FROM f39_scoped),
+  '{"throughChapterId": "f3900000-0000-4000-8000-0000000000c3", "throughTitle": "F39 Chapitre 3", "chaptersInScope": 3, "chaptersTotal": 6}'::jsonb,
+  'R-22 : la portée est rendue au départ — chapitre atteint, trois chapitres vus sur six'
+);
+
+SELECT is(
+  (SELECT jsonb_agg(u ->> 'title' ORDER BY (u ->> 'displayOrder')::int)
+     FROM f39_scoped, jsonb_array_elements(j -> 'scope' -> 'upcoming') AS u),
+  '["F39 Chapitre 4", "F39 Chapitre 5", "F39 Chapitre 6"]'::jsonb,
+  'R-22 : les chapitres suivants sont nommés « à venir »'
+);
+
+CREATE TEMP TABLE f39_scoped_done AS
+  SELECT public.finish_placement_session(
+           (j ->> 'id')::uuid, (j ->> 'token')::uuid,
+           (SELECT jsonb_object_agg(q ->> 'id', CASE WHEN q ->> 'questionType' = 'numeric' THEN '42' ELSE 'a' END)
+              FROM jsonb_array_elements(j -> 'questions') AS q),
+           120
+         ) AS b
+    FROM f39_scoped;
+GRANT SELECT ON f39_scoped_done TO PUBLIC;
+
+SELECT is(
+  (SELECT (b ->> 'scoreOn20') || '|' || (b ->> 'total') || '|' || jsonb_array_length(b -> 'chapters')
+          || '|' || (b -> 'scope' ->> 'chaptersInScope')
+     FROM f39_scoped_done),
+  '20.0|9|3|3',
+  '⭐ R-22 : la note ne compte que les chapitres vus (20/20 sur neuf), et le bilan garde la portée'
+);
+
+SELECT is(
+  (SELECT public.get_placement_session((j ->> 'id')::uuid, (j ->> 'token')::uuid) -> 'scope' ->> 'throughTitle'
+     FROM f39_scoped),
+  'F39 Chapitre 3',
+  'R-22 : la relecture rend la portée figée'
+);
+
+SELECT is(
+  (SELECT s.j -> 'scope' ->> 'throughTitle' || '/' || jsonb_array_length(s.j -> 'questions')
+     FROM (SELECT public.start_placement_session('f39-subj', 'student', 'f3900000-0000-4000-8000-0000000000c1') AS j) s),
+  'F39 Chapitre 2/6',
+  'R-1 + R-22 : un chapitre trop tôt est élargi au premier qui porte cinq questions'
+);
+
+SELECT is(
+  (SELECT jsonb_typeof(s.j -> 'scope') || '/' || jsonb_array_length(s.j -> 'questions')
+     FROM (SELECT public.start_placement_session('f39-subj', 'student', 'f3900000-0000-4000-8000-0000000000c6') AS j) s),
+  'null/10',
+  'R-22 : atteindre le dernier chapitre, c''est toute l''année — pas de portée'
+);
+
+SELECT is(
+  (SELECT jsonb_typeof(s.j -> 'scope') || '/' || jsonb_array_length(s.j -> 'questions')
+     FROM (SELECT public.start_placement_session('f39-subj', 'student', 'f3900000-0000-4000-8000-0000000000cf') AS j) s),
+  'null/10',
+  'R-22 : un chapitre étranger à la matière vaut toute l''année, jamais un départ en échec'
+);
+
+RESET ROLE;
+
+-- =========================================================
 -- 8. La digue (R-18) : 120 créations anonymes dans la minute, et la 121ᵉ attend.
 -- =========================================================
 INSERT INTO public.placement_sessions (user_id, subject_id, status, question_ids, started_at)
@@ -529,9 +615,11 @@ SELECT throws_ok(
 RESET ROLE;
 
 SELECT ok(
-  has_function_privilege('anon', 'public.start_placement_session(text, text)', 'EXECUTE')
+  has_function_privilege('anon', 'public.start_placement_session(text, text, uuid)', 'EXECUTE')
   AND has_function_privilege('anon', 'public.finish_placement_session(uuid, uuid, jsonb, int)', 'EXECUTE')
-  AND has_function_privilege('anon', 'public.get_placement_session(uuid, uuid)', 'EXECUTE'),
+  AND has_function_privilege('anon', 'public.get_placement_session(uuid, uuid)', 'EXECUTE')
+  AND has_function_privilege('anon', 'public.list_placement_chapters(text)', 'EXECUTE')
+  AND NOT has_function_privilege('anon', 'public.placement_chapter_ranks(text)', 'EXECUTE'),
   'le départ, la fin et la relecture sont ouverts à l''anonyme'
 );
 

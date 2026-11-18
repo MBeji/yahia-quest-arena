@@ -67,7 +67,8 @@ SELECT set_eq(
   $$,
   ARRAY[
     -- Catalogue public ou agrégat sans personne dedans.
-    'list_placement_subjects', 'get_placement_subject', 'parcours_interest_counts',
+    'list_placement_subjects', 'get_placement_subject', 'list_placement_chapters',
+    'parcours_interest_counts',
     'chapter_quiz_gated', 'resolve_subject_parcours', 'tutor_age_band',
     -- Prédicats de policies RLS : ils doivent rester exécutables par le rôle qui lit.
     'is_parent_of_student', 'is_duel_participant',
