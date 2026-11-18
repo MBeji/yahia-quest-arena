@@ -367,7 +367,10 @@ export function LessonReader({
               </span>
             )}
           </p>
-          <ol className="grid gap-x-6 sm:grid-cols-2">
+          {/* `grid-cols-1` = `minmax(0, 1fr)` : sans colonne explicite la piste est `auto`, et le
+              titre le plus long (`truncate`) l'élargissait au-delà de l'écran — la page défilait
+              de côté sur téléphone (43 et 75 px de trop sur deux chapitres de français). */}
+          <ol className="grid grid-cols-1 gap-x-6 sm:grid-cols-2">
             {sections.map((section, i) => (
               <li key={section.id}>
                 <a

@@ -300,6 +300,18 @@ describe("LessonReader", () => {
     expect(toc?.querySelector('a[href="#section-1"]')).not.toBeNull();
   });
 
+  it("gives the table of contents an explicit single column, so a long title cannot widen the page", () => {
+    const { container } = render(
+      <LessonReader chapterId="c1" chapter={chapter} allChapters={siblings} />,
+    );
+    // jsdom ne met rien en page : on épingle la classe qui fixe la piste (`minmax(0, 1fr)`).
+    // Sans elle la piste est `auto` et un titre `truncate` la gonflait au-delà d'un écran de
+    // téléphone — 43 et 75 px de débordement mesurés dans Chromium sur deux cours de français.
+    const list = container.querySelector('[data-testid="lesson-toc"] ol');
+    expect(list?.classList.contains("grid-cols-1")).toBe(true);
+    expect(list?.classList.contains("sm:grid-cols-2")).toBe(true);
+  });
+
   it("hides the table of contents on the summary tab and below two sections", () => {
     const { container, unmount } = render(
       <LessonReader chapterId="c1" chapter={chapter} allChapters={siblings} />,
