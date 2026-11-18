@@ -107,7 +107,7 @@ SELECT set_eq(
     -- Lectures de catalogue ou d'agrégat public : exécutées en transaction LECTURE SEULE
     -- par PostgREST (on ne peut pas y compter), et sans donnée qu'un SELECT anonyme ne lise.
     'get_active_event', 'get_recall_availability', 'parcours_interest_counts',
-    'list_placement_subjects', 'get_placement_subject',
+    'list_placement_subjects', 'get_placement_subject', 'list_placement_chapters',
     -- Porte = le jeton (uuid aléatoire) du test.
     'get_placement_session',
     -- Prédicats de policies RLS.
