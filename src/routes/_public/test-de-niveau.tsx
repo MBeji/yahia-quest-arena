@@ -6,16 +6,18 @@ import { ChevronRight, Loader2, Sparkles } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { PageShell } from "@/components/ui/page-shell";
-import { useAuth } from "@/features/auth";
+import { useAuth, useMyRole } from "@/features/auth";
 import { getParcours } from "@/features/dashboard";
 import {
   formatScoreOn20,
   getPlacementSubject,
   lastFinishedPlacement,
+  listPlacementChapters,
   listPlacementSubjects,
   placementErrorCode,
   rememberPlacement,
   startPlacementSession,
+  suggestThroughChapterId,
   useClaimPlacementSessions,
   type RememberedPlacement,
 } from "@/features/placement";
@@ -24,6 +26,7 @@ import {
   type PickerGrade,
   type PlacementAudience,
 } from "@/features/placement/components/placement-picker";
+import { PlacementScopeSelect } from "@/features/placement/components/placement-scope-select";
 import { useI18n } from "@/lib/i18n";
 import { usePlacementT } from "@/lib/i18n/placement";
 import { parcoursName } from "@/shared/lib/parcours-locale";
@@ -123,6 +126,7 @@ function PlacementEntryPage() {
   const fetchParcours = useServerFn(getParcours);
   const fetchSubjects = useServerFn(listPlacementSubjects);
   const fetchSubjectCard = useServerFn(getPlacementSubject);
+  const fetchChapters = useServerFn(listPlacementChapters);
   const start = useServerFn(startPlacementSession);
 
   const [parcoursId, setParcoursId] = useState<string | null>(search.niveau ?? null);
@@ -152,16 +156,65 @@ function PlacementEntryPage() {
     if (card?.parcoursId && !parcoursId) setParcoursId(card.parcoursId);
   }, [card, parcoursId]);
 
+  // Le membre a déjà dit sa classe à l'inscription : elle est préremplie — sauf si l'adresse en
+  // nomme une. Son parcours peut être le « concours » d'une classe que la liste montre par sa
+  // piste « scolaire » : on retient la piste AFFICHÉE de la même classe.
+  const { currentParcoursId } = useMyRole();
+  useEffect(() => {
+    if (parcoursId || search.niveau || search.matiere || !currentParcoursId) return;
+    const rows = (parcoursQuery.data?.parcours ?? []) as CatalogueRow[];
+    const mine = rows.find((p) => p.id === currentParcoursId);
+    if (!mine?.grade_id) return;
+    const shown = gradesOf(
+      rows.filter((p) => p.grade_id === mine.grade_id),
+      locale,
+    )[0];
+    if (shown) setParcoursId(shown.parcoursId);
+  }, [currentParcoursId, parcoursId, parcoursQuery.data, search.niveau, search.matiere, locale]);
+
   const subjectsQuery = useQuery({
     queryKey: ["placement-subjects", parcoursId],
     queryFn: () => fetchSubjects({ data: { parcoursId: parcoursId as string } }),
     enabled: Boolean(parcoursId),
   });
 
+  // R-22 — « où en es-tu ? ». La matière active est celle du sélecteur, ou celle du lien partagé.
+  // La proposition vient du calendrier, dans un effet (la date du visiteur, jamais celle du
+  // serveur : pas d'écart d'hydratation) ; dès que l'élève touche la liste, son choix tient.
+  const quickStart = Boolean(search.matiere) && !showPicker;
+  const scopeSubjectId = quickStart ? (card?.testable ? card.id : null) : subjectId;
+  const chaptersQuery = useQuery({
+    queryKey: ["placement-chapters", scopeSubjectId],
+    queryFn: () => fetchChapters({ data: { subjectId: scopeSubjectId as string } }),
+    enabled: Boolean(scopeSubjectId),
+  });
+  const chapters = chaptersQuery.data;
+  const [through, setThrough] = useState<{ subjectId: string; chapterId: string | null } | null>(
+    null,
+  );
+  useEffect(() => {
+    if (!scopeSubjectId || !chapters || through?.subjectId === scopeSubjectId) return;
+    setThrough({
+      subjectId: scopeSubjectId,
+      chapterId: suggestThroughChapterId(chapters, new Date()),
+    });
+  }, [scopeSubjectId, chapters, through]);
+  // Une liste de chapitres en panne ne bloque pas le départ : le test porte alors sur tout.
+  const throughChapterId = through?.subjectId === scopeSubjectId ? through.chapterId : null;
+  const scopeSelect = (align: "start" | "center") =>
+    scopeSubjectId && chapters ? (
+      <PlacementScopeSelect
+        chapters={chapters}
+        value={throughChapterId}
+        onChange={(chapterId) => setThrough({ subjectId: scopeSubjectId, chapterId })}
+        align={align}
+      />
+    ) : null;
+
   const [error, setError] = useState<string | null>(null);
   const startMutation = useMutation({
     mutationFn: (vars: { subjectId: string; fromShare: boolean }) =>
-      start({ data: { subjectId: vars.subjectId, audience } }),
+      start({ data: { subjectId: vars.subjectId, audience, throughChapterId } }),
     onSuccess: (started, vars) => {
       rememberPlacement({
         id: started.id,
@@ -195,8 +248,6 @@ function PlacementEntryPage() {
     setError(null);
     startMutation.mutate({ subjectId: id, fromShare });
   };
-
-  const quickStart = Boolean(search.matiere) && !showPicker;
 
   return (
     <PageShell width="narrow" className="py-10">
@@ -293,6 +344,7 @@ function PlacementEntryPage() {
                       </button>
                     ))}
                   </div>
+                  <div className="mx-auto mt-5 max-w-md">{scopeSelect("center")}</div>
                   {error && (
                     <p role="alert" className="mt-3 text-sm text-destructive">
                       {error}
@@ -343,6 +395,7 @@ function PlacementEntryPage() {
           audience={audience}
           starting={startMutation.isPending}
           error={error}
+          scopeSlot={scopeSelect("start")}
           onSelectParcours={(id) => {
             setParcoursId(id);
             setSubjectId(null);

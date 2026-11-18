@@ -17,6 +17,11 @@ export const frPlacement: PlacementTranslations = {
         "Vous passez le test vous-même, sur le programme de votre enfant. Votre résultat n'entre dans aucun classement d'élèves.",
       pickGrade: "Ta classe",
       pickSubject: "La matière",
+      scopeTitle: "Où en es-tu dans le programme ?",
+      scopeHint:
+        "Proposé d'après le calendrier scolaire. Corrige si ta classe est plus loin ou moins loin : les chapitres d'après ne comptent pas dans ta note.",
+      scopeThrough: "Jusqu'à : {chapter}",
+      scopeWholeYear: "Tout le programme de l'année",
       noSubject:
         "Aucune matière de cette classe n'a encore assez de questions pour un test. Elles arrivent.",
       start: "Commencer le test",
@@ -73,6 +78,9 @@ export const frPlacement: PlacementTranslations = {
       held: "tenu ✓",
       toReview: "à revoir ↻",
       allHeld: "Tous les chapitres testés sont tenus. Bravo.",
+      scopeLine: "Test sur le programme vu jusqu'à « {chapter} » — {n} chapitres sur {total}.",
+      upcomingTitle: "À venir dans l'année",
+      upcomingHint: "Ces chapitres ne sont pas encore vus : ils ne comptent pas dans ta note.",
       startWithTitle: "Par où commencer",
       startWithLesson: "Lire le cours : {chapter}",
       startWithSubject: "Voir toute la matière",

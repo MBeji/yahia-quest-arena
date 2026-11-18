@@ -53,6 +53,7 @@ import {
   getMyPlacementOverview,
   getPlacementSession,
   getPlacementSubject,
+  listPlacementChapters,
   listPlacementSubjects,
   placementErrorCode,
   startPlacementSession,
@@ -197,6 +198,69 @@ describe("placement.server — les lectures d'entrée et du Hall", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     ctxHolder.context.userId = null;
+  });
+
+  it("start (R-22) : le chapitre atteint part à la base, et la portée figée revient typée", async () => {
+    const through = "44444444-4444-4444-8444-444444444444";
+    rpc.mockResolvedValue({
+      data: {
+        id: bilan.id,
+        token: "22222222-2222-4222-8222-222222222222",
+        status: "running",
+        audience: "student",
+        startedAt: bilan.startedAt,
+        subject,
+        scope: {
+          throughChapterId: through,
+          throughTitle: "Thalès",
+          chaptersInScope: "3",
+          chaptersTotal: 6,
+          upcoming: [{ chapterId: "c4", title: "Statistiques", displayOrder: "4" }],
+        },
+        questions: [],
+      },
+      error: null,
+    });
+    const started = await startPlacementSession({
+      data: { subjectId: "math", throughChapterId: through },
+    });
+    expect(rpc).toHaveBeenCalledWith("start_placement_session", {
+      p_subject_id: "math",
+      p_audience: "student",
+      p_through_chapter_id: through,
+    });
+    expect(started.scope).toEqual({
+      throughChapterId: through,
+      throughTitle: "Thalès",
+      chaptersInScope: 3,
+      chaptersTotal: 6,
+      upcoming: [{ chapterId: "c4", title: "Statistiques", displayOrder: 4 }],
+    });
+  });
+
+  it("start (R-22) : un chapitre atteint qui n'est pas un uuid est refusé avant tout appel", async () => {
+    await expect(
+      startPlacementSession({ data: { subjectId: "math", throughChapterId: "chapitre-3" } }),
+    ).rejects.toThrow();
+    expect(rpc).not.toHaveBeenCalled();
+  });
+
+  it("listChapters : les chapitres testables dans l'ordre, et une forme inattendue est une panne", async () => {
+    rpc.mockResolvedValue({
+      data: [
+        { chapterId: "c1", title: "Fractions", displayOrder: "1", questions: 3, enough: false },
+      ],
+      error: null,
+    });
+    await expect(listPlacementChapters({ data: { subjectId: "math" } })).resolves.toEqual([
+      { chapterId: "c1", title: "Fractions", displayOrder: 1, questions: 3, enough: false },
+    ]);
+    expect(rpc).toHaveBeenCalledWith("list_placement_chapters", { p_subject_id: "math" });
+
+    rpc.mockResolvedValue({ data: [{ chapterId: "c1" }], error: null });
+    await expect(listPlacementChapters({ data: { subjectId: "math" } })).rejects.toThrow(
+      /Réponse inattendue/,
+    );
   });
 
   it("listSubjects : les matières testables d'une classe, langue par défaut comprise", async () => {

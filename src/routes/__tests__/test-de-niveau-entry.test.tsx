@@ -11,6 +11,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const hold = vi.hoisted(() => ({
   search: {} as { matiere?: string; niveau?: string },
   auth: { user: null as { id: string } | null, loading: false },
+  currentParcoursId: null as string | null,
 }));
 const navigate = vi.hoisted(() => vi.fn());
 const track = vi.hoisted(() => vi.fn());
@@ -18,6 +19,7 @@ const getParcours = vi.hoisted(() => vi.fn());
 const listSubjects = vi.hoisted(() => vi.fn());
 const getSubjectCard = vi.hoisted(() => vi.fn());
 const start = vi.hoisted(() => vi.fn());
+const listChapters = vi.hoisted(() => vi.fn());
 
 vi.mock("@tanstack/react-router", () => ({
   createFileRoute: () => (opts: Record<string, unknown>) => ({
@@ -67,7 +69,10 @@ vi.mock("@tanstack/react-query", () => ({
     mutate: (vars: unknown) => mutationFn(vars).then((r) => onSuccess(r, vars), onError),
   }),
 }));
-vi.mock("@/features/auth", () => ({ useAuth: () => hold.auth }));
+vi.mock("@/features/auth", () => ({
+  useAuth: () => hold.auth,
+  useMyRole: () => ({ currentParcoursId: hold.currentParcoursId }),
+}));
 vi.mock("@/features/dashboard", () => ({ getParcours: () => getParcours() }));
 vi.mock("@/shared/lib/product-events", () => ({
   trackProductEvent: (...a: unknown[]) => track(...a),
@@ -81,9 +86,14 @@ vi.mock("@/features/placement", async () => {
   const bilan = await vi.importActual<typeof import("@/features/placement/placement-bilan")>(
     "@/features/placement/placement-bilan",
   );
+  const scope = await vi.importActual<typeof import("@/features/placement/placement-scope")>(
+    "@/features/placement/placement-scope",
+  );
   return {
     ...memory,
     ...bilan,
+    ...scope,
+    listPlacementChapters: (a: unknown) => listChapters(a),
     listPlacementSubjects: (a: unknown) => listSubjects(a),
     getPlacementSubject: (a: unknown) => getSubjectCard(a),
     startPlacementSession: (a: unknown) => start(a),
@@ -171,6 +181,9 @@ describe("/test-de-niveau — l'entrée (é39 US-1)", () => {
     window.localStorage.clear();
     hold.search = {};
     hold.auth = { user: null, loading: false };
+    hold.currentParcoursId = null;
+    // Par défaut : une matière d'un seul chapitre — pas de « où en es-tu ? », tout le programme.
+    listChapters.mockResolvedValue([]);
     getParcours.mockResolvedValue(catalogue);
     listSubjects.mockResolvedValue([
       { id: "math", nameFr: "Mathématiques", contentLanguage: "fr", chapters: 20, questions: 800 },
@@ -204,7 +217,9 @@ describe("/test-de-niveau — l'entrée (é39 US-1)", () => {
         params: { sessionId: started.id },
       }),
     );
-    expect(start).toHaveBeenCalledWith({ data: { subjectId: "math", audience: "parent" } });
+    expect(start).toHaveBeenCalledWith({
+      data: { subjectId: "math", audience: "parent", throughChapterId: null },
+    });
     expect(readRememberedPlacements()[0]?.token).toBe(started.token);
     expect(track).toHaveBeenCalledWith("placement_started", {
       subject_id: "math",
@@ -279,6 +294,67 @@ describe("/test-de-niveau — l'entrée (é39 US-1)", () => {
     expect(screen.getByRole("link", { name: "Voir dans mon Hall" })).toHaveAttribute(
       "href",
       "/dashboard",
+    );
+  });
+
+  it("R-22 : « où en es-tu ? » est prérempli par le calendrier, et le choix de l'élève part au départ", async () => {
+    vi.useFakeTimers({ now: new Date(2026, 10, 18), toFake: ["Date"] });
+    try {
+      listChapters.mockResolvedValue(
+        ["c1", "c2", "c3", "c4"].map((id, i) => ({
+          chapterId: id,
+          title: `Chapitre ${i + 1}`,
+          displayOrder: i + 1,
+          questions: 6,
+          enough: true,
+        })),
+      );
+      render(<Page />);
+      fireEvent.click(await screen.findByRole("radio", { name: "Concours 9ᵉ" }));
+      fireEvent.click(await screen.findByTestId("placement-subject-math"));
+      const select = (await screen.findByTestId("placement-scope-select")) as HTMLSelectElement;
+      // Mi-novembre, quatre chapitres : le premier quart de l'année, donc le chapitre 1.
+      await waitFor(() => expect(select.value).toBe("c1"));
+      expect(listChapters).toHaveBeenCalledWith({ data: { subjectId: "math" } });
+
+      fireEvent.change(select, { target: { value: "c3" } });
+      fireEvent.click(screen.getByTestId("placement-start"));
+      await waitFor(() => expect(start).toHaveBeenCalled());
+      expect(start).toHaveBeenCalledWith({
+        data: { subjectId: "math", audience: "student", throughChapterId: "c3" },
+      });
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("le membre retrouve sa classe préremplie — par la piste affichée de la même classe", async () => {
+    hold.auth = { user: { id: "u1" }, loading: false };
+    hold.currentParcoursId = "concours-9eme";
+    render(<Page />);
+    await waitFor(() =>
+      expect(screen.getByRole("radio", { name: "Concours 9ᵉ" })).toHaveAttribute(
+        "aria-checked",
+        "true",
+      ),
+    );
+    expect(listSubjects).toHaveBeenCalledWith({ data: { parcoursId: "concours-9eme" } });
+  });
+
+  it("une classe nommée par l'adresse passe avant celle du membre", async () => {
+    hold.auth = { user: { id: "u1" }, loading: false };
+    hold.currentParcoursId = "concours-9eme";
+    hold.search = { niveau: "scolaire-6eme" };
+    render(<Page />);
+    await waitFor(() =>
+      expect(screen.getByRole("radio", { name: "6ᵉ année" })).toHaveAttribute(
+        "aria-checked",
+        "true",
+      ),
+    );
+    expect(screen.getByRole("radio", { name: "Concours 9ᵉ" })).toHaveAttribute(
+      "aria-checked",
+      "false",
     );
   });
 

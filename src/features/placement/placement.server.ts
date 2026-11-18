@@ -98,12 +98,24 @@ const servedQuestionSchema = z.object({
   questionType: z.string().nullable().default("mcq"),
 });
 
+/** La portée figée au départ (R-22) — `null` = tout le programme de l'année. */
+const scopeSchema = z.object({
+  throughChapterId: z.string(),
+  throughTitle: z.string(),
+  chaptersInScope: z.coerce.number(),
+  chaptersTotal: z.coerce.number(),
+  upcoming: z
+    .array(z.object({ chapterId: z.string(), title: z.string(), displayOrder: z.coerce.number() }))
+    .default([]),
+});
+
 const runningSchema = z.object({
   id: z.string(),
   status: z.literal("running"),
   audience: z.enum(["student", "parent"]),
   startedAt: z.string(),
   subject: subjectSchema,
+  scope: scopeSchema.nullable().default(null),
   questions: z.array(servedQuestionSchema),
 });
 
@@ -164,6 +176,7 @@ const bilanSchema = z.object({
     percentile: z.coerce.number().nullable().default(null),
   }),
   review: z.array(reviewItemSchema),
+  scope: scopeSchema.nullable().default(null),
   insightsLocked: z.boolean(),
 });
 
@@ -197,6 +210,16 @@ const subjectCardSchema = subjectSchema.extend({
   chapters: z.coerce.number(),
 });
 
+const testableChapterSchema = z.object({
+  chapterId: z.string(),
+  title: z.string(),
+  displayOrder: z.coerce.number(),
+  questions: z.coerce.number(),
+  enough: z.boolean(),
+});
+
+export type PlacementTestableChapter = z.infer<typeof testableChapterSchema>;
+export type PlacementScope = z.infer<typeof scopeSchema>;
 export type PlacementTestableSubject = z.infer<typeof testableSubjectSchema>;
 export type PlacementSubjectCard = z.infer<typeof subjectCardSchema>;
 export type PlacementStarted = z.infer<typeof startedSchema>;
@@ -251,6 +274,20 @@ export const getPlacementSubject = createServerFn({ method: "GET" })
     return parseOrFail(subjectCardSchema, payload, "placement.getSubject: shape");
   });
 
+/** « Où en es-tu ? » (R-22) : les chapitres testables d'une matière, dans l'ordre du programme. */
+export const listPlacementChapters = createServerFn({ method: "GET" })
+  .middleware([optionalSupabaseAuth])
+  .validator((d) => z.object({ subjectId: z.string().min(1).max(64) }).parse(d))
+  .handler(async ({ data, context }): Promise<PlacementTestableChapter[]> => {
+    const { data: payload, error } = await context.supabase.rpc("list_placement_chapters", {
+      p_subject_id: data.subjectId,
+    });
+    if (error) {
+      failWithClientError("placement.listChapters", error, "Impossible de charger les chapitres.");
+    }
+    return parseOrFail(z.array(testableChapterSchema), payload, "placement.listChapters: shape");
+  });
+
 /**
  * Ouvrir un test (US-1). Débit (R-18) : un compte, dix tests par dix minutes au limiteur
  * persistant ; un visiteur, six par adresse au limiteur local — la digue globale est en SQL.
@@ -262,6 +299,8 @@ export const startPlacementSession = createServerFn({ method: "POST" })
       .object({
         subjectId: z.string().min(1).max(64),
         audience: z.enum(["student", "parent"]).default("student"),
+        /** Le chapitre atteint (R-22) ; `null` = tout le programme de l'année. */
+        throughChapterId: z.guid().nullable().default(null),
       })
       .parse(d),
   )
@@ -275,6 +314,7 @@ export const startPlacementSession = createServerFn({ method: "POST" })
     const { data: payload, error } = await supabase.rpc("start_placement_session", {
       p_subject_id: data.subjectId,
       p_audience: data.audience,
+      p_through_chapter_id: data.throughChapterId ?? undefined,
     });
     if (error) {
       failWithPlacementError("placement.start", error, "Le test n'a pas pu démarrer.");
@@ -283,6 +323,7 @@ export const startPlacementSession = createServerFn({ method: "POST" })
     logger.info("placement.started", {
       subjectId: started.subject.id,
       audience: started.audience,
+      scoped: started.scope !== null,
       signedIn: userId !== null,
     });
     return started;

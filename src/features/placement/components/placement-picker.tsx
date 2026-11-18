@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { ChevronRight, Loader2, Users } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -62,6 +62,7 @@ export function PlacementPicker({
   audience,
   starting,
   error,
+  scopeSlot,
   onSelectParcours,
   onSelectSubject,
   onAudience,
@@ -77,6 +78,8 @@ export function PlacementPicker({
   audience: PlacementAudience;
   starting: boolean;
   error: string | null;
+  /** R-22 — « où en es-tu ? », rendu par la route entre la matière et « je suis… ». */
+  scopeSlot?: ReactNode;
   onSelectParcours: (parcoursId: string) => void;
   onSelectSubject: (subjectId: string) => void;
   onAudience: (audience: PlacementAudience) => void;
@@ -225,6 +228,8 @@ export function PlacementPicker({
           )}
         </section>
       )}
+
+      {scopeSlot}
 
       {/* 3. « Je suis… » — auto-déclaré, n'ouvre aucun droit (D-10). */}
       <section aria-labelledby="placement-audience">

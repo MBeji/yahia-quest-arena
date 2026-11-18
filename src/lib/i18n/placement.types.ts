@@ -32,6 +32,12 @@ export type PlacementTranslations = {
       audienceParentHint: string;
       pickGrade: string;
       pickSubject: string;
+      /** R-22 — « où en es-tu ? » : le chapitre atteint, prérempli d'après le calendrier. */
+      scopeTitle: string;
+      scopeHint: string;
+      /** Une option de la liste — `{chapter}`. */
+      scopeThrough: string;
+      scopeWholeYear: string;
       /** Aucune matière testable pour cette classe. */
       noSubject: string;
       start: string;
@@ -88,6 +94,11 @@ export type PlacementTranslations = {
       toReview: string;
       /** Rien à revoir. */
       allHeld: string;
+      /** R-22 — la portée du test : `{chapter}`, `{n}` chapitres vus sur `{total}`. */
+      scopeLine: string;
+      /** Les chapitres d'après : nommés, non comptés. */
+      upcomingTitle: string;
+      upcomingHint: string;
       /** Par où commencer — `{chapter}`. */
       startWithTitle: string;
       startWithLesson: string;
