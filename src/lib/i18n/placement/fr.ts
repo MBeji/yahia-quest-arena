@@ -3,13 +3,8 @@ import type { PlacementTranslations } from "../placement.types";
 export const frPlacement: PlacementTranslations = {
   placement: {
     entry: {
-      kicker: "Test de niveau · gratuit · sans inscription",
-      title: "Où en es-tu ? Dix questions pour le savoir.",
       subtitle:
         "Choisis ta classe et une matière : à la fin, tu vois ta note sur 20, ce que tu tiens déjà, ce qu'il reste à revoir, et par où commencer.",
-      factQuestions: "{n} questions",
-      factMinutes: "environ 7 minutes",
-      factBilan: "ton bilan par chapitre",
       audienceLabel: "Je suis…",
       audienceStudent: "élève",
       audienceParent: "parent",
@@ -17,9 +12,13 @@ export const frPlacement: PlacementTranslations = {
         "Vous passez le test vous-même, sur le programme de votre enfant. Votre résultat n'entre dans aucun classement d'élèves.",
       pickGrade: "Ta classe",
       pickSubject: "La matière",
+      scopeTitle: "Où en es-tu dans le programme ?",
+      scopeHint:
+        "Proposé d'après le calendrier scolaire. Corrige si ta classe est plus loin ou moins loin : les chapitres d'après ne comptent pas dans ta note.",
+      scopeThrough: "Jusqu'à : {chapter}",
+      scopeWholeYear: "Tout le programme de l'année",
       noSubject:
         "Aucune matière de cette classe n'a encore assez de questions pour un test. Elles arrivent.",
-      start: "Commencer le test",
       starting: "Préparation du test…",
       lastResultTitle: "Ton dernier test sur cet appareil",
       lastResultBody: "{score}/20 en {subject}",
@@ -73,6 +72,9 @@ export const frPlacement: PlacementTranslations = {
       held: "tenu ✓",
       toReview: "à revoir ↻",
       allHeld: "Tous les chapitres testés sont tenus. Bravo.",
+      scopeLine: "Test sur le programme vu jusqu'à « {chapter} » — {n} chapitres sur {total}.",
+      upcomingTitle: "À venir dans l'année",
+      upcomingHint: "Ces chapitres ne sont pas encore vus : ils ne comptent pas dans ta note.",
       startWithTitle: "Par où commencer",
       startWithLesson: "Lire le cours : {chapter}",
       startWithSubject: "Voir toute la matière",
@@ -117,7 +119,6 @@ export const frPlacement: PlacementTranslations = {
       allHeld: "Tous les chapitres testés sont tenus.",
       retake: "Refaire",
       open: "Voir le bilan",
-      onboardingCta: "Ou commence par ton test de niveau (7 min)",
     },
   },
 };

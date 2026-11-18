@@ -964,6 +964,7 @@ export const ar: TranslationKeys = {
       "{parcours} قيد الإنشاء. في الأثناء، استكشف الإضافات — وصوتك يقدّمه في الأولوية.",
     celebrateExtrasCta: "استكشاف الإضافات",
     celebrateDashboardCta: "الذهاب إلى لوحة التحكّم",
+    celebratePlacementCta: "أو ابدأ باختبار المستوى (7 دقائق)",
     welcomeCoins: "\u200E+{coins} قطعة ترحيبيّة",
     welcomeFirstQuestCta: "ابدأ مهمّتي الأولى",
     quickPickTitle: "هذا الدرس من {parcours} — هل هذا قسمك؟",

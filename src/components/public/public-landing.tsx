@@ -28,7 +28,6 @@ import { ResumeCardView } from "@/components/public/resume-card";
 import { useResumeChapter } from "@/components/public/use-resume-chapter";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useT } from "@/lib/i18n";
-import { usePlacementT } from "@/lib/i18n/placement";
 import { PLACEMENT_ITEMS } from "@/shared/constants/placement";
 import { trackProductEvent } from "@/shared/lib/product-events";
 import { cn } from "@/shared/lib/utils";
@@ -110,7 +109,6 @@ export function PublicLanding({
   const t = useT();
   // é39 : la porte du test de niveau lit son propre catalogue — l'accueil est une route paresseuse,
   // et `i18n-` n'a plus de place pour une surface qui ne sert qu'ici (règle du 2026-08-26).
-  const tp = usePlacementT();
   // é38 lot 1 (R-6) : tant que la session n'est pas lue (`loading`), AUCUNE invitation n'est rendue
   // — ni côté serveur, qui ne sait pas qui lit. « Créer mon compte » serait faux pour un connecté.
   const { user, loading } = useAuth();
@@ -325,18 +323,18 @@ export function PublicLanding({
         >
           <div>
             <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary">
-              <Target className="h-3.5 w-3.5" /> {tp.placement.entry.kicker}
+              <Target className="h-3.5 w-3.5" /> {t.public.placementDoor.kicker}
             </div>
             <h2 className="mt-3 font-display text-xl font-bold sm:text-2xl">
-              {tp.placement.entry.title}
+              {t.public.placementDoor.title}
             </h2>
             <p className="mt-1 max-w-xl text-sm text-muted-foreground">
-              {tp.placement.entry.factQuestions.replace("{n}", String(PLACEMENT_ITEMS))} ·{" "}
-              {tp.placement.entry.factMinutes} · {tp.placement.entry.factBilan}
+              {t.public.placementDoor.factQuestions.replace("{n}", String(PLACEMENT_ITEMS))} ·{" "}
+              {t.public.placementDoor.factMinutes} · {t.public.placementDoor.factBilan}
             </p>
           </div>
           <span className="inline-flex shrink-0 items-center gap-2 rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition group-hover:opacity-90">
-            {tp.placement.entry.start}
+            {t.public.placementDoor.start}
             <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5 rtl:-scale-x-100" />
           </span>
         </Link>

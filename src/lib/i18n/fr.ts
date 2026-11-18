@@ -991,6 +991,7 @@ export const fr: TranslationKeys = {
       "{parcours} est en construction. En attendant, explore les extras — et ton vote la fait avancer.",
     celebrateExtrasCta: "Explorer les extras",
     celebrateDashboardCta: "Voir mon tableau de bord",
+    celebratePlacementCta: "Ou commence par ton test de niveau (7 min)",
     // é31 lot 6 (US-9, R-19) — l'accueil se termine sur une VICTOIRE, pas sur un menu.
     welcomeCoins: "+{coins} pièces de bienvenue",
     welcomeFirstQuestCta: "Commencer ma première quête",

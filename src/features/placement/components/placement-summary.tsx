@@ -102,6 +102,17 @@ export function PlacementSummary({
             .replace("{correct}", String(bilan.correct))
             .replace("{total}", String(bilan.total))}
         </p>
+        {bilan.scope && (
+          <p
+            className="mx-auto mt-2 max-w-md text-sm text-muted-foreground"
+            data-testid="placement-scope-line"
+          >
+            {s.scopeLine
+              .replace("{chapter}", bilan.scope.throughTitle)
+              .replace("{n}", String(bilan.scope.chaptersInScope))
+              .replace("{total}", String(bilan.scope.chaptersTotal))}
+          </p>
+        )}
         <p
           className="mt-4 inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 font-display text-base font-bold text-primary"
           data-testid="placement-band"
@@ -175,6 +186,24 @@ export function PlacementSummary({
           )}
         </div>
       </section>
+
+      {/* --- À venir (R-22) : nommés, jamais comptés --- */}
+      {bilan.scope && bilan.scope.upcoming.length > 0 && (
+        <section
+          className="rounded-2xl border border-dashed border-border bg-card/60 p-5"
+          data-testid="placement-upcoming"
+        >
+          <h2 className="font-display text-lg font-bold">{s.upcomingTitle}</h2>
+          <p className="mt-1 text-sm text-muted-foreground">{s.upcomingHint}</p>
+          <ul className="mt-3 space-y-1 text-sm text-muted-foreground">
+            {bilan.scope.upcoming.map((c) => (
+              <li key={c.chapterId} dir={isRtlText(c.title) ? "rtl" : undefined}>
+                {c.title}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {/* --- Par où commencer (R-8) --- */}
       <section className="rounded-2xl border border-primary/30 bg-primary/[0.04] p-5">

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { ChevronRight, Loader2, Users } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -62,6 +62,7 @@ export function PlacementPicker({
   audience,
   starting,
   error,
+  scopeSlot,
   onSelectParcours,
   onSelectSubject,
   onAudience,
@@ -77,6 +78,8 @@ export function PlacementPicker({
   audience: PlacementAudience;
   starting: boolean;
   error: string | null;
+  /** R-22 — « où en es-tu ? », rendu par la route entre la matière et « je suis… ». */
+  scopeSlot?: ReactNode;
   onSelectParcours: (parcoursId: string) => void;
   onSelectSubject: (subjectId: string) => void;
   onAudience: (audience: PlacementAudience) => void;
@@ -109,10 +112,12 @@ export function PlacementPicker({
       {/* Les trois faits — ce qui attend l'élève, avant qu'il choisisse. */}
       <ul className="flex flex-wrap gap-2 text-xs font-semibold text-muted-foreground">
         <li className="rounded-full bg-secondary px-3 py-1">
-          {t.placement.entry.factQuestions.replace("{n}", String(PLACEMENT_ITEMS))}
+          {t.public.placementDoor.factQuestions.replace("{n}", String(PLACEMENT_ITEMS))}
         </li>
-        <li className="rounded-full bg-secondary px-3 py-1">{t.placement.entry.factMinutes}</li>
-        <li className="rounded-full bg-secondary px-3 py-1">{t.placement.entry.factBilan}</li>
+        <li className="rounded-full bg-secondary px-3 py-1">
+          {t.public.placementDoor.factMinutes}
+        </li>
+        <li className="rounded-full bg-secondary px-3 py-1">{t.public.placementDoor.factBilan}</li>
       </ul>
 
       {/* 1. La classe */}
@@ -226,6 +231,8 @@ export function PlacementPicker({
         </section>
       )}
 
+      {scopeSlot}
+
       {/* 3. « Je suis… » — auto-déclaré, n'ouvre aucun droit (D-10). */}
       <section aria-labelledby="placement-audience">
         <h2 id="placement-audience" className="font-display text-lg font-bold">
@@ -287,7 +294,7 @@ export function PlacementPicker({
             </>
           ) : (
             <>
-              {t.placement.entry.start}{" "}
+              {t.public.placementDoor.start}{" "}
               <ChevronRight className="h-5 w-5 rtl:-scale-x-100" aria-hidden />
             </>
           )}

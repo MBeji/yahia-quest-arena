@@ -180,6 +180,7 @@ const bilan = {
   firstToReview: null,
   percentile: { candidates: 1, minCandidates: 20, percentile: null },
   review: [],
+  scope: null,
   insightsLocked: true,
 };
 

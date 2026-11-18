@@ -799,6 +799,9 @@ export type TranslationKeys = {
     celebrateSoonDesc: string;
     celebrateExtrasCta: string;
     celebrateDashboardCta: string;
+    /** é39 US-6 — « ou commence par ton test de niveau ». Ici, pas dans `i18n-placement` : la
+     * route exporte `CelebrationStep`, donc ses imports restent dans le chunk index. */
+    celebratePlacementCta: string;
     welcomeCoins: string;
     welcomeFirstQuestCta: string;
     // Étude 38, lot 2 — la carte de classe de la quête (R-5). `{parcours}`.
@@ -1093,12 +1096,26 @@ export type TranslationKeys = {
       navAria: string;
       programme: string;
       extras: string;
-      /** L'entrée du test de niveau (étude 39) — la seule clé app-wide du test, l'en-tête n'étant pas paresseux. */
+      /** L'entrée du test de niveau (étude 39) — app-wide, l'en-tête n'étant pas paresseux. */
       placement: string;
       parentTracking: string;
       login: string;
       signup: string;
       account: string;
+    };
+    /**
+     * La porte du test de niveau (étude 39) : le titre, la promesse, les trois faits, le bouton.
+     * App-wide parce que l'ACCUEIL les montre — le catalogue `i18n-placement` reste paresseux,
+     * chargé avec les écrans du test seulement. L'entrée du test relit ces mêmes clés.
+     */
+    placementDoor: {
+      kicker: string;
+      title: string;
+      /** `{n}` questions. */
+      factQuestions: string;
+      factMinutes: string;
+      factBilan: string;
+      start: string;
     };
     footer: { tagline: string; rights: string; legalLink: string };
     /**

@@ -11,6 +11,14 @@ export const enPublic: TranslationKeys["public"] = {
     signup: "Create my account",
     account: "My space",
   },
+  placementDoor: {
+    kicker: "Placement test · free · no sign-up",
+    title: "Where do you stand? Ten questions to find out.",
+    factQuestions: "{n} questions",
+    factMinutes: "about 7 minutes",
+    factBilan: "your results, chapter by chapter",
+    start: "Start the test",
+  },
   footer: {
     tagline: "100% free · all of Tunisian school",
     rights: "All rights reserved",

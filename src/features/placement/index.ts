@@ -11,17 +11,20 @@ export {
   getPlacementSession,
   claimPlacementSessions,
   getMyPlacementOverview,
+  listPlacementChapters,
   listPlacementSubjects,
   getPlacementSubject,
   placementErrorCode,
   type PlacementBilan,
   type PlacementOverview,
   type PlacementRunning,
+  type PlacementScope,
   type PlacementServedQuestion,
   type PlacementSession,
   type PlacementStarted,
   type PlacementSubject,
   type PlacementSubjectCard,
+  type PlacementTestableChapter,
   type PlacementTestableSubject,
 } from "./placement.server";
 export {
@@ -43,4 +46,10 @@ export {
   sharePlacementText,
   splitChapters,
 } from "./placement-bilan";
+export {
+  schoolYearProgress,
+  selectableThroughChapters,
+  suggestThroughChapterId,
+  type ScopeChapter,
+} from "./placement-scope";
 export { useClaimPlacementSessions } from "./use-claim-placement-sessions";

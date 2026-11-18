@@ -3,13 +3,8 @@ import type { PlacementTranslations } from "../placement.types";
 export const arPlacement: PlacementTranslations = {
   placement: {
     entry: {
-      kicker: "اختبار المستوى · مجّاني · دون تسجيل",
-      title: "أين وصلت؟ عشرة أسئلة لتعرف.",
       subtitle:
         "اختر قسمك ومادّة: في النهاية ترى علامتك على 20، ما تتقنه، ما يبقى لمراجعته، ومن أين تبدأ.",
-      factQuestions: "{n} أسئلة",
-      factMinutes: "حوالي 7 دقائق",
-      factBilan: "حصيلتك درسًا بدرس",
       audienceLabel: "أنا…",
       audienceStudent: "تلميذ",
       audienceParent: "وليّ",
@@ -17,8 +12,12 @@ export const arPlacement: PlacementTranslations = {
         "تجتاز الاختبار بنفسك على برنامج ابنك. نتيجتك لا تدخل في أيّ ترتيب للتلاميذ.",
       pickGrade: "قسمك",
       pickSubject: "المادّة",
+      scopeTitle: "أين وصلت في البرنامج؟",
+      scopeHint:
+        "اقتراح حسب الروزنامة المدرسيّة. عدّله إن كان قسمك متقدّمًا أو متأخّرًا: الدروس التالية لا تُحتسب في عددك.",
+      scopeThrough: "إلى حدّ: {chapter}",
+      scopeWholeYear: "كامل برنامج السنة",
       noSubject: "لا توجد بعدُ مادّة في هذا القسم فيها ما يكفي من الأسئلة لاختبار. هي في الطريق.",
-      start: "ابدأ الاختبار",
       starting: "جارٍ إعداد الاختبار…",
       lastResultTitle: "آخر اختبار على هذا الجهاز",
       lastResultBody: "{score}/20 في {subject}",
@@ -71,6 +70,9 @@ export const arPlacement: PlacementTranslations = {
       held: "متقَن ✓",
       toReview: "للمراجعة ↻",
       allHeld: "كلّ الدروس المختبَرة متقَنة. أحسنت.",
+      scopeLine: "اختبار في البرنامج المدروس إلى حدّ «{chapter}» — {n} دروس من {total}.",
+      upcomingTitle: "قادمة خلال السنة",
+      upcomingHint: "هذه الدروس لم تُدرَس بعد: لا تُحتسب في عددك.",
       startWithTitle: "من أين تبدأ",
       startWithLesson: "اقرأ الدرس: {chapter}",
       startWithSubject: "عرض المادّة كاملة",
@@ -115,7 +117,6 @@ export const arPlacement: PlacementTranslations = {
       allHeld: "كلّ الدروس المختبَرة متقَنة.",
       retake: "إعادة",
       open: "عرض الحصيلة",
-      onboardingCta: "أو ابدأ باختبار المستوى (7 دقائق)",
     },
   },
 };

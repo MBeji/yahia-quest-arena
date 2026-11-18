@@ -3,13 +3,8 @@ import type { PlacementTranslations } from "../placement.types";
 export const enPlacement: PlacementTranslations = {
   placement: {
     entry: {
-      kicker: "Placement test · free · no sign-up",
-      title: "Where do you stand? Ten questions to find out.",
       subtitle:
         "Pick your grade and a subject: at the end you see your mark out of 20, what you already hold, what to review, and where to start.",
-      factQuestions: "{n} questions",
-      factMinutes: "about 7 minutes",
-      factBilan: "your results, chapter by chapter",
       audienceLabel: "I am…",
       audienceStudent: "a student",
       audienceParent: "a parent",
@@ -17,8 +12,12 @@ export const enPlacement: PlacementTranslations = {
         "You take the test yourself, on your child's syllabus. Your result never enters any student ranking.",
       pickGrade: "Your grade",
       pickSubject: "The subject",
+      scopeTitle: "How far are you in the syllabus?",
+      scopeHint:
+        "Suggested from the school calendar. Change it if your class is further along or behind: later chapters don't count in your mark.",
+      scopeThrough: "Up to: {chapter}",
+      scopeWholeYear: "The whole year's syllabus",
       noSubject: "No subject of this grade has enough questions for a test yet. They are coming.",
-      start: "Start the test",
       starting: "Preparing your test…",
       lastResultTitle: "Your last test on this device",
       lastResultBody: "{score}/20 in {subject}",
@@ -71,6 +70,9 @@ export const enPlacement: PlacementTranslations = {
       held: "held ✓",
       toReview: "to review ↻",
       allHeld: "Every tested chapter is held. Well done.",
+      scopeLine: "Test on the syllabus covered up to “{chapter}” — {n} chapters out of {total}.",
+      upcomingTitle: "Coming later this year",
+      upcomingHint: "These chapters haven't been covered yet: they don't count in your mark.",
       startWithTitle: "Where to start",
       startWithLesson: "Read the lesson: {chapter}",
       startWithSubject: "See the whole subject",
@@ -115,7 +117,6 @@ export const enPlacement: PlacementTranslations = {
       allHeld: "Every tested chapter is held.",
       retake: "Retake",
       open: "See the results",
-      onboardingCta: "Or start with your placement test (7 min)",
     },
   },
 };

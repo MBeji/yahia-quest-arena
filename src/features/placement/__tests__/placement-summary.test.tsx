@@ -106,6 +106,7 @@ const bilan: PlacementBilan = {
       misconception: null,
     },
   ],
+  scope: null,
   insightsLocked: true,
 };
 
@@ -184,6 +185,36 @@ describe("PlacementSummary", () => {
     );
     expect(screen.getByTestId("placement-see-hall")).toHaveAttribute("href", "/dashboard");
     expect(screen.queryByTestId("placement-invite")).not.toBeInTheDocument();
+  });
+
+  it("R-22 : la portée est dite, et les chapitres à venir sont nommés sans compter", () => {
+    mount({
+      bilan: {
+        ...bilan,
+        scope: {
+          throughChapterId: "c3",
+          throughTitle: "Thalès",
+          chaptersInScope: 3,
+          chaptersTotal: 6,
+          upcoming: [
+            { chapterId: "c4", title: "Statistiques", displayOrder: 4 },
+            { chapterId: "c5", title: "Trigonométrie", displayOrder: 5 },
+          ],
+        },
+      },
+    });
+    expect(screen.getByTestId("placement-scope-line")).toHaveTextContent(
+      "jusqu'à « Thalès » — 3 chapitres sur 6",
+    );
+    const upcoming = screen.getByTestId("placement-upcoming");
+    expect(upcoming).toHaveTextContent("Statistiques");
+    expect(upcoming).toHaveTextContent("ne comptent pas dans ta note");
+  });
+
+  it("toute l'année : ni ligne de portée, ni chapitres à venir", () => {
+    mount();
+    expect(screen.queryByTestId("placement-scope-line")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("placement-upcoming")).not.toBeInTheDocument();
   });
 
   it("tant que la session n'est pas lue, aucune invitation (é38 R-6)", () => {
