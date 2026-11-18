@@ -1214,8 +1214,7 @@ export const ar: TranslationKeys = {
     spendRecent: "آخر الطلبات",
     spendNone: "لا إنفاق بعد.",
     adviceTitle: "هذا النموذج يخفق كثيرا",
-    adviceBody:
-      "{model}: أكثر من سؤال من كل اثنين مولَّدين يُرفض منذ أسبوع. أنت تدفع مقابل عمل مرميّ.",
+    adviceBody: "{model}: أكثر من سؤال من كل اثنين مولَّدين يُرفض منذ أسبوع. أنت تدفع مقابل عمل مرميّ.",
     adviceSuggest: "هذه النماذج تجتاز العتبة: {models}",
     feedbackUp: "مفيد",
     feedbackDown: "الإبلاغ عن خطأ",

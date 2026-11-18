@@ -148,8 +148,7 @@ describe("nearPairs — les doublons littéraux", () => {
   });
 
   it("deux figures différentes font deux questions", () => {
-    const fig = (x: number) =>
-      `ما نوعُ هذه الزاوية؟ <svg viewBox="0 0 9 9"><line x1="${x}"/></svg>`;
+    const fig = (x: number) => `ما نوعُ هذه الزاوية؟ <svg viewBox="0 0 9 9"><line x1="${x}"/></svg>`;
     const opts = ["حادّة", "قائمة", "منفرجة", "مستقيمة"];
     expect(
       nearPairs([
