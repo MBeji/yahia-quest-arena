@@ -3,13 +3,8 @@ import type { PlacementTranslations } from "../placement.types";
 export const arPlacement: PlacementTranslations = {
   placement: {
     entry: {
-      kicker: "اختبار المستوى · مجّاني · دون تسجيل",
-      title: "أين وصلت؟ عشرة أسئلة لتعرف.",
       subtitle:
         "اختر قسمك ومادّة: في النهاية ترى علامتك على 20، ما تتقنه، ما يبقى لمراجعته، ومن أين تبدأ.",
-      factQuestions: "{n} أسئلة",
-      factMinutes: "حوالي 7 دقائق",
-      factBilan: "حصيلتك درسًا بدرس",
       audienceLabel: "أنا…",
       audienceStudent: "تلميذ",
       audienceParent: "وليّ",
@@ -23,7 +18,6 @@ export const arPlacement: PlacementTranslations = {
       scopeThrough: "إلى حدّ: {chapter}",
       scopeWholeYear: "كامل برنامج السنة",
       noSubject: "لا توجد بعدُ مادّة في هذا القسم فيها ما يكفي من الأسئلة لاختبار. هي في الطريق.",
-      start: "ابدأ الاختبار",
       starting: "جارٍ إعداد الاختبار…",
       lastResultTitle: "آخر اختبار على هذا الجهاز",
       lastResultBody: "{score}/20 في {subject}",
@@ -123,7 +117,6 @@ export const arPlacement: PlacementTranslations = {
       allHeld: "كلّ الدروس المختبَرة متقَنة.",
       retake: "إعادة",
       open: "عرض الحصيلة",
-      onboardingCta: "أو ابدأ باختبار المستوى (7 دقائق)",
     },
   },
 };

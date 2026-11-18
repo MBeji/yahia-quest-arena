@@ -968,6 +968,7 @@ export const en: TranslationKeys = {
       "{parcours} is under construction. Meanwhile, explore the extras — and your vote moves it up.",
     celebrateExtrasCta: "Explore the extras",
     celebrateDashboardCta: "Go to my dashboard",
+    celebratePlacementCta: "Or start with your placement test (7 min)",
     welcomeCoins: "+{coins} welcome coins",
     welcomeFirstQuestCta: "Start my first quest",
     quickPickTitle: "This chapter is in {parcours} — is that your class?",

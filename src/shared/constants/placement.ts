@@ -56,14 +56,3 @@ export const PLACEMENT_MEMORY_TTL_MS = 30 * 24 * 60 * 60 * 1000;
 
 /** Le chemin public du test — une seule source pour le lien de partage, le sitemap et l'en-tête. */
 export const PLACEMENT_PATH = "/test-de-niveau";
-
-/**
- * L'ANNÉE SCOLAIRE tunisienne, pour préremplir « où en es-tu ? » (étude 39 R-22) : les cours
- * vont, à peu près, de la mi-septembre à la fin mai ; juin est la révision et les examens, l'été
- * suit — le programme est alors vu en entier. Mois de 1 à 12. Une APPROXIMATION assumée : les
- * classes n'avancent pas au même pas, l'élève corrige d'un geste.
- */
-export const PLACEMENT_SCHOOL_YEAR = {
-  start: { month: 9, day: 15 },
-  end: { month: 5, day: 31 },
-} as const;

@@ -253,10 +253,10 @@ function PlacementEntryPage() {
     <PageShell width="narrow" className="py-10">
       <header className="mb-8 text-center">
         <div className="inline-flex items-center gap-2 rounded-full bg-secondary px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-primary">
-          <Sparkles className="h-3.5 w-3.5" aria-hidden /> {t.placement.entry.kicker}
+          <Sparkles className="h-3.5 w-3.5" aria-hidden /> {t.public.placementDoor.kicker}
         </div>
         <h1 className="mx-auto mt-4 max-w-2xl font-display text-3xl font-bold leading-tight sm:text-4xl">
-          {t.placement.entry.title}
+          {t.public.placementDoor.title}
         </h1>
         <p className="mx-auto mt-3 max-w-xl text-muted-foreground">{t.placement.entry.subtitle}</p>
         {!authLoading && isAuthenticated && (
@@ -365,7 +365,7 @@ function PlacementEntryPage() {
                       </>
                     ) : (
                       <>
-                        {t.placement.entry.start}{" "}
+                        {t.public.placementDoor.start}{" "}
                         <ChevronRight className="h-5 w-5 rtl:-scale-x-100" aria-hidden />
                       </>
                     )}

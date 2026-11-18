@@ -11,6 +11,14 @@ export const arPublic: TranslationKeys["public"] = {
     signup: "إنشاء حسابي",
     account: "مساحتي",
   },
+  placementDoor: {
+    kicker: "اختبار المستوى · مجّاني · دون تسجيل",
+    title: "أين وصلت؟ عشرة أسئلة لتعرف.",
+    factQuestions: "{n} أسئلة",
+    factMinutes: "حوالي 7 دقائق",
+    factBilan: "حصيلتك درسًا بدرس",
+    start: "ابدأ الاختبار",
+  },
   footer: {
     tagline: "مجاني 100٪ · كل المدرسة التونسية",
     rights: "جميع الحقوق محفوظة",

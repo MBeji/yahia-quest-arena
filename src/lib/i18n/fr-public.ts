@@ -11,6 +11,14 @@ export const frPublic: TranslationKeys["public"] = {
     signup: "Créer mon compte",
     account: "Mon espace",
   },
+  placementDoor: {
+    kicker: "Test de niveau · gratuit · sans inscription",
+    title: "Où en es-tu ? Dix questions pour le savoir.",
+    factQuestions: "{n} questions",
+    factMinutes: "environ 7 minutes",
+    factBilan: "ton bilan par chapitre",
+    start: "Commencer le test",
+  },
   footer: {
     tagline: "100 % gratuit · toute l’école tunisienne",
     rights: "Tous droits réservés",

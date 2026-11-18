@@ -112,10 +112,12 @@ export function PlacementPicker({
       {/* Les trois faits — ce qui attend l'élève, avant qu'il choisisse. */}
       <ul className="flex flex-wrap gap-2 text-xs font-semibold text-muted-foreground">
         <li className="rounded-full bg-secondary px-3 py-1">
-          {t.placement.entry.factQuestions.replace("{n}", String(PLACEMENT_ITEMS))}
+          {t.public.placementDoor.factQuestions.replace("{n}", String(PLACEMENT_ITEMS))}
         </li>
-        <li className="rounded-full bg-secondary px-3 py-1">{t.placement.entry.factMinutes}</li>
-        <li className="rounded-full bg-secondary px-3 py-1">{t.placement.entry.factBilan}</li>
+        <li className="rounded-full bg-secondary px-3 py-1">
+          {t.public.placementDoor.factMinutes}
+        </li>
+        <li className="rounded-full bg-secondary px-3 py-1">{t.public.placementDoor.factBilan}</li>
       </ul>
 
       {/* 1. La classe */}
@@ -292,7 +294,7 @@ export function PlacementPicker({
             </>
           ) : (
             <>
-              {t.placement.entry.start}{" "}
+              {t.public.placementDoor.start}{" "}
               <ChevronRight className="h-5 w-5 rtl:-scale-x-100" aria-hidden />
             </>
           )}

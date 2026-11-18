@@ -1,5 +1,3 @@
-import { PLACEMENT_SCHOOL_YEAR } from "@/shared/constants/placement";
-
 /**
  * LA PORTÉE DU TEST (étude 39 R-22) — « où en es-tu dans le programme ? ».
  *
@@ -8,6 +6,17 @@ import { PLACEMENT_SCHOOL_YEAR } from "@/shared/constants/placement";
  * de départ d'après le calendrier — une valeur par défaut que l'élève corrige, jamais une règle.
  * Pur : la date est un argument, les tests n'ont pas d'horloge à simuler.
  */
+
+/**
+ * L'ANNÉE SCOLAIRE tunisienne, pour préremplir « où en es-tu ? » (étude 39 R-22) : les cours
+ * vont, à peu près, de la mi-septembre à la fin mai ; juin est la révision et les examens, l'été
+ * suit — le programme est alors vu en entier. Mois de 1 à 12. Une APPROXIMATION assumée : les
+ * classes n'avancent pas au même pas, l'élève corrige d'un geste.
+ */
+const PLACEMENT_SCHOOL_YEAR = {
+  start: { month: 9, day: 15 },
+  end: { month: 5, day: 31 },
+} as const;
 
 /** Un chapitre testable, tel que `list_placement_chapters` le rend (dans l'ordre du programme). */
 export type ScopeChapter = {

@@ -3,13 +3,8 @@ import type { PlacementTranslations } from "../placement.types";
 export const enPlacement: PlacementTranslations = {
   placement: {
     entry: {
-      kicker: "Placement test · free · no sign-up",
-      title: "Where do you stand? Ten questions to find out.",
       subtitle:
         "Pick your grade and a subject: at the end you see your mark out of 20, what you already hold, what to review, and where to start.",
-      factQuestions: "{n} questions",
-      factMinutes: "about 7 minutes",
-      factBilan: "your results, chapter by chapter",
       audienceLabel: "I am…",
       audienceStudent: "a student",
       audienceParent: "a parent",
@@ -23,7 +18,6 @@ export const enPlacement: PlacementTranslations = {
       scopeThrough: "Up to: {chapter}",
       scopeWholeYear: "The whole year's syllabus",
       noSubject: "No subject of this grade has enough questions for a test yet. They are coming.",
-      start: "Start the test",
       starting: "Preparing your test…",
       lastResultTitle: "Your last test on this device",
       lastResultBody: "{score}/20 in {subject}",
@@ -123,7 +117,6 @@ export const enPlacement: PlacementTranslations = {
       allHeld: "Every tested chapter is held.",
       retake: "Retake",
       open: "See the results",
-      onboardingCta: "Or start with your placement test (7 min)",
     },
   },
 };

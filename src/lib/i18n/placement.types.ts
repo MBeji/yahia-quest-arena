@@ -6,8 +6,9 @@
  * des surfaces atteintes par des routes paresseuses (`/test-de-niveau`, la carte du Hall chargée
  * en `lazy()`, la fin de l'accueil). La laisser dans le catalogue app-wide la ferait descendre
  * chez tout le monde alors que `i18n-` est à son plafond. Elle prend donc son catalogue et son
- * budget (`i18n-placement-`). La seule clé app-wide du test est l'entrée de l'en-tête public
- * (`public.header.placement`), parce que l'en-tête n'est pas paresseux.
+ * budget (`i18n-placement-`). Les seules clés app-wide du test sont l'entrée de l'en-tête public
+ * (`public.header.placement`) et la porte de l'accueil (`public.placementDoor`), parce que ni
+ * l'en-tête ni l'accueil ne sont paresseux.
  *
  * VOCABULAIRE NORMATIF (étude 39 §2.3) — ne pas improviser : **test de niveau** · **bilan** ·
  * **tenu ✓** / **à revoir ↻** · les quatre bandes (`solide`, `en-route`, `consolider`,
@@ -16,15 +17,9 @@
  */
 export type PlacementTranslations = {
   placement: {
-    /** L'entrée publique : le titre, la promesse, les trois faits. */
+    /** L'entrée publique. Son titre, ses trois faits et son bouton sont dans `public.placementDoor` (l'accueil les montre). */
     entry: {
-      kicker: string;
-      title: string;
       subtitle: string;
-      /** Les trois faits — `{n}` questions. */
-      factQuestions: string;
-      factMinutes: string;
-      factBilan: string;
       /** « Je suis… » */
       audienceLabel: string;
       audienceStudent: string;
@@ -40,7 +35,6 @@ export type PlacementTranslations = {
       scopeWholeYear: string;
       /** Aucune matière testable pour cette classe. */
       noSubject: string;
-      start: string;
       starting: string;
       /** Un test déjà passé sur cet appareil — `{score}`, `{subject}`. */
       lastResultTitle: string;
@@ -151,8 +145,6 @@ export type PlacementTranslations = {
       allHeld: string;
       retake: string;
       open: string;
-      /** La fin de l'accueil : « ou commence par ton test ». */
-      onboardingCta: string;
     };
   };
 };

@@ -3,13 +3,8 @@ import type { PlacementTranslations } from "../placement.types";
 export const frPlacement: PlacementTranslations = {
   placement: {
     entry: {
-      kicker: "Test de niveau · gratuit · sans inscription",
-      title: "Où en es-tu ? Dix questions pour le savoir.",
       subtitle:
         "Choisis ta classe et une matière : à la fin, tu vois ta note sur 20, ce que tu tiens déjà, ce qu'il reste à revoir, et par où commencer.",
-      factQuestions: "{n} questions",
-      factMinutes: "environ 7 minutes",
-      factBilan: "ton bilan par chapitre",
       audienceLabel: "Je suis…",
       audienceStudent: "élève",
       audienceParent: "parent",
@@ -24,7 +19,6 @@ export const frPlacement: PlacementTranslations = {
       scopeWholeYear: "Tout le programme de l'année",
       noSubject:
         "Aucune matière de cette classe n'a encore assez de questions pour un test. Elles arrivent.",
-      start: "Commencer le test",
       starting: "Préparation du test…",
       lastResultTitle: "Ton dernier test sur cet appareil",
       lastResultBody: "{score}/20 en {subject}",
@@ -125,7 +119,6 @@ export const frPlacement: PlacementTranslations = {
       allHeld: "Tous les chapitres testés sont tenus.",
       retake: "Refaire",
       open: "Voir le bilan",
-      onboardingCta: "Ou commence par ton test de niveau (7 min)",
     },
   },
 };

@@ -38,7 +38,6 @@ import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { useEntrance } from "@/shared/lib/motion";
 import { parcoursName } from "@/shared/lib/parcours-locale";
 import { useI18n, useT } from "@/lib/i18n";
-import { usePlacementT } from "@/lib/i18n/placement";
 import { trackProductEvent } from "@/shared/lib/product-events";
 
 // La règle d'or du guide intégré, chargée à la demande : importée en statique,
@@ -486,7 +485,6 @@ export function CelebrationStep({
 }) {
   const t = useT();
   // é39 : le libellé de l'invitation au test vit dans son propre catalogue (budget `i18n-`).
-  const tp = usePlacementT();
   const { locale } = useI18n();
   const stepSlide = useStepSlide();
   const isComingSoon = parcours?.status === "coming_soon";
@@ -573,7 +571,7 @@ export function CelebrationStep({
             data-testid="onboarding-placement"
             className="min-h-11 text-sm font-semibold text-[color:var(--gold)] underline-offset-2 hover:underline"
           >
-            {tp.placement.hall.onboardingCta}
+            {t.onboarding.celebratePlacementCta}
           </button>
         )}
       </div>
