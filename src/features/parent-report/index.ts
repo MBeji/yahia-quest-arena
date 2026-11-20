@@ -10,6 +10,7 @@ export {
   getStudentDailyReportByCode,
   getStudentExamSummary,
   getStudentParcoursComparison,
+  getStudentPlacementSummary,
   getStudentReport,
   getStudentReportByCode,
   getStudentWeeklyGoal,

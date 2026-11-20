@@ -40,7 +40,6 @@ export {
 export {
   bandCopy,
   buildShareText,
-  formatScoreOn20,
   placementEntrySearch,
   placementShareUrl,
   sharePlacementText,

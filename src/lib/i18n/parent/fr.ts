@@ -87,6 +87,19 @@ export const frParent: ParentTranslations = {
     examsPending: "Classement affiché à partir de {n} candidats.",
     examsNone: "Pas encore d'examen blanc rendu : il y en a d'ouverts dans son parcours.",
     examsHint: "Un examen blanc sert à s'entraîner : chacun avance à son rythme.",
+    placementTitle: "Tests de niveau",
+    placementBands: {
+      solide: "Base solide",
+      "en-route": "En bonne voie",
+      consolider: "À consolider",
+      reprendre: "On reprend depuis le cours",
+    },
+    placementHeld: "Ce qui tient",
+    placementToReview: "À revoir",
+    placementScope: "Testé sur le programme vu jusqu'à « {chapter} » ({n} chapitres sur {total}).",
+    placementWholeYear: "Testé sur tout le programme de l'année.",
+    placementHint:
+      "Le dernier test de chaque matière : un point de départ, pas une note de classe.",
     tutorHelpTitle: "L'aide d'El Ostedh",
     tutorHelpSubtitle:
       "Combien de fois votre enfant a demandé de l'aide, et sur quels thèmes. Le contenu des échanges reste entre El Ostedh et lui.",

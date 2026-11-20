@@ -5,6 +5,7 @@
 // et sont figés en base (étude 39 R-13). Ce module ne fait que les lire et les mettre en mots.
 
 import {
+  formatScoreOn20,
   PLACEMENT_PATH,
   PLACEMENT_SHARE_SCORE_FLOOR,
   type PlacementBand,
@@ -59,15 +60,6 @@ export function placementShareUrl(subjectId: string): string {
 /** Le lien d'une matière vers son test, en relatif — pour les `<Link>` internes. */
 export function placementEntrySearch(subjectId: string): { matiere: string } {
   return { matiere: subjectId };
-}
-
-/** « 14 » plutôt que « 14.0 », « 13,3 » plutôt que « 13.333 » : la note comme on la dit. */
-export function formatScoreOn20(scoreOn20: number, locale: string): string {
-  const rounded = Math.round(scoreOn20 * 10) / 10;
-  const text = Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(1);
-  // Le séparateur décimal suit la langue de l'interface ; les chiffres restent occidentaux
-  // partout (politique du projet, y compris en arabe).
-  return locale === "fr" ? text.replace(".", ",") : text;
 }
 
 /**

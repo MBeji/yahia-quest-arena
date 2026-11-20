@@ -7,16 +7,11 @@ import { OptionContent, RichField } from "@/components/ui/svg-figure";
 import { useI18n } from "@/lib/i18n";
 import { usePlacementT } from "@/lib/i18n/placement";
 import { PLACEMENT_MIN_CANDIDATES } from "@/shared/constants/placement";
+import { formatScoreOn20 } from "@/shared/constants/placement";
 import { cn, isRtlText } from "@/shared/lib/utils";
 
 import type { PlacementBilan, PlacementReviewItem } from "../placement.server";
-import {
-  bandCopy,
-  buildShareText,
-  formatScoreOn20,
-  sharePlacementText,
-  splitChapters,
-} from "../placement-bilan";
+import { bandCopy, buildShareText, sharePlacementText, splitChapters } from "../placement-bilan";
 
 /**
  * LE BILAN (étude 39 US-2, US-3, R-5 à R-12) — la note, la bande, ce qui tient PUIS ce qui est à

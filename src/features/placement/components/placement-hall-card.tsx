@@ -5,10 +5,11 @@ import { ClipboardCheck } from "lucide-react";
 
 import { useI18n } from "@/lib/i18n";
 import { usePlacementT } from "@/lib/i18n/placement";
+import { formatScoreOn20 } from "@/shared/constants/placement";
 import { isRtlText } from "@/shared/lib/utils";
 
 import { getMyPlacementOverview } from "../placement.server";
-import { bandCopy, formatScoreOn20 } from "../placement-bilan";
+import { bandCopy } from "../placement-bilan";
 
 /**
  * « TON BILAN DE DÉPART » (étude 39 US-6, R-17) — la carte du Hall.

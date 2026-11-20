@@ -11,6 +11,8 @@
  *
  * Ajouter une clé ici l'ajoute au chunk parent, pas au catalogue app-wide.
  */
+import type { PlacementBand } from "@/shared/constants/placement";
+
 export type ParentTranslations = {
   // Parent / admin follow-up report
   parentReport: {
@@ -109,6 +111,13 @@ export type ParentTranslations = {
     examsPending: string;
     examsNone: string;
     examsHint: string;
+    placementTitle: string;
+    placementBands: Record<PlacementBand, string>;
+    placementHeld: string;
+    placementToReview: string;
+    placementScope: string;
+    placementWholeYear: string;
+    placementHint: string;
     tutorHelpTitle: string;
     tutorHelpSubtitle: string;
     /** `{n}` = le nombre de demandes sur 7 jours. */
