@@ -144,8 +144,9 @@ describe("ca-chain/ — ce qui est vendu", () => {
         { encoding: "utf8" },
       );
       expect(x509.status).toBe(0);
-      expect(x509.stdout).toContain("CN = Sectigo Public Server Authentication CA DV R36");
-      expect(x509.stdout).toContain("CN = Sectigo Public Server Authentication Root R46");
+      // OpenSSL ≤ 1.1 prints "CN = X" (spaces around =); ≥ 3.0 prints "CN=X" — both are valid.
+      expect(x509.stdout).toMatch(/CN\s*=\s*Sectigo Public Server Authentication CA DV R36/);
+      expect(x509.stdout).toMatch(/CN\s*=\s*Sectigo Public Server Authentication Root R46/);
       expect(x509.stdout).toContain(
         "8C:54:C3:34:B6:6B:A4:E4:26:77:2A:F4:A3:F9:13:6C:19:A1:AE:C7:29:FD:B2:8C:53:5C:07:A5:A4:EF:22:E0",
       );
