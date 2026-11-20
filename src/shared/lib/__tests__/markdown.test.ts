@@ -879,9 +879,7 @@ describe("renderLesson — ce qui appartient à un item de liste y reste", () =>
     "- **الدّورة الدّمويّة الكبرى**: مسار الدّم من القلب إلى بقيّة أعضاء الجسم ومنها إلى القلب، حيث يضخّ";
 
   it("recolle la suite d'un item renvoyé à la ligne : un item, une liste", () => {
-    const out = html(
-      `${ITEM}\n  البطين الأيسر الدّم المؤكسج.\n- **الصّغرى**: من القلب إلى الرّئتين.`,
-    );
+    const out = html(`${ITEM}\n  البطين الأيسر الدّم المؤكسج.\n- **الصّغرى**: من القلب إلى الرّئتين.`);
     expect(out.match(/<ul class="lesson-ul">/g)).toHaveLength(1);
     expect(out.match(/<li class="lesson-li">/g)).toHaveLength(2);
     expect(out).toContain("حيث يضخّ البطين الأيسر الدّم المؤكسج.</li>");
