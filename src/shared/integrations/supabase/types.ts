@@ -4105,6 +4105,10 @@ export type Database = {
         Args: { p_student: string };
         Returns: Json;
       };
+      get_student_placement_summary: {
+        Args: { p_student: string };
+        Returns: Json;
+      };
       get_student_report: { Args: { p_student: string }; Returns: Json };
       get_student_report_by_code: { Args: { p_code: string }; Returns: Json };
       get_subject_leaderboard: {
