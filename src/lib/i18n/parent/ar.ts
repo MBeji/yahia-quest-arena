@@ -85,6 +85,18 @@ export const arParent: ParentTranslations = {
     examsPending: "يظهر الترتيب ابتداء من {n} مترشّحا.",
     examsNone: "لا امتحان تجريبي منجَز بعد: توجد امتحانات مفتوحة في مساره.",
     examsHint: "الامتحان التجريبي تمرين: كلٌّ يتقدّم بنسقه.",
+    placementTitle: "اختبارات المستوى",
+    placementBands: {
+      solide: "أساس متين",
+      "en-route": "في الطريق الصحيح",
+      consolider: "يحتاج تثبيتًا",
+      reprendre: "نستأنف من الدرس",
+    },
+    placementHeld: "ما هو مكتسب",
+    placementToReview: "للمراجعة",
+    placementScope: "اختبار على البرنامج المدروس حتّى « {chapter} » ({n} محاور من {total}).",
+    placementWholeYear: "اختبار على كامل برنامج السنة.",
+    placementHint: "آخر اختبار في كلّ مادّة: نقطة انطلاق، لا عدد مدرسيّ.",
     tutorHelpTitle: "مساعدة الأستاذ",
     tutorHelpSubtitle:
       "كم مرّة طلب طفلك المساعدة، وفي أيّ المواضيع. أمّا ما قاله فعلاً فيبقى بينه وبين الأستاذ.",

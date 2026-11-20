@@ -42,6 +42,15 @@ export function placementBandFor(scoreOn20: number): PlacementBand {
   return "reprendre";
 }
 
+/** « 14 » plutôt que « 14.0 », « 13,3 » plutôt que « 13.333 » : la note comme on la dit. */
+export function formatScoreOn20(scoreOn20: number, locale: string): string {
+  const rounded = Math.round(scoreOn20 * 10) / 10;
+  const text = Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(1);
+  // Le séparateur décimal suit la langue de l'interface ; les chiffres restent occidentaux
+  // partout (politique du projet, y compris en arabe).
+  return locale === "fr" ? text.replace(".", ",") : text;
+}
+
 /**
  * Sous cette note, le texte de partage proposé tait le chiffre (RISK-2 : un 4/20 partagé n'est
  * pas une bonne publicité pour l'élève) — il peut toujours l'ajouter lui-même.

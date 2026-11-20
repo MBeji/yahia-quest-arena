@@ -88,6 +88,18 @@ export const enParent: ParentTranslations = {
     examsPending: "Ranking shown from {n} candidates.",
     examsNone: "No mock exam handed in yet: some are open in their track.",
     examsHint: "A mock exam is practice: everyone moves at their own pace.",
+    placementTitle: "Level tests",
+    placementBands: {
+      solide: "Solid base",
+      "en-route": "On the right track",
+      consolider: "To consolidate",
+      reprendre: "Starting again from the lesson",
+    },
+    placementHeld: "Solid",
+    placementToReview: "To review",
+    placementScope: "Tested on the syllabus covered up to “{chapter}” ({n} of {total} chapters).",
+    placementWholeYear: "Tested on the whole year's syllabus.",
+    placementHint: "The latest test in each subject: a starting point, not a school grade.",
     tutorHelpTitle: "Help from El Ostedh",
     tutorHelpSubtitle:
       "How often your child asked for help, and on which topics. What they actually said stays between them and El Ostedh.",

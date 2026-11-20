@@ -24,8 +24,13 @@ import { useEntrance } from "@/shared/lib/motion";
 import { isolateLtrRuns, signedNumber } from "@/shared/lib/bidi";
 import { buildWeeklyAdvice, type ReportData } from "../report-share";
 import type { TutorParentCounters } from "../parent-report.server";
-import type { ParcoursComparison, StudentExamSummary } from "../parent-report.schemas";
+import type {
+  ParcoursComparison,
+  StudentExamSummary,
+  StudentPlacementSummary,
+} from "../parent-report.schemas";
 import { ExamSection } from "./exam-section";
+import { PlacementSection } from "./placement-section";
 import { ParcoursComparisonSection } from "./parcours-comparison";
 export type { ReportData } from "../report-share";
 
@@ -65,6 +70,11 @@ export function ReportContent({
    * chemin public au code alliance ne l'a pas.
    */
   examSummary,
+  /**
+   * Étude 39 lot 5 (é08) — les tests de niveau. Même garde que `examSummary` :
+   * route authentifiée seule, jamais le chemin public au code alliance.
+   */
+  placementSummary,
   /** Étude 08 lot 3 (US-8) — le repère du parcours. Même garde : route authentifiée seule. */
   parcoursComparison,
 }: {
@@ -72,6 +82,7 @@ export function ReportContent({
   tutorCounters?: TutorParentCounters | null;
   renderTutorDigest?: ReactNode;
   examSummary?: StudentExamSummary | null;
+  placementSummary?: StudentPlacementSummary | null;
   parcoursComparison?: ParcoursComparison;
 }) {
   const { locale } = useI18n();
@@ -347,6 +358,8 @@ export function ReportContent({
           même `ReportContent` sans lien parent vérifié, et n'a rien à passer
           ici. La même garde que `tutorCounters`, par le même moyen. */}
       {renderTutorDigest}
+
+      {placementSummary ? <PlacementSection summary={placementSummary} /> : null}
 
       {examSummary ? <ExamSection summary={examSummary} /> : null}
 

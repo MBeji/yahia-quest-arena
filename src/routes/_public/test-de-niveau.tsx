@@ -8,8 +8,8 @@ import { Button } from "@/components/ui/button";
 import { PageShell } from "@/components/ui/page-shell";
 import { useAuth, useMyRole } from "@/features/auth";
 import { getParcours } from "@/features/dashboard";
+import { formatScoreOn20 } from "@/shared/constants/placement";
 import {
-  formatScoreOn20,
   getPlacementSubject,
   lastFinishedPlacement,
   listPlacementChapters,

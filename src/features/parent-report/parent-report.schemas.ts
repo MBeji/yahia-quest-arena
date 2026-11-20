@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { PLACEMENT_BANDS } from "@/shared/constants/placement";
 
 /**
  * Les schémas zod de `parent-report.server.ts` — et RIEN d'autre.
@@ -224,6 +225,39 @@ export const examSummarySchema = z.object({
 });
 
 export type StudentExamSummary = z.infer<typeof examSummarySchema>;
+
+// Tests de niveau (`get_student_placement_summary`, étude 39 lot 5). La note, la
+// bande et les verdicts par chapitre sont FIGÉS en base (é39 R-13) : le client ne
+// reclasse rien, il lit. Une bande inconnue est une panne de lecture, pas un repli.
+const placementScopeSchema = z
+  .object({
+    throughTitle: z.string(),
+    chaptersInScope: numberish,
+    chaptersTotal: numberish,
+  })
+  .nullable()
+  .catch(null);
+
+const placementTestSchema = z.object({
+  sessionId: z.string(),
+  subjectId: z.string(),
+  subjectNameFr: z.string().catch(""),
+  gradeNameFr: z.string().nullable().catch(null),
+  finishedAt: z.string().catch(""),
+  correct: numberish,
+  total: numberish,
+  scoreOn20: numberish,
+  band: z.enum(PLACEMENT_BANDS),
+  chaptersHeld: z.array(z.string()).catch([]),
+  chaptersToReview: z.array(z.string()).catch([]),
+  scope: placementScopeSchema,
+});
+
+export const placementSummarySchema = z.object({
+  tests: z.array(placementTestSchema),
+});
+
+export type StudentPlacementSummary = z.infer<typeof placementSummarySchema>;
 
 // Comparatif de parcours (`get_student_parcours_comparison`, étude 08 lot 3).
 // Sous le seuil (R-6) la base rend `masked` et des NULL : aucun chiffre n'arrive.

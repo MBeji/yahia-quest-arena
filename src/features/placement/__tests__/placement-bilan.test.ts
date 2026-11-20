@@ -2,11 +2,10 @@
 import { describe, expect, it, vi } from "vitest";
 
 import { placementTranslations } from "@/lib/i18n/placement";
-import { placementBandFor } from "@/shared/constants/placement";
+import { formatScoreOn20, placementBandFor } from "@/shared/constants/placement";
 
 import {
   buildShareText,
-  formatScoreOn20,
   placementShareUrl,
   sharePlacementText,
   splitChapters,

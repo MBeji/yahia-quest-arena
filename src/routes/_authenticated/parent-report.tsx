@@ -19,6 +19,7 @@ import {
   getLinkedStudents,
   getStudentDailyGoal,
   getStudentExamSummary,
+  getStudentPlacementSummary,
   getStudentParcoursComparison,
   getStudentReport,
   getStudentWeeklyGoal,
@@ -62,6 +63,7 @@ function ParentReport() {
   const getReportFn = useServerFn(getStudentReport);
   const getTutorCountersFn = useServerFn(getTutorParentCounters);
   const getExamSummaryFn = useServerFn(getStudentExamSummary);
+  const getPlacementSummaryFn = useServerFn(getStudentPlacementSummary);
   const getComparisonFn = useServerFn(getStudentParcoursComparison);
   const linkByCodeFn = useServerFn(linkStudentByCode);
   const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
@@ -98,6 +100,14 @@ function ParentReport() {
   const { data: examSummary } = useQuery({
     queryKey: ["parent-exam-summary", selectedStudent],
     queryFn: () => getExamSummaryFn({ data: { studentId: selectedStudent! } }),
+    enabled: !!selectedStudent,
+  });
+
+  // Étude 39 lot 5 (é08) — les tests de niveau de l'enfant, même frontière :
+  // une lecture à part, que le chemin public au code ne sert pas.
+  const { data: placementSummary } = useQuery({
+    queryKey: ["parent-placement-summary", selectedStudent],
+    queryFn: () => getPlacementSummaryFn({ data: { studentId: selectedStudent! } }),
     enabled: !!selectedStudent,
   });
 
@@ -394,6 +404,7 @@ function ParentReport() {
           report={report}
           tutorCounters={tutorCounters}
           examSummary={examSummary}
+          placementSummary={placementSummary}
           parcoursComparison={parcoursComparison}
           /* Étude 11 lot 6 (US-14) — le bilan hebdomadaire d'El Ostedh, composé
              ICI parce que `parent-report` n'importe pas `tutor`. Il porte sa

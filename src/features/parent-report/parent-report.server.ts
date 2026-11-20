@@ -23,10 +23,12 @@ import {
   isoDate,
   parcoursComparisonSchema,
   parseStudentReportPayload,
+  placementSummarySchema,
   tutorCountersSchema,
   weeklyGoalSchema,
   type ParcoursComparison,
   type StudentExamSummary,
+  type StudentPlacementSummary,
 } from "./parent-report.schemas";
 
 /**
@@ -665,6 +667,36 @@ export const getStudentExamSummary = createServerFn({ method: "GET" })
     }
     const parsed = examSummarySchema.safeParse(raw);
     return parsed.success ? parsed.data : null;
+  });
+
+// ---------------------------------------------------------------------------
+// ÉTUDE 39 LOT 5 (é08) — LES TESTS DE NIVEAU DE L'ENFANT.
+// ---------------------------------------------------------------------------
+// Même frontière que les examens blancs : une RPC à part (`parent-report`
+// n'importe pas `@/features/placement`), absente du chemin public au code
+// alliance, le lien actif jugé en base. Le dernier test valable par matière, et
+// rien de la correction : explications et erreurs nommées restent à l'élève.
+//
+// `null` sur refus comme sur panne : la section disparaît, le bilan reste.
+export const getStudentPlacementSummary = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .validator((d: unknown) => z.object({ studentId: z.guid() }).parse(d))
+  .handler(async ({ data, context }): Promise<StudentPlacementSummary | null> => {
+    const { supabase } = context;
+
+    const { data: raw, error } = await supabase.rpc("get_student_placement_summary", {
+      p_student: data.studentId,
+    });
+    if (error) {
+      logger.warn("parentReport.placementSummary", { error: errorMessage(error) });
+      return null;
+    }
+    const parsed = placementSummarySchema.safeParse(raw);
+    if (!parsed.success) {
+      logger.warn("parentReport.placementSummary: unexpected shape");
+      return null;
+    }
+    return parsed.data;
   });
 
 // ---------------------------------------------------------------------------
