@@ -13,6 +13,7 @@ import {
   type CatalogueParcours,
 } from "@/features/dashboard/components/parcours-catalogue";
 import { publicPageHead, seedOnServer } from "@/shared/lib/public-page-seo";
+import { rememberCurrentPage } from "@/shared/lib/return-to";
 import { CatalogueNotFound } from "./-catalogue-not-found";
 
 /**
@@ -83,7 +84,12 @@ function LyceeYearPage() {
 
   const interest = useParcoursInterest({
     canVote: user != null,
-    onRequireAuth: () => navigate({ to: "/auth", search: { mode: "login" } }),
+    // Comme les portes de l'en-tête : la page est retenue, le visiteur y revient une fois
+    // connecté (il atterrissait au Hall — audit de navigation du 2026-11-21, N-11).
+    onRequireAuth: () => {
+      rememberCurrentPage();
+      void navigate({ to: "/auth", search: { mode: "login" } });
+    },
   });
 
   if (isError) {

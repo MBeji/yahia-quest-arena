@@ -179,7 +179,7 @@ export function WeaknessesPanel({
                   )}
               {row.chapter_id && (
                 <Link
-                  to="/lesson/$chapterId"
+                  to="/chapitre/$chapterId"
                   params={{ chapterId: row.chapter_id }}
                   data-testid="weakness-course"
                   className="border-border inline-flex items-center gap-1 rounded-lg border px-2 py-1 text-xs font-bold transition hover:bg-surface-2"
