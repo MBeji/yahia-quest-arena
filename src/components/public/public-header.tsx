@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useT } from "@/lib/i18n";
 import { trackProductEvent } from "@/shared/lib/product-events";
 import { rememberCurrentPage } from "@/shared/lib/return-to";
-import { useAuth, useMyRole, useSignOutInPlace } from "@/features/auth";
+import { hubRouteForRole, useAuth, useMyRole, useSignOutInPlace } from "@/features/auth";
 import { SettingsMenu } from "@/components/ui/settings-menu";
 import { AccountHud } from "@/components/account-hud";
 import { GuideButton } from "@/components/guide/guide-button";
@@ -48,6 +48,8 @@ export function PublicHeader() {
   const { role } = useMyRole();
   const signOut = useSignOutInPlace();
   const isAuthed = user != null;
+  // L'espace du rôle, pas « /dashboard » en dur : un parent a son Suivi, pas de Hall.
+  const hub = hubRouteForRole(role);
   // R-14. Le lien reste pour le visiteur (et dans le HTML rendu côté serveur) et pour le parent ou
   // l'admin ; il n'est PAS rendu pour un connecté dont le rôle n'est pas encore lu — mieux vaut un
   // lien qui arrive qu'un lien qui disparaît sous le doigt de l'élève.
@@ -77,11 +79,11 @@ export function PublicHeader() {
         <div className="flex items-center gap-3 sm:gap-6">
           {/* Brand = home. AUTH-AWARE destination: a signed-in visitor who reached
               this public shell via the converged « Découvrir » nav is sent back to
-              their connected space (`/dashboard`), NOT the logged-out landing (`/`)
+              their own hub (Hall, or Suivi for a parent), NOT the logged-out landing (`/`)
               — tapping the logo used to strand them on the public home that reads as
               "not logged in" (issue #312). Logged-out visitors still go to `/`. */}
           <Link
-            to={isAuthed ? "/dashboard" : "/"}
+            to={isAuthed ? hub : "/"}
             // 44 px de haut : la marque est le premier lien que le pouce cherche.
             className="flex min-h-11 items-center gap-2"
           >
@@ -147,7 +149,7 @@ export function PublicHeader() {
               <span className={HEADER_SIGNUP}>{signupLabel}</span>
             </span>
           ) : isAuthed ? (
-            <AccountHud />
+            <AccountHud to={hub} />
           ) : (
             <>
               <Link

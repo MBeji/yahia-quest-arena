@@ -424,6 +424,17 @@ Non mesuré :
   sur le téléphone de référence). Les rejeux lancés pendant la publication de 16:12 ne listaient
   plus aucune mission (N-18) et ne comptent pas.
 
+## 10. Suivi des corrections
+
+Le propriétaire a demandé de corriger au fil de l'eau (2026-11-21). Une ligne par constat traité ;
+« rejoué » = le scénario de la sonde repassé sur le build corrigé.
+
+| Constat                                          | État                                                                                                                                                                                                                                                                               | Preuve                                        |
+| ------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| N-3 — le bouton Retour piégé                     | ✅ corrigé (lot 1) : les gardes de connexion et d'accueil, et la sortie de `/auth`, remplacent l'entrée d'historique. Rejoué : Retour ramène à la page d'avant dans les trois scénarios                                                                                            | `historique.cjs` C1, C3, C5 ; tests unitaires |
+| N-8 — le parent hors de son espace               | ✅ corrigé (lot 1) pour la marque, la puce de l'en-tête public et le rebond : la coquille décide sur le rôle qu'elle connaît, sans attendre le tableau de bord. Rejoué : la marque mène droit à `/parent-report`. Restent : la puce de jeu montrée à un parent, les écrans d'élève | `historique.cjs` C4 ; tests unitaires         |
+| Découvert en corrigeant — la garde hors coquille | ✅ corrigé (lot 1) : la garde d'accueil lisait l'adresse visée, pas l'écran rendu ; un élève sans classe qui quittait la coquille pour une page publique y était ramené. Les gardes de rôle lisent désormais la route affichée                                                     | `historique.cjs` C5 ; test « écran RENDU »    |
+
 ## Annexe — relevés de relecture, non re-vérifiés [R]
 
 À confirmer avant d'en faire un lot :

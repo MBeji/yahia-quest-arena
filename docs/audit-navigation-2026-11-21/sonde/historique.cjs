@@ -18,7 +18,7 @@ const urlLog = async (page, ms = 2500) => {
 };
 const hist = (page) => page.evaluate(() => history.length);
 const run = async (name, fn) => {
-  if (only && only !== name) return;
+  if (only && !name.startsWith(only)) return;
   console.log(`\n================ ${name}`);
   const browser = await launch();
   try {

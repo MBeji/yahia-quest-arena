@@ -1,4 +1,11 @@
-import { createFileRoute, Outlet, Link, useNavigate, useLocation } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Outlet,
+  Link,
+  useNavigate,
+  useLocation,
+  useMatches,
+} from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
@@ -7,6 +14,7 @@ import {
   useMyRole,
   shouldRedirectToOnboarding,
   hubRouteForRole,
+  shouldLeaveDashboard,
   useProfileLocaleSync,
 } from "@/features/auth";
 import { getPendingBetaCount } from "@/features/subscription";
@@ -44,6 +52,14 @@ function AuthenticatedLayout() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  // L'écran RENDU, pas l'adresse visée. `useLocation` change dès qu'une navigation part : pendant
+  // qu'un élève quitte cette coquille pour une page publique, elle est encore montée et lisait déjà
+  // « /programme » — la garde d'accueil le rattrapait et le ramenait à l'assistant (constaté en
+  // rejouant le bouton Retour, 2026-11-21). Les gardes de rôle lisent donc la route affichée.
+  const renderedPath = useMatches({
+    select: (matches) => matches[matches.length - 1]?.pathname.replace(/(.)\/$/, "$1"),
+  });
+  const guardPath = renderedPath ?? location.pathname;
   const t = useT();
   // La fenêtre « Signaler un bug » a deux portes (pastille dès `lg`, menu des réglages
   // en dessous) : son état vit ici, au-dessus des deux.
@@ -111,7 +127,10 @@ function AuthenticatedLayout() {
     }
     if (!loading) {
       if (!hadUser.current) rememberReturnTo(location.pathname + location.searchStr);
-      navigate({ to: "/auth", search: { mode: "login" } });
+      // `replace` : l'écran de compte demandé ne reste pas dans l'historique. Poussé, il piégeait
+      // le bouton Retour — revenir dessus relançait la garde, qui repoussait `/auth` (audit du
+      // 2026-11-21, N-3).
+      navigate({ to: "/auth", search: { mode: "login" }, replace: true });
     }
   }, [loading, user, navigate, location.pathname, location.searchStr]);
 
@@ -129,12 +148,23 @@ function AuthenticatedLayout() {
         hasProfile,
         role: userRole,
         currentParcoursId,
-        pathname: location.pathname,
+        pathname: guardPath,
       })
     ) {
-      navigate({ to: "/onboarding" });
+      // `replace`, même raison que la garde de connexion : Retour ne doit pas ramener sur
+      // l'écran qui renvoie ici.
+      navigate({ to: "/onboarding", replace: true });
     }
-  }, [user, meLoaded, hasProfile, userRole, currentParcoursId, location.pathname, navigate]);
+  }, [user, meLoaded, hasProfile, userRole, currentParcoursId, guardPath, navigate]);
+
+  // Un PARENT n'a pas de Hall : `/dashboard` le renvoie à son Suivi. Décidé ICI, sur le rôle que
+  // la coquille connaît déjà — la page l'attendait de toute la charge du tableau de bord, et le
+  // laissait devant « Impossible de charger le dashboard » quand cette lecture échouait (audit du
+  // 2026-11-21, N-8). `replace` : le Hall n'entre pas dans son historique.
+  useEffect(() => {
+    if (!user || guardPath !== "/dashboard") return;
+    if (shouldLeaveDashboard(userRole)) navigate({ to: hubRouteForRole(userRole), replace: true });
+  }, [user, userRole, guardPath, navigate]);
 
   if (loading) {
     return (

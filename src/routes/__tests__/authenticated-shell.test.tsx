@@ -16,6 +16,11 @@ const navigate = vi.fn();
 let authState: { user: { id: string } | null; loading: boolean } = { user: null, loading: false };
 const launcherProps: Array<{ authenticated: boolean }> = [];
 
+// Le rôle lu par la coquille, et le verdict de la garde d'accueil — réglables par test.
+let currentRole: string | null = "student";
+let needsOnboarding = false;
+let renderedPathname: string | null = null;
+
 let captured: React.ComponentType | undefined;
 // La page demandée — réglable : le garde la retient (é38 lot 1, R-4).
 let currentLocation = { pathname: "/dashboard", searchStr: "" };
@@ -29,6 +34,10 @@ vi.mock("@tanstack/react-router", () => ({
   Link: ({ children }: { children: React.ReactNode }) => React.createElement("a", null, children),
   useNavigate: () => navigate,
   useLocation: () => currentLocation,
+  // L'écran rendu — par défaut le même que l'adresse ; `renderedPathname` les sépare pour jouer
+  // l'instant où une navigation est partie et où la coquille est encore montée.
+  useMatches: ({ select }: { select: (m: Array<{ pathname: string }>) => unknown }) =>
+    select([{ pathname: "/" }, { pathname: renderedPathname ?? currentLocation.pathname }]),
 }));
 
 vi.mock("@tanstack/react-query", () => ({ useQuery: () => ({ data: undefined }) }));
@@ -36,9 +45,15 @@ vi.mock("@tanstack/react-start", () => ({ useServerFn: (fn: unknown) => fn }));
 
 vi.mock("@/features/auth", () => ({
   useAuth: () => authState,
-  useMyRole: () => ({ role: "student", currentParcoursId: "p1", hasProfile: true, isLoaded: true }),
-  shouldRedirectToOnboarding: () => false,
-  hubRouteForRole: () => "/dashboard",
+  useMyRole: () => ({
+    role: currentRole,
+    currentParcoursId: "p1",
+    hasProfile: true,
+    isLoaded: true,
+  }),
+  shouldRedirectToOnboarding: () => needsOnboarding,
+  hubRouteForRole: (role: string | null) => (role === "parent" ? "/parent-report" : "/dashboard"),
+  shouldLeaveDashboard: (role: string | null) => role === "parent",
   // é31 lot 4 : la coquille pousse la langue d'interface dans le profil (R-17).
   // Neutralisé ici — ce fichier teste le mur de connexion.
   useProfileLocaleSync: () => {},
@@ -100,6 +115,9 @@ beforeEach(() => {
   navigate.mockReset();
   launcherProps.length = 0;
   currentLocation = { pathname: "/dashboard", searchStr: "" };
+  currentRole = "student";
+  needsOnboarding = false;
+  renderedPathname = null;
   window.localStorage.clear();
 });
 
@@ -107,7 +125,11 @@ describe("coquille connectée — le mur de connexion", () => {
   it("renvoie vers /auth un visiteur sans session", async () => {
     authState = { user: null, loading: false };
     await renderShell();
-    expect(navigate).toHaveBeenCalledWith({ to: "/auth", search: { mode: "login" } });
+    expect(navigate).toHaveBeenCalledWith({
+      to: "/auth",
+      search: { mode: "login" },
+      replace: true,
+    });
   });
 
   it("ne monte AUCUNE surface IA pour un visiteur sans session", async () => {
@@ -130,7 +152,11 @@ describe("coquille connectée — le mur de connexion", () => {
     authState = { user: { id: "u1" }, loading: false };
     await renderShell();
     expect(launcherProps.at(-1)?.authenticated).toBe(true);
-    expect(navigate).not.toHaveBeenCalledWith({ to: "/auth", search: { mode: "login" } });
+    expect(navigate).not.toHaveBeenCalledWith({
+      to: "/auth",
+      search: { mode: "login" },
+      replace: true,
+    });
   });
 });
 
@@ -141,7 +167,11 @@ describe("coquille connectée — le retour au point de départ (é38 lot 1, R-4
     await renderShell();
 
     expect(peekReturnTo()).toBe("/quest/ex-1?variant=recall");
-    expect(navigate).toHaveBeenCalledWith({ to: "/auth", search: { mode: "login" } });
+    expect(navigate).toHaveBeenCalledWith({
+      to: "/auth",
+      search: { mode: "login" },
+      replace: true,
+    });
   });
 
   it("n'écrit rien tant que la session se lit : on ne sait pas encore s'il y en a une", async () => {
@@ -162,8 +192,60 @@ describe("coquille connectée — le retour au point de départ (é38 lot 1, R-4
     authState = { user: null, loading: false };
     view.rerender(React.createElement(captured as React.ComponentType));
 
-    expect(navigate).toHaveBeenCalledWith({ to: "/auth", search: { mode: "login" } });
+    expect(navigate).toHaveBeenCalledWith({
+      to: "/auth",
+      search: { mode: "login" },
+      replace: true,
+    });
     expect(peekReturnTo()).toBeNull();
+  });
+});
+
+describe("coquille connectée — le bouton Retour n'est pas piégé (audit du 2026-11-21, N-3)", () => {
+  // Une redirection POUSSÉE laisse derrière elle l'écran qui redirige : Retour y ramène, la
+  // garde repart, et l'on ne sort plus. Chaque garde REMPLACE donc l'entrée d'historique.
+  it("l'élève sans classe est conduit à l'accueil en remplaçant l'écran demandé", async () => {
+    needsOnboarding = true;
+    authState = { user: { id: "u1" }, loading: false };
+    await renderShell();
+    expect(navigate).toHaveBeenCalledWith({ to: "/onboarding", replace: true });
+  });
+
+  it("le parent qui arrive sur le Hall est conduit à son Suivi, sans attendre le tableau de bord", async () => {
+    currentRole = "parent";
+    authState = { user: { id: "u1" }, loading: false };
+    await renderShell();
+    expect(navigate).toHaveBeenCalledWith({ to: "/parent-report", replace: true });
+  });
+
+  it("le parent n'est renvoyé QUE du Hall : ses autres écrans restent les siens", async () => {
+    currentRole = "parent";
+    currentLocation = { pathname: "/parametrage", searchStr: "" };
+    authState = { user: { id: "u1" }, loading: false };
+    await renderShell();
+    expect(navigate).not.toHaveBeenCalled();
+  });
+
+  it("ne juge que l'écran RENDU : un parent qui quitte le Hall pour ailleurs n'y est pas rattrapé", async () => {
+    // La navigation vers le Hall est partie (l'adresse le dit) mais l'écran affiché est encore
+    // un autre : la garde attend que le Hall soit réellement rendu.
+    currentRole = "parent";
+    currentLocation = { pathname: "/dashboard", searchStr: "" };
+    renderedPathname = "/parent-report";
+    authState = { user: { id: "u1" }, loading: false };
+    await renderShell();
+    expect(navigate).not.toHaveBeenCalled();
+  });
+
+  it("l'élève et l'admin gardent le Hall", async () => {
+    for (const role of ["student", "admin"]) {
+      navigate.mockReset();
+      currentRole = role;
+      authState = { user: { id: "u1" }, loading: false };
+      const view = await renderShell();
+      expect(navigate).not.toHaveBeenCalled();
+      view.unmount();
+    }
   });
 });
 

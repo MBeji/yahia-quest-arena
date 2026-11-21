@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import React from "react";
 
 const mockNavigate = vi.fn();
-const mockPush = vi.fn();
+const mockReplace = vi.fn();
 const mockSearch: { mode: string; role?: "parent"; returnTo?: string } = { mode: "signup" };
 vi.mock("@tanstack/react-router", () => ({
   createFileRoute: () => (opts: Record<string, unknown>) => ({
@@ -11,7 +11,7 @@ vi.mock("@tanstack/react-router", () => ({
     useSearch: () => mockSearch,
   }),
   useNavigate: () => mockNavigate,
-  useRouter: () => ({ history: { push: mockPush } }),
+  useRouter: () => ({ history: { replace: mockReplace } }),
   Link: ({ children, to }: { children: React.ReactNode; to: string }) =>
     React.createElement("a", { href: to }, children),
 }));
@@ -207,7 +207,9 @@ describe("AuthPage — parent signup with alliance code", () => {
     });
     submitSignup();
 
-    await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith({ to: "/dashboard" }));
+    await waitFor(() =>
+      expect(mockNavigate).toHaveBeenCalledWith({ to: "/dashboard", replace: true }),
+    );
   });
 });
 
@@ -379,7 +381,7 @@ describe("AuthPage — les événements du tunnel (é38 lot 0)", () => {
       return_to_kept: true,
       from_content: true,
     });
-    expect(mockPush).toHaveBeenCalledWith("/chapitre/c1");
+    expect(mockReplace).toHaveBeenCalledWith("/chapitre/c1");
   });
 
   it("une session Google ANCIENNE qui se rouvre (onglet retrouvé) n'est pas une connexion", () => {
@@ -389,7 +391,7 @@ describe("AuthPage — les événements du tunnel (é38 lot 0)", () => {
     listener("SIGNED_IN", sessionOf("google", "2026-01-01T00:00:00.000Z"));
 
     expect(trackProductEvent).not.toHaveBeenCalled();
-    expect(mockNavigate).toHaveBeenCalledWith({ to: "/dashboard" });
+    expect(mockNavigate).toHaveBeenCalledWith({ to: "/dashboard", replace: true });
   });
 
   it("le retour d'un lien de confirmation e-mail n'est pas un login Google", () => {
@@ -408,7 +410,7 @@ describe("AuthPage — les événements du tunnel (é38 lot 0)", () => {
     listener("SIGNED_IN", { user: { id: "u1" } });
 
     expect(trackProductEvent).not.toHaveBeenCalled();
-    expect(mockNavigate).toHaveBeenCalledWith({ to: "/dashboard" });
+    expect(mockNavigate).toHaveBeenCalledWith({ to: "/dashboard", replace: true });
   });
 });
 
@@ -443,7 +445,7 @@ describe("AuthPage — le retour au point de départ (é38 lot 1)", () => {
     render(<AuthPage />);
     submitLogin();
 
-    await waitFor(() => expect(mockPush).toHaveBeenCalledWith("/chapitre/c1"));
+    await waitFor(() => expect(mockReplace).toHaveBeenCalledWith("/chapitre/c1"));
     expect(mockNavigate).not.toHaveBeenCalled();
     // Il ne sert qu'une fois : consommé.
     expect(peekReturnTo()).toBeNull();
@@ -453,8 +455,10 @@ describe("AuthPage — le retour au point de départ (é38 lot 1)", () => {
     render(<AuthPage />);
     submitLogin();
 
-    await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith({ to: "/dashboard" }));
-    expect(mockPush).not.toHaveBeenCalled();
+    await waitFor(() =>
+      expect(mockNavigate).toHaveBeenCalledWith({ to: "/dashboard", replace: true }),
+    );
+    expect(mockReplace).not.toHaveBeenCalled();
   });
 
   it("après l'inscription qui ouvre une session, ramène à la page gardée", async () => {
@@ -464,7 +468,7 @@ describe("AuthPage — le retour au point de départ (é38 lot 1)", () => {
     render(<AuthPage />);
     submitSignup();
 
-    await waitFor(() => expect(mockPush).toHaveBeenCalledWith("/matiere/m1"));
+    await waitFor(() => expect(mockReplace).toHaveBeenCalledWith("/matiere/m1"));
     expect(mockNavigate).not.toHaveBeenCalled();
   });
 
@@ -477,7 +481,7 @@ describe("AuthPage — le retour au point de départ (é38 lot 1)", () => {
 
     await screen.findByText(/Confirme ton email/);
     expect(peekReturnTo()).toBe("/chapitre/c1");
-    expect(mockPush).not.toHaveBeenCalled();
+    expect(mockReplace).not.toHaveBeenCalled();
   });
 
   it("le lien de confirmation, ouvert sur /auth, ramène à la page gardée", async () => {
@@ -486,7 +490,7 @@ describe("AuthPage — le retour au point de départ (é38 lot 1)", () => {
     mockGetSession.mockResolvedValue({ data: { session: { user: { id: "u1" } } } });
     render(<AuthPage />);
 
-    await waitFor(() => expect(mockPush).toHaveBeenCalledWith("/chapitre/c1"));
+    await waitFor(() => expect(mockReplace).toHaveBeenCalledWith("/chapitre/c1"));
     expect(mockNavigate).not.toHaveBeenCalled();
   });
 
@@ -496,12 +500,12 @@ describe("AuthPage — le retour au point de départ (é38 lot 1)", () => {
     render(<AuthPage />);
     const listener = mockOnAuthStateChange.mock.calls[0][0] as (e: string, s: unknown) => void;
 
-    await waitFor(() => expect(mockPush).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(mockReplace).toHaveBeenCalledTimes(1));
     // Le second arrivant retrouverait une mémoire consommée et renverrait au Hall PAR-DESSUS le retour.
     listener("SIGNED_IN", { user: { id: "u1" } });
     listener("TOKEN_REFRESHED", { user: { id: "u1" } });
 
-    expect(mockPush).toHaveBeenCalledTimes(1);
+    expect(mockReplace).toHaveBeenCalledTimes(1);
     expect(mockNavigate).not.toHaveBeenCalled();
   });
 
@@ -530,8 +534,10 @@ describe("AuthPage — le retour au point de départ (é38 lot 1)", () => {
     render(<AuthPage />);
     submitLogin();
 
-    await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith({ to: "/dashboard" }));
-    expect(mockPush).not.toHaveBeenCalled();
+    await waitFor(() =>
+      expect(mockNavigate).toHaveBeenCalledWith({ to: "/dashboard", replace: true }),
+    );
+    expect(mockReplace).not.toHaveBeenCalled();
   });
 
   it("les événements disent que le retour est gardé et d'où l'on venait", async () => {
@@ -711,8 +717,8 @@ describe("AuthPage — la mesure se lit avant la consommation (revue de sécurit
         from_content: true,
       }),
     );
-    expect(mockPush).toHaveBeenCalledTimes(1);
-    expect(mockPush).toHaveBeenCalledWith("/chapitre/c1");
+    expect(mockReplace).toHaveBeenCalledTimes(1);
+    expect(mockReplace).toHaveBeenCalledWith("/chapitre/c1");
   });
 
   it("inscription qui ouvre une session : même chose", async () => {
@@ -738,8 +744,8 @@ describe("AuthPage — la mesure se lit avant la consommation (revue de sécurit
         from_content: true,
       }),
     );
-    expect(mockPush).toHaveBeenCalledTimes(1);
-    expect(mockPush).toHaveBeenCalledWith("/chapitre/c1");
+    expect(mockReplace).toHaveBeenCalledTimes(1);
+    expect(mockReplace).toHaveBeenCalledWith("/chapitre/c1");
   });
 
   it("sans retour gardé, la mesure dit toujours faux — c'est le Hall", async () => {
@@ -755,7 +761,7 @@ describe("AuthPage — la mesure se lit avant la consommation (revue de sécurit
         from_content: false,
       }),
     );
-    expect(mockNavigate).toHaveBeenCalledWith({ to: "/dashboard" });
+    expect(mockNavigate).toHaveBeenCalledWith({ to: "/dashboard", replace: true });
   });
 
   it("retour de Google, session DÉJÀ ouverte au montage : un login, avec le contexte d'arrivée", async () => {
@@ -763,7 +769,7 @@ describe("AuthPage — la mesure se lit avant la consommation (revue de sécurit
     mockGetSession.mockResolvedValue({ data: { session: freshGoogle() } });
     render(<AuthPage />);
 
-    await waitFor(() => expect(mockPush).toHaveBeenCalledWith("/chapitre/c1"));
+    await waitFor(() => expect(mockReplace).toHaveBeenCalledWith("/chapitre/c1"));
     // SIGNED_IN arrive APRÈS que le rappel de session a déjà consommé la mémoire : il ne doit ni
     // doubler l'événement, ni le fausser.
     listener()("SIGNED_IN", freshGoogle());
@@ -771,7 +777,7 @@ describe("AuthPage — la mesure se lit avant la consommation (revue de sécurit
     expect(loginEvents()).toEqual([
       ["login", { method: "google", reason: "fresh", return_to_kept: true, from_content: true }],
     ]);
-    expect(mockPush).toHaveBeenCalledTimes(1);
+    expect(mockReplace).toHaveBeenCalledTimes(1);
   });
 
   it("retour de Google, INITIAL_SESSION d'abord puis SIGNED_IN : un seul login, avec le bon contexte", () => {
@@ -803,7 +809,9 @@ describe("AuthPage — la mesure se lit avant la consommation (revue de sécurit
     });
     render(<AuthPage />);
 
-    await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith({ to: "/dashboard" }));
+    await waitFor(() =>
+      expect(mockNavigate).toHaveBeenCalledWith({ to: "/dashboard", replace: true }),
+    );
     expect(loginEvents()).toHaveLength(0);
   });
 });

@@ -42,7 +42,7 @@ import { streakRecoveryBlock } from "@/shared/lib/streak-recovery";
 // l'importer ici les tirait dans le chunk eager — le `lazy()` ne découpait plus rien.
 import { DailyReviewPanel } from "@/features/progression/components/daily-review-panel";
 import { recoverStreak } from "@/features/progression/progression.server";
-import { hubRouteForRole, shouldLeaveDashboard, useExitOnRefusedSession } from "@/features/auth";
+import { useExitOnRefusedSession } from "@/features/auth";
 import { EnablePushCard } from "@/features/notifications";
 import { SubjectPathCard } from "@/features/dashboard/components/subject-path-card";
 import { MotivationalQuote } from "@/features/dashboard/components/motivational-quote";
@@ -154,15 +154,6 @@ function Dashboard() {
   const [ambient3dReady, setAmbient3dReady] = useState(false);
   useEffect(() => setAmbient3dReady(true), []);
   const showAmbient3d = ambient3dReady && !prefersReduced && !isMobile;
-
-  // A parent has no game profile — send them to their own space (Suivi). An ADMIN
-  // stays here: /dashboard is the return target of the whole shell, so bouncing
-  // them off it looped the navigation and made the Hall unreachable (hub-route.ts).
-  useEffect(() => {
-    if (shouldLeaveDashboard(data?.profile?.role)) {
-      navigate({ to: hubRouteForRole(data?.profile?.role) });
-    }
-  }, [data?.profile?.role, navigate]);
 
   const recoverStreakFn = useServerFn(recoverStreak);
   const streakRecoveryMutation = useMutation({
