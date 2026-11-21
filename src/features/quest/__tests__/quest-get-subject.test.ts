@@ -186,6 +186,28 @@ describe("gamification.quest — getSubject", () => {
     ).rejects.toThrow("Impossible de charger la matière.");
   });
 
+  // Audit de navigation du 2026-11-21 (N-18) : pendant une publication de contenu, la lecture
+  // des missions expirait et `?? []` rendait une matière « sans mission », sans rien en dire.
+  it.each(["chapters", "exercises"])(
+    "lève quand la lecture de %s échoue : une panne n'est pas une matière vide",
+    async (failing) => {
+      mockFrom.mockImplementation((table: string) => {
+        if (table === "subjects") return mockQuery({ id: "subj-1", name_fr: "Math" });
+        if (table === failing) {
+          return mockQuery(null, { message: "canceling statement due to statement timeout" });
+        }
+        return mockQuery([]);
+      });
+      mockRpc.mockReturnValue({ data: [], error: null });
+
+      const { getSubject } = await import("@/features/quest");
+
+      await expect(
+        (getSubject as unknown as (d: unknown) => Promise<unknown>)({ subjectId: "subj-1" }),
+      ).rejects.toThrow("Impossible de charger la matière.");
+    },
+  );
+
   it("degrades to no progress on a get_subject_progress RPC error", async () => {
     mockFrom.mockImplementation((table: string) => {
       if (table === "subjects") return mockQuery({ id: "s1" });

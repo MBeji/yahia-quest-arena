@@ -204,7 +204,7 @@ function MistakeBlock({
       <div className={`flex flex-wrap items-center gap-2 ${label ? "mt-2" : ""}`}>
         {chapterId && (
           <Link
-            to="/lesson/$chapterId"
+            to="/chapitre/$chapterId"
             params={{ chapterId }}
             data-testid="review-course-link"
             className="inline-flex items-center gap-1 rounded-lg border border-[color:var(--gold)]/30 px-2 py-1 text-xs font-bold text-[color:var(--gold)] transition hover:bg-[color:var(--gold)]/10"

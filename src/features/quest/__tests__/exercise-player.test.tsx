@@ -491,6 +491,42 @@ describe("ExercisePlayer — une panne ne doit jamais laisser un bouton mort", (
     expect(startSession).toHaveBeenCalledTimes(2);
   });
 
+  // Audit de navigation du 2026-11-21 (N-4) : ces écrans sont immersifs, sans barre
+  // d'onglets. Une panne y a toujours DEUX issues — réessayer, et partir.
+  it("lecture de l'exercice en échec : ni « Préparation… » sans fin, ni écran sans issue", async () => {
+    mockGetExercise.mockReset().mockRejectedValue(new Error("boom"));
+    renderPlayer(anonStrategy());
+
+    const retry = await screen.findByRole("button", { name: /réessayer/i });
+    expect(screen.getByRole("alert")).toBeInTheDocument();
+    // La sortie : l'accueil pour un visiteur (`homeTo` de la stratégie).
+    expect(screen.getByRole("link", { name: /accueil/i })).toHaveAttribute("href", "/");
+
+    // Et « Réessayer » relit vraiment l'exercice.
+    mockGetExercise.mockResolvedValue(exerciseData());
+    fireEvent.click(retry);
+    expect(await screen.findByText("1 + 1 ?")).toBeInTheDocument();
+  });
+
+  it("lecture en échec côté compte : la sortie mène au Hall", async () => {
+    mockGetExercise.mockReset().mockRejectedValue(new Error("boom"));
+    renderPlayer(anonStrategy({ homeTo: "/dashboard" }));
+    expect(await screen.findByRole("link", { name: /retour au hall/i })).toHaveAttribute(
+      "href",
+      "/dashboard",
+    );
+  });
+
+  it("démarrage en échec : une sortie à côté de « Réessayer », et jamais le message brut du navigateur", async () => {
+    const startSession = vi.fn().mockRejectedValue(new TypeError("Failed to fetch"));
+    renderPlayer(anonStrategy({ startSession }));
+
+    await screen.findByTestId("quest-session-retry");
+    expect(screen.getByRole("link", { name: /accueil/i })).toHaveAttribute("href", "/");
+    expect(screen.queryByText(/failed to fetch/i)).not.toBeInTheDocument();
+    expect(screen.getByText("Impossible de démarrer la session.")).toBeInTheDocument();
+  });
+
   it("soumission en échec : l'élève peut re-valider sa dernière question", async () => {
     const submit = vi
       .fn()

@@ -21,6 +21,9 @@ import {
 } from "@/shared/lib/quest-labels";
 import { useT } from "@/lib/i18n";
 import { LoadingState } from "@/components/ui/loading-state";
+import { BackLink } from "@/components/ui/back-link";
+import { LoadError } from "@/components/ui/load-error";
+import { WaitingForNetwork, isWaitingForNetwork } from "@/components/ui/query-wait-state";
 import { PageShell } from "@/components/ui/page-shell";
 import { questionSlide, useEntrance } from "@/shared/lib/motion";
 import { useQuestPulse } from "@/features/quest/quest-pulse";
@@ -198,7 +201,7 @@ export function ExercisePlayer({
   // et elle invalide ["subject"] explicitement. Un détour par la calculatrice ne
   // doit donc jamais relancer getExercise ni getSubject pendant qu'il répond,
   // en concurrence sur la radio avec son prochain « Valider » (data-02).
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError, refetch, fetchStatus } = useQuery({
     queryKey: ["exercise", exerciseId, variant],
     queryFn: () => fetchExercise({ data: { exerciseId, variant } }),
     refetchOnWindowFocus: false,
@@ -636,6 +639,23 @@ export function ExercisePlayer({
 
   const preparingScreen = <LoadingState label={t.quest.preparing} className="min-h-[60dvh]" />;
 
+  // L'issue de secours des écrans sans partie. Ces écrans sont immersifs — pas de barre
+  // d'onglets — : une panne sans lien y laissait l'élève devant un chargement sans fin
+  // (audit de navigation du 2026-11-21, N-4).
+  const exitLink = (
+    <BackLink to={strategy.homeTo} className="mb-0">
+      {strategy.homeTo === "/dashboard" ? t.common.backToHall : t.common.home}
+    </BackLink>
+  );
+
+  // Sans réseau la lecture est en PAUSE, pas en cours ; en échec, elle est finie. Dans les
+  // deux cas « Préparation… » mentait.
+  if (isWaitingForNetwork({ fetchStatus, data })) {
+    return <WaitingForNetwork onRetry={() => void refetch()} />;
+  }
+  if (isError && !data) {
+    return <LoadError onRetry={() => void refetch()}>{exitLink}</LoadError>;
+  }
   if (isLoading || !data) return preparingScreen;
 
   const chapterId = (data.exercise.chapter_id as string | null) ?? null;
@@ -705,14 +725,18 @@ export function ExercisePlayer({
     return (
       <QuestSessionError
         title={t.errors.errorTitle}
+        // Un refus du serveur porte sa phrase (traduite, stable) ; une panne de réseau porte
+        // celle du navigateur (« Failed to fetch »), qui n'est pas pour un élève.
         message={
-          failure instanceof Error && failure.message
+          failure instanceof Error && failure.message && !(failure instanceof TypeError)
             ? failure.message
             : t.errors.sessionStartFailed
         }
         retryLabel={t.common.retry}
         onRetry={session.retry}
-      />
+      >
+        {exitLink}
+      </QuestSessionError>
     );
   }
 

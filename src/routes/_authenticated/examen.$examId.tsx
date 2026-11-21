@@ -4,6 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ChevronLeft, ChevronRight, ShieldAlert } from "lucide-react";
 
+import { BackLink } from "@/components/ui/back-link";
 import { EmptyState } from "@/components/ui/empty-state";
 import { LoadingState } from "@/components/ui/loading-state";
 import { PageShell } from "@/components/ui/page-shell";
@@ -227,6 +228,9 @@ function ExamRunner({ examId, kind }: { examId: string; kind: "ranked" | "practi
   if (result) {
     return (
       <PageShell width="narrow" className="py-8">
+        {/* L'écran est immersif (pas de barre d'onglets) : sans ce lien, une copie rendue
+            n'avait que le logo pour repartir (audit de navigation du 2026-11-21, N-4). */}
+        <BackLink to="/examens">{t.exam.back}</BackLink>
         <header className="mb-6">
           <p className="text-sm text-muted-foreground">{examTitle}</p>
           <h1 className="font-display text-3xl font-bold">{t.exam.resultTitle}</h1>

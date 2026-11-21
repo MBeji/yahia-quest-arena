@@ -318,6 +318,16 @@ export const getSubject = createServerFn({ method: "GET" })
 
     // Comprehension-quiz gate: a chapter's exercises stay locked until the
     // user passes that chapter's mode='quiz' exercise at/above the threshold.
+    // Une lecture en ÉCHEC n'est pas une matière vide. `?? []` rendait un sommaire sans
+    // chapitre ou sans mission, sans rien en dire — constaté en production le 2026-11-21,
+    // pendant une publication de contenu (audit de navigation, N-18). On lève : la page
+    // sait dire « réessayer », et le rendu serveur repasse la main au client.
+    if (chaps.error) {
+      failWithClientError("quest.getSubject", chaps.error, "Impossible de charger la matière.");
+    }
+    if (exs.error) {
+      failWithClientError("quest.getSubject", exs.error, "Impossible de charger la matière.");
+    }
     const exercises = exs.data ?? [];
     // The comprehension-quiz gate applies only to the school program (grade-bound
     // subjects). Non-school themes (culture-générale, muscle-cerveau/IQ, languages)

@@ -36,7 +36,7 @@ export function AccountHud({ to = "/dashboard" }: { to?: HubRoute }) {
       to={to}
       aria-label={t.public.header.account}
       data-testid="account-hud"
-      className="flex min-w-0 max-w-[9rem] items-center gap-2 overflow-hidden rounded-lg border border-[color:var(--gold)]/40 bg-card px-2.5 py-1.5 text-sm font-semibold text-foreground shadow-sm transition hover:border-[color:var(--gold)]/70 sm:max-w-none sm:px-3"
+      className="flex min-w-0 max-w-[9rem] items-center gap-2 overflow-hidden rounded-lg border border-[color:var(--gold)]/40 bg-card px-2.5 py-1.5 max-[399px]:gap-1 max-[399px]:px-2 text-sm font-semibold text-foreground shadow-sm transition hover:border-[color:var(--gold)]/70 sm:max-w-none sm:px-3"
     >
       {hasStats ? (
         <>
@@ -47,13 +47,14 @@ export function AccountHud({ to = "/dashboard" }: { to?: HubRoute }) {
             <Flame className="h-4 w-4 text-[color:var(--flame)]" aria-hidden="true" />
             {streak}
           </span>
-          <span aria-hidden="true" className="shrink-0 text-muted-foreground">
+          <span aria-hidden="true" className="shrink-0 text-muted-foreground max-[399px]:hidden">
             ·
           </span>
           <span className="flex min-w-0 items-center gap-1">
             <Zap className="h-4 w-4 shrink-0 text-[color:var(--gold)]" aria-hidden="true" />
             <span className="truncate">{xpDisplay}</span>
-            <span className="shrink-0 text-muted-foreground">XP</span>
+            {/* Sous 400 px l'éclair suffit à dire « XP » : le suffixe rend ses 24 px à la ligne. */}
+            <span className="shrink-0 text-muted-foreground max-[399px]:hidden">XP</span>
           </span>
         </>
       ) : (

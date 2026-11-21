@@ -16,11 +16,14 @@ export function QuestSessionError({
   message,
   retryLabel,
   onRetry,
+  children,
 }: {
   title: string;
   message: string;
   retryLabel: string;
   onRetry: () => void;
+  /** Une seconde issue : l'écran est immersif, « Réessayer » ne peut pas être la seule. */
+  children?: React.ReactNode;
 }) {
   return (
     <div className="mx-auto max-w-md px-6 py-12">
@@ -30,14 +33,17 @@ export function QuestSessionError({
         title={title}
         description={message}
         action={
-          <button
-            type="button"
-            data-testid="quest-session-retry"
-            onClick={onRetry}
-            className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-[image:var(--gradient-gold)] px-6 text-sm font-bold text-primary-foreground shadow-gold transition"
-          >
-            {retryLabel}
-          </button>
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <button
+              type="button"
+              data-testid="quest-session-retry"
+              onClick={onRetry}
+              className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-[image:var(--gradient-gold)] px-6 text-sm font-bold text-primary-foreground shadow-gold transition"
+            >
+              {retryLabel}
+            </button>
+            {children}
+          </div>
         }
       />
     </div>

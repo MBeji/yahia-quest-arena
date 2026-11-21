@@ -76,7 +76,7 @@ export function PublicHeader() {
           un élève passe de son Hall au catalogue. À `max-w-5xl` la barre du haut n'avait
           pas la place de ses liens — ils passaient sur deux lignes. */}
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 px-4 py-2 max-[359px]:gap-1 max-[359px]:px-2 sm:gap-3 sm:px-6 sm:py-3">
-        <div className="flex items-center gap-3 sm:gap-6">
+        <div className="flex shrink-0 items-center gap-3 sm:gap-6">
           {/* Brand = home. AUTH-AWARE destination: a signed-in visitor who reached
               this public shell via the converged « Découvrir » nav is sent back to
               their own hub (Hall, or Suivi for a parent), NOT the logged-out landing (`/`)
@@ -87,7 +87,12 @@ export function PublicHeader() {
             // 44 px de haut : la marque est le premier lien que le pouce cherche.
             className="flex min-h-11 items-center gap-2"
           >
-            <span className="font-brand text-lg font-bold tracking-tight whitespace-nowrap text-primary max-[359px]:text-base">
+            {/* Connecté, sous 400 px : la marque cède de la place à la puce de compte, dont le
+                chiffre d'XP disparaissait sinon (tronqué jusqu'à l'éclair seul). */}
+            <span
+              data-authed={isAuthed}
+              className="font-brand text-lg font-bold tracking-tight whitespace-nowrap text-primary max-[359px]:text-base data-[authed=true]:max-[399px]:text-sm"
+            >
               Na9ra Nal3ab
             </span>
             {/* Le nom accessible COMMENCE par la marque visible, puis dit où mène le lien.
@@ -125,13 +130,19 @@ export function PublicHeader() {
             )}
           </nav>
         </div>
-        <div className="flex items-center gap-1 sm:gap-2">
+        {/* `min-w-0` : la puce de compte garde le droit de se tronquer. Sans lui, marque + aide +
+            réglages + puce élargissaient le document de 17 à 53 px sous 400 px pour un connecté
+            (audit de navigation du 2026-11-21, N-2). */}
+        <div className="flex min-w-0 items-center gap-1 sm:gap-2">
           {/* Même engrenage que la coquille connectée, sans le bloc compte : un
               visiteur anonyme règle thème, langue ET son — les trois providers
               vivent à la racine, mais l'ancien header public n'offrait pas le son. */}
           {/* Sur téléphone, la marque + « Créer mon compte » remplissent déjà la
               ligne : l'aide y garde son icône, son libellé revient dès `sm`. */}
           <GuideButton compact />
+          {/* Connecté : la puce PUIS l'engrenage, comme dans la coquille connectée — les deux
+              contrôles s'échangeaient leur place à chaque passage d'une coquille à l'autre. */}
+          {!loading && isAuthed && <AccountHud to={hub} />}
           <SettingsMenu onSignOut={isAuthed ? signOut : undefined} />
           {loading ? (
             // é38 R-6 : tant que la session n'est pas lue, aucun libellé ne dit l'état du
@@ -148,9 +159,7 @@ export function PublicHeader() {
               </span>
               <span className={HEADER_SIGNUP}>{signupLabel}</span>
             </span>
-          ) : isAuthed ? (
-            <AccountHud to={hub} />
-          ) : (
+          ) : isAuthed ? null : (
             <>
               <Link
                 to="/login"

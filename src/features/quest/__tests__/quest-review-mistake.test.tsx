@@ -87,7 +87,7 @@ describe("QuestReviewList — bloc de correction riche (A1.2b)", () => {
     expect(screen.getByTestId("review-mistake-label").textContent).toBe(
       "Tu additionnes les dénominateurs",
     );
-    expect(screen.getByTestId("review-course-link").getAttribute("href")).toBe("/lesson/chap-1");
+    expect(screen.getByTestId("review-course-link").getAttribute("href")).toBe("/chapitre/chap-1");
   });
 
   it("n'affiche JAMAIS le tag lui-même — c'est un id (R-A1.2-1)", () => {
