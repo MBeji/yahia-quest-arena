@@ -67,8 +67,11 @@ function AuthPage() {
     if (left.current) return;
     left.current = true;
     const back = consumeReturnTo();
-    if (back) router.history.push(back);
-    else navigate({ to: "/dashboard" });
+    // REMPLACER, pas empiler : `/auth` renvoie aussitôt quiconque a une session. Resté dans
+    // l'historique, il transformait chaque Retour en saut vers le Hall — la page d'avant la
+    // connexion devenait inatteignable (audit du 2026-11-21, N-3).
+    if (back) router.history.replace(back);
+    else navigate({ to: "/dashboard", replace: true });
   }, [navigate, router]);
   const isSignup = mode === "signup";
   const isForgot = mode === "forgot";

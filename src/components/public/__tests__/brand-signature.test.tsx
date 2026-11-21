@@ -16,6 +16,7 @@ vi.mock("@/features/auth", () => ({
   useAuth: () => ({ user: null, session: null, loading: false }),
   useMyRole: () => ({ role: null, loading: false }),
   useSignOutInPlace: () => vi.fn(),
+  hubRouteForRole: () => "/dashboard",
 }));
 
 import { I18nProvider } from "@/lib/i18n";

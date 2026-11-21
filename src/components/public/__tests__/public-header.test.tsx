@@ -47,13 +47,15 @@ vi.mock("@/features/auth", () => ({
   useAuth: () => mockUseAuth(),
   useMyRole: () => mockUseMyRole(),
   useSignOutInPlace: () => mockSignOut,
+  // La vraie règle, recopiée : le mock remplace toute la feature (elle tire la couche serveur).
+  hubRouteForRole: (role: string | null) => (role === "parent" ? "/parent-report" : "/dashboard"),
 }));
 
 // The signed-in branch renders <AccountHud/> (its own tested unit); stub it to a
 // plain dashboard link so this spec stays focused on the header's auth branching.
 vi.mock("@/components/account-hud", () => ({
-  AccountHud: () =>
-    React.createElement("a", { href: "/dashboard", "data-testid": "account-hud" }, "hud"),
+  AccountHud: ({ to = "/dashboard" }: { to?: string }) =>
+    React.createElement("a", { href: to, "data-testid": "account-hud" }, "hud"),
 }));
 
 import { I18nProvider } from "@/lib/i18n";
@@ -128,6 +130,17 @@ describe("PublicHeader", () => {
     // The brand logo now points at the dashboard.
     const brand = screen.getByText("Na9ra Nal3ab").closest("a");
     expect(brand).toHaveAttribute("href", "/dashboard");
+  });
+});
+
+describe("PublicHeader — l'espace du rôle (audit du 2026-11-21, N-8)", () => {
+  it("parent connecté : la marque et la puce mènent à son Suivi, jamais au Hall de l'élève", () => {
+    mockUseAuth.mockReturnValue({ user: { id: "u1" }, session: {}, loading: false });
+    mockUseMyRole.mockReturnValue({ role: "parent" });
+    const { container } = renderHeader();
+    expect(screen.getByText("Na9ra Nal3ab").closest("a")).toHaveAttribute("href", "/parent-report");
+    expect(screen.getByTestId("account-hud")).toHaveAttribute("href", "/parent-report");
+    expect(container.querySelector('a[href="/dashboard"]')).toBeNull();
   });
 });
 

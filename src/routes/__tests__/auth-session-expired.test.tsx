@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import React from "react";
 
 const mockNavigate = vi.fn();
-const mockPush = vi.fn();
+const mockReplace = vi.fn();
 const mockSearch: { mode: string; role?: "parent"; returnTo?: string } = { mode: "signup" };
 vi.mock("@tanstack/react-router", () => ({
   createFileRoute: () => (opts: Record<string, unknown>) => ({
@@ -11,7 +11,7 @@ vi.mock("@tanstack/react-router", () => ({
     useSearch: () => mockSearch,
   }),
   useNavigate: () => mockNavigate,
-  useRouter: () => ({ history: { push: mockPush } }),
+  useRouter: () => ({ history: { replace: mockReplace } }),
   Link: ({ children, to }: { children: React.ReactNode; to: string }) =>
     React.createElement("a", { href: to }, children),
 }));
@@ -180,8 +180,8 @@ describe("AuthPage — la session qui meurt (é38 lot 3, R-7)", () => {
         from_content: false,
       }),
     );
-    expect(mockPush).toHaveBeenCalledTimes(1);
-    expect(mockPush).toHaveBeenCalledWith("/quest/ex-1?variant=recall");
+    expect(mockReplace).toHaveBeenCalledTimes(1);
+    expect(mockReplace).toHaveBeenCalledWith("/quest/ex-1?variant=recall");
     // La mémoire est consommée : la prochaine connexion ne rejouera pas l'expiration.
     expect(peekReturnReason()).toBeNull();
   });
@@ -200,7 +200,7 @@ describe("AuthPage — la session qui meurt (é38 lot 3, R-7)", () => {
     });
     render(<AuthPage />);
 
-    await waitFor(() => expect(mockPush).toHaveBeenCalledWith("/quest/ex-1"));
+    await waitFor(() => expect(mockReplace).toHaveBeenCalledWith("/quest/ex-1"));
     const logins = trackProductEvent.mock.calls.filter(([name]) => name === "login");
     expect(logins).toEqual([
       ["login", { method: "google", reason: "expired", return_to_kept: true, from_content: false }],
