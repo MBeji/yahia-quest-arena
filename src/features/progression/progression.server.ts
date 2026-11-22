@@ -224,3 +224,36 @@ export const setClassChapters = createServerFn({ method: "POST" })
     }
     return { count: count ?? 0 };
   });
+
+// Les réglages du programme : l'objectif quotidien (30 minutes est un plancher) et jusqu'à deux
+// matières prioritaires, servies chaque jour. Un réglage absent n'est pas touché.
+export const setStudyPreferences = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .validator((d: unknown) =>
+    z
+      .object({
+        dailyMinutes: z.number().int().min(30).max(120).optional(),
+        focusSubjectIds: z.array(z.string().min(1).max(120)).max(2).optional(),
+      })
+      .parse(d),
+  )
+  .handler(async ({ data, context }): Promise<{ ok: true }> => {
+    const { supabase, userId } = context;
+
+    if (await isRateLimited(supabase, `study_prefs_${userId}`, 30, 60_000)) {
+      throw new Error("Trop de modifications. Réessaie dans une minute.");
+    }
+
+    const { error } = await supabase.rpc("set_study_preferences", {
+      p_daily_minutes: data.dailyMinutes,
+      p_focus_subject_ids: data.focusSubjectIds,
+    });
+    if (error) {
+      failWithClientError(
+        "setStudyPreferences: rpc failed",
+        error,
+        "Enregistrement impossible. Réessaie.",
+      );
+    }
+    return { ok: true };
+  });

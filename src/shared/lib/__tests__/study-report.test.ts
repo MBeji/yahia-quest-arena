@@ -13,6 +13,9 @@ import { describe, expect, it } from "vitest";
 import {
   chaptersToWork,
   examMarkOutOf20,
+  focusSubjectIds,
+  toggleFocusSubject,
+  withStudyPreferences,
   isStudyGoalReached,
   seenThroughChapter,
   studyGoalPercent,
@@ -122,5 +125,44 @@ describe("la déclaration des chapitres vus", () => {
   it("sans détail des chapitres, rien à appliquer", () => {
     const light = report({ subjects: [subject({ chapters: null })] });
     expect(withSeenChapters(light, "math", ["c1"])).toEqual(light);
+  });
+});
+
+describe("les réglages : matières prioritaires et objectif", () => {
+  const three = report({
+    subjects: [
+      subject({ id: "math" }),
+      subject({ id: "fr", focus: true }),
+      subject({ id: "ar", focus: false }),
+    ],
+  });
+
+  it("le schéma accepte le bilan avec ou sans le drapeau « prioritaire »", () => {
+    expect(parseStudyReport(three)?.subjects.map((s) => s.focus)).toEqual([undefined, true, false]);
+  });
+
+  it("focusSubjectIds rend les matières prioritaires, dans l'ordre du parcours", () => {
+    expect(focusSubjectIds(three)).toEqual(["fr"]);
+    expect(focusSubjectIds(report())).toEqual([]);
+  });
+
+  it("basculer une matière l'ajoute ou la retire, dans l'ordre du parcours", () => {
+    expect(toggleFocusSubject(three, "math")).toEqual(["math", "fr"]);
+    expect(toggleFocusSubject(three, "fr")).toEqual([]);
+  });
+
+  it("une troisième matière prioritaire est refusée", () => {
+    const two = withStudyPreferences(three, { focusSubjectIds: ["math", "fr"] });
+    expect(toggleFocusSubject(two, "ar")).toBeNull();
+    expect(toggleFocusSubject(two, "math")).toEqual(["fr"]);
+  });
+
+  it("withStudyPreferences applique l'objectif et les matières, sans toucher au reste", () => {
+    const next = withStudyPreferences(three, { dailyMinutes: 45 });
+    expect(next.targetMinutes).toBe(45);
+    expect(next.subjects).toBe(three.subjects);
+    const focused = withStudyPreferences(three, { focusSubjectIds: ["ar"] });
+    expect(focused.targetMinutes).toBe(30);
+    expect(focusSubjectIds(focused)).toEqual(["ar"]);
   });
 });

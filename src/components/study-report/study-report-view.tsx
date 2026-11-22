@@ -1,9 +1,15 @@
 import { useState } from "react";
 import { useMutation, useQueryClient, type QueryKey } from "@tanstack/react-query";
 
-import { withSeenChapters, type StudyReport } from "@/shared/lib/study-report";
+import {
+  withSeenChapters,
+  withStudyPreferences,
+  type StudyReport,
+} from "@/shared/lib/study-report";
 import { StudyPlanCard } from "./study-plan-card";
 import { StudySubjects } from "./study-subjects";
+
+type StudyPreferences = { dailyMinutes?: number; focusSubjectIds?: string[] };
 
 /**
  * Le bilan complet — programme du jour, puis matière par matière — et le geste « chapitres vus
@@ -19,6 +25,7 @@ export function StudyReportView({
   audience,
   queryKey,
   save,
+  savePreferences,
   alsoInvalidate = [],
 }: {
   report: StudyReport;
@@ -26,6 +33,8 @@ export function StudyReportView({
   /** La clé de la lecture qui a fourni `report` — c'est elle qu'on met à jour et qu'on relit. */
   queryKey: QueryKey;
   save: (subjectId: string, chapterIds: string[]) => Promise<unknown>;
+  /** Règle l'objectif quotidien et les matières prioritaires. Absent : pas de réglage. */
+  savePreferences?: (prefs: StudyPreferences) => Promise<unknown>;
   /** D'autres lectures qui dépendent du programme (le tableau de bord de l'élève). */
   alsoInvalidate?: QueryKey[];
 }) {
@@ -53,15 +62,48 @@ export function StudyReportView({
     },
   });
 
+  const [preferencesError, setPreferencesError] = useState(false);
+  const preferences = useMutation({
+    mutationFn: (prefs: StudyPreferences) =>
+      savePreferences ? savePreferences(prefs) : Promise.resolve(null),
+    onMutate: async (prefs) => {
+      setPreferencesError(false);
+      await queryClient.cancelQueries({ queryKey });
+      const previous = queryClient.getQueryData<StudyReport | null>(queryKey);
+      if (previous) queryClient.setQueryData(queryKey, withStudyPreferences(previous, prefs));
+      return { previous };
+    },
+    onError: (_error, _prefs, context) => {
+      if (context?.previous) queryClient.setQueryData(queryKey, context.previous);
+      setPreferencesError(true);
+    },
+    onSettled: () => {
+      void queryClient.invalidateQueries({ queryKey });
+      for (const key of alsoInvalidate) void queryClient.invalidateQueries({ queryKey: key });
+    },
+  });
+
   return (
     <div className="space-y-6" data-testid="study-report">
-      <StudyPlanCard report={report} audience={audience} />
+      <StudyPlanCard
+        report={report}
+        audience={audience}
+        onSetTarget={
+          savePreferences ? (dailyMinutes) => preferences.mutate({ dailyMinutes }) : undefined
+        }
+        saving={preferences.isPending}
+      />
       <StudySubjects
         report={report}
         audience={audience}
         onSetChapters={(subjectId, chapterIds) => mutation.mutate({ subjectId, chapterIds })}
         savingSubjectId={mutation.isPending ? (mutation.variables?.subjectId ?? null) : null}
         errorSubjectId={errorSubjectId}
+        onSetFocus={
+          savePreferences ? (focusSubjectIds) => preferences.mutate({ focusSubjectIds }) : undefined
+        }
+        savingFocus={preferences.isPending}
+        focusError={preferencesError}
       />
     </div>
   );

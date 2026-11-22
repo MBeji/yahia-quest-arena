@@ -56,6 +56,7 @@ async function load() {
   return {
     getStudentStudyReport: mod.getStudentStudyReport as unknown as Fn,
     setStudentClassChapters: mod.setStudentClassChapters as unknown as Fn,
+    setStudentStudyPreferences: mod.setStudentStudyPreferences as unknown as Fn,
   };
 }
 
@@ -122,5 +123,40 @@ describe("setStudentClassChapters", () => {
       setStudentClassChapters({ studentId: STUDENT, subjectId: "math", chapterIds: ["non"] }),
     ).rejects.toThrow();
     expect(mockRpc).not.toHaveBeenCalled();
+  });
+});
+
+describe("setStudentStudyPreferences", () => {
+  it("règle le programme de l'enfant par la même écriture que lui", async () => {
+    mockRpc.mockResolvedValue({ data: {}, error: null });
+    const { setStudentStudyPreferences } = await load();
+    await expect(
+      setStudentStudyPreferences({
+        studentId: STUDENT,
+        dailyMinutes: 60,
+        focusSubjectIds: ["arabic"],
+      }),
+    ).resolves.toEqual({ ok: true });
+    expect(mockRpc).toHaveBeenCalledWith("set_study_preferences", {
+      p_daily_minutes: 60,
+      p_focus_subject_ids: ["arabic"],
+      p_student: STUDENT,
+    });
+  });
+
+  it("refuse avant la base un objectif hors bornes", async () => {
+    const { setStudentStudyPreferences } = await load();
+    await expect(
+      setStudentStudyPreferences({ studentId: STUDENT, dailyMinutes: 200 }),
+    ).rejects.toThrow();
+    expect(mockRpc).not.toHaveBeenCalled();
+  });
+
+  it("remonte un refus de la base (lien inactif) sans en livrer le détail", async () => {
+    mockRpc.mockResolvedValue({ data: null, error: { message: "Access denied" } });
+    const { setStudentStudyPreferences } = await load();
+    await expect(
+      setStudentStudyPreferences({ studentId: STUDENT, dailyMinutes: 45 }),
+    ).rejects.toThrow("Enregistrement impossible");
   });
 });

@@ -54,6 +54,7 @@ async function load() {
   return {
     getStudyReport: mod.getStudyReport as unknown as Fn,
     setClassChapters: mod.setClassChapters as unknown as Fn,
+    setStudyPreferences: mod.setStudyPreferences as unknown as Fn,
   };
 }
 
@@ -135,5 +136,58 @@ describe("setClassChapters", () => {
     await expect(
       setClassChapters({ data: { subjectId: "math", chapterIds: [CHAPTER] } }),
     ).rejects.toThrow("Enregistrement impossible");
+  });
+});
+
+describe("setStudyPreferences", () => {
+  it("règle l'objectif seul : les matières ne sont pas envoyées", async () => {
+    mockRpc.mockResolvedValue({ data: {}, error: null });
+    const { setStudyPreferences } = await load();
+    await expect(setStudyPreferences({ data: { dailyMinutes: 45 } })).resolves.toEqual({
+      ok: true,
+    });
+    expect(mockRpc).toHaveBeenCalledWith("set_study_preferences", {
+      p_daily_minutes: 45,
+      p_focus_subject_ids: undefined,
+    });
+  });
+
+  it("règle les matières prioritaires, liste vide comprise", async () => {
+    mockRpc.mockResolvedValue({ data: {}, error: null });
+    const { setStudyPreferences } = await load();
+    await setStudyPreferences({ data: { focusSubjectIds: ["arabic", "french"] } });
+    expect(mockRpc).toHaveBeenLastCalledWith("set_study_preferences", {
+      p_daily_minutes: undefined,
+      p_focus_subject_ids: ["arabic", "french"],
+    });
+    await setStudyPreferences({ data: { focusSubjectIds: [] } });
+    expect(mockRpc).toHaveBeenLastCalledWith("set_study_preferences", {
+      p_daily_minutes: undefined,
+      p_focus_subject_ids: [],
+    });
+  });
+
+  it("refuse avant la base un objectif sous le plancher ou une troisième matière", async () => {
+    const { setStudyPreferences } = await load();
+    await expect(setStudyPreferences({ data: { dailyMinutes: 20 } })).rejects.toThrow();
+    await expect(
+      setStudyPreferences({ data: { focusSubjectIds: ["a", "b", "c"] } }),
+    ).rejects.toThrow();
+    expect(mockRpc).not.toHaveBeenCalled();
+  });
+
+  it("freine les rafales et remonte un refus sans en livrer le détail", async () => {
+    isRateLimited.mockResolvedValueOnce(true);
+    const { setStudyPreferences } = await load();
+    await expect(setStudyPreferences({ data: { dailyMinutes: 60 } })).rejects.toThrow(
+      "Trop de modifications",
+    );
+    mockRpc.mockResolvedValue({
+      data: null,
+      error: { message: "Unknown subject for this parcours" },
+    });
+    await expect(setStudyPreferences({ data: { focusSubjectIds: ["x"] } })).rejects.toThrow(
+      "Enregistrement impossible",
+    );
   });
 });

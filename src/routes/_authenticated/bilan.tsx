@@ -7,7 +7,7 @@ import { BackLink } from "@/components/ui/back-link";
 import { EmptyState } from "@/components/ui/empty-state";
 import { LoadingState } from "@/components/ui/loading-state";
 import { PageShell } from "@/components/ui/page-shell";
-import { getStudyReport, setClassChapters } from "@/features/progression";
+import { getStudyReport, setClassChapters, setStudyPreferences } from "@/features/progression";
 import { useT } from "@/lib/i18n";
 import { pageTitle } from "@/lib/i18n/head";
 import { useStudyT } from "@/lib/i18n/study";
@@ -32,6 +32,7 @@ function StudyReportPage() {
   const study = useStudyT().study;
   const fetchReport = useServerFn(getStudyReport);
   const saveChapters = useServerFn(setClassChapters);
+  const savePreferences = useServerFn(setStudyPreferences);
 
   const reportQuery = useQuery({
     queryKey: STUDY_REPORT_QUERY_KEY,
@@ -56,6 +57,7 @@ function StudyReportPage() {
           audience="student"
           queryKey={STUDY_REPORT_QUERY_KEY}
           save={(subjectId, chapterIds) => saveChapters({ data: { subjectId, chapterIds } })}
+          savePreferences={(prefs) => savePreferences({ data: prefs })}
           alsoInvalidate={[["dashboard"]]}
         />
       ) : (
