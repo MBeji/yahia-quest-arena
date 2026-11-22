@@ -15,6 +15,8 @@ import {
   shouldRedirectToOnboarding,
   hubRouteForRole,
   shouldLeaveDashboard,
+  isDeliberateSignOut,
+  useSignOutToHome,
   useProfileLocaleSync,
 } from "@/features/auth";
 import { getPendingBetaCount } from "@/features/subscription";
@@ -23,8 +25,6 @@ import { BetaBadge, BugReportLauncher, getOpenBugsCount } from "@/features/bug-r
 import { AiLauncher } from "@/features/ai/components/ai-launcher";
 import { useClaimPlacementSessions } from "@/features/placement";
 import { ClipboardList, Shield } from "lucide-react";
-import { supabase } from "@/shared/integrations/supabase/client";
-import { toast } from "sonner";
 import { useT } from "@/lib/i18n";
 import { rememberReturnTo } from "@/shared/lib/return-to";
 import { isImmersiveAppPath } from "@/shared/lib/immersive-paths";
@@ -119,6 +119,7 @@ function AuthenticatedLayout() {
   // é38 lot 1 (R-4) : un visiteur qui n'a JAMAIS eu de session ici et suit un lien vers un écran de
   // compte retrouve, une fois connecté, la page qu'il voulait. Celui qui vient de se DÉCONNECTER, non :
   // sur un poste partagé, la page du précédent n'est pas pour le suivant.
+  const signOutToHome = useSignOutToHome();
   const hadUser = useRef(false);
   useEffect(() => {
     if (user) {
@@ -126,6 +127,9 @@ function AuthenticatedLayout() {
       return;
     }
     if (!loading) {
+      // Une déconnexion VOULUE mène à l'accueil (`useSignOutToHome`) : la garde ne lui dispute pas
+      // la navigation (audit du 2026-11-21, N-7 · arbitrage Q-4).
+      if (isDeliberateSignOut()) return;
       if (!hadUser.current) rememberReturnTo(location.pathname + location.searchStr);
       // `replace` : l'écran de compte demandé ne reste pas dans l'historique. Poussé, il piégeait
       // le bouton Retour — revenir dessus relançait la garde, qui repoussait `/auth` (audit du
@@ -153,9 +157,27 @@ function AuthenticatedLayout() {
     ) {
       // `replace`, même raison que la garde de connexion : Retour ne doit pas ramener sur
       // l'écran qui renvoie ici.
-      navigate({ to: "/onboarding", replace: true });
+      // L'écran demandé voyage avec l'élève : l'assistant l'y ramène une fois sa classe choisie
+      // (`?redirect=`, que personne n'émettait — il finissait toujours au Hall ; N-11).
+      if (guardPath === "/dashboard") navigate({ to: "/onboarding", replace: true });
+      else {
+        navigate({
+          to: "/onboarding",
+          search: { redirect: guardPath + location.searchStr },
+          replace: true,
+        });
+      }
     }
-  }, [user, meLoaded, hasProfile, userRole, currentParcoursId, guardPath, navigate]);
+  }, [
+    user,
+    meLoaded,
+    hasProfile,
+    userRole,
+    currentParcoursId,
+    guardPath,
+    location.searchStr,
+    navigate,
+  ]);
 
   // Un PARENT n'a pas de Hall : `/dashboard` le renvoie à son Suivi. Décidé ICI, sur le rôle que
   // la coquille connaît déjà — la page l'attendait de toute la charge du tableau de bord, et le
@@ -177,12 +199,6 @@ function AuthenticatedLayout() {
   }
   if (!user) {
     return null;
-  }
-
-  async function signOut() {
-    await supabase.auth.signOut();
-    toast.success(t.layout.logoutToast);
-    navigate({ to: "/" });
   }
 
   // The primary STUDENT destinations — one list (`studentNavItems`), rendered inline in the
@@ -290,7 +306,10 @@ function AuthenticatedLayout() {
                 y compris pendant une quête ou un cours (écrans immersifs). */}
             <GuideButton />
             <AccountHud to={hub} />
-            <SettingsMenu onSignOut={signOut} onReportBug={() => setBugReportOpen(true)} />
+            <SettingsMenu
+              onSignOut={() => void signOutToHome(t.layout.logoutToast)}
+              onReportBug={() => setBugReportOpen(true)}
+            />
           </div>
         </div>
       </header>

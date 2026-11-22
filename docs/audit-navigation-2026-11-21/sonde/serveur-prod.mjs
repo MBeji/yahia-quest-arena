@@ -50,7 +50,9 @@ http
       res.end(Buffer.from(await response.arrayBuffer()));
     } catch (error) {
       res.writeHead(500);
-      res.end(String(error));
+      // Le détail reste dans la console de la sonde ; la réponse ne porte jamais la trace (CodeQL).
+      console.error(error);
+      res.end("Erreur interne de la sonde.");
     }
   })
   .listen(PORT, "127.0.0.1", () => console.log("prod build on " + ORIGIN));

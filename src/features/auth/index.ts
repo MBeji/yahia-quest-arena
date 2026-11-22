@@ -5,6 +5,7 @@ export { useAuth } from "./use-auth";
 export { useExitOnRefusedSession } from "./use-exit-on-refusal";
 export { useRedirectConnectedParent } from "./use-redirect-connected-parent";
 export { useSignOutInPlace } from "./use-sign-out-in-place";
+export { useSignOutToHome, isDeliberateSignOut } from "./use-sign-out-to-home";
 export { useMyRole } from "./use-my-role";
 export { useMyStats } from "./use-my-stats";
 export { shouldRedirectToOnboarding } from "./onboarding-guard";

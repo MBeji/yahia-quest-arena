@@ -1,7 +1,8 @@
 import { test, expect } from "../fixtures";
 import { STORAGE_STATE } from "../helpers/users";
 
-// Logging out clears the session and the auth guard bounces back to /auth. Driven
+// Logging out clears the session and lands on the public home (arbitrage Q-4 of the
+// 2026-11-21 navigation audit — it used to race the auth guard, which won with /auth). Driven
 // from the lighter leaderboard page (same nav banner) to avoid the dashboard's 3D
 // radar WebGL stalls.
 //
@@ -14,7 +15,7 @@ test.use({ storageState: STORAGE_STATE.free });
 test.describe("Logout", () => {
   test.describe.configure({ timeout: 60_000 });
 
-  test("signing out from the settings menu returns to the auth screen", async ({
+  test("signing out from the settings menu lands on the public home, signed out", async ({
     leaderboard,
     page,
     nav,
@@ -25,16 +26,22 @@ test.describe("Logout", () => {
       await nav.openSettings();
       // FR default (GAP-010) labels it "Déconnexion"; EN "Sign out".
       await nav.settingsMenu.getByRole("button", { name: /sign out|déconnexion/i }).click();
-      await expect(page).toHaveURL(/\/auth/, { timeout: 3000 });
+      await expect(page).toHaveURL(/\/$/, { timeout: 3000 });
+      // Signed out for real: the home offers the account invite, not the HUD.
+      await expect(page.getByTestId("header-signup")).toBeVisible({ timeout: 3000 });
     }).toPass({ timeout: 30_000 });
   });
 
-  test("signing out from the settings page returns to the auth screen", async ({ page }) => {
+  test("signing out from the settings page lands on the public home, signed out", async ({
+    page,
+  }) => {
     await page.goto("/parametrage");
     const signOut = page.getByTestId("settings-sign-out");
     await expect(async () => {
       await signOut.click();
-      await expect(page).toHaveURL(/\/auth/, { timeout: 3000 });
+      await expect(page).toHaveURL(/\/$/, { timeout: 3000 });
+      // Signed out for real: the home offers the account invite, not the HUD.
+      await expect(page.getByTestId("header-signup")).toBeVisible({ timeout: 3000 });
     }).toPass({ timeout: 30_000 });
   });
 

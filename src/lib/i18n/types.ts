@@ -450,6 +450,10 @@ export type TranslationKeys = {
     retryDungeon: string;
     descending: string;
     leaveDungeon: string;
+    leaveTitle: string;
+    leaveBody: string;
+    leaveConfirm: string;
+    leaveCancel: string;
     floor: string;
     oneHp: string;
     warning: string;

@@ -20,6 +20,7 @@ const launcherProps: Array<{ authenticated: boolean }> = [];
 let currentRole: string | null = "student";
 let needsOnboarding = false;
 let renderedPathname: string | null = null;
+let deliberateSignOut = false;
 
 let captured: React.ComponentType | undefined;
 // La page demandée — réglable : le garde la retient (é38 lot 1, R-4).
@@ -54,6 +55,8 @@ vi.mock("@/features/auth", () => ({
   shouldRedirectToOnboarding: () => needsOnboarding,
   hubRouteForRole: (role: string | null) => (role === "parent" ? "/parent-report" : "/dashboard"),
   shouldLeaveDashboard: (role: string | null) => role === "parent",
+  isDeliberateSignOut: () => deliberateSignOut,
+  useSignOutToHome: () => vi.fn(),
   // é31 lot 4 : la coquille pousse la langue d'interface dans le profil (R-17).
   // Neutralisé ici — ce fichier teste le mur de connexion.
   useProfileLocaleSync: () => {},
@@ -118,6 +121,7 @@ beforeEach(() => {
   currentRole = "student";
   needsOnboarding = false;
   renderedPathname = null;
+  deliberateSignOut = false;
   window.localStorage.clear();
 });
 
@@ -235,6 +239,27 @@ describe("coquille connectée — le bouton Retour n'est pas piégé (audit du 2
     authState = { user: { id: "u1" }, loading: false };
     await renderShell();
     expect(navigate).not.toHaveBeenCalled();
+  });
+
+  it("une déconnexion VOULUE n'est pas disputée : la garde ne pousse pas /auth (Q-4, N-7)", async () => {
+    authState = { user: { id: "u1" }, loading: false };
+    const view = await renderShell();
+    deliberateSignOut = true;
+    authState = { user: null, loading: false };
+    view.rerender(React.createElement(captured as React.ComponentType));
+    expect(navigate).not.toHaveBeenCalled();
+  });
+
+  it("l'élève sans classe garde l'écran demandé : l'assistant l'y ramènera (N-11)", async () => {
+    needsOnboarding = true;
+    currentLocation = { pathname: "/boutique", searchStr: "?onglet=badges" };
+    authState = { user: { id: "u1" }, loading: false };
+    await renderShell();
+    expect(navigate).toHaveBeenCalledWith({
+      to: "/onboarding",
+      search: { redirect: "/boutique?onglet=badges" },
+      replace: true,
+    });
   });
 
   it("l'élève et l'admin gardent le Hall", async () => {

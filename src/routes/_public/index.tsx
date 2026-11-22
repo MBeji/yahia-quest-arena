@@ -1,7 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { getCatalogueStats } from "@/features/dashboard";
+import { hubRouteForRole, useAuth, useMyRole } from "@/features/auth";
 import { PublicLanding } from "@/components/public/public-landing";
 
 /**
@@ -23,6 +25,19 @@ export const Route = createFileRoute("/_public/")({
  * with empty slots (never a fake count); it disappears only if the read fails.
  */
 function HomePage() {
+  // LA VITRINE EST POUR LE VISITEUR (arbitrage Q-3 de l'audit de navigation du 2026-11-21, N-9).
+  // L'application installée s'ouvre ici (`start_url`), comme l'adresse tapée du site et le lien
+  // « Retour à l'accueil » de la page 404 : un connecté y voyait la présentation du produit et
+  // devait toucher « Hall ». Une fois sa session et son rôle lus, il passe dans SON espace — Hall,
+  // ou Suivi pour un parent — sans que la vitrine reste dans l'historique. Le rendu serveur ne
+  // connaît pas la session : moteurs de recherche et aperçus de partage voient toujours la vitrine.
+  const { user } = useAuth();
+  const { role, isLoaded: roleLoaded } = useMyRole();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (user && roleLoaded) void navigate({ to: hubRouteForRole(role), replace: true });
+  }, [user, roleLoaded, role, navigate]);
+
   const fetchStats = useServerFn(getCatalogueStats);
   const { data, isPending } = useQuery({
     queryKey: ["catalogue-stats"],

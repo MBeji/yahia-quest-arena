@@ -17,7 +17,9 @@ vi.mock("@/shared/lib/product-events", () => ({
   trackProductEvent: (...a: unknown[]) => trackProductEvent(...a),
 }));
 
+const navigateSpy = vi.hoisted(() => vi.fn());
 vi.mock("@tanstack/react-router", () => ({
+  useNavigate: () => navigateSpy,
   notFound: () => ({ isNotFound: true }),
   isNotFound: (e: unknown) => (e as { isNotFound?: boolean } | null)?.isNotFound === true,
   createFileRoute: () => (opts: Record<string, unknown>) => ({
@@ -99,7 +101,10 @@ vi.mock("@/components/public/keep-row", () => ({
     }),
 }));
 const authState = vi.hoisted(() => ({ user: null as { id: string } | null, loading: false }));
-vi.mock("@/features/auth", () => ({ useAuth: () => authState }));
+// Par défaut le rôle n'est PAS lu : la bascule vers la quête (Q-2) attend qu'il le soit, donc les
+// tests existants voient la page telle qu'avant. Le bloc « Q-2 » le règle lui-même.
+const roleState = vi.hoisted(() => ({ role: null as string | null, isLoaded: false }));
+vi.mock("@/features/auth", () => ({ useAuth: () => authState, useMyRole: () => roleState }));
 
 import { Route } from "../_public/exercice.$exerciseId";
 import { peekReturnTo } from "@/shared/lib/return-to";
@@ -654,5 +659,49 @@ describe("entraînement public — « Garder ce chapitre » (é40 lot 4, R-15 à
     authState.user = null;
     authState.loading = true;
     expect(row(renderFooter(true))).toBeNull();
+  });
+});
+
+describe("un élève connecté joue la quête, pas l'entraînement sans compte (Q-2, audit du 2026-11-21)", () => {
+  beforeEach(() => {
+    navigateSpy.mockReset();
+    authState.loading = false;
+  });
+  afterEach(() => {
+    authState.user = null;
+    roleState.role = null;
+    roleState.isLoaded = false;
+  });
+
+  it("passe à /quest dès que session et rôle sont lus, sans laisser cette page dans l'historique", () => {
+    authState.user = { id: "u1" };
+    roleState.role = "student";
+    roleState.isLoaded = true;
+    render(<Page />);
+    expect(navigateSpy).toHaveBeenCalledWith({
+      to: "/quest/$exerciseId",
+      params: { exerciseId: "ex-1" },
+      replace: true,
+    });
+  });
+
+  it("attend le rôle : rien ne part tant qu'il n'est pas lu", () => {
+    authState.user = { id: "u1" };
+    render(<Page />);
+    expect(navigateSpy).not.toHaveBeenCalled();
+  });
+
+  it("un parent n'a pas de quête : il reste sur l'entraînement", () => {
+    authState.user = { id: "u1" };
+    roleState.role = "parent";
+    roleState.isLoaded = true;
+    render(<Page />);
+    expect(navigateSpy).not.toHaveBeenCalled();
+  });
+
+  it("un visiteur sans compte reste ici", () => {
+    roleState.isLoaded = true;
+    render(<Page />);
+    expect(navigateSpy).not.toHaveBeenCalled();
   });
 });

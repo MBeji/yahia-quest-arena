@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState, type ReactNode } from "react";
@@ -50,6 +50,7 @@ import {
   useAuth,
   userDataExportFileName,
   useMyRole,
+  useSignOutToHome,
 } from "@/features/auth";
 import { getParcours } from "@/features/dashboard";
 import { EnablePushCard, usePush } from "@/features/notifications";
@@ -267,7 +268,6 @@ function ParametragePage() {
   const { locale } = useI18n();
   const { user } = useAuth();
   const { role, currentParcoursId } = useMyRole();
-  const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
   const [sendingReset, setSendingReset] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -303,10 +303,10 @@ function ParametragePage() {
   const inviteParent = useParentInvite(allianceCode, "settings");
   const { copy: inviteCopy } = useInviteT();
 
-  async function signOut() {
-    await supabase.auth.signOut();
-    toast.success(t.layout.logoutToast);
-    navigate({ to: "/" });
+  // Même geste que l'engrenage de la coquille : l'accueil, sans course avec la garde (Q-4).
+  const signOutToHome = useSignOutToHome();
+  function signOut() {
+    void signOutToHome(t.layout.logoutToast);
   }
 
   // Changer de mot de passe depuis un compte connecté : `/auth` renvoie tout
@@ -374,10 +374,8 @@ function ParametragePage() {
       // Le compte n'existe plus : la session locale ne pointe vers rien. On la
       // vide AVANT de naviguer, sinon le garde d'authentification renverrait vers
       // un tableau de bord que plus aucune requête ne peut servir.
-      await supabase.auth.signOut();
       setDeleteOpen(false);
-      toast.success(t.settings.deleteDone);
-      navigate({ to: "/" });
+      await signOutToHome(t.settings.deleteDone);
     } catch (error) {
       toast.error(
         accountDeleteErrorLabel(error instanceof Error ? error.message : String(error), t),

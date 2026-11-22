@@ -245,6 +245,16 @@ describe("rememberCurrentPage — les invitations retiennent LA PAGE OÙ L'ON ES
     expect(peekReturnTo()).toBeNull();
   });
 
+  it("depuis l'accueil, OUBLIE le retour d'une invitation abandonnée (audit du 2026-11-21, N-11)", () => {
+    // Une invitation cliquée sur un cours, puis abandonnée…
+    window.history.replaceState({}, "", "/chapitre/c1");
+    expect(rememberCurrentPage()).toBe(true);
+    // …ne doit pas ramener sur ce cours quelqu'un qui s'inscrit plus tard depuis l'accueil.
+    window.history.replaceState({}, "", "/");
+    expect(rememberCurrentPage()).toBe(false);
+    expect(peekReturnTo()).toBeNull();
+  });
+
   it("ne retient pas le tunnel", () => {
     window.history.replaceState({}, "", "/auth?mode=signup");
     expect(rememberCurrentPage()).toBe(false);

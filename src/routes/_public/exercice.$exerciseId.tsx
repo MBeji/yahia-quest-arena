@@ -1,6 +1,6 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { ArrowRight, Dumbbell, RotateCcw, Sparkles, Zap } from "lucide-react";
 import { checkAnswersPublic, getChapterLesson, scoreQuizPublic } from "@/features/quest";
 import {
@@ -19,7 +19,7 @@ import {
   PASS_THRESHOLD_PCT,
   QUIZ_PASS_THRESHOLD_PCT,
 } from "@/shared/constants/gamification";
-import { useAuth } from "@/features/auth";
+import { useAuth, useMyRole } from "@/features/auth";
 import { InstallNudge } from "@/components/public/install-nudge";
 import { KeepRow } from "@/components/public/keep-row";
 import { useT } from "@/lib/i18n";
@@ -84,6 +84,17 @@ function ExercicePage() {
   const { user, loading } = useAuth();
   const isAuthenticated = !!user;
   const t = useT();
+  // UN ÉLÈVE CONNECTÉ JOUE LA QUÊTE, PAS L'ENTRAÎNEMENT SANS COMPTE (arbitrage Q-2 de l'audit de
+  // navigation du 2026-11-21, constat N-5). Il arrivait ici par un lien partagé, par un lien servi
+  // avant la lecture de sa session, ou ramené après son inscription — et jouait sans XP, sans rien
+  // en savoir. Dès que sa session ET son rôle sont lus, il passe à `/quest`, sans laisser cette
+  // page dans l'historique. Un parent n'a pas de quête : il reste ici.
+  const { role, isLoaded: roleLoaded } = useMyRole();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!user || !roleLoaded || role === "parent") return;
+    void navigate({ to: "/quest/$exerciseId", params: { exerciseId }, replace: true });
+  }, [user, roleLoaded, role, exerciseId, navigate]);
   const check = useServerFn(checkAnswersPublic);
   const score = useServerFn(scoreQuizPublic);
   const fetchLesson = useServerFn(getChapterLesson);

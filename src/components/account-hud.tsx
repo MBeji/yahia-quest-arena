@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Flame, Zap } from "lucide-react";
 
-import { useMyStats } from "@/features/auth";
+import { useMyRole, useMyStats } from "@/features/auth";
 import type { HubRoute } from "@/features/auth";
 import { useT } from "@/lib/i18n";
 
@@ -25,6 +25,10 @@ const COMPACT_XP = new Intl.NumberFormat("en", { notation: "compact", maximumFra
 export function AccountHud({ to = "/dashboard" }: { to?: HubRoute }) {
   const t = useT();
   const { xp, currentStreak, hasStats } = useMyStats();
+  // Un parent n'a pas de profil de jeu : série et XP ne disent rien de lui (audit de navigation du
+  // 2026-11-21, N-8). Sa puce garde le libellé « Mon espace ».
+  const { role } = useMyRole();
+  const showStats = hasStats && role !== "parent";
 
   const streak = currentStreak ?? 0;
   // Compact the XP figure (e.g. 12 345 → "12.3k") so a large value never widens the
@@ -38,7 +42,7 @@ export function AccountHud({ to = "/dashboard" }: { to?: HubRoute }) {
       data-testid="account-hud"
       className="flex min-w-0 max-w-[9rem] items-center gap-2 overflow-hidden rounded-lg border border-[color:var(--gold)]/40 bg-card px-2.5 py-1.5 max-[399px]:gap-1 max-[399px]:px-2 text-sm font-semibold text-foreground shadow-sm transition hover:border-[color:var(--gold)]/70 sm:max-w-none sm:px-3"
     >
-      {hasStats ? (
+      {showStats ? (
         <>
           <span
             className="flex shrink-0 items-center gap-1"

@@ -45,6 +45,8 @@ vi.mock("@/features/dungeon", () => ({
   submitDungeonRun: vi.fn(),
   DUNGEON_XP_PER_FLOOR: 15,
   DUNGEON_COINS_PER_5_FLOORS: 5,
+  DungeonLeaveButton: () => null,
+  useFinalizeRunOnLeave: () => {},
 }));
 
 vi.mock("@/shared/lib/utils", async (importOriginal) => ({
