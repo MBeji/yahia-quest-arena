@@ -15,6 +15,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as AuthenticatedAreneRouteImport } from './routes/_authenticated/arene'
+import { Route as AuthenticatedBilanRouteImport } from './routes/_authenticated/bilan'
 import { Route as AuthenticatedBoutiqueRouteImport } from './routes/_authenticated/boutique'
 import { Route as AuthenticatedConsoleRouteImport } from './routes/_authenticated/console'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
@@ -83,6 +84,11 @@ const SignupRoute = SignupRouteImport.update({
 const AuthenticatedAreneRoute = AuthenticatedAreneRouteImport.update({
   id: '/arene',
   path: '/arene',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedBilanRoute = AuthenticatedBilanRouteImport.update({
+  id: '/bilan',
+  path: '/bilan',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedBoutiqueRoute = AuthenticatedBoutiqueRouteImport.update({
@@ -315,6 +321,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/arene': typeof AuthenticatedAreneRoute
+  '/bilan': typeof AuthenticatedBilanRoute
   '/boutique': typeof AuthenticatedBoutiqueRoute
   '/console': typeof AuthenticatedConsoleRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
@@ -362,6 +369,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/arene': typeof AuthenticatedAreneRoute
+  '/bilan': typeof AuthenticatedBilanRoute
   '/boutique': typeof AuthenticatedBoutiqueRoute
   '/console': typeof AuthenticatedConsoleRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
@@ -411,6 +419,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/_authenticated/arene': typeof AuthenticatedAreneRoute
+  '/_authenticated/bilan': typeof AuthenticatedBilanRoute
   '/_authenticated/boutique': typeof AuthenticatedBoutiqueRoute
   '/_authenticated/console': typeof AuthenticatedConsoleRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
@@ -461,6 +470,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/arene'
+    | '/bilan'
     | '/boutique'
     | '/console'
     | '/dashboard'
@@ -508,6 +518,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/arene'
+    | '/bilan'
     | '/boutique'
     | '/console'
     | '/dashboard'
@@ -556,6 +567,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/_authenticated/arene'
+    | '/_authenticated/bilan'
     | '/_authenticated/boutique'
     | '/_authenticated/console'
     | '/_authenticated/dashboard'
@@ -650,6 +662,13 @@ declare module '@tanstack/react-router' {
       path: '/arene'
       fullPath: '/arene'
       preLoaderRoute: typeof AuthenticatedAreneRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/bilan': {
+      id: '/_authenticated/bilan'
+      path: '/bilan'
+      fullPath: '/bilan'
+      preLoaderRoute: typeof AuthenticatedBilanRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/boutique': {
@@ -955,6 +974,7 @@ const AuthenticatedDuelRouteWithChildren =
 
 interface AuthenticatedRouteChildren {
   AuthenticatedAreneRoute: typeof AuthenticatedAreneRoute
+  AuthenticatedBilanRoute: typeof AuthenticatedBilanRoute
   AuthenticatedBoutiqueRoute: typeof AuthenticatedBoutiqueRoute
   AuthenticatedConsoleRoute: typeof AuthenticatedConsoleRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
@@ -985,6 +1005,7 @@ interface AuthenticatedRouteChildren {
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAreneRoute: AuthenticatedAreneRoute,
+  AuthenticatedBilanRoute: AuthenticatedBilanRoute,
   AuthenticatedBoutiqueRoute: AuthenticatedBoutiqueRoute,
   AuthenticatedConsoleRoute: AuthenticatedConsoleRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,

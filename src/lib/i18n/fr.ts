@@ -166,6 +166,9 @@ export const fr: TranslationKeys = {
     strengthenTitle: "La même idée, autrement",
     // Priorité 1 de R-31 : une révision espacée est échue. Elle passe avant tout le reste.
     reviewOverline: "À réviser",
+    studyOverline: "Programme du jour",
+    studyTitle: "Ta prochaine étape",
+    studyReportTitle: "Mon bilan",
     // Étude 22 R-4 : la bannière de rentrée. « Je reste » ferme pour la saison, sans rien
     // écrire côté serveur — un refus d'une année ne doit pas peser sur la suivante.
     backToSchool: {

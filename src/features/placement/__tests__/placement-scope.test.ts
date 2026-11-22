@@ -19,6 +19,15 @@ const chapters = (n: number, enoughFrom = 1): ScopeChapter[] =>
   }));
 
 describe("schoolYearProgress", () => {
+  // Les MÊMES trois repères que le pgTAP 116 (`school_year_share`, migration
+  // 20261122160000) : le bilan estime en base les chapitres vus en classe avec ces bornes, le
+  // test de niveau les préremplit ici. Si l'une des deux dérive, l'un des deux fichiers rougit.
+  it("tient les mêmes bornes que school_year_share en base (pgTAP 116)", () => {
+    expect(schoolYearProgress(new Date(2026, 8, 15))).toBe(0);
+    expect(schoolYearProgress(new Date(2026, 6, 10))).toBe(1);
+    expect(schoolYearProgress(new Date(2026, 10, 22))).toBeCloseTo(0.2636, 4);
+  });
+
   it("vaut 0 à la rentrée et avant le premier cours de l'année", () => {
     expect(schoolYearProgress(new Date(2026, 8, 15))).toBe(0);
   });

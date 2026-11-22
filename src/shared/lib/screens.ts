@@ -63,6 +63,8 @@ export const ECRANS: Readonly<Record<string, Ecran>> = {
   duel: { aide: "arena", bulleMuette: "segment", eleve: true },
   leaderboard: { aide: "arena", eleve: true },
   examens: { eleve: true },
+  // « Mon bilan » : le bilan et le programme du jour de l'élève (commande du 2026-11-22).
+  bilan: { eleve: true },
   examen: { immersif: "enfant", bulleMuette: "enfant", eleve: true },
   quest: {
     aide: "quest",

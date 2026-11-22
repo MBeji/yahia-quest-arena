@@ -2447,6 +2447,32 @@ export type Database = {
           },
         ];
       };
+      student_class_chapters: {
+        Row: {
+          chapter_id: string;
+          marked_at: string;
+          user_id: string;
+        };
+        Insert: {
+          chapter_id: string;
+          marked_at?: string;
+          user_id: string;
+        };
+        Update: {
+          chapter_id?: string;
+          marked_at?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "student_class_chapters_chapter_id_fkey";
+            columns: ["chapter_id"];
+            isOneToOne: false;
+            referencedRelation: "chapters";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       subjects: {
         Row: {
           attribute: string;
@@ -4124,6 +4150,10 @@ export type Database = {
       };
       get_student_report: { Args: { p_student: string }; Returns: Json };
       get_student_report_by_code: { Args: { p_code: string }; Returns: Json };
+      get_study_report: {
+        Args: { p_student?: string; p_with_chapters?: boolean };
+        Returns: Json;
+      };
       get_subject_leaderboard: {
         Args: { p_limit?: number; p_subject: string };
         Returns: {
@@ -4601,6 +4631,7 @@ export type Database = {
         };
         Returns: undefined;
       };
+      school_year_share: { Args: { p_day: string }; Returns: number };
       score_answer: {
         Args: {
           p_choice: string;
@@ -4685,6 +4716,14 @@ export type Database = {
           p_student: string;
         };
         Returns: undefined;
+      };
+      set_class_chapters: {
+        Args: {
+          p_chapter_ids: string[];
+          p_student?: string;
+          p_subject_id: string;
+        };
+        Returns: number;
       };
       set_current_parcours: {
         Args: { p_parcours: string };
@@ -4958,6 +4997,47 @@ export type Database = {
           subject_id: string;
         }[];
       };
+      student_study_chapters: {
+        Args: { p_day: string; p_subject_ids: string[]; p_user: string };
+        Returns: {
+          chapter_id: string;
+          chapter_rank: number;
+          chapters_total: number;
+          declared: boolean;
+          missing_for_next: number;
+          missions_counted: number;
+          missions_failed: number;
+          missions_total: number;
+          next_star: number;
+          quiz_cleared: boolean;
+          quiz_gated: boolean;
+          seen: boolean;
+          star: number;
+          started: boolean;
+          status: string;
+          subject_id: string;
+          title: string;
+        }[];
+      };
+      student_study_plan: {
+        Args: {
+          p_budget_minutes: number;
+          p_day: string;
+          p_subject_ids: string[];
+          p_user: string;
+        };
+        Returns: {
+          chapter_id: string;
+          chapter_title: string;
+          difficulty: number;
+          est_minutes: number;
+          exercise_id: string;
+          kind: string;
+          step: number;
+          subject_id: string;
+          title: string;
+        }[];
+      };
       student_subject_stars: {
         Args: { p_subject_ids?: string[]; p_user: string };
         Returns: {
@@ -4974,6 +5054,19 @@ export type Database = {
           subject_id: string;
         }[];
       };
+      study_daily_target_minutes: {
+        Args: Record<PropertyKey, never>;
+        Returns: number;
+      };
+      study_exercise_minutes: {
+        Args: { p_difficulty: number; p_questions: number };
+        Returns: number;
+      };
+      study_level: {
+        Args: { p_attempts: number; p_avg_score: number };
+        Returns: string;
+      };
+      study_subject_ids: { Args: { p_user: string }; Returns: string[] };
       submit_ai_feedback: {
         Args: { p_quiz: string; p_reason?: string; p_verdict: string };
         Returns: number;

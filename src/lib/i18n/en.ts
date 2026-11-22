@@ -157,6 +157,9 @@ export const en: TranslationKeys = {
     strengthenOverline: "A little more",
     strengthenTitle: "The same idea, another way",
     reviewOverline: "To review",
+    studyOverline: "Today's plan",
+    studyTitle: "Your next step",
+    studyReportTitle: "My report",
     backToSchool: {
       title: "Back to school!",
       body: "Still preparing {current}? Move up to {next} and your XP, badges and streak come with you — {current} stays there whenever you want to revise.",

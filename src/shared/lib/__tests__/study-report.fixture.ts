@@ -1,0 +1,86 @@
+import type { StudyChapter, StudyReport, StudySubject } from "../study-report";
+
+export const chapter = (over: Partial<StudyChapter> = {}): StudyChapter => ({
+  id: "c1",
+  title: "Chapitre 1",
+  seen: true,
+  status: "en-cours",
+  star: 0,
+  missionsTotal: 4,
+  missionsCounted: 1,
+  missionsFailed: 0,
+  nextStar: 1,
+  missingForNext: 2,
+  ...over,
+});
+
+export const subject = (over: Partial<StudySubject> = {}): StudySubject => ({
+  id: "math",
+  name: "Mathématiques",
+  contentLanguage: "fr",
+  declared: true,
+  chaptersTotal: 4,
+  chaptersSeen: 3,
+  seenMastered: 1,
+  seenAcquired: 1,
+  seenInProgress: 0,
+  seenFragile: 1,
+  seenNotStarted: 0,
+  missionsSeenTotal: 12,
+  missionsSeenCounted: 7,
+  recentAttempts: 9,
+  recentAvgScore: 72,
+  level: "en-progres",
+  lastActiveAt: "2026-11-20T10:00:00Z",
+  exam: null,
+  chapters: [
+    chapter({ id: "c1", title: "Nombres", status: "maitrise", star: 4, missingForNext: 0 }),
+    chapter({ id: "c2", title: "Fractions", status: "non-commence" }),
+    chapter({ id: "c3", title: "Équations", status: "fragile", missionsFailed: 1 }),
+    chapter({ id: "c4", title: "Thalès", seen: false, status: "non-commence" }),
+  ],
+  ...over,
+});
+
+export const report = (over: Partial<StudyReport> = {}): StudyReport => ({
+  studentId: "11111111-1111-4111-8111-111111111111",
+  day: "2026-11-22",
+  parcoursId: "concours-9eme",
+  targetMinutes: 30,
+  doneMinutes: 10,
+  weekMinutes: 85,
+  weekActiveDays: 3,
+  subjects: [subject()],
+  today: [
+    {
+      exerciseId: "e-done",
+      title: "Mission faite",
+      subjectId: "math",
+      chapterTitle: "Nombres",
+      scorePct: 80,
+    },
+  ],
+  plan: [
+    {
+      exerciseId: "e1",
+      title: "Reprise des équations",
+      subjectId: "math",
+      chapterId: "c3",
+      chapterTitle: "Équations",
+      kind: "retry",
+      difficulty: 1,
+      estMinutes: 4,
+    },
+    {
+      exerciseId: "e2",
+      title: "Quiz des fractions",
+      subjectId: "math",
+      chapterId: "c2",
+      chapterTitle: "Fractions",
+      kind: "quiz",
+      difficulty: 1,
+      estMinutes: 5,
+    },
+  ],
+  ...over,
+});

@@ -23,3 +23,7 @@ export { WeaknessesPanel } from "./components/weaknesses-panel";
 // (« Prêt à apprendre » et la carte à 4 états), repli R-6 sur la carte de é07 compris. La
 // route ne compose plus qu'un composant ; le choix de quelle carte montrer appartient ici.
 export { LearningPanels } from "./components/learning-panels";
+// Bilan et programme du jour (commande du 2026-11-22) : la lecture de l'écran « Mon bilan »
+// et le geste « chapitres vus en classe ». Les composants sont partagés avec le suivi
+// parental (`@/components/study-report`), le contrat avec `@/shared/lib/study-report`.
+export { getStudyReport, setClassChapters } from "./progression.server";

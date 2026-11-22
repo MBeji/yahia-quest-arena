@@ -55,12 +55,21 @@ const BUDGETS = {
   // premier geste) sort aussi. Sur `main` du jour : 237,36 KB ici, 188,68 KB dans
   // `vendor-react-`, et sur la page d'accueil le JavaScript du premier rendu passe de
   // 305,0 à 250,3 KB brotli (`npm run perf:budget`, même commit avant/après).
-  "index-": 242 * 1024,
+  //
+  // 2026-11-22 — UNE ROUTE DE PLUS (`/bilan`, le bilan et le programme du jour), et le partage
+  // bouge d'UN KB sans que la somme monte d'un octet : 456 = 243 (`index-`) + 213
+  // (`vendor-react-`). `main` du jour était à 241,91 KB — 0,09 de marge — et une route coûte
+  // ici son entrée dans l'arbre des routes, son `head` et ses chunks dans la table de
+  // préchargement : +0,51 KB mesurés (242,42), tout le reste de la fonctionnalité étant dans
+  // des chunks paresseux (`bilan-`, `study-report-view-`, `study-plan-card-`, `i18n-study-`).
+  // `vendor-react-` est à 188,68 KB : le KB vient de sa marge, pas d'un relèvement. La règle
+  // d'au-dessus tient toujours — la prochaine route devra d'abord rendre de la place ici.
+  "index-": 243 * 1024,
   // `react` + `react-dom` + `scheduler`, et rien d'autre. 188,68 KB mesurés. La marge
   // (25 KB) est la part du plafond commun que `index-` ne prend pas ; `react` 19.3 en
   // demande 28 (docs/dependency-maintenance.md) : il la dépassera de 3 KB, et c'est à ce
   // moment-là, chiffres en main, que la somme des deux plafonds se rediscute — pas avant.
-  "vendor-react-": 214 * 1024,
+  "vendor-react-": 213 * 1024,
   // ---------------------------------------------------------------------------
   // Catalogues i18n. DEUX budgets depuis le 2026-08-26, parce que le catalogue
   // n'est plus monolithique :
@@ -229,6 +238,10 @@ const BUDGETS = {
   // en trois langues. Tirée par la route publique `/test-de-niveau` (paresseuse) et par la
   // carte du Hall en `lazy()` — jamais par le chunk index. Plafond posé avec le chunk.
   "i18n-placement-": 24 * 1024,
+  // Surface du bilan et du programme du jour (2026-11-22) : niveau par matière, chapitres vus
+  // en classe, programme — en trois langues, pour l'élève et son parent. Tirée par la carte du
+  // tableau de bord en `lazy()`, par `/bilan` et par le suivi parental. Plafond posé avec le chunk.
+  "i18n-study-": 12 * 1024,
   "vendor-supabase-": 240 * 1024,
   "vendor-motion-": 150 * 1024,
   // @dnd-kit (core+sortable+utilities) powering the B2 ordering/matching

@@ -77,10 +77,17 @@ export function ReportContent({
   placementSummary,
   /** Étude 08 lot 3 (US-8) — le repère du parcours. Même garde : route authentifiée seule. */
   parcoursComparison,
+  /**
+   * Commande du 2026-11-22 — le bilan et le programme du jour de l'enfant, le même que celui
+   * qu'il lit à la connexion. Un SLOT, comme `renderTutorDigest` : la section porte sa propre
+   * lecture, seule la route authentifiée la pose, le chemin public au code alliance ne l'a pas.
+   */
+  renderStudyReport,
 }: {
   report: ReportData;
   tutorCounters?: TutorParentCounters | null;
   renderTutorDigest?: ReactNode;
+  renderStudyReport?: ReactNode;
   examSummary?: StudentExamSummary | null;
   placementSummary?: StudentPlacementSummary | null;
   parcoursComparison?: ParcoursComparison;
@@ -148,6 +155,10 @@ export function ReportContent({
 
       {/* Verdict card */}
       <VerdictCard score={summary.seriousnessScore} verdict={summary.verdict} />
+
+      {/* Juste sous le verdict : c'est la réponse à « que fait-il aujourd'hui, et où en
+          est-il ? » — la question que ce suivi laissait au parent. */}
+      {renderStudyReport}
 
       {/* Le conseil de la semaine — la ligne d'action concrète pour le parent. */}
       <motion.div

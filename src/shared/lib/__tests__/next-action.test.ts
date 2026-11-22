@@ -379,3 +379,39 @@ describe("é30 amendement C — les deux nouveaux rangs", () => {
     expect(b).toMatchObject({ competencySlug: "math.frac.comparer" });
   });
 });
+
+describe("programme du jour — le rang « plan » (commande du 2026-11-22)", () => {
+  const remediation = { competencySlug: "math.num.multiples", exerciseId: "cause" };
+
+  it("passe DEVANT la reprise, la consolidation et le chemin : eux ignorent la classe", () => {
+    expect(
+      resolveNextAction({
+        planExerciseId: "etape",
+        failedExerciseId: "fail",
+        strengthen: { competencySlug: "math.frac.comparer", exerciseId: "autre-forme" },
+        pathSubjectId: "math",
+        untouchedSubjectId: "svt",
+      }),
+    ).toEqual({ kind: "plan", exerciseId: "etape" });
+  });
+
+  it("reste DERRIÈRE la révision due et la remédiation", () => {
+    expect(resolveNextAction({ planExerciseId: "etape", dueReviewExerciseId: "rev" })).toEqual({
+      kind: "review",
+      exerciseId: "rev",
+    });
+    expect(resolveNextAction({ planExerciseId: "etape", remediation })).toEqual({
+      kind: "remediate",
+      exerciseId: "cause",
+      competencySlug: "math.num.multiples",
+    });
+  });
+
+  it("programme terminé ou absent : les rangs d'avant, à l'identique", () => {
+    expect(resolveNextAction({ planExerciseId: null, failedExerciseId: "fail" })).toEqual({
+      kind: "retry",
+      exerciseId: "fail",
+    });
+    expect(resolveNextAction({ planExerciseId: undefined })).toBeNull();
+  });
+});

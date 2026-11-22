@@ -155,6 +155,9 @@ export const ar: TranslationKeys = {
     strengthenOverline: "قليلًا بعد",
     strengthenTitle: "الفكرة نفسها، بطريقة أخرى",
     reviewOverline: "للمراجعة",
+    studyOverline: "برنامج اليوم",
+    studyTitle: "خطوتك التالية",
+    studyReportTitle: "حصيلتي",
     backToSchool: {
       title: "بداية السنة الدراسيّة!",
       body: "أما زلت تحضّر {current}؟ إن انتقلت إلى {next} فإنّ نقاطك وأوسمتك وسلسلتك ترافقك — وتبقى {current} في متناولك للمراجعة متى شئت.",

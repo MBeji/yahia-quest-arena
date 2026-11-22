@@ -16,6 +16,8 @@
  * n'est pas négociable au cas par cas :
  *   1. une RÉVISION due — ce que la mémoire est en train d'oublier prime sur tout le reste ;
  *   2. la REMÉDIATION — une lacune confirmée bloque la frontière, on remonte à la cause ;
+ *   2bis. le PROGRAMME DU JOUR — sa prochaine étape, bornée aux chapitres vus en classe
+ *      (commande du 2026-11-22) ; absent hors du tableau de bord, donc sans effet ailleurs ;
  *   3. le dernier exercice RATÉ — reprendre un échec récent vaut mieux qu'avancer sur du neuf ;
  *   4. la CONSOLIDATION — une compétence en cours, servie sous une AUTRE forme ;
  *   5. la prochaine mission du CHEMIN — le chapitre le plus avancé non terminé ;
@@ -51,6 +53,13 @@ export type NextAction =
    * parce que R-14 veut une raison en langage élève, et que la raison est cette compétence-là.
    */
   | { kind: "remediate"; exerciseId: string; competencySlug: string }
+  /**
+   * La prochaine étape du PROGRAMME DU JOUR (commande du 2026-11-22), entre la remédiation et
+   * la reprise. Le programme borne le travail aux chapitres vus en classe ; tant qu'il lui
+   * reste une étape, c'est elle que la bande promeut — sinon la bande et le programme
+   * désigneraient deux cibles, ce que D-8 interdit.
+   */
+  | { kind: "plan"; exerciseId: string }
   /** Le dernier exercice a été raté et reste rejouable (priorité 3). */
   | { kind: "retry"; exerciseId: string }
   /**
@@ -79,6 +88,11 @@ export type NextActionExercise = CatalogueExercise & {
 export type NextActionInput = {
   /** Exercice de la révision due la plus ancienne, si une est échue. */
   dueReviewExerciseId?: string | null;
+  /**
+   * Première étape restante du programme du jour (`get_study_report`), s'il en reste une. Seul
+   * le tableau de bord la fournit ; le hub matière, lui, résout le chemin de SA matière.
+   */
+  planExerciseId?: string | null;
   /** Dernier exercice tenté sous la barre de réussite (le `nextExerciseId` historique). */
   failedExerciseId?: string | null;
   /** Chapitres de la matière courante, dans leur ordre d'affichage. */
@@ -195,6 +209,12 @@ export function resolveNextAction(input: NextActionInput): NextAction | null {
       exerciseId: input.remediation.exerciseId,
       competencySlug: input.remediation.competencySlug,
     };
+  }
+  // Le programme du jour, DERRIÈRE la révision et la remédiation (ce que la mémoire oublie et
+  // ce qui bloque priment toujours), DEVANT la reprise et le chemin : ces deux rangs ignorent
+  // la classe de l'élève, le programme la connaît — et il sert les reprises des chapitres vus.
+  if (input.planExerciseId) {
+    return { kind: "plan", exerciseId: input.planExerciseId };
   }
   if (input.failedExerciseId) {
     return { kind: "retry", exerciseId: input.failedExerciseId };

@@ -178,6 +178,11 @@ export type TranslationKeys = {
     strengthenTitle: string;
     /** Étude 22 R-31 — bande focus, priorité 1 (révision due). */
     reviewOverline: string;
+    /** Bande focus — la prochaine étape du programme du jour (commande du 2026-11-22). */
+    studyOverline: string;
+    studyTitle: string;
+    /** Titre de l'écran « Mon bilan » (onglet du navigateur). */
+    studyReportTitle: string;
     /** Étude 22 R-4 — bannière de rentrée (proposée, jamais imposée). */
     backToSchool: {
       title: string;

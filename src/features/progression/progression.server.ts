@@ -13,6 +13,8 @@ import {
   parseRpcRows,
 } from "@/shared/integrations/supabase/rpc-rows";
 import type { CompetencyExercise, LearningFrontierRow } from "@/shared/types/competency";
+import type { StudyReport } from "@/shared/lib/study-report";
+import { parseStudyReport } from "@/shared/lib/study-report.schema";
 
 // ---------- Streak Recovery (buy back streak with coins) ----------
 export const recoverStreak = createServerFn({ method: "POST" })
@@ -167,4 +169,58 @@ export const disputeInference = createServerFn({ method: "POST" })
     const disputed = (res.data ?? []).length > 0;
     logger.info("belief.disputed", { competency: data.competency, disputed });
     return { disputed };
+  });
+
+// ---------------------------------------------------------------------------
+// BILAN ET PROGRAMME DU JOUR (commande du 2026-11-22).
+// ---------------------------------------------------------------------------
+// La lecture complète de l'écran « Mon bilan » : niveau par matière, état de chaque chapitre,
+// programme du jour. Tout est tranché par `get_study_report` — cette fonction ne fait que
+// valider la forme. `null` sur panne comme sur forme inattendue : l'écran dit que le bilan
+// n'est pas disponible, il n'en affiche jamais la moitié.
+export const getStudyReport = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }): Promise<StudyReport | null> => {
+    const { supabase } = context;
+    const { data, error } = await supabase.rpc("get_study_report");
+    if (error) {
+      logger.warn("progression.studyReport", { error: error.message });
+      return null;
+    }
+    const report = parseStudyReport(data);
+    if (!report) logger.warn("progression.studyReport: unexpected shape");
+    return report;
+  });
+
+// L'élève déclare les chapitres VUS EN CLASSE d'une matière. La liste remplace la déclaration
+// (un appel par geste, idempotent) ; la base refuse un chapitre d'une autre matière.
+export const setClassChapters = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .validator((d: unknown) =>
+    z
+      .object({
+        subjectId: z.string().min(1).max(120),
+        chapterIds: z.array(z.guid()).max(200),
+      })
+      .parse(d),
+  )
+  .handler(async ({ data, context }): Promise<{ count: number }> => {
+    const { supabase, userId } = context;
+
+    if (await isRateLimited(supabase, `class_chapters_${userId}`, 30, 60_000)) {
+      throw new Error("Trop de modifications. Réessaie dans une minute.");
+    }
+
+    const { data: count, error } = await supabase.rpc("set_class_chapters", {
+      p_subject_id: data.subjectId,
+      p_chapter_ids: data.chapterIds,
+    });
+    if (error) {
+      failWithClientError(
+        "setClassChapters: rpc failed",
+        error,
+        "Enregistrement impossible. Réessaie.",
+      );
+    }
+    return { count: count ?? 0 };
   });
