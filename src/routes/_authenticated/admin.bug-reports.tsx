@@ -29,7 +29,8 @@ function AdminBugReportsPage() {
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-10">
-      <BackLink to="/dashboard">{t.common.backToHall}</BackLink>
+      {/* Toutes les consoles reviennent au pôle (audit de navigation du 2026-11-21, N-10). */}
+      <BackLink to="/console">{t.adminHub.title}</BackLink>
       {isAdmin && <BugReportsAdmin />}
     </div>
   );

@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Suspense, lazy, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -663,7 +663,21 @@ function OnboardingComponent() {
             switch up front — a parent can set their language before choosing. */}
         <div className="mb-6 flex items-center justify-between gap-3">
           <p className="text-sm text-muted-foreground">{t.onboarding.promise}</p>
-          <LanguageSwitcher />
+          <div className="flex shrink-0 items-center gap-2">
+            {/* L'assistant est immersif (pas d'onglets) et la garde y ramène de tout écran
+                connecté : sans ce lien, seule la déconnexion en sortait (audit de navigation du
+                2026-11-21, N-4). Le programme est public — la garde ne l'y poursuit pas. */}
+            {step < 2 && (
+              <Link
+                to="/programme"
+                data-testid="onboarding-later"
+                className="inline-flex min-h-11 items-center px-2 text-sm font-medium text-muted-foreground underline-offset-2 hover:text-foreground hover:underline"
+              >
+                {t.onboarding.later}
+              </Link>
+            )}
+            <LanguageSwitcher />
+          </div>
         </div>
 
         {/* Progress indicator */}

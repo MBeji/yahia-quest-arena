@@ -139,7 +139,8 @@ function LeaderboardPage() {
 
   return (
     <PageShell>
-      <BackLink to="/dashboard">{t.common.backToHall}</BackLink>
+      {/* Enfant de l'Arène : son retour y mène (audit de navigation du 2026-11-21, N-10). */}
+      <BackLink to="/arene">{t.arena.title}</BackLink>
 
       <div className="mb-6 text-center">
         <h1 className="font-display text-3xl font-bold sm:text-4xl">

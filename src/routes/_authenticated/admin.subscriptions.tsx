@@ -106,7 +106,8 @@ function AdminSubscriptionsPage() {
     // Miroir du crochet ci-dessus : `adminSubscriptions.consolePanel` prouve à
     // `authorization.spec` que la console n'est pas rendue SOUS l'avis de refus.
     <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6" data-testid="admin-subscriptions-console">
-      <BackLink to="/dashboard">{t.common.backToHall}</BackLink>
+      {/* Toutes les consoles reviennent au pôle (audit de navigation du 2026-11-21, N-10). */}
+      <BackLink to="/console">{t.adminHub.title}</BackLink>
 
       <div className="mb-6 flex items-center gap-3">
         <div className="grid h-11 w-11 place-items-center rounded-xl bg-[image:var(--gradient-gold)] shadow-gold">

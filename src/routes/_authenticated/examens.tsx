@@ -3,6 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { ClipboardCheck } from "lucide-react";
 
+import { BackLink } from "@/components/ui/back-link";
 import { EmptyState } from "@/components/ui/empty-state";
 import { LoadingState } from "@/components/ui/loading-state";
 import { PageShell } from "@/components/ui/page-shell";
@@ -45,6 +46,8 @@ function ExamListPage() {
 
   return (
     <PageShell width="narrow" className="py-8">
+      {/* Enfant de l'Arène : son retour y mène (audit de navigation du 2026-11-21, N-10). */}
+      <BackLink to="/arene">{t.arena.title}</BackLink>
       <header className="mb-6">
         <h1 className="font-display text-3xl font-bold sm:text-4xl">{t.exam.title}</h1>
         <p className="mt-2 text-muted-foreground">{t.exam.subtitle}</p>

@@ -14,7 +14,6 @@ import {
   useMyRole,
   shouldRedirectToOnboarding,
   hubRouteForRole,
-  shouldLeaveDashboard,
   isDeliberateSignOut,
   useSignOutToHome,
   useProfileLocaleSync,
@@ -27,8 +26,9 @@ import { useClaimPlacementSessions } from "@/features/placement";
 import { ClipboardList, Shield } from "lucide-react";
 import { useT } from "@/lib/i18n";
 import { rememberReturnTo } from "@/shared/lib/return-to";
-import { isImmersivePath } from "@/shared/lib/screens";
+import { isImmersivePath, isStudentOnlyPath } from "@/shared/lib/screens";
 import { NetworkBanner } from "@/components/ui/network-banner";
+import { MAIN_CONTENT_ID, SkipToContent } from "@/components/ui/route-announcer";
 import { SettingsMenu } from "@/components/ui/settings-menu";
 import { GoldAmbient } from "@/components/visual/gold-ambient";
 import { AccountHud } from "@/components/account-hud";
@@ -179,13 +179,14 @@ function AuthenticatedLayout() {
     navigate,
   ]);
 
-  // Un PARENT n'a pas de Hall : `/dashboard` le renvoie à son Suivi. Décidé ICI, sur le rôle que
-  // la coquille connaît déjà — la page l'attendait de toute la charge du tableau de bord, et le
-  // laissait devant « Impossible de charger le dashboard » quand cette lecture échouait (audit du
-  // 2026-11-21, N-8). `replace` : le Hall n'entre pas dans son historique.
+  // Un PARENT n'a ni profil de jeu ni parcours : les écrans d'élève (Hall, Arène, quête, boutique…,
+  // déclarés `eleve` dans le registre des écrans) le renvoient à son Suivi. Décidé ICI, sur le rôle
+  // que la coquille connaît déjà : `/dashboard` l'attendait de toute la charge du tableau de bord, et
+  // les autres écrans s'affichaient à un parent, sans onglets (audit du 2026-11-21, N-8). `replace` :
+  // l'écran d'élève n'entre pas dans son historique.
   useEffect(() => {
-    if (!user || guardPath !== "/dashboard") return;
-    if (shouldLeaveDashboard(userRole)) navigate({ to: hubRouteForRole(userRole), replace: true });
+    if (!user || userRole !== "parent" || !isStudentOnlyPath(guardPath)) return;
+    navigate({ to: hubRouteForRole(userRole), replace: true });
   }, [user, userRole, guardPath, navigate]);
 
   if (loading) {
@@ -220,6 +221,7 @@ function AuthenticatedLayout() {
 
   return (
     <div className="app-shell relative min-h-[100dvh] bg-black-deep">
+      <SkipToContent label={t.common.skipToContent} />
       <GoldAmbient />
       {/* z-30 (above <main>'s z-10): the header hosts inline pop-overs (language
           menu) that open over the page content. At equal z-index the later <main>
@@ -316,10 +318,12 @@ function AuthenticatedLayout() {
       {/* é38 lot 4 — l'en-tête connecté défile avec la page : le bandeau, lui, reste. */}
       <NetworkBanner className="sticky top-0 z-20" />
       <main
+        id={MAIN_CONTENT_ID}
+        tabIndex={-1}
         className={
           immersive || !showPrimaryNav
-            ? "relative z-10 pb-[env(safe-area-inset-bottom)]"
-            : `relative z-10 ${TAB_BAR_CLEARANCE}`
+            ? "relative z-10 pb-[env(safe-area-inset-bottom)] outline-none"
+            : `relative z-10 outline-none ${TAB_BAR_CLEARANCE}`
         }
       >
         <Outlet />

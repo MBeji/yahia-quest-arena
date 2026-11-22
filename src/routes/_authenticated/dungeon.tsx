@@ -315,7 +315,7 @@ function DungeonPage() {
   if (state === "lobby") {
     return (
       <PageShell width="narrow" className="py-12">
-        <BackLink to="/dashboard">{t.dungeon.heroesHall}</BackLink>
+        <BackLink to="/arene">{t.arena.title}</BackLink>
 
         <motion.div
           {...riseIn}

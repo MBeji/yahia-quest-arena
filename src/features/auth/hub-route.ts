@@ -21,12 +21,3 @@ export type HubRoute = "/dashboard" | "/parent-report";
 export function hubRouteForRole(role: string | null | undefined): HubRoute {
   return role === "parent" ? "/parent-report" : "/dashboard";
 }
-
-/**
- * True when a user landing on /dashboard must be sent to their own hub instead.
- * Only ever true for a parent — and never for a role that is still unknown
- * (loading), so no redirect fires before the profile is actually read.
- */
-export function shouldLeaveDashboard(role: string | null | undefined): boolean {
-  return hubRouteForRole(role) !== "/dashboard";
-}
