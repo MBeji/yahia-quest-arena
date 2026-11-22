@@ -49,6 +49,9 @@ export function DashboardFocus({
     // faire, jamais ce qu'on pense de l'élève — « lacune » et les pourcentages de croyance
     // sont réservés à la console d'admin (D-1).
     remediate: { overline: t.dashboard.remediateOverline, title: t.dashboard.remediateTitle },
+    // Le programme du jour (commande du 2026-11-22) : sa prochaine étape, bornée aux
+    // chapitres vus en classe. La carte « Programme du jour » montre la liste, la bande sa tête.
+    plan: { overline: t.dashboard.studyOverline, title: t.dashboard.studyTitle },
     retry: { overline: t.duel.resume, title: t.dashboard.retryTitle },
     // Rang 4 — la même compétence, servie sous une AUTRE forme (« répétée ET variée », R-4).
     // Sans lui, réussir trois fois le même type d'item passe pour de la compréhension alors

@@ -218,6 +218,7 @@ Run with coverage: `npm run test:coverage`
 | user_chapter_stars                     | **Grand livre des étoiles de chapitre** (insert-only) — `docs/etoiles-et-sceaux.md`                                         |
 | user_subject_seals                     | **Grand livre des sceaux de matière** (insert-only) — idem                                                                  |
 | placement_sessions                     | **Test de niveau** (é39) : dix questions, note figée ; anonyme par `token`, `user_id` NULL ; `scope` = chapitres vus (R-22) |
+| student_class_chapters                 | **Chapitres déclarés « vus en classe »** (élève ou parent lié) ; borne le programme du jour — `docs/bilan-et-programme.md`  |
 | themes                                 | Top-level content tracks (école-tn, culture-générale…)                                                                      |
 | grades                                 | Grade levels (e.g. 9th grade; incl. lycée section nodes)                                                                    |
 

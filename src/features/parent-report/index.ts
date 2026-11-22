@@ -29,6 +29,9 @@ export {
   SUIVI_CODE_STORAGE_KEY,
 } from "./remembered-code";
 export { ReportContent } from "./components/report-content";
+// Bilan et programme du jour de l'enfant (commande du 2026-11-22) : la section porte sa
+// lecture et son écriture ; la route authentifiée la place dans `ReportContent` par un slot.
+export { StudyReportSection } from "./components/study-report-section";
 export { DailyDashboard } from "./components/daily-dashboard";
 export { reportSourceKey, type ReportSource } from "./report-source";
 export { buildFamilyReportShareText, buildWeeklyAdvice, shareFamilyReport } from "./report-share";

@@ -126,10 +126,10 @@ describe("getDashboard — profondeur du chemin critique", () => {
     starts = [];
   });
 
-  it("émet ses 14 lectures en 2 vagues, et rend l'état de croyance lu une seule fois", async () => {
+  it("émet ses 15 lectures en 2 vagues, et rend l'état de croyance lu une seule fois", async () => {
     // Le scénario le plus long : une classe et un parcours (grades, parcours, étoiles), une
     // compétence sous le seuil (blocages), une lacune ET une compétence en cours (remontée et
-    // consolidation) — les 14 lectures partent toutes.
+    // consolidation) — les 15 lectures partent toutes.
     const tables: Record<string, unknown> = {
       profiles: {
         id: "user-123",
@@ -191,6 +191,10 @@ describe("getDashboard — profondeur du chemin critique", () => {
     const rpcs: Record<string, unknown> = {
       get_user_subject_stats: [],
       get_daily_plan: [],
+      // Le bilan et le programme du jour (commande du 2026-11-22) : une lecture de PLUS, dans
+      // la première vague — elle ne dépend que de la session. Forme inattendue ici : la carte
+      // ne s'affiche pas, la bande garde ses rangs d'avant.
+      get_study_report: null,
       // Une ligne COMPLÈTE : la carte est validée à la frontière, et une ligne
       // partielle serait écartée — donc plus de compétence en échec, donc plus
       // de lecture des blocages.
@@ -235,7 +239,8 @@ describe("getDashboard — profondeur du chemin critique", () => {
     >;
 
     const names = starts.map((s) => s.name);
-    expect(names).toHaveLength(14);
+    expect(names).toHaveLength(15);
+    expect(names.filter((n) => n === "rpc:get_study_report")).toHaveLength(1);
     expect(names.filter((n) => n === "rpc:get_learning_state")).toHaveLength(1);
     const waves = Math.max(...starts.map((s) => s.at)) + 1;
     expect(waves, `vagues : ${JSON.stringify(starts)}`).toBe(2);

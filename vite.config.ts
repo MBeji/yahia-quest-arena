@@ -59,6 +59,9 @@ function chunkNameFor(id: string): string | undefined {
   // Étude 39 : le test de niveau — ses écrans sont une route publique paresseuse, une
   // carte du Hall en `lazy()` et la fin de l'accueil. Même règle : données seules.
   if (/\/src\/lib\/i18n\/placement\/(fr|en|ar)\.ts$/.test(id)) return "i18n-placement";
+  // Bilan et programme du jour (2026-11-22) : la carte du tableau de bord (`lazy()`),
+  // l'écran « Mon bilan » et le suivi parental — trois surfaces paresseuses. Données seules.
+  if (/\/src\/lib\/i18n\/study\/(fr|en|ar)\.ts$/.test(id)) return "i18n-study";
   if (!id.includes("node_modules")) return;
 
   if (id.includes("@tanstack/")) return "vendor-tanstack";

@@ -6,6 +6,8 @@ import { isRateLimited } from "@/shared/lib/rate-limit";
 import { GOAL_TARGET_MAX } from "@/shared/constants/gamification";
 import { logger } from "@/shared/lib/logger";
 import { errorMessage, failWithClientError } from "@/shared/lib/safe-error";
+import type { StudyReport } from "@/shared/lib/study-report";
+import { parseStudyReport } from "@/shared/lib/study-report.schema";
 // Alliance-code failures travel as STABLE codes and are translated client-side
 // in the visitor's language (étude 15, lot 3 — audit §F-1). Codes + prefixes +
 // mappers live in the pure, client-safe ./parent-code-errors module.
@@ -720,4 +722,61 @@ export const getStudentParcoursComparison = createServerFn({ method: "GET" })
     }
     const parsed = parcoursComparisonSchema.safeParse(raw);
     return parsed.success ? parsed.data : null;
+  });
+
+// ---------------------------------------------------------------------------
+// BILAN ET PROGRAMME DU JOUR DE L'ENFANT (commande du 2026-11-22).
+// ---------------------------------------------------------------------------
+// Le MÊME bilan que celui que l'élève lit à la connexion — même RPC, même schéma
+// (`@/shared/lib/study-report`), donc aucune seconde définition du niveau ou du
+// programme. Le lien actif est jugé en base. Comme les examens blancs et les
+// tests de niveau : une RPC à part, absente du chemin public au code alliance.
+//
+// `null` sur refus comme sur panne : la section disparaît, le bilan reste.
+export const getStudentStudyReport = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .validator((d: unknown) => z.object({ studentId: z.guid() }).parse(d))
+  .handler(async ({ data, context }): Promise<StudyReport | null> => {
+    const { supabase } = context;
+
+    const { data: raw, error } = await supabase.rpc("get_study_report", {
+      p_student: data.studentId,
+    });
+    if (error) {
+      logger.warn("parentReport.studyReport", { error: errorMessage(error) });
+      return null;
+    }
+    const report = parseStudyReport(raw);
+    if (!report) logger.warn("parentReport.studyReport: unexpected shape");
+    return report;
+  });
+
+// Le parent lié coche, pour son enfant, les chapitres vus en classe d'une matière.
+export const setStudentClassChapters = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .validator((d: unknown) =>
+    z
+      .object({
+        studentId: z.guid(),
+        subjectId: z.string().min(1).max(120),
+        chapterIds: z.array(z.guid()).max(200),
+      })
+      .parse(d),
+  )
+  .handler(async ({ data, context }): Promise<{ count: number }> => {
+    const { supabase } = context;
+
+    const { data: count, error } = await supabase.rpc("set_class_chapters", {
+      p_subject_id: data.subjectId,
+      p_chapter_ids: data.chapterIds,
+      p_student: data.studentId,
+    });
+    if (error) {
+      failWithClientError(
+        "setStudentClassChapters: rpc failed",
+        error,
+        "Enregistrement impossible. Réessayez.",
+      );
+    }
+    return { count: count ?? 0 };
   });

@@ -18,6 +18,8 @@ import { getCurrentWeekStartUtc, getTodayUtc } from "@/shared/lib/dates";
 import { failWithClientError } from "@/shared/lib/safe-error";
 import { logger } from "@/shared/lib/logger";
 import { resolveNextAction } from "@/shared/lib/next-action";
+import type { StudyReport } from "@/shared/lib/study-report";
+import { parseStudyReport } from "@/shared/lib/study-report.schema";
 import { readSubjectStars, type SubjectStarSummary } from "@/shared/lib/progress-stars";
 import { readLearningState, resolveAdaptiveInputs } from "@/shared/lib/adaptive-inputs";
 import {
@@ -59,6 +61,29 @@ async function fetchDailyPlan(supabase: Supabase, limit: number): Promise<DailyP
     return [];
   }
   return parseRpcRows(dailyPlanItemSchema, res.data, "getDashboard.dailyPlan");
+}
+
+/**
+ * Le bilan et le programme du jour (commande du 2026-11-22) — la matière de la carte
+ * « Programme du jour » et la source du rang « programme » de `resolveNextAction`. Une seule
+ * lecture pour les deux, pour la même raison que `fetchDailyPlan` : la bande et la carte ne
+ * peuvent pas désigner deux cibles.
+ *
+ * Même dégradation : RPC absente ou forme inattendue ⇒ `null`, la carte ne s'affiche pas et la
+ * bande retombe sur ses rangs d'avant.
+ */
+async function fetchStudyReport(supabase: Supabase): Promise<StudyReport | null> {
+  const res = await supabase.rpc("get_study_report", { p_with_chapters: false });
+
+  if (res.error) {
+    logger.warn("getDashboard.studyReport: study-report RPC failed, defaulting to none", {
+      error: res.error.message,
+    });
+    return null;
+  }
+  const report = parseStudyReport(res.data);
+  if (!report) logger.warn("getDashboard.studyReport: unexpected shape");
+  return report;
 }
 
 /**
@@ -199,6 +224,7 @@ export const getDashboard = createServerFn({ method: "GET" })
       competencyMap,
       weaknesses,
       learningState,
+      studyReport,
     ] = await Promise.all([
       supabase.from("profiles").select("*").eq("id", userId).maybeSingle(),
       supabase.from("subjects").select("*").order("display_order"),
@@ -223,6 +249,9 @@ export const getDashboard = createServerFn({ method: "GET" })
       // 41 % », celles-là disent « tu additionnes les dénominateurs ».
       fetchWeaknesses(supabase),
       readLearningState(supabase, null),
+      // Bilan et programme du jour (commande du 2026-11-22), SANS le détail des chapitres :
+      // la carte du tableau de bord n'en a pas besoin, l'écran « Mon bilan » le relit.
+      fetchStudyReport(supabase),
     ]);
 
     if (profileRes.error)
@@ -420,6 +449,9 @@ export const getDashboard = createServerFn({ method: "GET" })
       // La tête du plan EST la priorité 1 : le plan est déjà trié par urgence, donc le premier
       // élément est la révision que le moteur doit promouvoir.
       dueReviewExerciseId: dailyPlan[0]?.exercise_id ?? null,
+      // La tête du programme du jour : tant qu'il reste une étape, la bande la promeut — la
+      // carte « Programme du jour » et la bande ne désignent jamais deux cibles (D-8).
+      planExerciseId: studyReport?.plan[0]?.exerciseId ?? null,
       failedExerciseId: nextExerciseId,
       pathSubjectId: subjects.some((s) => s.id === lastWorkedSubjectId)
         ? lastWorkedSubjectId
@@ -437,6 +469,7 @@ export const getDashboard = createServerFn({ method: "GET" })
       nextExerciseId,
       nextAction,
       dailyPlan,
+      studyReport,
       competencyMap,
       weaknesses,
       learningState,

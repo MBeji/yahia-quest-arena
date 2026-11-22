@@ -109,6 +109,14 @@ const PlacementHallCard = lazy(() =>
     default: m.PlacementHallCard,
   })),
 );
+// Commande du 2026-11-22 — « Programme du jour ». Lazy comme ses voisines : la carte tire son
+// catalogue (`i18n-study`), qui n'a rien à faire dans le chunk eager. Ses DONNÉES, elles,
+// arrivent par `getDashboard` — la même lecture que la bande focus (D-8).
+const StudyPlanCard = lazy(() =>
+  import("@/components/study-report/study-plan-card").then((m) => ({
+    default: m.StudyPlanCard,
+  })),
+);
 import { useT } from "@/lib/i18n";
 import { xpToNextLevel, xpWithinLevel } from "@/shared/lib/level";
 // (subject-locale filtering moved out with the « Autres thèmes » grid — lot 6.)
@@ -434,6 +442,20 @@ function Dashboard() {
 
             Le tuteur ne s'importe pas depuis `progression` : c'est la route qui
             compose, par un slot, comme `renderTutor` sur l'écran de correction. */}
+        {/* « Programme du jour » (commande du 2026-11-22) — sous la bande focus, qui en promeut
+            la tête : l'objectif de trente minutes MESURÉES, ce qui a été fait aujourd'hui, ce
+            qui reste, borné aux chapitres vus en classe. Le bilan complet est à un lien. */}
+        {data.studyReport && (
+          <Suspense fallback={null}>
+            <StudyPlanCard
+              report={data.studyReport}
+              audience="student"
+              showReportLink
+              className="mt-6"
+            />
+          </Suspense>
+        )}
+
         <TutorGreeting
           state={{
             daysAway: daysAwayFrom(profile.last_active_date, appLocalDate(new Date())),

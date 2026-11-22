@@ -27,6 +27,7 @@ import {
   linkStudentByCode,
   parentCodeErrorLabel,
   ReportContent,
+  StudyReportSection,
   setStudentDailyGoal,
   setStudentWeeklyGoal,
 } from "@/features/parent-report";
@@ -420,6 +421,12 @@ function ParentReport() {
              Même précaution que le reste de cet écran (`!isAdmin`). */
           renderTutorDigest={
             !isAdmin && selectedStudent ? <TutorParentDigest studentId={selectedStudent} /> : null
+          }
+          /* Commande du 2026-11-22 — le bilan et le programme du jour, le même que
+             celui de l'élève. `get_study_report` admet l'admin en lecture ; l'écriture
+             (cocher les chapitres) reste au parent lié, jugée en base. */
+          renderStudyReport={
+            selectedStudent ? <StudyReportSection studentId={selectedStudent} /> : null
           }
         />
       ) : null}
