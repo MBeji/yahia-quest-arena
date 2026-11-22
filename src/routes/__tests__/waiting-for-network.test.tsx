@@ -72,7 +72,6 @@ vi.mock("@/features/quest/components/subject-hub-skeleton", () => ({
 vi.mock("@/features/auth", () => ({
   useAuth: () => ({ user: null, loading: false }),
   hubRouteForRole: () => "/dashboard",
-  shouldLeaveDashboard: () => false,
   useExitOnRefusedSession: () => undefined,
 }));
 

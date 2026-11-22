@@ -127,8 +127,9 @@ function DuelHubPage() {
 
   return (
     <PageShell width="narrow" className="space-y-6">
-      <BackLink to="/dashboard" className="mb-0">
-        {t.common.backToHall}
+      {/* Enfant de l'Arène : son retour y mène (audit de navigation du 2026-11-21, N-10). */}
+      <BackLink to="/arene" className="mb-0">
+        {t.arena.title}
       </BackLink>
       <header>
         <h1 className="flex items-center gap-2 font-display text-3xl font-bold sm:text-4xl">

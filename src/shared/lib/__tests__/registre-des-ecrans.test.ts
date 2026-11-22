@@ -9,6 +9,7 @@ import {
   isContentPath,
   isFunnelPath,
   isImmersivePath,
+  isStudentOnlyPath,
 } from "../screens";
 
 const ROUTES = resolve(__dirname, "../../../routes");
@@ -134,4 +135,20 @@ describe("la fiche d'aide d'un écran", () => {
   ])("%s → %s", (path, screen) => {
     expect(guideScreenForPath(path)).toBe(screen);
   });
+});
+
+describe("les écrans d'élève — un parent en est renvoyé à son Suivi", () => {
+  it.each(["/dashboard", "/arene", "/quest/e1", "/examen/x", "/boutique", "/onboarding"])(
+    "%s est un écran d'élève",
+    (path) => {
+      expect(isStudentOnlyPath(path)).toBe(true);
+    },
+  );
+
+  it.each(["/parent-report", "/parametrage", "/programme", "/chapitre/c1", "/suivi", "/console"])(
+    "%s ne l'est pas",
+    (path) => {
+      expect(isStudentOnlyPath(path)).toBe(false);
+    },
+  );
 });

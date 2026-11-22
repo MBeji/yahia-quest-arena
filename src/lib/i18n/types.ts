@@ -16,6 +16,7 @@ export type TranslationKeys = {
     loading: string;
     retry: string;
     home: string;
+    skipToContent: string;
     close: string;
     continue: string;
     completed: string;
@@ -796,6 +797,7 @@ export type TranslationKeys = {
     saveError: string;
     // Onboarding v2 (étude 15 lot 10)
     promise: string;
+    later: string;
     chooseAnyway: string;
     celebrateTitle: string;
     celebrateDesc: string;

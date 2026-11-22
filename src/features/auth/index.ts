@@ -9,7 +9,7 @@ export { useSignOutToHome, isDeliberateSignOut } from "./use-sign-out-to-home";
 export { useMyRole } from "./use-my-role";
 export { useMyStats } from "./use-my-stats";
 export { shouldRedirectToOnboarding } from "./onboarding-guard";
-export { hubRouteForRole, shouldLeaveDashboard } from "./hub-route";
+export { hubRouteForRole } from "./hub-route";
 export type { HubRoute } from "./hub-route";
 export {
   bootstrapProfile,

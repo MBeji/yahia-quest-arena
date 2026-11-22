@@ -48,7 +48,8 @@ function AdminEconomyPage() {
 
   return (
     <div className="mx-auto max-w-4xl px-6 py-10">
-      <BackLink to="/dashboard">{t.common.backToHall}</BackLink>
+      {/* Toutes les consoles reviennent au pôle (audit de navigation du 2026-11-21, N-10). */}
+      <BackLink to="/console">{t.adminHub.title}</BackLink>
 
       <h1 className="flex items-center gap-2 font-display text-2xl font-bold">
         <Coins className="h-6 w-6 text-[color:var(--gold)]" aria-hidden="true" />

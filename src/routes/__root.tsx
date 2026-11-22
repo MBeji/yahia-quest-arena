@@ -11,6 +11,7 @@ import { createIsomorphicFn } from "@tanstack/react-start";
 import { getRequestHeader } from "@tanstack/react-start/server";
 import { useEffect } from "react";
 import { LazyToaster } from "@/components/ui/lazy-toaster";
+import { RouteAnnouncer } from "@/components/ui/route-announcer";
 import { I18nProvider, useT } from "@/lib/i18n";
 import type { Locale } from "@/lib/i18n";
 import { GuideProvider } from "@/components/guide/guide-provider";
@@ -343,6 +344,7 @@ function RootComponent() {
           <SoundProvider>
             <GuideProvider>
               <GlobalSoundEffects />
+              <RouteAnnouncer />
               <Outlet />
               <ThemedToaster />
             </GuideProvider>

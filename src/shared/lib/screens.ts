@@ -27,6 +27,11 @@ export type Ecran = {
   readonly contenu?: Portee;
   /** Le tunnel de connexion lui-même : on n'y « revient » pas, on ne le retient pas. */
   readonly tunnel?: true;
+  /**
+   * Écran d'ÉLÈVE : un parent n'a ni profil de jeu ni parcours, il est renvoyé à son Suivi
+   * (audit de navigation du 2026-11-21, N-8). Un admin garde tout.
+   */
+  readonly eleve?: true;
   /** La fiche d'aide de l'écran ; `aidePortee` par défaut : `"segment"`. */
   readonly aide?: GuideScreenKey;
   readonly aidePortee?: Portee;
@@ -50,19 +55,25 @@ export const ECRANS: Readonly<Record<string, Ecran>> = {
   login: { tunnel: true },
   signup: { tunnel: true },
   // Coquille connectée
-  dashboard: { aide: "dashboard" },
-  parcours: { aide: "parcours" },
-  arene: { aide: "arena" },
+  dashboard: { aide: "dashboard", eleve: true },
+  parcours: { aide: "parcours", eleve: true },
+  arene: { aide: "arena", eleve: true },
   // Le hall du donjon et un duel gardent leurs onglets (étude 15, D-4) ; la bulle s'y tait.
-  dungeon: { aide: "arena", bulleMuette: "segment" },
-  duel: { aide: "arena", bulleMuette: "segment" },
-  leaderboard: { aide: "arena" },
-  examens: {},
-  examen: { immersif: "enfant", bulleMuette: "enfant" },
-  quest: { aide: "quest", aidePortee: "enfant", immersif: "segment", bulleMuette: "segment" },
-  onboarding: { immersif: "segment", bulleMuette: "segment" },
-  boutique: {},
-  forge: {},
+  dungeon: { aide: "arena", bulleMuette: "segment", eleve: true },
+  duel: { aide: "arena", bulleMuette: "segment", eleve: true },
+  leaderboard: { aide: "arena", eleve: true },
+  examens: { eleve: true },
+  examen: { immersif: "enfant", bulleMuette: "enfant", eleve: true },
+  quest: {
+    aide: "quest",
+    aidePortee: "enfant",
+    immersif: "segment",
+    bulleMuette: "segment",
+    eleve: true,
+  },
+  onboarding: { immersif: "segment", bulleMuette: "segment", eleve: true },
+  boutique: { eleve: true },
+  forge: { eleve: true },
   parametrage: { aide: "settings" },
   "parent-report": { aide: "parent" },
   console: {},
@@ -108,6 +119,11 @@ export function isContentPath(chemin: string): boolean {
 /** Le tunnel de connexion (`/auth`, `/login`, `/signup`), quelle que soit la casse. */
 export function isFunnelPath(chemin: string): boolean {
   return lire(chemin).ecran?.tunnel === true;
+}
+
+/** Un écran d'élève, dont un parent est renvoyé à son Suivi. */
+export function isStudentOnlyPath(chemin: string): boolean {
+  return lire(chemin).ecran?.eleve === true;
 }
 
 /** La fiche d'aide de l'écran, ou la fiche générale. */

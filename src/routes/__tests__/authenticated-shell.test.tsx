@@ -54,7 +54,6 @@ vi.mock("@/features/auth", () => ({
   }),
   shouldRedirectToOnboarding: () => needsOnboarding,
   hubRouteForRole: (role: string | null) => (role === "parent" ? "/parent-report" : "/dashboard"),
-  shouldLeaveDashboard: (role: string | null) => role === "parent",
   isDeliberateSignOut: () => deliberateSignOut,
   useSignOutToHome: () => vi.fn(),
   // é31 lot 4 : la coquille pousse la langue d'interface dans le profil (R-17).
@@ -222,7 +221,18 @@ describe("coquille connectée — le bouton Retour n'est pas piégé (audit du 2
     expect(navigate).toHaveBeenCalledWith({ to: "/parent-report", replace: true });
   });
 
-  it("le parent n'est renvoyé QUE du Hall : ses autres écrans restent les siens", async () => {
+  it.each(["/arene", "/boutique", "/quest/e1", "/parcours"])(
+    "un parent qui ouvre l'écran d'élève %s est conduit à son Suivi",
+    async (pathname) => {
+      currentRole = "parent";
+      currentLocation = { pathname, searchStr: "" };
+      authState = { user: { id: "u1" }, loading: false };
+      await renderShell();
+      expect(navigate).toHaveBeenCalledWith({ to: "/parent-report", replace: true });
+    },
+  );
+
+  it("le parent n'est renvoyé QUE des écrans d'élève : ses paramètres restent les siens", async () => {
     currentRole = "parent";
     currentLocation = { pathname: "/parametrage", searchStr: "" };
     authState = { user: { id: "u1" }, loading: false };

@@ -1,5 +1,7 @@
 import { createFileRoute, Outlet, useLocation } from "@tanstack/react-router";
 import { PublicHeader } from "@/components/public/public-header";
+import { MAIN_CONTENT_ID, SkipToContent } from "@/components/ui/route-announcer";
+import { useT } from "@/lib/i18n";
 import { PublicFooter } from "@/components/public/public-footer";
 import { NetworkBanner } from "@/components/ui/network-banner";
 import { PrintMark } from "@/components/public/print-mark";
@@ -27,6 +29,7 @@ export const Route = createFileRoute("/_public")({
 });
 
 function PublicLayout() {
+  const t = useT();
   usePublicContentProtection();
   // La bulle IA vit AUSSI ici : le lecteur de chapitre est une page publique, et
   // c'est la page où le chat existe. Un élève connecté qui lit son cours doit y
@@ -53,10 +56,11 @@ function PublicLayout() {
     >
       {/* Hoisted into <head> by React 19 — the indexable origin, stated outright. */}
       <CanonicalLink />
+      <SkipToContent label={t.common.skipToContent} />
       <PublicHeader />
       {/* é38 lot 4 — collé sous l'en-tête collant, dont la hauteur est mesurée. */}
       <NetworkBanner className="sticky top-[var(--public-header-h,0px)] z-20" />
-      <main className="flex-1">
+      <main id={MAIN_CONTENT_ID} tabIndex={-1} className="flex-1 outline-none">
         <Outlet />
       </main>
       <PublicFooter />

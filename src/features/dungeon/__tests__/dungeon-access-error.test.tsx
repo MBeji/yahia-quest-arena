@@ -95,6 +95,7 @@ vi.mock("sonner", () => ({
 vi.mock("@/lib/i18n", () => ({
   useT: () => ({
     common: { loading: "LOADING", retry: "RETRY", backToHall: "BACK" },
+    arena: { title: "ARENA" },
     dungeon: {
       loadAccessError: "ACCESS_ERROR",
       title: "Dungeon",

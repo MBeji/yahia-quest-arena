@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { describe, expect, it } from "vitest";
-import { hubRouteForRole, shouldLeaveDashboard } from "../hub-route";
+import { hubRouteForRole } from "../hub-route";
 
 // Regression: the dashboard used to bounce BOTH admins and parents to
 // /parent-report. Since /dashboard is the return target of the whole shell (logo,
@@ -23,24 +23,5 @@ describe("hubRouteForRole", () => {
   it("defaults to the Hall while the role is still unknown", () => {
     expect(hubRouteForRole(null)).toBe("/dashboard");
     expect(hubRouteForRole(undefined)).toBe("/dashboard");
-  });
-});
-
-describe("shouldLeaveDashboard", () => {
-  it("is true only for a parent", () => {
-    expect(shouldLeaveDashboard("parent")).toBe(true);
-  });
-
-  it("is false for an admin — no bounce, no navigation loop", () => {
-    expect(shouldLeaveDashboard("admin")).toBe(false);
-  });
-
-  it("is false for a student", () => {
-    expect(shouldLeaveDashboard("student")).toBe(false);
-  });
-
-  it("does not fire before the profile is read", () => {
-    expect(shouldLeaveDashboard(null)).toBe(false);
-    expect(shouldLeaveDashboard(undefined)).toBe(false);
   });
 });
