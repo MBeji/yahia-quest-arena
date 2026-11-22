@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { isAiSilentPath } from "@/shared/lib/screens";
 import { useServerFn } from "@tanstack/react-start";
 import { useLocation, useNavigate, useParams } from "@tanstack/react-router";
 import { GraduationCap, Hammer, Lock, Sparkles } from "lucide-react";
@@ -45,8 +46,7 @@ import { listForgeableChapters, type ForgeableChapter } from "../forge.server";
  * dialogue en ferait deux qui divergeraient.
  */
 
-/** Routes où la bulle se tait : épreuves notées et tunnels sans place pour elle. */
-const SILENT_PATHS = /^\/(quest|dungeon|duel|examen|onboarding)/;
+/* Les routes où la bulle se tait (épreuves notées, tunnels) sont dans le registre des écrans. */
 
 /**
  * Le chemin courant, LU DANS LE ROUTEUR — jamais dans `window.location`.
@@ -66,7 +66,7 @@ const SILENT_PATHS = /^\/(quest|dungeon|duel|examen|onboarding)/;
  * l'hydratation).
  */
 function useSilent(): boolean {
-  return useLocation({ select: (location) => SILENT_PATHS.test(location.pathname) });
+  return useLocation({ select: (location) => isAiSilentPath(location.pathname) });
 }
 
 export function AiLauncher({ authenticated }: { authenticated: boolean }) {

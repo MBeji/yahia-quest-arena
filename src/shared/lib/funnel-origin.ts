@@ -12,18 +12,13 @@
 // module, qui meurt avec l'onglet, jamais écrite nulle part. Le lot 0 de l'étude n'avait que (2) ;
 // c'est pourquoi le retour de Google, rechargé, n'y portait alors pas `from_content`.
 
-/** Pages de CONTENU public : ce qu'un visiteur lit ou pratique avant de songer à un compte. */
-const CONTENT_PATH =
-  /^\/(?:(?:chapitre|matiere|exercice|niveau)\/|(?:programme|extras)(?:[/?#]|$))/;
-
-/** Le tunnel lui-même : le traverser ne doit pas effacer la page d'où l'on venait. */
-const FUNNEL_PATH = /^\/(?:auth|login|signup)(?:[/?#]|$)/;
+import { isContentPath, isFunnelPath } from "@/shared/lib/screens";
 
 let lastPath: string | null = null;
 
 /** Retient la page qui vient de s'afficher — sauf le tunnel (auth, login, signup). */
 export function notePageForFunnel(path: string): void {
-  if (FUNNEL_PATH.test(path)) return;
+  if (isFunnelPath(path)) return;
   lastPath = path;
 }
 
@@ -32,6 +27,6 @@ export function notePageForFunnel(path: string): void {
  * c'est là qu'on le ramène), sinon `null` et c'est la dernière page vue qui répond.
  */
 export function isFromContent(returnTo: string | null): boolean {
-  if (returnTo !== null) return CONTENT_PATH.test(returnTo);
-  return lastPath !== null && CONTENT_PATH.test(lastPath);
+  if (returnTo !== null) return isContentPath(returnTo);
+  return lastPath !== null && isContentPath(lastPath);
 }
