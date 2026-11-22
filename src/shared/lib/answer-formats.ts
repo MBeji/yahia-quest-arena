@@ -41,6 +41,26 @@ const SENTINEL_CHOICES = new Set([TIMEOUT_ANSWER_CHOICE, UNSUPPORTED_ANSWER_CHOI
 export const NUMERIC_CHOICE_PATTERN = /^-?\d+(?:[.,]\d+)?$/;
 
 /**
+ * Ce qu'un clavier de téléphone ou un copier-coller mettent à la place du signe moins : le
+ * « − » typographique (U+2212) et les tirets demi-cadratin et cadratin. Ramenés au « - » que
+ * `NUMERIC_CHOICE_PATTERN` et `score_answer` attendent — sinon « −20 » est refusé alors que
+ * l'élève a tapé la bonne réponse.
+ */
+export function normalizeNumericEntry(raw: string): string {
+  return raw.replace(/[\u2212\u2013\u2014]/g, "-");
+}
+
+/**
+ * Bascule le signe d'une saisie numérique. Le pavé décimal d'iOS n'a PAS de touche « moins » :
+ * sans ce geste, une réponse négative ne peut pas être saisie sur iPhone (constat d'audit du
+ * 2026-11-22). Sans effet sur la valeur elle-même, y compris vide ou en cours de frappe.
+ */
+export function toggleNumericSign(raw: string): string {
+  const value = normalizeNumericEntry(raw).trimStart();
+  return value.startsWith("-") ? value.slice(1) : `-${value}`;
+}
+
+/**
  * Split a B2 CSV answer into its parts, whitespace-insensitive (mirrors the
  * server-side normalization in `score_answer`). Empty parts are kept so a
  * trailing/double comma invalidates the payload instead of hiding a bug.

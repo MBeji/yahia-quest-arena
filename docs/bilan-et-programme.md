@@ -60,6 +60,15 @@ Le programme ne décide d'aucun accès : la porte reste `resolve_exercise_access
 bord lit le bilan une fois (`getDashboard`), pour la carte et pour la bande — elles ne désignent
 jamais deux cibles (étude 22, D-8). Le hub matière ne fournit pas ce rang et se comporte comme avant.
 
+## Coût
+
+La lecture part dans la première vague du tableau de bord, à chaque connexion. Mesurée en
+production le 2026-11-22 sur un élève de 9ᵉ (98 chapitres, 896 missions) : ~205 ms à chaud avec
+la première écriture. La migration `20261122170000_study_report_single_pass.sql` calcule les
+chapitres **une fois** par lecture (le bilan et le programme les partagent) et matérialise les
+étages de `student_study_chapters`, dont les fonctions de quiz étaient réévaluées à chaque
+lecture de leur colonne. Le poste dominant reste `chapter_quiz_cleared` (un appel par chapitre).
+
 ## Accès
 
 - `get_study_report(p_student, p_with_chapters)` : soi, son enfant (lien actif), ou l'admin.

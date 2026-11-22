@@ -9,6 +9,7 @@ const labels: QuestionInputLabels = {
   numericPlaceholder: "n",
   numericHint: "n",
   numericInvalid: "n",
+  numericSign: "Changer le signe (plus ou moins)",
   orderingHint: "Range dans le bon ordre.",
   matchingHint: "Aligne chaque paire.",
   moveUp: "Monter",

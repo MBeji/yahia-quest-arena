@@ -118,6 +118,7 @@ SELECT ok(
 SELECT ok(
   NOT has_function_privilege('authenticated', 'public.student_study_chapters(uuid,text[],date)', 'EXECUTE')
   AND NOT has_function_privilege('authenticated', 'public.student_study_plan(uuid,text[],date,integer)', 'EXECUTE')
+  AND NOT has_function_privilege('authenticated', 'public.student_study_plan_from(uuid,text[],date,integer,jsonb)', 'EXECUTE')
   AND NOT has_function_privilege('authenticated', 'public.study_subject_ids(uuid)', 'EXECUTE'),
   '⭐ les fonctions internes ne sont pas des RPC'
 );
