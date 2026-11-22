@@ -4,6 +4,7 @@ import { CalendarCheck, Check, ChevronRight } from "lucide-react";
 import { useStudyT } from "@/lib/i18n/study";
 import {
   isStudyGoalReached,
+  STUDY_TARGET_OPTIONS,
   studyGoalPercent,
   studyPlanMinutes,
   type StudyReport,
@@ -24,12 +25,17 @@ export function StudyPlanCard({
   report,
   audience,
   showReportLink = false,
+  onSetTarget,
+  saving = false,
   className = "",
 }: {
   report: StudyReport;
   audience: "student" | "parent";
   /** Le lien vers le bilan complet — sur le tableau de bord, pas dans le bilan lui-même. */
   showReportLink?: boolean;
+  /** Règle l'objectif quotidien. Absent (tableau de bord) : l'objectif se lit sans se régler. */
+  onSetTarget?: (minutes: number) => void;
+  saving?: boolean;
   className?: string;
 }) {
   const t = useStudyT().study;
@@ -83,6 +89,35 @@ export function StudyPlanCard({
             .replace("{minutes}", String(report.weekMinutes))
             .replace("{days}", String(report.weekActiveDays))}
         </p>
+        {onSetTarget && (
+          <div
+            role="group"
+            aria-label={t.goal.choose}
+            data-testid="study-target"
+            className="mt-3 flex flex-wrap items-center gap-2"
+          >
+            <span className="text-muted-foreground text-xs">{t.goal.choose}</span>
+            {STUDY_TARGET_OPTIONS.map((minutes) => {
+              const active = report.targetMinutes === minutes;
+              return (
+                <button
+                  key={minutes}
+                  type="button"
+                  aria-pressed={active}
+                  disabled={saving}
+                  onClick={() => onSetTarget(minutes)}
+                  className={`rounded-full border px-3 py-1 text-xs font-semibold transition disabled:opacity-50 ${
+                    active
+                      ? "border-[color:var(--gold)] bg-[color:var(--gold)]/15 text-[color:var(--gold)]"
+                      : "border-border/60 text-muted-foreground hover:border-[color:var(--gold)]/50"
+                  }`}
+                >
+                  {t.goal.option.replace("{n}", String(minutes))}
+                </button>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {report.plan.length === 0 ? (
@@ -95,10 +130,12 @@ export function StudyPlanCard({
             const body = (
               <>
                 <div className="min-w-0 flex-1">
-                  <div className="truncate font-semibold" dir="auto">
+                  {/* Deux lignes, pas une : sur téléphone un titre de mission tronqué à vingt
+                      caractères ne dit plus de quoi il s'agit. */}
+                  <div className="line-clamp-2 leading-snug font-semibold" dir="auto">
                     {item.title}
                   </div>
-                  <div className="text-muted-foreground truncate text-xs" dir="auto">
+                  <div className="text-muted-foreground mt-0.5 line-clamp-2 text-xs" dir="auto">
                     {`${subjectName.get(item.subjectId) ?? ""} · ${item.chapterTitle}`}
                   </div>
                   <div className="mt-1 text-xs text-[color:var(--gold)]">
@@ -145,7 +182,8 @@ export function StudyPlanCard({
                   {done.title}
                 </span>
                 <span className="text-muted-foreground shrink-0 text-xs">
-                  {t.plan.doneScore.replace("{score}", String(done.scorePct))}
+                  {/* Isolat LTR : sans lui « 88 % » se lit « % 88 » dans une ligne arabe. */}
+                  {`\u2066${t.plan.doneScore.replace("{score}", String(done.scorePct))}\u2069`}
                 </span>
               </li>
             ))}

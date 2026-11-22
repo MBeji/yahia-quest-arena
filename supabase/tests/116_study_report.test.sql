@@ -21,7 +21,7 @@
 
 BEGIN;
 CREATE EXTENSION IF NOT EXISTS pgtap;
-SELECT plan(33);
+SELECT plan(43);
 
 INSERT INTO auth.users (id, email) VALUES
   ('e1160000-0000-4000-8000-0000000000a1', 't116-eleve@test.local'),
@@ -291,6 +291,23 @@ SELECT is(
   'objectif atteint : le programme se tait'
 );
 
+-- Une matière PRIORITAIRE passe devant, chaque jour (migration 20261122180000).
+SET LOCAL "request.jwt.claims" = '{"sub":"e1160000-0000-4000-8000-0000000000a1","role":"authenticated"}';
+SET LOCAL ROLE authenticated;
+SELECT is(
+  public.set_study_preferences(NULL, ARRAY['t116-math']) ->> 'focusSubjectIds',
+  '["t116-math"]',
+  'l''élève choisit les maths comme matière prioritaire'
+);
+RESET ROLE;
+SELECT is(
+  (SELECT string_agg(p.kind, ',' ORDER BY p.step)
+     FROM public.student_study_plan('e1160000-0000-4000-8000-0000000000a1',
+            ARRAY['t116-math', 't116-fr'], public.app_current_day(), 8) p),
+  'retry,start',
+  '⭐ la matière prioritaire ouvre le programme — avant, le français jamais travaillé passait devant'
+);
+
 -- L'élève rejoue A2 aujourd'hui (toujours ratée) et travaille dix minutes.
 INSERT INTO public.attempts (user_id, exercise_id, subject_id, correct_count, total_count, score_pct, duration_seconds, xp_earned, variant)
 VALUES ('e1160000-0000-4000-8000-0000000000a1', 'e1160000-0000-4000-8000-000000000102', 't116-math', 4, 10, 40, 90, 0, 'classic');
@@ -364,6 +381,71 @@ SELECT is(
   'une liste vide rend la matière à l''estimation du calendrier'
 );
 
+RESET ROLE;
+
+-- ---------------------------------------------------------
+-- 8. Les réglages : objectif quotidien et matières prioritaires.
+-- ---------------------------------------------------------
+SELECT ok(
+  has_table_privilege('authenticated', 'public.study_preferences', 'SELECT')
+  AND NOT has_table_privilege('authenticated', 'public.study_preferences', 'INSERT')
+  AND NOT has_table_privilege('authenticated', 'public.study_preferences', 'UPDATE')
+  AND NOT has_function_privilege('authenticated', 'public.study_target_minutes(uuid)', 'EXECUTE')
+  AND NOT has_function_privilege('authenticated', 'public.study_focus_subject_ids(uuid)', 'EXECUTE')
+  AND has_function_privilege('authenticated', 'public.set_study_preferences(integer,text[],uuid)', 'EXECUTE')
+  AND NOT has_function_privilege('anon', 'public.set_study_preferences(integer,text[],uuid)', 'EXECUTE'),
+  '⭐ les réglages se lisent, ils ne s''écrivent que par la RPC ; les lectures internes ne sont pas des RPC'
+);
+
+SET LOCAL "request.jwt.claims" = '{"sub":"e1160000-0000-4000-8000-0000000000a3","role":"authenticated"}';
+SET LOCAL ROLE authenticated;
+SELECT throws_ok(
+  $$SELECT public.set_study_preferences(60, NULL, 'e1160000-0000-4000-8000-0000000000a1')$$,
+  'Access denied',
+  '⭐ un inconnu ne règle pas le programme d''un élève'
+);
+RESET ROLE;
+
+SET LOCAL "request.jwt.claims" = '{"sub":"e1160000-0000-4000-8000-0000000000a1","role":"authenticated"}';
+SET LOCAL ROLE authenticated;
+SELECT throws_ok(
+  $$SELECT public.set_study_preferences(20)$$,
+  'Daily minutes out of range',
+  '⭐ trente minutes sont un plancher : l''objectif ne descend pas dessous'
+);
+SELECT throws_ok(
+  $$SELECT public.set_study_preferences(NULL, ARRAY['t116-math', 't116-fr', 't116-hors'])$$,
+  'Too many focus subjects',
+  'deux matières prioritaires au plus'
+);
+SELECT throws_ok(
+  $$SELECT public.set_study_preferences(NULL, ARRAY['t116-hors'])$$,
+  'Unknown subject for this parcours',
+  'une matière hors du parcours n''est pas prioritaire'
+);
+SELECT is(
+  public.set_study_preferences(45) ->> 'dailyMinutes',
+  '45',
+  'l''élève monte son objectif à 45 minutes'
+);
+SELECT is(
+  (SELECT (r->>'targetMinutes') || ' '
+          || (SELECT string_agg(s->>'id', ',' ORDER BY s->>'id')
+                FROM jsonb_array_elements(r->'subjects') s WHERE (s->>'focus')::boolean)
+     FROM public.get_study_report(NULL, false) r),
+  '45 t116-math',
+  '⭐ le bilan porte l''objectif de l''élève et marque sa matière prioritaire'
+);
+RESET ROLE;
+
+SET LOCAL "request.jwt.claims" = '{"sub":"e1160000-0000-4000-8000-0000000000a2","role":"authenticated"}';
+SET LOCAL ROLE authenticated;
+SELECT is(
+  (SELECT (j->>'dailyMinutes') || ' ' || (j->'focusSubjectIds')::text
+     FROM public.set_study_preferences(60, NULL, 'e1160000-0000-4000-8000-0000000000a1') j),
+  '60 ["t116-math"]',
+  'le parent lié règle l''objectif de son enfant ; un réglage non donné reste inchangé'
+);
 RESET ROLE;
 
 SELECT * FROM finish();

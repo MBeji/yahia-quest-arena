@@ -32,7 +32,8 @@ présente. Une règle n'existe qu'à un endroit.
 | État d'un chapitre          | `student_study_chapters`          | étoile 4 : maîtrisé ; jamais ouvert : non commencé ; étoile ≥ 1 : acquis ; une mission ratée : fragile ; sinon en cours                                                                           |
 | Mission comptée, étoile     | `mission_is_counted`, grand livre | inchangé — `docs/etoiles-et-sceaux.md`. Rien n'est recopié                                                                                                                                        |
 | Durée estimée d'une mission | `study_exercise_minutes`          | 35 s par question (60 s en difficulté 4), 3 minutes au moins — le troisième quartile mesuré en production                                                                                         |
-| Objectif quotidien          | `study_daily_target_minutes`      | 30 minutes                                                                                                                                                                                        |
+| Objectif quotidien          | `study_target_minutes`            | celui de l'élève (`study_preferences`, 30 à 120 minutes) ; sans réglage, le plancher `study_daily_target_minutes` = 30                                                                            |
+| Matières prioritaires       | `study_focus_subject_ids`         | deux au plus, du parcours de l'élève ; le programme les sert **chaque jour, en premier**                                                                                                          |
 | Temps fait                  | `get_study_report`                | `learning_pulses` du jour (Africa/Tunis), hors navigation — la mesure du suivi quotidien                                                                                                          |
 
 ## Comment le programme se compose
@@ -45,8 +46,10 @@ présente. Une règle n'existe qu'à un endroit.
 2. **Dans une matière** : les reprises d'abord, puis les chapitres commencés (le plus proche de
    son étoile en tête), puis les chapitres vus jamais ouverts, dans l'ordre du programme. Deux
    missions au plus par chapitre, trois par matière.
-3. **Entre matières** : celle qui n'a pas été travaillée aujourd'hui, puis la plus délaissée, puis
-   la moins couverte. Les trois premières alternent.
+3. **Entre matières** : les matières **prioritaires** d'abord (qu'elles aient été travaillées
+   aujourd'hui ou non — c'est ce qui les fait revenir chaque jour), puis celle qui n'a pas été
+   travaillée aujourd'hui, puis la plus délaissée, puis la moins couverte. Les trois premières
+   alternent.
 4. **Jusqu'au budget** : l'objectif moins le temps déjà mesuré. Trente minutes sont donc trente
    minutes réellement passées : qui expédie ses missions en voit arriver d'autres ; l'objectif
    atteint, le programme se tait.
@@ -74,7 +77,9 @@ lecture de leur colonne. Le poste dominant reste `chapter_quiz_cleared` (un appe
 - `get_study_report(p_student, p_with_chapters)` : soi, son enfant (lien actif), ou l'admin.
 - `set_class_chapters(p_subject_id, p_chapter_ids, p_student)` : soi, ou son enfant. La liste
   **remplace** la déclaration de la matière ; vide, elle la rend à l'estimation du calendrier.
-- `student_class_chapters` : lecture par RLS (propriétaire, admin, parent lié), aucune écriture
+- `set_study_preferences(p_daily_minutes, p_focus_subject_ids, p_student)` : soi, ou son enfant.
+  `NULL` laisse un réglage inchangé ; une matière prioritaire doit appartenir au parcours.
+- `student_class_chapters`, `study_preferences` : lecture par RLS (propriétaire, admin, parent lié), aucune écriture
   directe. Les fonctions internes sont révoquées d'`authenticated`.
 - Le chemin public au code alliance (`/suivi`) ne sert pas ce bilan.
 
@@ -83,7 +88,6 @@ Tests : `supabase/tests/116_study_report.test.sql` ; `src/shared/lib/__tests__/s
 
 ## Ce qui n'est pas fait
 
-- L'objectif est fixe (30 minutes) : ni l'élève ni le parent ne le règlent.
-- Aucune matière « prioritaire » ne se choisit : l'alternance sert d'elle-même les matières délaissées.
 - Les épreuves blanches ne sont pas proposées par le programme (elles couvrent toute l'année) ;
   leur dernière note figure au bilan.
+- Le programme sert toutes les matières du parcours actif : on ne peut pas en écarter une.

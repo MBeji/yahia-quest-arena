@@ -4,7 +4,11 @@ import { CalendarCheck } from "lucide-react";
 
 import { StudyReportView } from "@/components/study-report/study-report-view";
 import { useStudyT } from "@/lib/i18n/study";
-import { getStudentStudyReport, setStudentClassChapters } from "../parent-report.server";
+import {
+  getStudentStudyReport,
+  setStudentClassChapters,
+  setStudentStudyPreferences,
+} from "../parent-report.server";
 
 /**
  * Commande du 2026-11-22 — le bilan et le programme du jour de l'enfant, au suivi parental.
@@ -21,6 +25,7 @@ export function StudyReportSection({ studentId }: { studentId: string }) {
   const t = useStudyT().study;
   const fetchReport = useServerFn(getStudentStudyReport);
   const saveChapters = useServerFn(setStudentClassChapters);
+  const savePreferences = useServerFn(setStudentStudyPreferences);
   const queryKey = ["parent-study-report", studentId] as const;
 
   const { data: report } = useQuery({
@@ -43,6 +48,7 @@ export function StudyReportSection({ studentId }: { studentId: string }) {
         save={(subjectId, chapterIds) =>
           saveChapters({ data: { studentId, subjectId, chapterIds } })
         }
+        savePreferences={(prefs) => savePreferences({ data: { studentId, ...prefs } })}
       />
     </section>
   );

@@ -780,3 +780,33 @@ export const setStudentClassChapters = createServerFn({ method: "POST" })
     }
     return { count: count ?? 0 };
   });
+
+// Le parent lié règle le programme de son enfant : objectif quotidien et matières prioritaires.
+export const setStudentStudyPreferences = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .validator((d: unknown) =>
+    z
+      .object({
+        studentId: z.guid(),
+        dailyMinutes: z.number().int().min(30).max(120).optional(),
+        focusSubjectIds: z.array(z.string().min(1).max(120)).max(2).optional(),
+      })
+      .parse(d),
+  )
+  .handler(async ({ data, context }): Promise<{ ok: true }> => {
+    const { supabase } = context;
+
+    const { error } = await supabase.rpc("set_study_preferences", {
+      p_daily_minutes: data.dailyMinutes,
+      p_focus_subject_ids: data.focusSubjectIds,
+      p_student: data.studentId,
+    });
+    if (error) {
+      failWithClientError(
+        "setStudentStudyPreferences: rpc failed",
+        error,
+        "Enregistrement impossible. Réessayez.",
+      );
+    }
+    return { ok: true };
+  });

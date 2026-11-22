@@ -29,6 +29,11 @@ export const STUDY_CHAPTER_STATUSES = [
 ] as const;
 export const STUDY_PLAN_KINDS = ["retry", "quiz", "start", "advance"] as const;
 
+/** Les objectifs quotidiens proposés, en minutes. 30 est le PLANCHER (commande du 2026-11-22). */
+export const STUDY_TARGET_OPTIONS = [30, 45, 60, 90] as const;
+/** Deux matières prioritaires au plus : au-delà, « prioritaire » ne veut plus rien dire. */
+export const STUDY_MAX_FOCUS = 2;
+
 export type StudyLevel = (typeof STUDY_LEVELS)[number];
 export type StudyChapterStatus = (typeof STUDY_CHAPTER_STATUSES)[number];
 export type StudyPlanKind = (typeof STUDY_PLAN_KINDS)[number];
@@ -53,6 +58,11 @@ export type StudySubject = {
   id: string;
   name: string;
   contentLanguage: string | null;
+  /**
+   * Matière PRIORITAIRE : le programme la sert chaque jour, en premier. Absente d'une base qui
+   * n'a pas encore la migration des réglages — d'où l'optionnel.
+   */
+  focus?: boolean;
   /** L'élève a coché des chapitres ; sinon « vu » est une estimation du calendrier. */
   declared: boolean;
   chaptersTotal: number;
@@ -167,5 +177,39 @@ export function withSeenChapters(
             chapters: s.chapters.map((c) => ({ ...c, seen: seen.has(c.id) })),
           },
     ),
+  };
+}
+
+/** Les matières prioritaires du bilan, dans l'ordre du parcours. */
+export function focusSubjectIds(report: Pick<StudyReport, "subjects">): string[] {
+  return report.subjects.filter((s) => s.focus === true).map((s) => s.id);
+}
+
+/**
+ * La liste après avoir basculé UNE matière. `null` quand le geste est refusé : on ne peut pas
+ * en ajouter une troisième — la base le refuserait aussi (`set_study_preferences`).
+ */
+export function toggleFocusSubject(
+  report: Pick<StudyReport, "subjects">,
+  subjectId: string,
+): string[] | null {
+  const current = focusSubjectIds(report);
+  if (current.includes(subjectId)) return current.filter((id) => id !== subjectId);
+  if (current.length >= STUDY_MAX_FOCUS) return null;
+  return report.subjects.filter((s) => s.focus === true || s.id === subjectId).map((s) => s.id);
+}
+
+/** Applique un réglage au bilan affiché, en attendant la relecture du serveur. */
+export function withStudyPreferences(
+  report: StudyReport,
+  prefs: { dailyMinutes?: number; focusSubjectIds?: readonly string[] },
+): StudyReport {
+  const focus = prefs.focusSubjectIds;
+  return {
+    ...report,
+    targetMinutes: prefs.dailyMinutes ?? report.targetMinutes,
+    subjects: focus
+      ? report.subjects.map((s) => ({ ...s, focus: focus.includes(s.id) }))
+      : report.subjects,
   };
 }

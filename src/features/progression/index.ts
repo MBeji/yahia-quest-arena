@@ -26,4 +26,4 @@ export { LearningPanels } from "./components/learning-panels";
 // Bilan et programme du jour (commande du 2026-11-22) : la lecture de l'écran « Mon bilan »
 // et le geste « chapitres vus en classe ». Les composants sont partagés avec le suivi
 // parental (`@/components/study-report`), le contrat avec `@/shared/lib/study-report`.
-export { getStudyReport, setClassChapters } from "./progression.server";
+export { getStudyReport, setClassChapters, setStudyPreferences } from "./progression.server";

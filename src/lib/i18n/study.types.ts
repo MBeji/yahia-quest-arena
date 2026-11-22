@@ -26,6 +26,9 @@ export type StudyTranslations = {
       reached: string;
       /** `{minutes}` minutes sur `{days}` jour(s), sept derniers jours. */
       week: string;
+      /** Le réglage de l'objectif — son titre, et une option de `{n}` minutes. */
+      choose: string;
+      option: string;
     };
     plan: {
       title: string;
@@ -55,7 +58,7 @@ export type StudyTranslations = {
       noRecent: string;
       /** `{done}` chapitres acquis sur `{seen}` vus en classe. */
       seen: string;
-      /** `{mark}` sur 20. */
+      /** `{mark}` = la note déjà écrite « 13,5/20 », isolée en LTR. */
       exam: string;
     };
     work: {
@@ -78,6 +81,13 @@ export type StudyTranslations = {
       /** `{seen}` chapitres cochés sur `{total}`. */
       declared: string;
       through: string;
+      error: string;
+    };
+    focus: {
+      /** Le bouton d'une matière, et son état quand elle est prioritaire. */
+      toggle: string;
+      active: string;
+      hint: ByAudience;
       error: string;
     };
     unavailable: string;
