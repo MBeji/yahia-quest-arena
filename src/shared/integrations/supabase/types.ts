@@ -1614,7 +1614,9 @@ export type Database = {
           duration_minutes: number;
           id: string;
           parcours_id: string;
+          slug: string | null;
           status: string;
+          subject_id: string | null;
           title_ar: string | null;
           title_en: string | null;
           title_fr: string;
@@ -1625,7 +1627,9 @@ export type Database = {
           duration_minutes: number;
           id?: string;
           parcours_id: string;
+          slug?: string | null;
           status?: string;
+          subject_id?: string | null;
           title_ar?: string | null;
           title_en?: string | null;
           title_fr: string;
@@ -1636,7 +1640,9 @@ export type Database = {
           duration_minutes?: number;
           id?: string;
           parcours_id?: string;
+          slug?: string | null;
           status?: string;
+          subject_id?: string | null;
           title_ar?: string | null;
           title_en?: string | null;
           title_fr?: string;
@@ -1647,6 +1653,13 @@ export type Database = {
             columns: ["parcours_id"];
             isOneToOne: false;
             referencedRelation: "parcours";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "mock_exams_subject_id_fkey";
+            columns: ["subject_id"];
+            isOneToOne: false;
+            referencedRelation: "subjects";
             referencedColumns: ["id"];
           },
         ];

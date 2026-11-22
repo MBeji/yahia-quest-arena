@@ -362,8 +362,9 @@ export const en: TranslationKeys = {
   exam: {
     title: "Mock exams",
     subtitle:
-      "The real thing: several subjects, one clock, no help — the correction comes afterwards.",
+      "The real thing: one clock, no help — the correction comes afterwards. A full mock exam mixes the subjects; a paper trains a single one.",
     none: "No mock exam is open right now.",
+    groupMixed: "Full mock exam — all subjects",
     loading: "Preparing the paper…",
     notFound: "This exam could not be found.",
     back: "Back to exams",

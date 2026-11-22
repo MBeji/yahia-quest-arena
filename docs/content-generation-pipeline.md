@@ -53,7 +53,7 @@ flowchart LR
 
     subgraph PRIV["🔒 MBeji/yahia-quest-content (privé, sur invitation)"]
         C1["content/**\n(566 chapitres, ~18 700 questions,\ncorrigés)"]
-        C2["registres : misconceptions.json,\ncompetences/, videos.json"]
+        C2["registres : misconceptions.json,\ncompetences/, videos.json,\nmock-exams.json"]
         C3["41 skills pédagogiques\n(content-*, prof-*,\ncurriculum-architect)"]
         C4["FableEtudes/ +\nMÉTHODE-GENERATION-CONTENU.md"]
         C5["workflows content-audit.yml,\nvideo-health.yml, apply-content.yml"]
@@ -65,7 +65,7 @@ flowchart LR
 | Ce que tu cherches                                                                                      | Où c'est                                                       |
 | ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
 | Le corpus (`content/`, cours, quiz, exercices, corrigés)                                                | **dépôt privé**                                                |
-| Les registres `misconceptions.json`, `competences/`, `videos.json`                                      | **dépôt privé**                                                |
+| Les registres `misconceptions.json`, `competences/`, `videos.json`, `mock-exams.json`                   | **dépôt privé**                                                |
 | Les 41 skills pédagogiques (`content-*`, `prof-*`, `curriculum-architect`)                              | **dépôt privé**                                                |
 | Les études (`FableEtudes/`) et `METHODE-GENERATION-CONTENU.md`                                          | **dépôt privé**                                                |
 | Les workflows `content-audit.yml` et `video-health.yml`                                                 | **dépôt privé**                                                |
@@ -927,8 +927,12 @@ flowchart TD
 
 ### Piège n° 8 — un REGISTRE sans canal vers la prod, et le run reste VERT
 
-Le moteur sait émettre deux registres à part des sujets : `_competences_registry.sql`
-(`build.ts --competences`) et `_misconceptions_registry.sql` (`build.ts --misconceptions`).
+Le moteur sait émettre trois registres à part des sujets : `_competences_registry.sql`
+(`build.ts --competences`), `_misconceptions_registry.sql` (`build.ts --misconceptions`) et,
+depuis le 2026-11-22, `_mock_exams_registry.sql` (`build.ts --mock-exams` — les examens blancs
+que le corpus compose dans `content/mock-exams.json` ; **il s'applique APRÈS les sujets**, au
+contraire des deux autres, parce qu'une épreuve est un exercice : la jointure ne retient que
+ceux qui sont en base, et un examen incomplet reste `draft`).
 Chacun exige **deux** choses dans `apply-content.yml` (dépôt privé) : une **étape d'émission**,
 et une **entrée dans le plan d'application**. Il en faut une **troisième** dans l'étape de
 vérification — son propre critère —, sans quoi le registre est compté comme un SUJET, ne trouve

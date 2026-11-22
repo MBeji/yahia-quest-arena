@@ -5,13 +5,14 @@ import {
   isRecallEligible,
   normalizeRecallText,
 } from "./free-answer.ts";
-import { parseManuelPages, toCompiledVideo } from "./schema.ts";
+import { MOCK_EXAM_EXERCISE_REF, parseManuelPages, toCompiledVideo } from "./schema.ts";
 import type {
   CompetencyRegistry,
   CompiledVideo,
   ContentQuestion,
   LoadedSubject,
   MisconceptionRegistry,
+  MockExamRegistry,
   VideoRegistry,
 } from "./schema.ts";
 
@@ -63,6 +64,12 @@ export const questionId = (
 
 /** Deterministic id of a competency, derived from its stable slug (étude 07 R-1). */
 export const competencyId = (slug: string): string => uuidV5(`competency/${slug}`);
+
+/**
+ * Stable id of a corpus-declared mock exam, derived from its slug alone. The
+ * students' copies hang off this id: a slug is retired, never renamed.
+ */
+export const mockExamId = (slug: string): string => uuidV5(`mock-exam/${slug}`);
 
 /**
  * File name of a subject's content SQL on the content channel (étude 24 D-3).
@@ -789,6 +796,169 @@ export function buildMisconceptionRegistryMigrationSql(registry: MisconceptionRe
       doomedWhere: `tag NOT IN (${sqlIdList(tags)})`,
       collateral: "toutes les erreurs qu'ils nomment redeviennent anonymes dans la correction",
     }),
+    "",
+  );
+
+  return out.join("\n");
+}
+
+/** Stable file name of the mock-exam registry on the content channel (D-6). */
+export const MOCK_EXAMS_SQL_FILE_NAME = "_mock_exams_registry.sql";
+
+/** `'<subject>/<chapter>/<exercise>'` → l'UUIDv5 que le sujet a écrit en base. */
+function mockExamPaperExerciseId(ref: string): string {
+  const match = MOCK_EXAM_EXERCISE_REF.exec(ref);
+  if (!match) throw new Error(`mock-exam paper '${ref}' is not '<subject>/<chapter>/<exercise>'`);
+  return exerciseId(match[1]!, match[2]!, match[3]!);
+}
+
+/**
+ * Compile `content/mock-exams.json` into the examens blancs the corpus composes
+ * (étude 02, suite du 2026-11-22).
+ *
+ * Le fichier s'applique APRÈS les sujets : une épreuve est un exercice, et la
+ * jointure sur `public.exercises` ne retient que ceux qui sont en base. D'où la
+ * règle de publication, la même que le seed de la session 1 — **un examen n'est
+ * `published` que s'il est COMPLET** ; il lui manque une épreuve (sujet pas
+ * encore appliqué, exercice renommé), il reste ou repasse `draft`. Mieux vaut pas
+ * d'épreuve visible qu'une épreuve de français sans sa compréhension.
+ *
+ * Idempotent et rejouable, comme tout ce qui passe par `apply-content.yml` :
+ *   1. upsert des examens déclarés (identité = UUIDv5 du slug) ;
+ *   2. retrait des épreuves qu'un examen DÉCLARÉ ne liste plus ;
+ *   3. upsert des épreuves dont l'exercice existe ;
+ *   4. statut recalculé sur la complétude ;
+ *   5. archivage des examens à slug que le registre ne déclare plus.
+ *
+ * Rien n'est jamais SUPPRIMÉ côté examens : `mock_exam_sessions` pend à
+ * `mock_exams` en CASCADE, effacer un examen effacerait les copies des élèves.
+ * Un examen retiré est archivé, et il GARDE ses épreuves — le corrigé d'une
+ * copie rendue doit rester lisible. Un examen semé par migration (`slug` NULL)
+ * n'est jamais touché : ce registre ne gère que ce qu'il a déclaré.
+ *
+ * Régénérer avec `npm run content:build -- --mock-exams`.
+ */
+export function buildMockExamRegistrySql(registry: MockExamRegistry): string {
+  const slugs = Object.keys(registry).sort();
+  const paperCount = slugs.reduce((n, slug) => n + registry[slug]!.papers.length, 0);
+  const out: string[] = [
+    "-- =========================================================",
+    "-- GENERATED FILE — do not edit by hand.",
+    `-- Mock-exam registry (étude 02) — ${slugs.length} exam(s), ${paperCount} paper(s)`,
+    "-- Regenerate with: npm run content:build -- --mock-exams",
+    "-- Source of truth: content/mock-exams.json",
+    "-- Apply AFTER the subjects: a paper only lands if its exercise is in base.",
+    "-- =========================================================",
+    "",
+  ];
+
+  if (slugs.length === 0) {
+    // Même règle que les autres registres : « rien à dire » n'est pas « tout
+    // archiver ». Un fichier vidé par accident ne retire aucune épreuve.
+    out.push("-- Registre vide : rien à écrire, et surtout rien à archiver.", "");
+    return out.join("\n");
+  }
+
+  const examIds = slugs.map(mockExamId);
+  const uuid = (id: string): string => `${sqlString(id)}::uuid`;
+
+  const examRows = slugs.map((slug) => {
+    const exam = registry[slug]!;
+    const subject = exam.subject ? `${sqlString(exam.subject)}::text` : "NULL::text";
+    return (
+      `    (${uuid(mockExamId(slug))}, ${sqlString(slug)}, ${sqlString(exam.parcours)}, ${subject}, ` +
+      `${sqlString(exam.title.fr)}, ${sqlString(exam.title.en)}, ${sqlString(exam.title.ar)}, ` +
+      `${exam.durationMinutes}, ${exam.displayOrder})`
+    );
+  });
+
+  const paperRows: string[] = [];
+  const paperKeys: string[] = [];
+  for (const slug of slugs) {
+    registry[slug]!.papers.forEach((paper, index) => {
+      const examUuid = uuid(mockExamId(slug));
+      const exerciseUuid = uuid(mockExamPaperExerciseId(paper.exercise));
+      paperKeys.push(`    (${examUuid}, ${exerciseUuid})`);
+      paperRows.push(
+        `    (${examUuid}, ${exerciseUuid}, ${sqlString(paper.label.fr)}, ` +
+          `${sqlString(paper.label.en)}, ${sqlString(paper.label.ar)}, ${paper.points}, ${index + 1})`,
+      );
+    });
+  }
+
+  const expectedRows = slugs.map(
+    (slug) => `    (${uuid(mockExamId(slug))}, ${registry[slug]!.papers.length})`,
+  );
+
+  out.push(
+    "-- 1. Les examens déclarés. Le parcours doit exister (JOIN) : un examen",
+    "--    déclaré pour un parcours absent de cette base ne s'écrit pas, il n'échoue pas.",
+    "INSERT INTO public.mock_exams",
+    "  (id, slug, parcours_id, subject_id, title_fr, title_en, title_ar, duration_minutes, status, display_order)",
+    "SELECT v.id, v.slug, v.parcours_id, sub.id, v.title_fr, v.title_en, v.title_ar,",
+    "       v.duration_minutes, 'draft', v.display_order",
+    "  FROM (VALUES",
+    examRows.join(",\n"),
+    "  ) AS v(id, slug, parcours_id, subject_id, title_fr, title_en, title_ar, duration_minutes, display_order)",
+    "  JOIN public.parcours p ON p.id = v.parcours_id",
+    "  LEFT JOIN public.subjects sub ON sub.id = v.subject_id",
+    "ON CONFLICT (id) DO UPDATE SET",
+    "  slug = EXCLUDED.slug,",
+    "  parcours_id = EXCLUDED.parcours_id,",
+    "  subject_id = EXCLUDED.subject_id,",
+    "  title_fr = EXCLUDED.title_fr,",
+    "  title_en = EXCLUDED.title_en,",
+    "  title_ar = EXCLUDED.title_ar,",
+    "  duration_minutes = EXCLUDED.duration_minutes,",
+    "  display_order = EXCLUDED.display_order;",
+    "",
+    "-- 2. Les épreuves qu'un examen DÉCLARÉ ne liste plus. Un examen archivé",
+    "--    (plus déclaré) garde les siennes : le corrigé d'une copie rendue reste lisible.",
+    "DELETE FROM public.mock_exam_papers pp",
+    ` WHERE pp.exam_id IN (${examIds.map(uuid).join(", ")})`,
+    "   AND NOT EXISTS (",
+    "     SELECT 1 FROM (VALUES",
+    paperKeys.join(",\n"),
+    "     ) AS d(exam_id, exercise_id)",
+    "      WHERE d.exam_id = pp.exam_id AND d.exercise_id = pp.exercise_id",
+    "   );",
+    "",
+    "-- 3. Les épreuves déclarées — seulement celles dont l'exercice est en base.",
+    "INSERT INTO public.mock_exam_papers",
+    "  (exam_id, exercise_id, label_fr, label_en, label_ar, points, display_order)",
+    "SELECT d.exam_id, d.exercise_id, d.label_fr, d.label_en, d.label_ar, d.points, d.display_order",
+    "  FROM (VALUES",
+    paperRows.join(",\n"),
+    "  ) AS d(exam_id, exercise_id, label_fr, label_en, label_ar, points, display_order)",
+    "  JOIN public.mock_exams e ON e.id = d.exam_id",
+    "  JOIN public.exercises x ON x.id = d.exercise_id",
+    "ON CONFLICT (exam_id, exercise_id) DO UPDATE SET",
+    "  label_fr = EXCLUDED.label_fr,",
+    "  label_en = EXCLUDED.label_en,",
+    "  label_ar = EXCLUDED.label_ar,",
+    "  points = EXCLUDED.points,",
+    "  display_order = EXCLUDED.display_order;",
+    "",
+    "-- 4. Publié si COMPLET, brouillon sinon — jamais une épreuve amputée.",
+    "UPDATE public.mock_exams e",
+    "   SET status = CASE",
+    "         WHEN (SELECT count(*) FROM public.mock_exam_papers pp WHERE pp.exam_id = e.id) = d.expected",
+    "           THEN 'published'",
+    "         ELSE 'draft'",
+    "       END",
+    "  FROM (VALUES",
+    expectedRows.join(",\n"),
+    "  ) AS d(id, expected)",
+    " WHERE e.id = d.id;",
+    "",
+    "-- 5. Ce que le registre ne déclare plus est ARCHIVÉ, jamais supprimé : les",
+    "--    copies des élèves pendent à l'examen. `slug IS NOT NULL` borne le geste",
+    "--    aux examens que ce registre a lui-même déclarés.",
+    "UPDATE public.mock_exams",
+    "   SET status = 'archived'",
+    " WHERE slug IS NOT NULL",
+    "   AND status <> 'archived'",
+    `   AND id NOT IN (${examIds.map(uuid).join(", ")});`,
     "",
   );
 

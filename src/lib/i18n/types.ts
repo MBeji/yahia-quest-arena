@@ -392,6 +392,8 @@ export type TranslationKeys = {
     title: string;
     subtitle: string;
     none: string;
+    /** Intertitre du groupe des concours blancs multi-matières, au-dessus des épreuves par matière. */
+    groupMixed: string;
     loading: string;
     notFound: string;
     back: string;
