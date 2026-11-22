@@ -5038,6 +5038,26 @@ export type Database = {
           title: string;
         }[];
       };
+      student_study_plan_from: {
+        Args: {
+          p_budget_minutes: number;
+          p_chapters: Json;
+          p_day: string;
+          p_subject_ids: string[];
+          p_user: string;
+        };
+        Returns: {
+          chapter_id: string;
+          chapter_title: string;
+          difficulty: number;
+          est_minutes: number;
+          exercise_id: string;
+          kind: string;
+          step: number;
+          subject_id: string;
+          title: string;
+        }[];
+      };
       student_subject_stars: {
         Args: { p_subject_ids?: string[]; p_user: string };
         Returns: {
