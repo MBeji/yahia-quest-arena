@@ -6,6 +6,7 @@ import { hubRouteForRole, useAuth, useMyRole, useSignOutInPlace } from "@/featur
 import { SettingsMenu } from "@/components/ui/settings-menu";
 import { AccountHud } from "@/components/account-hud";
 import { GuideButton } from "@/components/guide/guide-button";
+import { studentNavItems } from "@/components/student-nav";
 import { useStickyHeaderOffset } from "@/components/public/use-sticky-header-offset";
 
 /** L'onglet de la page où l'on est : encre de marque, graisse de titre. Le routeur pose
@@ -54,6 +55,12 @@ export function PublicHeader() {
   // l'admin ; il n'est PAS rendu pour un connecté dont le rôle n'est pas encore lu — mieux vaut un
   // lien qui arrive qu'un lien qui disparaît sous le doigt de l'élève.
   const showParentTracking = !isAuthed || role === "parent" || role === "admin";
+  // LES MENUS DE L'ÉLÈVE SUIVENT L'ÉLÈVE SUR LE CATALOGUE (arbitrage Q-1 de l'audit de navigation
+  // du 2026-11-21, N-1). Sous `lg` la barre d'onglets du bas les porte ; au-delà elle s'efface, et
+  // l'en-tête public n'offrait que le menu du visiteur : sur ordinateur, programme, classe, matière
+  // et cours n'avaient plus ni Hall, ni Parcours, ni Arène. Même règle que la barre d'onglets : un
+  // connecté dont le rôle est LU, et qui n'est pas parent (étude 15, D-4).
+  const showStudentNav = isAuthed && role !== null && role !== "parent";
   // Les sauts d'ancre s'arrêtent SOUS cet en-tête, quelle que soit sa hauteur.
   const headerRef = useStickyHeaderOffset<HTMLElement>();
   // Sous 430 px la barre n'a pas la place de « Créer mon compte » sur UNE ligne (elle
@@ -104,15 +111,28 @@ export function PublicHeader() {
               lang="ar"
               dir="rtl"
               aria-hidden="true"
-              className="hidden font-brand-ar text-sm font-semibold whitespace-nowrap text-muted-foreground sm:inline"
+              data-student-nav={showStudentNav}
+              className="hidden font-brand-ar text-sm font-semibold whitespace-nowrap text-muted-foreground sm:inline data-[student-nav=true]:lg:hidden data-[student-nav=true]:xl:inline"
             >
               نقرا نلعب
             </span>
           </Link>
+          {showStudentNav && (
+            <nav className="hidden items-center gap-1 lg:flex" aria-label={t.public.header.account}>
+              {studentNavItems(t).map(({ to, Icon, label }) => (
+                <Link key={to} to={to} className={`${DESKTOP_NAV_LINK} gap-1.5`}>
+                  <Icon className="h-4 w-4 shrink-0" aria-hidden="true" /> {label}
+                </Link>
+              ))}
+            </nav>
+          )}
           <nav className="hidden items-center gap-1 xl:flex" aria-label={t.public.header.navAria}>
-            <Link to="/programme" className={DESKTOP_NAV_LINK}>
-              {t.public.header.programme}
-            </Link>
+            {/* L'élève a déjà « Programme » parmi ses destinations, juste à côté. */}
+            {!showStudentNav && (
+              <Link to="/programme" className={DESKTOP_NAV_LINK}>
+                {t.public.header.programme}
+              </Link>
+            )}
             <Link to="/extras" className={DESKTOP_NAV_LINK}>
               {t.public.header.extras}
             </Link>
@@ -123,7 +143,9 @@ export function PublicHeader() {
             </Link>
             {/* Suivi parent — sans compte : discoverable depuis le catalogue,
                 plus seulement depuis le bloc famille de la landing (audit §C-4). */}
-            {showParentTracking && (
+            {/* À côté des quatre destinations de l'élève, la barre n'a plus la place : un admin
+                atteint le Suivi par sa Console (débordement de 83 à 104 px mesuré à 1 280 px). */}
+            {showParentTracking && !showStudentNav && (
               <Link to="/suivi" className={DESKTOP_NAV_LINK}>
                 {t.public.header.parentTracking}
               </Link>
@@ -133,7 +155,7 @@ export function PublicHeader() {
         {/* `min-w-0` : la puce de compte garde le droit de se tronquer. Sans lui, marque + aide +
             réglages + puce élargissaient le document de 17 à 53 px sous 400 px pour un connecté
             (audit de navigation du 2026-11-21, N-2). */}
-        <div className="flex min-w-0 items-center gap-1 sm:gap-2">
+        <div className="flex min-w-0 items-center gap-1 sm:gap-2 lg:shrink-0">
           {/* Même engrenage que la coquille connectée, sans le bloc compte : un
               visiteur anonyme règle thème, langue ET son — les trois providers
               vivent à la racine, mais l'ancien header public n'offrait pas le son. */}
@@ -202,9 +224,13 @@ export function PublicHeader() {
             className="scroll-fade-end -ms-2.5 flex min-w-0 flex-1 items-center gap-x-1 overflow-x-auto pe-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             aria-label={t.public.header.navAria}
           >
-            <Link to="/programme" className={PHONE_NAV_LINK}>
-              {t.public.header.programme}
-            </Link>
+            {/* L'élève a « Programme » dans ses onglets (sous `lg`) ou dans l'en-tête (dès `lg`) :
+                deux liens allumés pour la même page, c'était un de trop. */}
+            {!showStudentNav && (
+              <Link to="/programme" className={PHONE_NAV_LINK}>
+                {t.public.header.programme}
+              </Link>
+            )}
             <Link to="/extras" className={PHONE_NAV_LINK}>
               {t.public.header.extras}
             </Link>

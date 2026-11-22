@@ -11,3 +11,5 @@ export {
   DUNGEON_COINS_PER_5_FLOORS,
   type DungeonPoolScope,
 } from "./dungeon.server";
+export { DungeonLeaveButton } from "./components/dungeon-leave";
+export { useFinalizeRunOnLeave } from "./use-finalize-run-on-leave";

@@ -144,6 +144,35 @@ describe("PublicHeader — l'espace du rôle (audit du 2026-11-21, N-8)", () => 
   });
 });
 
+describe("PublicHeader — les menus de l'élève sur le catalogue (Q-1, audit du 2026-11-21)", () => {
+  const signedIn = (role: string | null) => {
+    mockUseAuth.mockReturnValue({ user: { id: "u1" }, session: {}, loading: false });
+    mockUseMyRole.mockReturnValue({ role });
+  };
+
+  it("élève connecté : Hall, Parcours, Programme et Arène dans l'en-tête — une seule entrée « Programme »", () => {
+    signedIn("student");
+    const { container } = renderHeader();
+    for (const href of ["/dashboard", "/parcours", "/arene"]) {
+      expect(container.querySelector(`nav a[href="${href}"]`)).not.toBeNull();
+    }
+    expect(container.querySelectorAll('a[href="/programme"]')).toHaveLength(1);
+  });
+
+  it("parent connecté : jamais la navigation de jeu", () => {
+    signedIn("parent");
+    const { container } = renderHeader();
+    expect(container.querySelector('a[href="/arene"]')).toBeNull();
+    expect(container.querySelector('a[href="/parcours"]')).toBeNull();
+  });
+
+  it("rôle pas encore lu : rien n'arrive qui pourrait disparaître sous le doigt", () => {
+    signedIn(null);
+    const { container } = renderHeader();
+    expect(container.querySelector('a[href="/arene"]')).toBeNull();
+  });
+});
+
 describe("PublicHeader — invitation mesurée (é38 lot 0)", () => {
   beforeEach(() => {
     trackProductEvent.mockClear();
@@ -365,12 +394,22 @@ describe("PublicHeader — « Suivi parent » n'est pas la porte d'un élève (�
     expect(suiviLinks(container)).toHaveLength(0);
   });
 
-  it.each(["parent", "admin"])("un %s connecté le garde", (role) => {
+  it("un parent connecté le garde, dans les deux barres", () => {
     mockUseAuth.mockReturnValue({ user: { id: "u1" }, session: {}, loading: false });
-    mockUseMyRole.mockReturnValue({ role });
+    mockUseMyRole.mockReturnValue({ role: "parent" });
     const { container } = renderHeader();
 
     expect(suiviLinks(container)).toHaveLength(2);
+  });
+
+  it("un admin le garde dans la rangée du catalogue ; la barre du haut porte ses menus d'élève (Q-1)", () => {
+    // À côté de Hall · Parcours · Programme · Arène, la barre du haut débordait de 83 à 104 px
+    // à 1 280 px : l'admin y atteint le Suivi par sa Console.
+    mockUseAuth.mockReturnValue({ user: { id: "u1" }, session: {}, loading: false });
+    mockUseMyRole.mockReturnValue({ role: "admin" });
+    const { container } = renderHeader();
+
+    expect(suiviLinks(container)).toHaveLength(1);
   });
 });
 

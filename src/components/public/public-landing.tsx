@@ -30,6 +30,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useT } from "@/lib/i18n";
 import { PLACEMENT_ITEMS } from "@/shared/constants/placement";
 import { trackProductEvent } from "@/shared/lib/product-events";
+import { rememberCurrentPage } from "@/shared/lib/return-to";
 import { cn } from "@/shared/lib/utils";
 
 /**
@@ -537,7 +538,11 @@ export function PublicLanding({
               <Link
                 to="/auth"
                 search={{ mode: "signup", role: "parent" }}
-                onClick={() => trackProductEvent("account_invite_clicked", { surface: "landing" })}
+                onClick={() => {
+                  // Depuis l'accueil : rien à retenir, et l'ancienne mémoire de retour s'efface (N-11).
+                  rememberCurrentPage();
+                  trackProductEvent("account_invite_clicked", { surface: "landing" });
+                }}
                 className="mt-1 inline-flex min-h-11 items-center justify-center gap-1.5 text-sm font-medium text-muted-foreground transition hover:text-foreground"
               >
                 {t.public.landing.familleCta}
@@ -584,7 +589,10 @@ export function PublicLanding({
                 onClick={
                   isAuthed
                     ? undefined
-                    : () => trackProductEvent("account_invite_clicked", { surface: "landing" })
+                    : () => {
+                        rememberCurrentPage();
+                        trackProductEvent("account_invite_clicked", { surface: "landing" });
+                      }
                 }
                 className="mt-7 inline-flex items-center gap-2 rounded-lg bg-amber-400 px-6 py-3 text-base font-bold text-[#15120d] transition hover:bg-amber-300"
               >

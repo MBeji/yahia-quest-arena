@@ -39,7 +39,7 @@ describe("StudentTabBar — la navigation d'un élève sur téléphone", () => {
     expect(links.map((link) => link.textContent)).toEqual([
       "Hall des Héros",
       "Parcours",
-      "Découvrir",
+      "Programme",
       "Arène",
     ]);
   });

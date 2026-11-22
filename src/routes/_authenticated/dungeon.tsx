@@ -25,6 +25,8 @@ import {
   submitDungeonRun,
   DUNGEON_XP_PER_FLOOR,
   DUNGEON_COINS_PER_5_FLOORS,
+  DungeonLeaveButton,
+  useFinalizeRunOnLeave,
   type DungeonPoolScope,
 } from "@/features/dungeon";
 import { trackDungeonPoolScope } from "@/shared/lib/analytics";
@@ -131,6 +133,18 @@ function DungeonPage() {
       qc.invalidateQueries({ queryKey: ["me-stats"] });
     },
     onError: (e) => toast.error(e instanceof Error ? e.message : t.dungeon.errorSavingRun),
+  });
+
+  // Partir par un onglet, le logo ou Retour pendant une descente la finalise quand même : les
+  // étages franchis sont gagnés (arbitrage Q-6 de l'audit de navigation du 2026-11-21).
+  useFinalizeRunOnLeave({ runId, playing: state === "playing" }, (leftRunId) => {
+    const durationSeconds = Math.round((Date.now() - startTimeRef.current) / 1000);
+    void submitRun({ data: { runId: leftRunId, durationSeconds } })
+      .then(() => {
+        qc.invalidateQueries({ queryKey: ["dashboard"] });
+        qc.invalidateQueries({ queryKey: ["me-stats"] });
+      })
+      .catch(() => {});
   });
 
   const answerMutation = useMutation({
@@ -526,9 +540,7 @@ function DungeonPage() {
   return (
     <PageShell width="narrow">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
-        <BackLink to="/dashboard" className="mb-0">
-          {t.dungeon.leaveDungeon}
-        </BackLink>
+        <DungeonLeaveButton onConfirm={endRun} />
         <div className="flex items-center gap-3">
           <AnimatePresence>
             {totalCorrect >= 2 && (

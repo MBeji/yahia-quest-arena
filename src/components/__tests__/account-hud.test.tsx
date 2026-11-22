@@ -11,7 +11,11 @@ vi.mock("@tanstack/react-router", () => ({
 
 // Drive the two stat states.
 const mockUseMyStats = vi.fn();
-vi.mock("@/features/auth", () => ({ useMyStats: () => mockUseMyStats() }));
+const roleState = vi.hoisted(() => ({ role: "student" as string | null }));
+vi.mock("@/features/auth", () => ({
+  useMyStats: () => mockUseMyStats(),
+  useMyRole: () => roleState,
+}));
 
 import { I18nProvider } from "@/lib/i18n";
 import { AccountHud } from "../account-hud";
@@ -25,6 +29,7 @@ const renderHud = () =>
 
 describe("AccountHud", () => {
   beforeEach(() => {
+    roleState.role = "student";
     mockUseMyStats.mockReturnValue({
       xp: null,
       currentStreak: null,
@@ -69,5 +74,14 @@ describe("AccountHud", () => {
     const hud = screen.getByTestId("account-hud");
     expect(hud.textContent).toContain("12.3K");
     expect(hud.textContent).not.toContain("12345");
+  });
+
+  it("un parent garde le libellé « Mon espace » : série et XP ne disent rien de lui (audit du 2026-11-21, N-8)", () => {
+    roleState.role = "parent";
+    mockUseMyStats.mockReturnValue({ xp: 1234, currentStreak: 3, hasStats: true, isLoaded: true });
+    renderHud();
+    const hud = screen.getByTestId("account-hud");
+    expect(hud.textContent).not.toMatch(/XP/);
+    expect(hud.textContent).toMatch(/mon espace/i);
   });
 });

@@ -441,6 +441,11 @@ export const fr: TranslationKeys = {
     retryDungeon: "Rejouer le donjon",
     descending: "Descente vers l'étage {n}…",
     leaveDungeon: "Quitter le donjon",
+    leaveTitle: "Terminer la descente ?",
+    leaveBody:
+      "Les étages franchis sont gagnés : la partie s'arrête ici et tes récompenses sont comptées.",
+    leaveConfirm: "Terminer et encaisser",
+    leaveCancel: "Continuer",
     floor: "Étage {n}",
     oneHp: "1 PV",
     warning: "Une mauvaise réponse met fin à la course. Choisis bien.",
@@ -828,7 +833,7 @@ export const fr: TranslationKeys = {
   layout: {
     heroesHall: "Hall des Héros",
     parcours: "Parcours",
-    themes: "Découvrir",
+    themes: "Programme",
     dungeon: "Donjon",
     arena: "Arène",
     ranking: "Classement",

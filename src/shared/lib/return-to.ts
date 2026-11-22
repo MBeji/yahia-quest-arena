@@ -155,7 +155,13 @@ export function rememberReturnTo(
 export function rememberCurrentPage(reason?: ReturnReason): boolean {
   if (typeof window === "undefined") return false;
   const { pathname, search } = window.location;
-  if (pathname === "/") return false;
+  // Depuis l'accueil, on ne retient rien — et on OUBLIE ce qui traînait : une invitation cliquée
+  // sur un cours puis abandonnée ramenait sur ce cours, pendant vingt-quatre heures, quelqu'un qui
+  // s'inscrivait plus tard depuis l'accueil (audit de navigation du 2026-11-21, N-11).
+  if (pathname === "/") {
+    clear();
+    return false;
+  }
   return rememberReturnTo(
     SUIVI_PATH.test(pathname) ? pathname : pathname + search,
     Date.now(),
