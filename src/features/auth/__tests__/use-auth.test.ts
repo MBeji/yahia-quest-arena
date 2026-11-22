@@ -17,9 +17,11 @@ vi.mock("@/shared/integrations/supabase/client", () => ({
 }));
 
 import { useAuth } from "@/features/auth";
+import { resetAuthStoreForTests } from "@/features/auth/use-auth";
 
 describe("useAuth", () => {
   beforeEach(() => {
+    resetAuthStoreForTests();
     mockOnAuthStateChange.mockReset();
     mockGetSession.mockReset();
     mockUnsubscribe.mockReset();
@@ -71,7 +73,7 @@ describe("useAuth", () => {
     });
   });
 
-  it("unsubscribes on unmount", () => {
+  it("unsubscribes once the last reader is gone", async () => {
     mockOnAuthStateChange.mockReturnValue({
       data: { subscription: { unsubscribe: mockUnsubscribe } },
     });
@@ -79,7 +81,10 @@ describe("useAuth", () => {
 
     const { unmount } = renderHook(() => useAuth());
     unmount();
-
+    // Coupé au tour suivant, pas dans le même commit : une bascule de coquille démonte et monte
+    // ensemble, et rouvrir l'abonnement entre les deux serait relire la session.
+    expect(mockUnsubscribe).not.toHaveBeenCalled();
+    await new Promise((resolve) => setTimeout(resolve, 0));
     expect(mockUnsubscribe).toHaveBeenCalledTimes(1);
   });
 
@@ -100,5 +105,42 @@ describe("useAuth", () => {
     // Et une session illisible n'est PAS une session : la garde doit se fermer.
     expect(result.current.user).toBeNull();
     expect(result.current.session).toBeNull();
+  });
+
+  // Audit de navigation du 2026-11-21 (§ 6 A-2, N-6) : chaque appelant relisait la session à son
+  // montage. Une coquille montée APRÈS la première lecture affichait « Chargement… » plein écran.
+  it("une seule lecture et un seul abonnement, partagés par tous les lecteurs", async () => {
+    mockOnAuthStateChange.mockReturnValue({
+      data: { subscription: { unsubscribe: mockUnsubscribe } },
+    });
+    mockGetSession.mockResolvedValue({ data: { session: { user: { id: "u1" } } } });
+
+    const first = renderHook(() => useAuth());
+    const second = renderHook(() => useAuth());
+    await waitFor(() => expect(first.result.current.loading).toBe(false));
+
+    expect(second.result.current.user).toEqual({ id: "u1" });
+    expect(mockOnAuthStateChange).toHaveBeenCalledTimes(1);
+    expect(mockGetSession).toHaveBeenCalledTimes(1);
+  });
+
+  it("un lecteur monté après la première lecture a la session DÈS son premier rendu", async () => {
+    mockOnAuthStateChange.mockReturnValue({
+      data: { subscription: { unsubscribe: mockUnsubscribe } },
+    });
+    mockGetSession.mockResolvedValue({ data: { session: { user: { id: "u1" } } } });
+
+    const shellA = renderHook(() => useAuth());
+    await waitFor(() => expect(shellA.result.current.loading).toBe(false));
+
+    // La bascule : l'ancienne coquille se démonte, la nouvelle se monte.
+    shellA.unmount();
+    const renders: boolean[] = [];
+    renderHook(() => {
+      const auth = useAuth();
+      renders.push(auth.loading);
+      return auth;
+    });
+    expect(renders[0]).toBe(false);
   });
 });
