@@ -2473,6 +2473,27 @@ export type Database = {
           },
         ];
       };
+      study_preferences: {
+        Row: {
+          daily_minutes: number;
+          focus_subject_ids: string[];
+          updated_at: string;
+          user_id: string;
+        };
+        Insert: {
+          daily_minutes?: number;
+          focus_subject_ids?: string[];
+          updated_at?: string;
+          user_id: string;
+        };
+        Update: {
+          daily_minutes?: number;
+          focus_subject_ids?: string[];
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       subjects: {
         Row: {
           attribute: string;
@@ -4849,6 +4870,14 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      set_study_preferences: {
+        Args: {
+          p_daily_minutes?: number;
+          p_focus_subject_ids?: string[];
+          p_student?: string;
+        };
+        Returns: Json;
+      };
       set_tutor_plan_push: { Args: { p_enabled: boolean }; Returns: undefined };
       set_tutor_prefs: {
         Args: { p_interests: string[]; p_verbosity: string };
@@ -5082,11 +5111,13 @@ export type Database = {
         Args: { p_difficulty: number; p_questions: number };
         Returns: number;
       };
+      study_focus_subject_ids: { Args: { p_user: string }; Returns: string[] };
       study_level: {
         Args: { p_attempts: number; p_avg_score: number };
         Returns: string;
       };
       study_subject_ids: { Args: { p_user: string }; Returns: string[] };
+      study_target_minutes: { Args: { p_user: string }; Returns: number };
       submit_ai_feedback: {
         Args: { p_quiz: string; p_reason?: string; p_verdict: string };
         Returns: number;
