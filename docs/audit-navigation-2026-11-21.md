@@ -393,6 +393,9 @@ rend le lot 4 plus simple s'il passe avant ; l'inverse reste possible.
 
 ## 8. Arbitrages demandés au propriétaire
 
+> **Tranché le 2026-11-22** : le propriétaire a retenu les six recommandations ci-dessous
+> (« OK pour tes recommandations »). Leur mise en œuvre est suivie au § 10.
+
 | #   | Question                                                                                         | Recommandation                                                                                                                        |
 | --- | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
 | Q-1 | Sur ordinateur, que voit l'élève connecté dans l'en-tête du catalogue ?                          | Ses quatre destinations, comme sur téléphone : c'est la décision du 15 novembre étendue aux grands écrans.                            |
