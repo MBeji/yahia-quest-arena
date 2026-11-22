@@ -305,39 +305,6 @@ function Dashboard() {
         </div>
       )}
       <PageShell width="wide" className="relative z-10">
-        {/* ZONE « Explorer » — EN TÊTE de page (commande du propriétaire, 2026-11-22) : les
-            matières sont la première chose que l'élève voit, avant l'en-tête du héros. La
-            grille reste pleine largeur ; son action (classement) suit l'intertitre. */}
-        <section data-testid="dashboard-explore" className="mb-8">
-          <SectionHeading
-            icon={Swords}
-            title={t.dashboard.zoneExplore}
-            action={
-              <Link
-                to="/leaderboard"
-                className="flex shrink-0 items-center gap-1.5 rounded-lg border border-[color:var(--neon-gold)]/30 bg-[color:var(--neon-gold)]/10 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-[color:var(--neon-gold)] transition hover:bg-[color:var(--neon-gold)]/20 [@media(pointer:coarse)]:min-h-11"
-              >
-                <Crown className="h-3.5 w-3.5" /> {t.common.leaderboard}
-              </Link>
-            }
-          />
-          <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-            {t.dashboard.pathsTitle}
-          </h3>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {subjects.map((s, i) => (
-              <motion.div key={s.id} {...entrance(prefersReduced, "rise", i * 0.05)}>
-                <SubjectPathCard
-                  subject={s}
-                  stat={stats[s.id]}
-                  stars={progress[s.id]}
-                  premiumLocked={lockedSet.has(s.id)}
-                />
-              </motion.div>
-            ))}
-          </div>
-        </section>
-
         {/* HERO HEADER */}
         <motion.div
           {...entrance(prefersReduced, "rise")}
@@ -400,6 +367,39 @@ function Dashboard() {
             </div>
           </div>
         </motion.div>
+
+        {/* ZONE « Explorer » — juste SOUS l'en-tête du héros (commande du propriétaire,
+            2026-11-22) : le nom d'abord, puis les matières, avant « Aujourd'hui ». La
+            grille reste pleine largeur ; son action (classement) suit l'intertitre. */}
+        <section data-testid="dashboard-explore" className="mt-8">
+          <SectionHeading
+            icon={Swords}
+            title={t.dashboard.zoneExplore}
+            action={
+              <Link
+                to="/leaderboard"
+                className="flex shrink-0 items-center gap-1.5 rounded-lg border border-[color:var(--neon-gold)]/30 bg-[color:var(--neon-gold)]/10 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-[color:var(--neon-gold)] transition hover:bg-[color:var(--neon-gold)]/20 [@media(pointer:coarse)]:min-h-11"
+              >
+                <Crown className="h-3.5 w-3.5" /> {t.common.leaderboard}
+              </Link>
+            }
+          />
+          <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+            {t.dashboard.pathsTitle}
+          </h3>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {subjects.map((s, i) => (
+              <motion.div key={s.id} {...entrance(prefersReduced, "rise", i * 0.05)}>
+                <SubjectPathCard
+                  subject={s}
+                  stat={stats[s.id]}
+                  stars={progress[s.id]}
+                  premiumLocked={lockedSet.has(s.id)}
+                />
+              </motion.div>
+            ))}
+          </div>
+        </section>
 
         {/* Bannière de rentrée (étude 22, R-4) — proposée, jamais imposée : elle n'apparaît que
             dans la fenêtre du 1ᵉʳ septembre au 31 octobre, et seulement si le choix de classe

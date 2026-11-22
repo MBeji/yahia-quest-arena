@@ -33,12 +33,13 @@ describe("Hall des héros — « Continuer » tient dans le premier écran", () 
     expect(between).not.toContain("<GuideIntroCard");
   });
 
-  it("la zone « Explorer » (les matières) ouvre la page, avant l'en-tête du héros", () => {
-    const explore = DASHBOARD.indexOf('data-testid="dashboard-explore"');
+  it("la zone « Explorer » (les matières) suit l'en-tête du héros et précède « Aujourd'hui »", () => {
     const hero = DASHBOARD.indexOf("{/* HERO HEADER */}");
-    expect(explore).toBeGreaterThan(0);
-    expect(hero).toBeGreaterThan(explore);
-    expect(DASHBOARD.indexOf("title={t.dashboard.zoneExplore}")).toBeLessThan(hero);
+    const explore = DASHBOARD.indexOf('data-testid="dashboard-explore"');
+    const today = DASHBOARD.indexOf("title={t.dashboard.zoneToday}");
+    expect(hero).toBeGreaterThan(0);
+    expect(explore).toBeGreaterThan(hero);
+    expect(today).toBeGreaterThan(explore);
   });
 
   it("sur téléphone l'avatar se range à côté du nom : 56 px, 80 dès `sm`", () => {
