@@ -64,11 +64,18 @@ export interface TrancheItem {
   keyIndex: number | null;
 }
 
-/** Texte visible d'un fragment : figures, balises et notation retirées. */
+/**
+ * Texte visible d'un fragment : figures, balises et notation retirées.
+ *
+ * Une BALISE commence par un nom collé au chevron (`<b>`, `</span>`, `<br/>`). L'ancienne
+ * règle, `<[^>]*>`, prenait aussi pour une balise tout ce qui va d'un « < » à un « > » : une
+ * option « x < −7 أو x > 7 » se réduisait à « x 7 », et la mesure « clé la plus longue »
+ * signalait à tort des inégalités (constat d'audit du 2026-11-22, mission 19/08).
+ */
 export function visibleText(s: string): string {
   return s
     .replace(/<svg[\s\S]*?<\/svg>/gi, " ")
-    .replace(/<[^>]*>/g, " ")
+    .replace(/<\/?[a-zA-Z][a-zA-Z0-9-]*(?:\s[^<>]*)?\/?>/g, " ")
     .replace(/\s+/g, " ")
     .trim();
 }
