@@ -4,6 +4,8 @@ import {
   findAnswerFormatViolation,
   isValidAnswerFormat,
   MAX_CHOICE_LENGTH,
+  normalizeNumericEntry,
+  toggleNumericSign,
   TIMEOUT_ANSWER_CHOICE,
   UNSUPPORTED_ANSWER_CHOICE,
 } from "@/shared/lib/answer-formats";
@@ -141,5 +143,28 @@ describe("answer-formats — findAnswerFormatViolation", () => {
   it("treats a null stored type as mcq", () => {
     const withNull = new Map<string, string | null>([["q-x", null]]);
     expect(findAnswerFormatViolation(withNull, [{ questionId: "q-x", choice: "abc" }])).toBeNull();
+  });
+});
+
+describe("saisie numérique — le signe (constat d'audit du 2026-11-22)", () => {
+  it("normalizeNumericEntry ramène « − » et les tirets longs au tiret simple", () => {
+    expect(normalizeNumericEntry("\u221220")).toBe("-20");
+    expect(normalizeNumericEntry("\u20133,5")).toBe("-3,5");
+    expect(normalizeNumericEntry("\u20147")).toBe("-7");
+    expect(normalizeNumericEntry("12")).toBe("12");
+  });
+
+  it("toggleNumericSign bascule le signe sans toucher à la valeur", () => {
+    expect(toggleNumericSign("20")).toBe("-20");
+    expect(toggleNumericSign("-20")).toBe("20");
+    expect(toggleNumericSign("\u221220")).toBe("20");
+    expect(toggleNumericSign("")).toBe("-");
+    expect(toggleNumericSign("-")).toBe("");
+    expect(toggleNumericSign(" 3,5")).toBe("-3,5");
+  });
+
+  it("une saisie basculée reste un nombre valide pour le serveur", () => {
+    expect(isValidAnswerFormat("numeric", toggleNumericSign("20"))).toBe(true);
+    expect(isValidAnswerFormat("numeric", normalizeNumericEntry("\u221220"))).toBe(true);
   });
 });

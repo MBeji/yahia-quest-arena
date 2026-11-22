@@ -59,6 +59,7 @@ export type QuestLabels = {
   numericPlaceholder: string;
   numericHint: string;
   numericInvalid: string;
+  numericSign: string;
   orderingHint: string;
   matchingHint: string;
   moveUp: string;
@@ -159,6 +160,12 @@ export function buildQuestLabels(qlang: QuestContentLang): QuestLabels {
       ar: "أدخل عددًا صحيحًا أو عشريًّا فقط.",
       fr: "Entre uniquement un nombre (entier ou décimal).",
       en: "Enter a number only (integer or decimal).",
+    }[qlang],
+    // Le bouton « ± » : le pavé décimal d'iOS n'a pas de touche « moins ».
+    numericSign: {
+      ar: "تغيير الإشارة (موجب أو سالب)",
+      fr: "Changer le signe (plus ou moins)",
+      en: "Toggle the sign (plus or minus)",
     }[qlang],
     // Native drag-&-drop boards (Tier B — B2): ordering (arrange the steps) and
     // matching (align each right-hand item with its left-hand partner).

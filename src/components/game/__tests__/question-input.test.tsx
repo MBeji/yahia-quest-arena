@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { cleanup, render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 
 import {
@@ -11,6 +11,7 @@ const labels: QuestionInputLabels = {
   numericPlaceholder: "Ta réponse (nombre)",
   numericHint: "Saisis un nombre — ex. 3,14 ou -5",
   numericInvalid: "Entre uniquement un nombre (entier ou décimal).",
+  numericSign: "Changer le signe (plus ou moins)",
   orderingHint: "Range dans le bon ordre.",
   matchingHint: "Aligne chaque paire.",
   moveUp: "Monter",
@@ -79,6 +80,30 @@ describe("QuestionInput — mcq (historical radiogroup)", () => {
 });
 
 describe("QuestionInput — numeric (native entry)", () => {
+  // Constat d'audit du 2026-11-22 : le pavé décimal d'iOS n'a pas de touche « moins », donc une
+  // réponse négative ne se saisissait pas sur iPhone. Le bouton « ± » la rend possible partout.
+  it("le bouton ± bascule le signe de la saisie", () => {
+    const { onChange } = renderInput({ questionType: "numeric", options: [], value: "20" });
+    fireEvent.click(screen.getByRole("button", { name: labels.numericSign }));
+    expect(onChange).toHaveBeenCalledWith("-20");
+  });
+
+  it("le bouton ± retire un signe déjà posé, et s'utilise avant de taper", () => {
+    const first = renderInput({ questionType: "numeric", options: [], value: "-20" });
+    fireEvent.click(screen.getByRole("button", { name: labels.numericSign }));
+    expect(first.onChange).toHaveBeenCalledWith("20");
+    cleanup();
+    const second = renderInput({ questionType: "numeric", options: [], value: "" });
+    fireEvent.click(screen.getByRole("button", { name: labels.numericSign }));
+    expect(second.onChange).toHaveBeenCalledWith("-");
+  });
+
+  it("ramène le signe moins typographique au tiret que le serveur attend", () => {
+    const { onChange } = renderInput({ questionType: "numeric", options: [] });
+    fireEvent.change(screen.getByTestId("numeric-answer-input"), { target: { value: "\u221220" } });
+    expect(onChange).toHaveBeenCalledWith("-20");
+  });
+
   it("renders a hard-LTR decimal input and forwards typed text", () => {
     const { onChange } = renderInput({ questionType: "numeric", options: [], rtl: true });
     const input = screen.getByTestId("numeric-answer-input");

@@ -1,7 +1,12 @@
 import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
 import { Check } from "lucide-react";
 import { isMathExpression, isRtlText } from "@/shared/lib/utils";
-import { isValidAnswerFormat, UNSUPPORTED_ANSWER_CHOICE } from "@/shared/lib/answer-formats";
+import {
+  isValidAnswerFormat,
+  normalizeNumericEntry,
+  toggleNumericSign,
+  UNSUPPORTED_ANSWER_CHOICE,
+} from "@/shared/lib/answer-formats";
 import { OptionContent } from "@/components/ui/svg-figure";
 import { MatchingBoard, OrderingBoard } from "@/components/game/question-boards";
 import type { DisplayOption } from "@/shared/lib/question-utils";
@@ -30,6 +35,7 @@ export type QuestionInputLabels = {
   numericPlaceholder: string;
   numericHint: string;
   numericInvalid: string;
+  numericSign: string;
   orderingHint: string;
   matchingHint: string;
   moveUp: string;
@@ -154,29 +160,43 @@ function NumericInput({
     <div className="mt-6">
       {/* Numbers are standard notation in every language (Western digits, LTR),
           so the entry is hard-LTR even inside an RTL subject (R-4). */}
-      <input
-        type="text"
-        inputMode="decimal"
-        autoComplete="off"
-        dir="ltr"
-        data-testid="numeric-answer-input"
-        // Le champ porte la QUESTION pour nom, comme le groupe d'options d'un QCM : il
-        // n'avait que son texte d'exemple, qui disparaît à la première frappe.
-        aria-label={prompt}
-        aria-describedby={hintId}
-        aria-invalid={invalid || undefined}
-        placeholder={labels.numericPlaceholder}
-        value={raw}
-        disabled={disabled}
-        onChange={(e) => onChange(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" && !invalid && raw.trim().length > 0) {
-            e.preventDefault();
-            onSubmit?.();
-          }
-        }}
-        className="w-full rounded-xl border border-border bg-surface-2 px-4 py-3.5 text-center font-mono text-lg outline-none transition focus:border-(--gold) focus:bg-surface-3 disabled:opacity-50"
-      />
+      <div className="flex items-stretch gap-2" dir="ltr">
+        {/* Le pavé décimal d'iOS n'a pas de touche « moins » : sans ce bouton, une réponse
+            négative ne se saisit pas sur iPhone (constat d'audit du 2026-11-22). */}
+        <button
+          type="button"
+          data-testid="numeric-sign-toggle"
+          aria-label={labels.numericSign}
+          disabled={disabled}
+          onClick={() => onChange(toggleNumericSign(raw))}
+          className="shrink-0 rounded-xl border border-border bg-surface-2 px-4 font-mono text-lg transition hover:border-primary disabled:opacity-50"
+        >
+          ±
+        </button>
+        <input
+          type="text"
+          inputMode="decimal"
+          autoComplete="off"
+          dir="ltr"
+          data-testid="numeric-answer-input"
+          // Le champ porte la QUESTION pour nom, comme le groupe d'options d'un QCM : il
+          // n'avait que son texte d'exemple, qui disparaît à la première frappe.
+          aria-label={prompt}
+          aria-describedby={hintId}
+          aria-invalid={invalid || undefined}
+          placeholder={labels.numericPlaceholder}
+          value={raw}
+          disabled={disabled}
+          onChange={(e) => onChange(normalizeNumericEntry(e.target.value))}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !invalid && raw.trim().length > 0) {
+              e.preventDefault();
+              onSubmit?.();
+            }
+          }}
+          className="w-full rounded-xl border border-border bg-surface-2 px-4 py-3.5 text-center font-mono text-lg outline-none transition focus:border-(--gold) focus:bg-surface-3 disabled:opacity-50"
+        />
+      </div>
       {/* Région vivante TOUJOURS montée : c'est le changement de son texte qui est
           annoncé — la consigne devient l'erreur sans que rien ne le dise autrement
           qu'en couleur. `polite` : l'erreur de format n'interrompt pas la frappe. */}
