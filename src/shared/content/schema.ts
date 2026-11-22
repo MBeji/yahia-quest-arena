@@ -1093,3 +1093,98 @@ export interface LoadedSubject {
   meta: SubjectMeta;
   chapters: LoadedChapter[];
 }
+
+// ---------------------------------------------------------------------------
+// Épreuves blanches déclarées par le corpus — `content/mock-exams.json`
+// (étude 02, suite du 2026-11-22).
+// ---------------------------------------------------------------------------
+
+const kebabSlug = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+/** `"<sujet>/<chapitre>/<exercice>"` — le chemin dont dérive l'UUIDv5 de l'exercice. */
+export const MOCK_EXAM_EXERCISE_REF =
+  /^([a-z0-9]+(?:-[a-z0-9]+)*)\/([a-z0-9]+(?:-[a-z0-9]+)*)\/([a-z0-9]+(?:-[a-z0-9]+)*)$/;
+
+const trilingualSchema = z
+  .object({
+    fr: z.string().min(1).max(120),
+    en: z.string().min(1).max(120),
+    ar: z.string().min(1).max(120),
+  })
+  .strict();
+
+/**
+ * Une épreuve d'un examen blanc : UN exercice du corpus, son nom d'épreuve et son
+ * barème. `points` porte le coefficient réel (entier : le barème officiel ×10,
+ * pour qu'un exercice à 3,5 points reste un entier — `mock_exam_papers.points`).
+ */
+export const mockExamPaperSchema = z
+  .object({
+    exercise: z
+      .string()
+      .regex(
+        MOCK_EXAM_EXERCISE_REF,
+        "exercise must be '<subject>/<chapter-slug>/<exercise-slug>' (kebab-case segments)",
+      ),
+    label: trilingualSchema,
+    points: z.number().int().positive().max(1000),
+  })
+  .strict();
+export type MockExamPaper = z.infer<typeof mockExamPaperSchema>;
+
+/** Bornes du CHECK `mock_exams.duration_minutes` (migration du 2026-08-16). */
+export const MOCK_EXAM_MIN_MINUTES = 15;
+export const MOCK_EXAM_MAX_MINUTES = 300;
+
+export const mockExamEntrySchema = z
+  .object({
+    /** `parcours.id` qui porte l'examen (ex. `concours-9eme`). */
+    parcours: z.string().regex(kebabSlug, "parcours must be kebab-case"),
+    /**
+     * La matière d'une épreuve mono-matière ; absente pour un concours blanc qui
+     * mêle les matières. Déclarée, elle engage : toutes les épreuves en viennent.
+     */
+    subject: z.string().regex(kebabSlug, "subject must be kebab-case").optional(),
+    title: trilingualSchema,
+    durationMinutes: z.number().int().min(MOCK_EXAM_MIN_MINUTES).max(MOCK_EXAM_MAX_MINUTES),
+    displayOrder: z.number().int().nonnegative(),
+    papers: z.array(mockExamPaperSchema).min(1).max(12),
+  })
+  .strict()
+  .superRefine((entry, ctx) => {
+    const seen = new Set<string>();
+    entry.papers.forEach((paper, index) => {
+      if (seen.has(paper.exercise)) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["papers", index, "exercise"],
+          message: `exercise '${paper.exercise}' is listed twice — a paper is one exercise, once`,
+        });
+      }
+      seen.add(paper.exercise);
+      const paperSubject = MOCK_EXAM_EXERCISE_REF.exec(paper.exercise)?.[1];
+      if (entry.subject && paperSubject && paperSubject !== entry.subject) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["papers", index, "exercise"],
+          message: `exercise '${paper.exercise}' is not in subject '${entry.subject}' — drop 'subject' for a multi-subject exam`,
+        });
+      }
+    });
+  });
+export type MockExamEntry = z.infer<typeof mockExamEntrySchema>;
+
+/**
+ * `content/mock-exams.json` — les examens blancs que le corpus COMPOSE : chaque
+ * clé est le slug stable de l'examen (identité à vie, comme un slug d'exercice :
+ * on retire, on ne renomme pas — les copies des élèves y sont attachées).
+ *
+ * Un exercice du corpus n'a pas d'identité dans le dépôt du moteur (étude 24) :
+ * seul le corpus peut désigner « l'exercice 3 du sujet de 2024 ». D'où ce
+ * registre, compilé par `buildMockExamRegistrySql`.
+ */
+export const mockExamRegistrySchema = z.record(
+  z.string().regex(kebabSlug, "a mock-exam slug must be kebab-case"),
+  mockExamEntrySchema,
+);
+export type MockExamRegistry = z.infer<typeof mockExamRegistrySchema>;

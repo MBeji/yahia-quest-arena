@@ -98,6 +98,13 @@ const startPayloadSchema = z.object({
 });
 
 const listItemSchema = examHeaderSchema.extend({
+  /**
+   * La matière d'une épreuve mono-matière, `null` pour un concours blanc qui les
+   * mêle. `.default(null)` : la fonction SQL d'avant le 2026-11-22 ne rend pas ces
+   * deux champs, et un catalogue sans rangement vaut mieux qu'un catalogue en panne.
+   */
+  subjectId: z.string().nullable().default(null),
+  subjectName: z.string().nullable().default(null),
   paperCount: z.coerce.number(),
   maxPoints: z.coerce.number(),
   mySessions: z

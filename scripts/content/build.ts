@@ -18,6 +18,8 @@
  *                           compiled target it declares.
  *   --competences           Emit ONLY the competency-registry migration
  *   --misconceptions        Emit ONLY the misconception-registry migration
+ *   --mock-exams            Emit ONLY the mock-exam registry (étude 02) — the
+ *                           exams the corpus composes; applied AFTER the subjects
  *                           (content/competences/*.json — étude 07 D-1);
  *                           subjects are validated but not regenerated.
  *   --content-dir <path>    Content root (default: content).
@@ -42,8 +44,10 @@ import { argv, cwd, exit, stderr, stdout } from "node:process";
 import {
   COMPETENCES_SQL_FILE_NAME,
   MISCONCEPTIONS_SQL_FILE_NAME,
+  MOCK_EXAMS_SQL_FILE_NAME,
   buildCompetencyRegistryMigrationSql,
   buildMisconceptionRegistryMigrationSql,
+  buildMockExamRegistrySql,
   buildMigrationSql,
   contentSqlFileName,
 } from "../../src/shared/content/sql-builder.ts";
@@ -52,7 +56,9 @@ import {
   expandSubjects,
   loadAllSubjects,
   loadCompetencyRegistries,
+  findMockExamIssues,
   loadMisconceptionRegistry,
+  loadMockExamRegistry,
   loadSubject,
   loadVideosRegistry,
 } from "../../src/shared/content/loader.ts";
@@ -99,6 +105,7 @@ function main(): void {
   const checkOnly = hasFlag("check");
   const competencesOnly = hasFlag("competences");
   const misconceptionsOnly = hasFlag("misconceptions");
+  const mockExamsOnly = hasFlag("mock-exams");
   const onlySubject = getFlag("subject");
   const baseStamp = getFlag("timestamp") ?? defaultTimestamp();
 
@@ -163,7 +170,7 @@ function main(): void {
 
     // --competences regenerates the registry only: subjects are validated
     // (they still count in the summary) but their migrations stay untouched.
-    if (checkOnly || competencesOnly || misconceptionsOnly) return;
+    if (checkOnly || competencesOnly || misconceptionsOnly || mockExamsOnly) return;
 
     const sql = buildMigrationSql(subject, videosRegistry);
     // Same SQL either way — only the destination and the naming differ: a
@@ -219,6 +226,36 @@ function main(): void {
   } else if (misconceptionsOnly) {
     stderr.write(`No misconception registry found at ${join(contentDir, "misconceptions.json")}\n`);
     exit(1);
+  }
+
+  // Examens blancs composés par le corpus (étude 02, suite) : la forme du
+  // registre échoue au chargement ; ici on vérifie que chaque épreuve désigne un
+  // exercice qui EXISTE — une référence morte compilerait en un INSERT muet, et
+  // l'examen resterait `draft` en production sans que personne ne sache pourquoi.
+  const mockExamRegistry = loadMockExamRegistry(contentDir);
+  const mockExamCount = Object.keys(mockExamRegistry).length;
+  if (mockExamCount > 0) {
+    const issues = findMockExamIssues(mockExamRegistry, subjects, {
+      partial: Boolean(onlySubject),
+    });
+    if (issues.length > 0) {
+      throw new ContentValidationError(
+        `content/mock-exams.json — ${issues.length} paper(s) point at nothing:\n  ${issues.join("\n  ")}`,
+      );
+    }
+    stdout.write(`✓ mock exams: ${mockExamCount} exam(s)\n`);
+  }
+  if (mockExamsOnly && !checkOnly) {
+    // Un registre absent émet quand même le fichier (vide de toute écriture) :
+    // le canal de contenu l'attend à chaque passage, corpus avec ou sans examen.
+    const sql = buildMockExamRegistrySql(mockExamRegistry);
+    const dir = sqlDir ?? outDir;
+    const fileName = sqlDir
+      ? MOCK_EXAMS_SQL_FILE_NAME
+      : `${baseStamp}_generated_mock_exams_registry.sql`;
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(join(dir, fileName), `${sql}\n`, "utf8");
+    stdout.write(`  → ${fileName}\n`);
   }
 
   stdout.write(

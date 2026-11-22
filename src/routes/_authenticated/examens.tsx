@@ -8,7 +8,7 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { LoadingState } from "@/components/ui/loading-state";
 import { PageShell } from "@/components/ui/page-shell";
 import { useI18n, useT } from "@/lib/i18n";
-import { listMockExams, type ExamListItem } from "@/features/exam";
+import { groupExamsBySubject, listMockExams, type ExamListItem } from "@/features/exam";
 import { pageTitle } from "@/lib/i18n/head";
 
 /**
@@ -22,6 +22,11 @@ import { pageTitle } from "@/lib/i18n/head";
  * La session classée ne se joue qu'une fois (R-4) — l'écran le dit en amont et
  * bascule ensuite sur l'entraînement, plutôt que d'afficher un bouton qui
  * échouera.
+ *
+ * Depuis le 2026-11-22 le corpus déclare des épreuves PAR MATIÈRE : le catalogue
+ * les range sous leur matière, le concours blanc multi-matières en tête. Tant
+ * qu'il n'existe que ce dernier, l'écran reste la liste nue d'avant — un
+ * intertitre au-dessus d'une seule carte n'aiderait personne.
  */
 export const Route = createFileRoute("/_authenticated/examens")({
   head: () => ({ meta: [{ title: pageTitle((t) => t.exam.title) }] }),
@@ -43,6 +48,8 @@ function ExamListPage() {
   }
 
   const exams = examsQuery.data ?? [];
+  const groups = groupExamsBySubject(exams);
+  const grouped = groups.some((group) => group.subjectId !== null);
 
   return (
     <PageShell width="narrow" className="py-8">
@@ -55,10 +62,31 @@ function ExamListPage() {
 
       {exams.length === 0 ? (
         <EmptyState icon={ClipboardCheck} title={t.exam.none} />
+      ) : grouped ? (
+        <div className="flex flex-col gap-8">
+          {groups.map((group) => (
+            <section key={group.key} aria-labelledby={`exam-group-${group.key}`}>
+              <h2
+                id={`exam-group-${group.key}`}
+                className="mb-3 font-display text-xl font-bold"
+                // Le nom d'une matière est dans SA langue (« العربية » sur un écran
+                // français) : `dir="auto"` le pose dans son sens, sans retourner la page.
+                dir="auto"
+              >
+                {group.subjectName ?? t.exam.groupMixed}
+              </h2>
+              <ul className="flex flex-col gap-4">
+                {group.exams.map((exam) => (
+                  <ExamCard key={exam.id} exam={exam} locale={locale} headingLevel="h3" />
+                ))}
+              </ul>
+            </section>
+          ))}
+        </div>
       ) : (
         <ul className="flex flex-col gap-4">
           {exams.map((exam) => (
-            <ExamCard key={exam.id} exam={exam} locale={locale} />
+            <ExamCard key={exam.id} exam={exam} locale={locale} headingLevel="h2" />
           ))}
         </ul>
       )}
@@ -66,7 +94,16 @@ function ExamListPage() {
   );
 }
 
-function ExamCard({ exam, locale }: { exam: ExamListItem; locale: string }) {
+function ExamCard({
+  exam,
+  locale,
+  headingLevel: Heading,
+}: {
+  exam: ExamListItem;
+  locale: string;
+  /** `h3` sous un intertitre de matière, `h2` dans la liste nue : le plan de la page reste juste. */
+  headingLevel: "h2" | "h3";
+}) {
   const t = useT();
 
   const title =
@@ -86,7 +123,7 @@ function ExamCard({ exam, locale }: { exam: ExamListItem; locale: string }) {
   return (
     <li className="rounded-xl border border-border bg-surface-2 p-4">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h2 className="font-display text-lg font-bold">{title}</h2>
+        <Heading className="font-display text-lg font-bold">{title}</Heading>
         <span className="text-sm text-muted-foreground tabular-nums">
           {t.exam.duration.replace("{min}", String(exam.durationMinutes))} ·{" "}
           {t.exam.papers.replace("{n}", String(exam.paperCount))} ·{" "}

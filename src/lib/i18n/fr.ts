@@ -383,8 +383,9 @@ export const fr: TranslationKeys = {
   exam: {
     title: "Examens blancs",
     subtitle:
-      "L'épreuve en conditions réelles : plusieurs matières, un chrono, aucune aide — la correction vient après.",
+      "L'épreuve en conditions réelles : un chrono, aucune aide — la correction vient après. Un concours blanc mêle les matières ; une épreuve en travaille une seule.",
     none: "Aucun examen blanc n'est ouvert pour l'instant.",
+    groupMixed: "Concours blanc — toutes les matières",
     loading: "Préparation de l'épreuve…",
     notFound: "Cet examen est introuvable.",
     back: "Retour aux examens",

@@ -20,3 +20,9 @@ export {
   type ExamReview,
   type ExamStartPayload,
 } from "./exam.server";
+export {
+  MIXED_EXAM_GROUP_KEY,
+  groupExamsBySubject,
+  type ExamGroup,
+  type GroupableExam,
+} from "./exam-groups";

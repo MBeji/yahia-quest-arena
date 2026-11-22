@@ -6,6 +6,8 @@ import {
   competencyRegistrySchema,
   exerciseSchema,
   misconceptionRegistrySchema,
+  mockExamRegistrySchema,
+  MOCK_EXAM_EXERCISE_REF,
   quizSchema,
   subjectMetaWithCompileToSchema,
   videoRegistrySchema,
@@ -16,6 +18,7 @@ import {
   type LoadedSubject,
   type LoadedExercise,
   type MisconceptionRegistry,
+  type MockExamRegistry,
   type SubjectMeta,
   type VideoRegistry,
 } from "./schema.ts";
@@ -37,6 +40,7 @@ const EXERCISES_DIR = "exercices";
 const MISCONCEPTION_REGISTRY = "misconceptions.json";
 const COMPETENCES_DIR = "competences";
 const VIDEO_REGISTRY = "videos.json";
+const MOCK_EXAM_REGISTRY = "mock-exams.json";
 
 function readJson(filePath: string): unknown {
   if (!existsSync(filePath)) {
@@ -203,6 +207,70 @@ export function loadVideosRegistry(contentRoot: string): VideoRegistry {
   const filePath = join(contentRoot, VIDEO_REGISTRY);
   if (!existsSync(filePath)) return {};
   return parseOrThrow(videoRegistrySchema, readJson(filePath), filePath);
+}
+
+/**
+ * Load and validate the mock-exam registry (`content/mock-exams.json`, étude 02
+ * suite). Absent → an empty registry (a corpus need not compose any exam);
+ * present → validated against the schema so a malformed registry fails
+ * `content:check`. Whether each paper points at an exercise that EXISTS is a
+ * second question, answered against the loaded subjects by
+ * {@link findMockExamIssues}.
+ */
+export function loadMockExamRegistry(contentRoot: string): MockExamRegistry {
+  const filePath = join(contentRoot, MOCK_EXAM_REGISTRY);
+  if (!existsSync(filePath)) return {};
+  return parseOrThrow(mockExamRegistrySchema, readJson(filePath), filePath);
+}
+
+/** Ce que le contrôle croisé lit d'un sujet chargé : ses slugs, rien d'autre. */
+export interface MockExamCorpusSubject {
+  meta: { id: string };
+  chapters: ReadonlyArray<{ slug: string; exercises: ReadonlyArray<{ slug: string }> }>;
+}
+
+/**
+ * Cross-check the registry against the loaded (expanded) subjects: every paper
+ * must name an exercise the corpus really carries. A paper that points nowhere
+ * compiles to an `INSERT … JOIN exercises` that silently writes nothing — the
+ * exam would stay `draft` in production with no one told why.
+ *
+ * `partial` is the `--subject <dir>` mode: only one directory is loaded, so a
+ * reference into a subject that is not loaded cannot be judged and is skipped
+ * (the full check runs in CI, which loads everything).
+ */
+export function findMockExamIssues(
+  registry: MockExamRegistry,
+  subjects: ReadonlyArray<MockExamCorpusSubject>,
+  options: { partial?: boolean } = {},
+): string[] {
+  const byId = new Map(subjects.map((subject) => [subject.meta.id, subject]));
+  const issues: string[] = [];
+  for (const [slug, exam] of Object.entries(registry)) {
+    for (const paper of exam.papers) {
+      const match = MOCK_EXAM_EXERCISE_REF.exec(paper.exercise);
+      if (!match) continue; // refused upstream by the schema
+      const [, subjectId, chapterSlug, exerciseSlug] = match;
+      const subject = byId.get(subjectId!);
+      if (!subject) {
+        if (!options.partial) {
+          issues.push(`${slug}: '${paper.exercise}' — unknown subject '${subjectId}'`);
+        }
+        continue;
+      }
+      const chapter = subject.chapters.find((c) => c.slug === chapterSlug);
+      if (!chapter) {
+        issues.push(`${slug}: '${paper.exercise}' — no chapter '${chapterSlug}' in '${subjectId}'`);
+        continue;
+      }
+      if (!chapter.exercises.some((e) => e.slug === exerciseSlug)) {
+        issues.push(
+          `${slug}: '${paper.exercise}' — no exercise '${exerciseSlug}' in '${subjectId}/${chapterSlug}'`,
+        );
+      }
+    }
+  }
+  return issues;
 }
 
 /** Discover and load every subject under a content root directory. */
