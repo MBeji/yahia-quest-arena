@@ -45,6 +45,14 @@ describe("visibleText", () => {
   it("retire figures et balises, compacte les blancs", () => {
     expect(visibleText('a <svg viewBox="0 0 1 1"><line/></svg>  <b>b</b>')).toBe("a b");
   });
+
+  // Constat d'audit du 2026-11-22 : « x < −7 أو x > 7 » était lu « x 7 », et la mesure de
+  // longueur des options signalait à tort les inégalités.
+  it("garde une inégalité entière : un chevron suivi d'un espace n'ouvre pas une balise", () => {
+    expect(visibleText("x < −7 أو x > 7")).toBe("x < −7 أو x > 7");
+    expect(visibleText("−2 < 5x − 3 < 2")).toBe("−2 < 5x − 3 < 2");
+    expect(visibleText("|x| <b>> 6</b> <br/> fin")).toBe("|x| > 6 fin");
+  });
 });
 
 describe("longestKey — la fuite par la forme", () => {
