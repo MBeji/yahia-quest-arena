@@ -27,7 +27,7 @@ import { useClaimPlacementSessions } from "@/features/placement";
 import { ClipboardList, Shield } from "lucide-react";
 import { useT } from "@/lib/i18n";
 import { rememberReturnTo } from "@/shared/lib/return-to";
-import { isImmersiveAppPath } from "@/shared/lib/immersive-paths";
+import { isImmersivePath } from "@/shared/lib/screens";
 import { NetworkBanner } from "@/components/ui/network-banner";
 import { SettingsMenu } from "@/components/ui/settings-menu";
 import { GoldAmbient } from "@/components/visual/gold-ambient";
@@ -215,8 +215,8 @@ function AuthenticatedLayout() {
   // an in-screen sticky CTA (quiz submit, lesson nav, onboarding). The Dungeon
   // LOBBY is no longer immersive (D-4 / audit §E-1): the nav stays until a run
   // actually starts — consistent with duel matches, which already keep the nav.
-  // La liste des écrans immersifs vit dans `immersive-paths.ts`.
-  const immersive = isImmersiveAppPath(location.pathname);
+  // Les écrans immersifs sont déclarés dans le registre des écrans (`shared/lib/screens.ts`).
+  const immersive = isImmersivePath(location.pathname);
 
   return (
     <div className="app-shell relative min-h-[100dvh] bg-black-deep">

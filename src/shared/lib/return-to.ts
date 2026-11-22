@@ -16,6 +16,8 @@
 // `isSafeReturnPath` est la seule porte : tout ce qui n'est pas un chemin INTERNE est ignoré en
 // silence, jamais corrigé, jamais renvoyé tel quel.
 
+import { isFunnelPath } from "@/shared/lib/screens";
+
 const STORAGE_KEY = "na9ra.returnTo.v1";
 
 /** Au-delà, l'envie de revenir là est périmée — et une confirmation d'e-mail se fait en quelques heures. */
@@ -25,12 +27,6 @@ const MAX_LENGTH = 512;
 
 /** La page publique du suivi parental : sa requête peut porter un code d'alliance (voir `rememberCurrentPage`). */
 const SUIVI_PATH = /^\/suivi\/?$/i;
-
-/**
- * Le tunnel lui-même : y « revenir » boucle. Insensible à la casse : le routeur apparie `/AUTH` et
- * `/Auth` au même écran que `/auth`, donc les laisser passer ferait un saut de plus par le tunnel.
- */
-const FUNNEL_PATH = /^\/(?:auth|login|signup)(?:[/?]|$)/i;
 
 /**
  * Y a-t-il un caractère de contrôle ? Tabulation et saut de ligne compris : un navigateur les ôte d'une
@@ -78,7 +74,8 @@ export function isSafeReturnPath(raw: unknown): string | null {
   // cette fonction promet. Le routeur le ramènerait sur notre origine, mais c'est lui qui nous
   // sauverait, pas le contrôle : on refuse ici, sur le résultat.
   if (path.startsWith("//")) return null;
-  return FUNNEL_PATH.test(path) ? null : path;
+  // Le tunnel lui-même : y « revenir » boucle. Insensible à la casse, comme le routeur (registre).
+  return isFunnelPath(path) ? null : path;
 }
 
 /**

@@ -1,35 +1,12 @@
 /**
  * Le GUIDE INTÉGRÉ — sa logique pure (2026-10-19).
  *
- * Trois questions, tranchées ici une fois pour tous les écrans :
- *   - quelle fiche d'aide correspond à l'écran affiché (`guideScreenFor`) ;
+ * Deux questions, tranchées ici une fois pour tous les écrans (la fiche d'aide de l'écran
+ * affiché, elle, est déclarée dans le registre des écrans, `screens.ts`) :
  *   - où en est l'élève dans les 3 étapes d'un chapitre (`chapterSteps`) ;
  *   - ce que l'appareil a retenu → `guide-storage.ts`, à part : le provider racine
  *     n'a besoin que de lui, et ce module-ci reste hors du chunk index.
  */
-import type { GuideScreenKey } from "@/lib/i18n/guide.types";
-
-/**
- * La fiche d'aide d'un chemin. Les routes connectées et publiques d'un même
- * écran (« /subject/… » redirige vers « /matiere/… ») partagent leur fiche.
- */
-const SCREEN_PATTERNS: ReadonlyArray<readonly [RegExp, GuideScreenKey]> = [
-  [/^\/dashboard(\/|$)/, "dashboard"],
-  [/^\/parcours(\/|$)/, "parcours"],
-  [/^\/(programme|niveau|extras|themes)(\/|_|$)/, "programme"],
-  [/^\/(arene|dungeon|duel|leaderboard)(\/|$)/, "arena"],
-  [/^\/(matiere|subject)\//, "subject"],
-  [/^\/(chapitre|lesson)\//, "lesson"],
-  [/^\/(quest|exercice)\//, "quest"],
-  [/^\/parent-report(\/|$)/, "parent"],
-  [/^\/suivi(\/|$)/, "suivi"],
-  [/^\/parametrage(\/|$)/, "settings"],
-];
-
-export function guideScreenFor(pathname: string): GuideScreenKey {
-  for (const [pattern, screen] of SCREEN_PATTERNS) if (pattern.test(pathname)) return screen;
-  return "general";
-}
 
 export type StepState = "done" | "current" | "next" | "locked";
 

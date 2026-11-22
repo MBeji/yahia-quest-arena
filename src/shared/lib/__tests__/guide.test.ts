@@ -1,7 +1,8 @@
 // @vitest-environment node
 import { describe, expect, it } from "vitest";
 
-import { LOCKED_CHAPTER_STEPS, chapterSteps, fillGuideText, guideScreenFor } from "../guide";
+import { LOCKED_CHAPTER_STEPS, chapterSteps, fillGuideText } from "../guide";
+import { guideScreenForPath as guideScreenFor } from "../screens";
 import {
   GUIDE_TIPS_KEY,
   browserGuideStorage,

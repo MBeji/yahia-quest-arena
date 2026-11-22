@@ -8,7 +8,7 @@ import { usePublicContentProtection } from "@/shared/lib/content-protection";
 import { useAuth, useMyRole } from "@/features/auth";
 import { StudentTabBar } from "@/components/student-tab-bar";
 import { TAB_BAR_CLEARANCE } from "@/components/student-nav";
-import { isImmersivePublicPath } from "@/shared/lib/immersive-paths";
+import { isImmersivePath } from "@/shared/lib/screens";
 import { AiLauncher } from "@/features/ai/components/ai-launcher";
 // é40 lot 3 (R-13) — importé pour son EFFET : le module retient `beforeinstallprompt`, que le
 // navigateur n'émet qu'une fois par page, bien avant l'écran de résultat qui s'en servira.
@@ -44,8 +44,7 @@ function PublicLayout() {
   //     ont leur bouton en bas d'écran.
   const { role, isLoaded: roleLoaded } = useMyRole();
   const pathname = useLocation({ select: (location) => location.pathname });
-  const showTabBar =
-    user != null && roleLoaded && role !== "parent" && !isImmersivePublicPath(pathname);
+  const showTabBar = user != null && roleLoaded && role !== "parent" && !isImmersivePath(pathname);
   return (
     <div
       className={`public-shell flex min-h-[100dvh] flex-col bg-background text-foreground ${

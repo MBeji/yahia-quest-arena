@@ -11,7 +11,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Switch } from "@/components/ui/switch";
-import { guideScreenFor } from "@/shared/lib/guide";
+import { guideScreenForPath } from "@/shared/lib/screens";
 import { useGuide } from "./guide-context";
 import { GuideRule } from "./guide-rule";
 
@@ -33,7 +33,7 @@ export function GuideSheet({
   const { dir } = useI18n();
   const { tipsEnabled, setTipsEnabled } = useGuide();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const screen = guideScreenFor(pathname);
+  const screen = guideScreenForPath(pathname);
   const copy = t.guide.screens[screen];
 
   return (
