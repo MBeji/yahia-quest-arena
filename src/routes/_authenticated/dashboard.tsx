@@ -305,6 +305,39 @@ function Dashboard() {
         </div>
       )}
       <PageShell width="wide" className="relative z-10">
+        {/* ZONE « Explorer » — EN TÊTE de page (commande du propriétaire, 2026-11-22) : les
+            matières sont la première chose que l'élève voit, avant l'en-tête du héros. La
+            grille reste pleine largeur ; son action (classement) suit l'intertitre. */}
+        <section data-testid="dashboard-explore" className="mb-8">
+          <SectionHeading
+            icon={Swords}
+            title={t.dashboard.zoneExplore}
+            action={
+              <Link
+                to="/leaderboard"
+                className="flex shrink-0 items-center gap-1.5 rounded-lg border border-[color:var(--neon-gold)]/30 bg-[color:var(--neon-gold)]/10 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-[color:var(--neon-gold)] transition hover:bg-[color:var(--neon-gold)]/20 [@media(pointer:coarse)]:min-h-11"
+              >
+                <Crown className="h-3.5 w-3.5" /> {t.common.leaderboard}
+              </Link>
+            }
+          />
+          <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+            {t.dashboard.pathsTitle}
+          </h3>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {subjects.map((s, i) => (
+              <motion.div key={s.id} {...entrance(prefersReduced, "rise", i * 0.05)}>
+                <SubjectPathCard
+                  subject={s}
+                  stat={stats[s.id]}
+                  stars={progress[s.id]}
+                  premiumLocked={lockedSet.has(s.id)}
+                />
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
         {/* HERO HEADER */}
         <motion.div
           {...entrance(prefersReduced, "rise")}
@@ -580,40 +613,6 @@ function Dashboard() {
             onAction={runQuestAction}
           />
         </Suspense>
-
-        {/* SUBJECTS GRID — now full-width (radar/inventory/badges/shop moved to
-            the dedicated /boutique route, D-5 / Q-4). */}
-        {/* ZONE 3 — « Explorer ». La grille de matières portait DÉJÀ le seul intertitre
-            de l'écran ; il devient celui de la zone, et son action (classement) le suit. */}
-        <section className="mt-8">
-          <SectionHeading
-            icon={Swords}
-            title={t.dashboard.zoneExplore}
-            action={
-              <Link
-                to="/leaderboard"
-                className="flex shrink-0 items-center gap-1.5 rounded-lg border border-[color:var(--neon-gold)]/30 bg-[color:var(--neon-gold)]/10 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-[color:var(--neon-gold)] transition hover:bg-[color:var(--neon-gold)]/20 [@media(pointer:coarse)]:min-h-11"
-              >
-                <Crown className="h-3.5 w-3.5" /> {t.common.leaderboard}
-              </Link>
-            }
-          />
-          <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-            {t.dashboard.pathsTitle}
-          </h3>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {subjects.map((s, i) => (
-              <motion.div key={s.id} {...entrance(prefersReduced, "rise", i * 0.05)}>
-                <SubjectPathCard
-                  subject={s}
-                  stat={stats[s.id]}
-                  stars={progress[s.id]}
-                  premiumLocked={lockedSet.has(s.id)}
-                />
-              </motion.div>
-            ))}
-          </div>
-        </section>
 
         {/* Two calm destination cards replacing the inline shop/other-themes
             walls (audit §A-4): a personal space (/boutique) and a gateway to the
