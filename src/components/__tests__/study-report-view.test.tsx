@@ -13,6 +13,7 @@ import { describe, expect, it, vi } from "vitest";
 import { report } from "@/shared/lib/__tests__/study-report.fixture";
 import type { StudyReport } from "@/shared/lib/study-report";
 
+vi.mock("@/lib/i18n", () => ({ useI18n: () => ({ locale: "fr" }) }));
 vi.mock("@/lib/i18n/study", async (orig) => {
   const actual = await orig<typeof import("@/lib/i18n/study")>();
   return { ...actual, useStudyT: () => actual.studyTranslations("fr") };
@@ -26,7 +27,13 @@ import { StudyReportView } from "../study-report/study-report-view";
 
 const KEY = ["study-report-test"] as const;
 
-function setup(save: (subjectId: string, chapterIds: string[]) => Promise<unknown>) {
+function setup(
+  save: (subjectId: string, chapterIds: string[]) => Promise<unknown>,
+  savePreferences?: (prefs: {
+    dailyMinutes?: number;
+    focusSubjectIds?: string[];
+  }) => Promise<unknown>,
+) {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   client.setQueryData(KEY, report());
   const invalidate = vi.spyOn(client, "invalidateQueries");
@@ -39,6 +46,7 @@ function setup(save: (subjectId: string, chapterIds: string[]) => Promise<unknow
         audience="student"
         queryKey={KEY}
         save={save}
+        savePreferences={savePreferences}
         alsoInvalidate={[["dashboard"]]}
       />
     );
@@ -79,6 +87,37 @@ describe("StudyReportView", () => {
     await waitFor(() => expect(save).toHaveBeenCalled());
     await waitFor(() =>
       expect(client.getQueryData<StudyReport>(KEY)?.subjects[0]?.chaptersSeen).toBe(3),
+    );
+  });
+
+  it("sans écriture des réglages, ni objectif ni priorité à régler", () => {
+    setup(vi.fn().mockResolvedValue(undefined));
+    expect(screen.queryByTestId("study-target")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("study-focus-toggle")).not.toBeInTheDocument();
+  });
+
+  it("régler l'objectif : mise à jour immédiate, écriture, relecture", async () => {
+    const savePreferences = vi.fn().mockResolvedValue({ ok: true });
+    const { client, invalidate } = setup(vi.fn(), savePreferences);
+
+    fireEvent.click(screen.getByRole("button", { name: "60 min" }));
+
+    await waitFor(() => expect(savePreferences).toHaveBeenCalledWith({ dailyMinutes: 60 }));
+    expect(client.getQueryData<StudyReport>(KEY)?.targetMinutes).toBe(60);
+    await waitFor(() => expect(invalidate).toHaveBeenCalledWith({ queryKey: ["dashboard"] }));
+  });
+
+  it("rendre une matière prioritaire, puis refus : l'état d'avant revient", async () => {
+    const savePreferences = vi.fn().mockRejectedValue(new Error("non"));
+    const { client } = setup(vi.fn(), savePreferences);
+
+    fireEvent.click(screen.getByTestId("study-focus-toggle"));
+
+    await waitFor(() =>
+      expect(savePreferences).toHaveBeenCalledWith({ focusSubjectIds: ["math"] }),
+    );
+    await waitFor(() =>
+      expect(client.getQueryData<StudyReport>(KEY)?.subjects[0]?.focus).toBeUndefined(),
     );
   });
 });

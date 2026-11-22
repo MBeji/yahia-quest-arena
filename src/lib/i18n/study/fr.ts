@@ -8,6 +8,8 @@ export const frStudy: StudyTranslations = {
       progress: "{done} min sur {target}",
       reached: "Objectif du jour atteint 🎉",
       week: "7 derniers jours : {minutes} min, {days} jour(s) de travail",
+      choose: "Objectif quotidien",
+      option: "{n} min",
     },
     plan: {
       title: "Programme du jour",
@@ -46,7 +48,7 @@ export const frStudy: StudyTranslations = {
       recent: "{score} % de réussite sur {n} mission(s) récente(s)",
       noRecent: "Pas assez de missions récentes pour juger",
       seen: "{done} chapitre(s) acquis sur {seen} vu(s) en classe",
-      exam: "Dernière épreuve : {mark}/20",
+      exam: "Dernière épreuve : {mark}",
     },
     work: {
       title: "À travailler",
@@ -68,7 +70,18 @@ export const frStudy: StudyTranslations = {
       },
       estimated: "Estimation d'après le calendrier scolaire — à corriger d'un geste.",
       declared: "{seen} chapitre(s) coché(s) sur {total}",
-      through: "J'en suis là",
+      through: "Jusqu'ici",
+      error: "Enregistrement impossible. Réessaie.",
+    },
+    focus: {
+      toggle: "Rendre prioritaire",
+      active: "Prioritaire",
+      hint: {
+        student:
+          "Jusqu'à deux matières prioritaires : ton programme les sert chaque jour, en premier.",
+        parent:
+          "Jusqu'à deux matières prioritaires : le programme les sert chaque jour, en premier.",
+      },
       error: "Enregistrement impossible. Réessaie.",
     },
     unavailable: "Le bilan n'est pas disponible pour l'instant.",

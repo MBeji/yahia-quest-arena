@@ -8,6 +8,8 @@ export const enStudy: StudyTranslations = {
       progress: "{done} min out of {target}",
       reached: "Today's goal reached 🎉",
       week: "Last 7 days: {minutes} min, {days} day(s) of work",
+      choose: "Daily goal",
+      option: "{n} min",
     },
     plan: {
       title: "Today's plan",
@@ -45,7 +47,7 @@ export const enStudy: StudyTranslations = {
       recent: "{score}% success over {n} recent mission(s)",
       noRecent: "Not enough recent missions to tell",
       seen: "{done} chapter(s) acquired out of {seen} covered in class",
-      exam: "Latest mock paper: {mark}/20",
+      exam: "Latest mock paper: {mark}",
     },
     work: {
       title: "To work on",
@@ -67,7 +69,16 @@ export const enStudy: StudyTranslations = {
       },
       estimated: "Estimated from the school calendar — fix it with one tap.",
       declared: "{seen} chapter(s) ticked out of {total}",
-      through: "I'm up to here",
+      through: "Up to here",
+      error: "Could not save. Try again.",
+    },
+    focus: {
+      toggle: "Make it a priority",
+      active: "Priority",
+      hint: {
+        student: "Up to two priority subjects: your plan serves them every day, first.",
+        parent: "Up to two priority subjects: the plan serves them every day, first.",
+      },
       error: "Could not save. Try again.",
     },
     unavailable: "The report is not available right now.",

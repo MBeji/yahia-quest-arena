@@ -37,6 +37,7 @@ const studySubjectSchema = z.object({
   id: z.string(),
   name: z.string(),
   contentLanguage: z.string().nullable(),
+  focus: z.boolean().optional(),
   declared: z.boolean(),
   chaptersTotal: count,
   chaptersSeen: count,

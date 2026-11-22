@@ -18,6 +18,7 @@ vi.mock("@tanstack/react-start", () => ({ useServerFn: (fn: unknown) => fn }));
 vi.mock("../parent-report.server", () => ({
   getStudentStudyReport: vi.fn(),
   setStudentClassChapters: vi.fn(),
+  setStudentStudyPreferences: vi.fn(),
 }));
 vi.mock("@/lib/i18n/study", async (orig) => {
   const actual = await orig<typeof import("@/lib/i18n/study")>();
