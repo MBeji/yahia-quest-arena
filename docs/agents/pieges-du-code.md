@@ -597,6 +597,53 @@ numéro d'une liste numérotée (jeté, remplacé par un éclair). Ce qu'il faut
   (`<ol class="grid">` sans colonne explicite : la piste est `auto`, et un titre `truncate` la
   gonfle — `grid-cols-1`).
 
+## Un composant vert au DOM peut être illisible à 390 px — le VOIR avant de livrer
+
+Mesuré le 2026-11-22 sur le bilan et le programme du jour (#1360). Les composants avaient leurs
+tests, `lint`, `typecheck` et le gate étaient verts, et ils sont partis en production. Une
+capture à 390 px a ensuite montré trois défauts qu'aucun test ne pouvait voir : des titres de
+missions tronqués à vingt caractères (`truncate` sur une ligne), des titres de chapitres écrasés
+en une colonne d'un mot par ligne (titre et état côte à côte dans un `flex`), une note affichée
+« 20/13.5 » dans une phrase arabe (seule la valeur était isolée en LTR, pas « /20 »). Corrigés
+dans #1363.
+
+**La règle : une surface neuve se regarde, en français ET en arabe, dans le thème par défaut.**
+Le thème par défaut est `html.reference` (clair) — une capture en `dark` ne dit rien de ce que
+la plupart des élèves voient.
+
+**La recette, sans Supabase ni serveur d'app** (un composant partagé et ses données suffisent) :
+un dossier jetable à la racine, jamais commité, avec un `vite.config.mjs` (plugins
+`@vitejs/plugin-react` et `@tailwindcss/vite`, alias `@` → `src`), un `index.html` et un
+`main.tsx` qui importe `../src/styles.css`, monte le composant dans `I18nProvider` et un routeur
+mémoire (`createMemoryHistory`), et le nourrit d'une fixture de test. Trois pièges :
+
+- **la langue** : `I18nProvider` se réconcilie avec la langue persistée après le montage ; sans
+  `localStorage.setItem("xp-scholars-locale", locale)` AVANT le rendu, la page revient au
+  français et la capture « arabe » est une capture française ;
+- **le thème** : la classe se pose sur `<html>` (`reference` ou `dark`) ;
+- **le navigateur en session cloud** : `chromium.launch()` échoue (le Playwright du dépôt
+  attend une autre version que celle de la VM) — passer
+  `executablePath: "/opt/pw-browsers/chromium"`. Pour la même raison,
+  `content:overflow:check` n'y passe pas sa calibration (+10,8 u mesurés pour +9,7 attendus,
+  police un peu plus large) : en cloud sa mesure est **indicative et pessimiste**, pas un verdict.
+
+## Une CTE lue une seule fois est repliée — et une fonction `STABLE` s'y réévalue à chaque lecture
+
+Mesuré en production le 2026-11-22 sur `student_study_chapters` (#1361) : 130 ms pour 98
+chapitres, alors que ses parties additionnées en faisaient 60. Depuis Postgres 12, une CTE
+référencée une seule fois est **repliée** dans la requête qui la lit ; une colonne calculée par
+un appel de fonction (`chapter_quiz_cleared(…) AS quiz_cleared`) y est donc réévaluée à CHAQUE
+endroit où l'étage suivant la lit — ici trois fois par chapitre. `AS MATERIALIZED` sur les
+étages qui portent ces appels a rendu chaque fonction à une évaluation par ligne ; avec le
+calcul des chapitres fait une seule fois par lecture, `get_study_report` est passé de 205 ms à
+72 ms à chaud.
+
+**La règle : un étage de CTE qui appelle une fonction et dont les colonnes sont lues plusieurs
+fois s'écrit `AS MATERIALIZED`.** Et une lecture qui part dans la première vague du tableau de
+bord se **mesure en production** après son premier déploiement (`clock_timestamp()` autour de
+l'appel, dans un bloc `DO` en lecture seule) : la suite pgTAP tourne sur dix lignes et ne dit
+rien du coût sur un vrai catalogue.
+
 ## Règles laissées par les chantiers d'août-septembre 2026
 
 Sorties de `STATUS.md` le 2026-09-22 (son § 6 les portait) ; le détail et les mesures sont dans
