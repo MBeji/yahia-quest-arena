@@ -11,6 +11,7 @@ export {
   getStudentExamSummary,
   getStudentParcoursComparison,
   getStudentPlacementSummary,
+  getStudentPlacementSummaryByCode,
   getStudentReport,
   getStudentReportByCode,
   getStudentWeeklyGoal,
@@ -33,6 +34,7 @@ export { ReportContent } from "./components/report-content";
 // lecture et son écriture ; la route authentifiée la place dans `ReportContent` par un slot.
 export { StudyReportSection } from "./components/study-report-section";
 export { DailyDashboard } from "./components/daily-dashboard";
+export { PlacementPanel } from "./components/placement-panel";
 export { reportSourceKey, type ReportSource } from "./report-source";
 export { buildFamilyReportShareText, buildWeeklyAdvice, shareFamilyReport } from "./report-share";
 // Le moteur d'analyse (pur) reste importable à part pour les tests et pour une

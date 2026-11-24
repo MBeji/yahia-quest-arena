@@ -11,6 +11,7 @@ import {
   forgetRememberedCode,
   getStudentReportByCode,
   parentCodeErrorLabel,
+  PlacementPanel,
   readRememberedCode,
   rememberCode,
   ReportContent,
@@ -233,6 +234,12 @@ function SuiviPublicPage() {
           {/* Deux lectures du même enfant. Le « Bilan » répond « où en est-il »,
               le « Jour par jour » répond « qu'a-t-il fait, et est-ce sérieux ».
               Empilées, elles seraient illisibles toutes les deux. */}
+          {/* Étude 39 lot 5 (é08) — les tests de niveau, au-dessus des onglets (la page s'ouvre
+              sur « Jour par jour »). Lus par le code qui a produit ce bilan. */}
+          {submittedCode ? (
+            <PlacementPanel source={{ kind: "code", studentCode: submittedCode }} />
+          ) : null}
+
           <div className="mb-4 inline-flex rounded-lg border border-border bg-card p-0.5 print:hidden">
             <ViewTab
               active={view === "summary"}

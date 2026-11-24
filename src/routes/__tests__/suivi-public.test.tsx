@@ -44,6 +44,9 @@ vi.mock("@/features/parent-report", () => ({
   forgetRememberedCode: vi.fn(),
   getStudentReportByCode: vi.fn(),
   parentCodeErrorLabel: vi.fn(),
+  PlacementPanel: ({ source }: { source: { kind: string; studentCode?: string } }) => (
+    <div data-testid="placement-panel" data-kind={source.kind} data-code={source.studentCode} />
+  ),
   readRememberedCode: () => null,
   rememberCode: vi.fn(),
   ReportContent: () => null,
@@ -108,5 +111,14 @@ describe("/suivi — l'invitation à installer (é40 lot 3, US-10)", () => {
     const nudge = screen.getByTestId("install-nudge");
     expect(nudge).toHaveAttribute("data-audience", "parent");
     expect(nudge).toHaveAttribute("data-eligible", "true");
+  });
+
+  it("bilan affiché ⇒ les tests de niveau, lus par le code qui a produit ce bilan", () => {
+    hold.report = {};
+    render(<Page />);
+
+    const panel = screen.getByTestId("placement-panel");
+    expect(panel).toHaveAttribute("data-kind", "code");
+    expect(panel).toHaveAttribute("data-code", "ABCD1234");
   });
 });
