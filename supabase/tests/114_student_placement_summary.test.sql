@@ -6,13 +6,15 @@
 --   * les règles du Hall : le DERNIER test fini par matière, ni bâclé, ni en cours ;
 --   * un test passé « en parent » n'entre pas ;
 --   * ce qui sort : note, bande, chapitres tenus / à revoir dans l'ordre du programme,
---     portée figée — et RIEN de la correction (ni réponses, ni jeton, ni percentile).
+--     portée figée — et RIEN de la correction (ni réponses, ni jeton, ni percentile) ;
+--   * par le CODE D'ALLIANCE (`/suivi`, 20261124100000) : anon lit la MÊME sortie ; un code
+--     invalide ou d'un compte parent est refusé ; le helper interne reste inatteignable.
 -- Espace de noms : `e3910000…` (comptes), `e3911000…` (contenu). Tout est annulé.
 -- =========================================================
 
 BEGIN;
 CREATE EXTENSION IF NOT EXISTS pgtap;
-SELECT plan(16);
+SELECT plan(21);
 
 INSERT INTO auth.users (id, email) VALUES
   ('e3910000-0000-4000-8000-0000000000a1', 'pl-parent@test.local'),
@@ -164,12 +166,45 @@ SELECT is(
   'rien d''autre ne sort : ni réponses, ni jeton, ni percentile, ni correction');
 
 -- ---------------------------------------------------------
+-- 3bis. Par le code d'alliance — le porteur du code, sans compte.
+-- ---------------------------------------------------------
+RESET ROLE;
+GRANT SELECT ON pl_out TO anon;
+SET LOCAL "request.jwt.claims" = '';
+SET LOCAL ROLE anon;
+
+SELECT is(
+  public.get_student_placement_summary_by_code('e3910000000040008000' || '0000000000b1'),
+  (SELECT j FROM pl_out),
+  'par le code : anon lit EXACTEMENT ce que lit le parent lié');
+
+SELECT is(
+  public.get_student_placement_summary_by_code('E391-0000-0000-4000-8000-0000-0000-00B2'),
+  '{"tests":[]}'::jsonb,
+  'le code se lit avec tirets et majuscules ; élève sans test : liste vide');
+
+SELECT throws_ok(
+  $$SELECT public.get_student_placement_summary_by_code('pas-un-code')$$,
+  'Invalid student alliance code.',
+  'code mal formé : refusé');
+
+SELECT throws_ok(
+  $$SELECT public.get_student_placement_summary_by_code('e3910000000040008000' || '0000000000a1')$$,
+  'This code does not belong to a student account.',
+  'le code d''un compte parent ne lit rien');
+
+-- ---------------------------------------------------------
 -- 4. Les droits de la fonction.
 -- ---------------------------------------------------------
 RESET ROLE;
 SELECT ok(
   NOT has_function_privilege('anon', 'public.get_student_placement_summary(uuid)', 'EXECUTE'),
   'anon n''a pas EXECUTE');
+
+SELECT ok(
+  NOT has_function_privilege('anon', 'public._student_placement_summary_json(uuid)', 'EXECUTE')
+  AND NOT has_function_privilege('authenticated', 'public._student_placement_summary_json(uuid)', 'EXECUTE'),
+  'le helper interne (sans garde) n''est exécutable par aucun rôle client');
 
 SELECT * FROM finish();
 ROLLBACK;
