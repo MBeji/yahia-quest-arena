@@ -701,6 +701,32 @@ export const getStudentPlacementSummary = createServerFn({ method: "GET" })
     return parsed.data;
   });
 
+// Le même volet pour le porteur du code d'alliance (`/suivi`) — décision du
+// propriétaire du 2026-11-24 : le code donne déjà tout le bilan de l'enfant. La
+// borne de débit et le décodage du code sont en base. Une erreur ici (code
+// invalide, refus de cadence) est déjà dite par le bilan principal : la section
+// se tait, `null`.
+export const getStudentPlacementSummaryByCode = createServerFn({ method: "GET" })
+  .middleware([optionalSupabaseAuth])
+  .validator((d: unknown) => z.object({ studentCode: z.string().min(8).max(64) }).parse(d))
+  .handler(async ({ data, context }): Promise<StudentPlacementSummary | null> => {
+    const { supabase } = context;
+
+    const { data: raw, error } = await supabase.rpc("get_student_placement_summary_by_code", {
+      p_code: data.studentCode,
+    });
+    if (error) {
+      logger.warn("parentReport.placementSummaryByCode", { error: errorMessage(error) });
+      return null;
+    }
+    const parsed = placementSummarySchema.safeParse(raw);
+    if (!parsed.success) {
+      logger.warn("parentReport.placementSummaryByCode: unexpected shape");
+      return null;
+    }
+    return parsed.data;
+  });
+
 // ---------------------------------------------------------------------------
 // ÉTUDE 08 LOT 3 (US-8) — L'ENFANT FACE AU REPÈRE DE SON PARCOURS.
 // ---------------------------------------------------------------------------

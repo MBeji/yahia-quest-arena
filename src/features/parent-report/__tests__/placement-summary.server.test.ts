@@ -115,3 +115,34 @@ describe("getStudentPlacementSummary — étude 39 lot 5 (é08)", () => {
     expect(mockRpc).not.toHaveBeenCalled();
   });
 });
+
+describe("getStudentPlacementSummaryByCode — /suivi (2026-11-24)", () => {
+  const CODE = "11111111-1111-4111-8111-111111111111";
+  async function loadByCode(): Promise<Fn> {
+    return (await import("../parent-report.server"))
+      .getStudentPlacementSummaryByCode as unknown as Fn;
+  }
+
+  it("lit par la RPC au code — le décodage et la borne de débit sont en base", async () => {
+    mockRpc.mockResolvedValue({ data: { tests: [test0] }, error: null });
+    const fn = await loadByCode();
+    const out = (await fn({ studentCode: CODE })) as { tests: unknown[] };
+    expect(out.tests).toHaveLength(1);
+    expect(mockRpc).toHaveBeenCalledWith("get_student_placement_summary_by_code", {
+      p_code: CODE,
+    });
+  });
+
+  it("code refusé ou cadence dépassée : null — le bilan principal dit déjà l'erreur", async () => {
+    mockRpc.mockResolvedValue({ data: null, error: { message: "Invalid student alliance code." } });
+    const fn = await loadByCode();
+    expect(await fn({ studentCode: CODE })).toBeNull();
+    expect(warn).toHaveBeenCalledTimes(1);
+  });
+
+  it("refuse un code trop court avant tout appel", async () => {
+    const fn = await loadByCode();
+    await expect(fn({ studentCode: "abc" })).rejects.toThrow();
+    expect(mockRpc).not.toHaveBeenCalled();
+  });
+});
