@@ -644,6 +644,32 @@ bord se **mesure en production** après son premier déploiement (`clock_timesta
 l'appel, dans un bloc `DO` en lecture seule) : la suite pgTAP tourne sur dix lignes et ne dit
 rien du coût sur un vrai catalogue.
 
+## Trois pièges de navigation qu'aucun test unitaire ne voit (audit du 2026-11-21)
+
+Les tests de la coquille et des gardes mockent le routeur : ils prouvent qu'une garde APPELLE
+`navigate`, jamais ce que le navigateur fait de l'historique. Les trois pièges ci-dessous n'ont été
+vus qu'en rejouant le geste dans Chromium (sonde rejouable :
+[`docs/audit-navigation-2026-11-21/sonde/`](../audit-navigation-2026-11-21/sonde/README.md)).
+
+1. **Une redirection POUSSÉE piège le bouton Retour.** `navigate({ to })` laisse derrière lui
+   l'écran qui redirige : Retour y ramène, la garde repart, et l'on n'en sort plus. Toute
+   redirection de garde, et la sortie de `/auth`, passe `replace: true`. Seuls les gestes
+   VOULUS par l'utilisateur (un clic sur un lien) s'empilent.
+2. **Une garde de la coquille lit l'écran RENDU, pas l'adresse visée.** `useLocation()` change dès
+   qu'une navigation part, alors que la coquille est encore montée pour quelques images :
+   la garde d'accueil lisait déjà `/programme`, jugeait « élève sans classe, hors quête » et le
+   rattrapait au moment où il la quittait. Les gardes de rôle lisent
+   `useMatches({ select })` (`routes/_authenticated.tsx`, `guardPath`).
+3. **S'abonner à `onResolved` ne dit pas quelle navigation est « la première ».** L'abonnement
+   d'un `useEffect` arrive APRÈS la résolution initiale : « ignorer le premier événement » saute
+   alors la première VRAIE navigation. Comparer l'adresse courante à la dernière vue
+   (`components/ui/route-announcer.tsx`).
+
+Et pour le mode connecté : une **session simulée** (faux jeton côté navigateur, lectures publiques
+repassées en anonyme, écritures bloquées — `sonde/session-simulee.cjs`) suffit à rejouer les
+coquilles, les gardes et les redirections sans créer de compte ni écrire en base. Elle ne rend pas
+les DONNÉES des écrans connectés : ce qui touche leur contenu se lit dans le code.
+
 ## Règles laissées par les chantiers d'août-septembre 2026
 
 Sorties de `STATUS.md` le 2026-09-22 (son § 6 les portait) ; le détail et les mesures sont dans
