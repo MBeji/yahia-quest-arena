@@ -52,10 +52,18 @@ export function PlacementSection({ summary }: { summary: StudentPlacementSummary
             className="bg-surface-3 border-border/40 rounded-lg border p-3"
           >
             <div className="flex flex-wrap items-baseline justify-between gap-2">
-              <span className="text-foreground font-medium" dir="auto">
-                {test.gradeNameFr
-                  ? `${test.subjectNameFr} · ${test.gradeNameFr}`
-                  : test.subjectNameFr}
+              {/* « matière · classe » : le sens de la ligne est celui de la page, pas celui du
+                  premier mot. Avec `dir="auto"`, une matière arabe (« الرياضيات ») retournait toute
+                  la ligne dans un écran français — la classe passait avant la matière. Chaque
+                  morceau est isolé (`<bdi>`), son écriture ne déborde plus sur l'autre. */}
+              <span className="text-foreground font-medium" data-testid="report-placement-title">
+                <bdi>{test.subjectNameFr}</bdi>
+                {test.gradeNameFr ? (
+                  <>
+                    {" · "}
+                    <bdi>{test.gradeNameFr}</bdi>
+                  </>
+                ) : null}
               </span>
               {test.finishedAt ? (
                 <span className="text-muted-foreground text-xs">

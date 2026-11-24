@@ -47,7 +47,9 @@ describe("PlacementSection — étude 39 lot 5 (é08)", () => {
   it("⭐ affiche la matière, la note sur 20 et la bande", () => {
     render(<PlacementSection summary={{ tests: [test()] }} />);
     const row = within(screen.getByTestId("report-placement-test"));
-    expect(row.getByText("Mathématiques · 9ème année")).toBeInTheDocument();
+    expect(row.getByTestId("report-placement-title")).toHaveTextContent(
+      "Mathématiques · 9ème année",
+    );
     expect(row.getByText(`${LRI}14 / 20${PDI}`)).toBeInTheDocument();
     expect(row.getByTestId("report-placement-band")).toHaveTextContent("En bonne voie");
   });
@@ -79,7 +81,24 @@ describe("PlacementSection — étude 39 lot 5 (é08)", () => {
 
   it("une matière sans classe : le nom seul, pas de « · » orphelin", () => {
     render(<PlacementSection summary={{ tests: [test({ gradeNameFr: null })] }} />);
-    expect(screen.getByText("Mathématiques")).toBeInTheDocument();
+    expect(screen.getByTestId("report-placement-title")).toHaveTextContent(/^Mathématiques$/);
+  });
+
+  it("matière arabe : chaque morceau est isolé et la ligne n'est pas retournée (dir=auto)", () => {
+    render(
+      <PlacementSection
+        summary={{
+          tests: [test({ subjectNameFr: "الرياضيات", gradeNameFr: "9ème année de base" })],
+        }}
+      />,
+    );
+    const title = screen.getByTestId("report-placement-title");
+    // Pas de `dir="auto"` : c'est lui qui faisait passer la classe avant la matière.
+    expect(title).not.toHaveAttribute("dir");
+    const parts = title.querySelectorAll("bdi");
+    expect(parts).toHaveLength(2);
+    expect(parts[0]).toHaveTextContent("الرياضيات");
+    expect(parts[1]).toHaveTextContent("9ème année de base");
   });
 
   it("plusieurs matières : une ligne chacune", () => {
