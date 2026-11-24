@@ -3368,6 +3368,10 @@ export type Database = {
         Args: { p_code: string };
         Returns: string;
       };
+      _student_placement_summary_json: {
+        Args: { p_student: string };
+        Returns: Json;
+      };
       _student_report_json: { Args: { p_student: string }; Returns: Json };
       _student_weakness_insights: { Args: { p_student: string }; Returns: Json };
       activate_inventory_item: { Args: { p_item_code: string }; Returns: Json };
@@ -4167,6 +4171,10 @@ export type Database = {
       };
       get_student_placement_summary: {
         Args: { p_student: string };
+        Returns: Json;
+      };
+      get_student_placement_summary_by_code: {
+        Args: { p_code: string };
         Returns: Json;
       };
       get_student_report: { Args: { p_student: string }; Returns: Json };
