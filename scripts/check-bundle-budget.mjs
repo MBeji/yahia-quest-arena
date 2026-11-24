@@ -64,12 +64,20 @@ const BUDGETS = {
   // des chunks paresseux (`bilan-`, `study-report-view-`, `study-plan-card-`, `i18n-study-`).
   // `vendor-react-` est à 188,68 KB : le KB vient de sa marge, pas d'un relèvement. La règle
   // d'au-dessus tient toujours — la prochaine route devra d'abord rendre de la place ici.
-  "index-": 243 * 1024,
-  // `react` + `react-dom` + `scheduler`, et rien d'autre. 188,68 KB mesurés. La marge
-  // (25 KB) est la part du plafond commun que `index-` ne prend pas ; `react` 19.3 en
-  // demande 28 (docs/dependency-maintenance.md) : il la dépassera de 3 KB, et c'est à ce
-  // moment-là, chiffres en main, que la somme des deux plafonds se rediscute — pas avant.
-  "vendor-react-": 213 * 1024,
+  //
+  // 2026-11-24 — `react` 19.3.1 (voir `vendor-react-` ci-dessous). Mesuré : 243,82 KB.
+  // Plafond relevé à 245 KB ; somme totale : 460 KB (← +4 KB vs 456 avant react 19.3).
+  "index-": 245 * 1024,
+  // `react` + `react-dom` + `scheduler`, et rien d'autre. 188,68 KB mesurés lors du
+  // découpage (2026-11-12). La marge (25 KB) était la part du plafond commun que
+  // `index-` ne prenait pas ; `react` 19.3 était annoncé à +28 KB — le commentaire
+  // disait de rediscuter la somme à ce moment-là, chiffres en main.
+  //
+  // 2026-11-24 — `react` 19.2.8 → 19.3.1 (lot patch/minor). Mesuré : 213,79 KB.
+  // L'augmentation réelle est bien moindre que prévu (+25 KB par rapport à
+  // 188,68 KB, non +28 KB). `index-` mesure 243,82 KB. Somme : 457,61 KB.
+  // Plafonds relevés à 215 + 245 = 460 KB (← +2 KB de marge sur chaque chunk).
+  "vendor-react-": 215 * 1024,
   // ---------------------------------------------------------------------------
   // Catalogues i18n. DEUX budgets depuis le 2026-08-26, parce que le catalogue
   // n'est plus monolithique :

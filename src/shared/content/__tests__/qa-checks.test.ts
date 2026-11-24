@@ -200,10 +200,7 @@ describe("auditQuestion — figure-dependent prompt", () => {
   });
 
   it("errors on an Arabic figure reference with no figure", () => {
-    const flags = auditQuestion(
-      base({ prompt: "ما نوعُ المثلّث المبيّن في الشكل حسب زواياه؟" }),
-      "w",
-    );
+    const flags = auditQuestion(base({ prompt: "ما نوعُ المثلّث المبيّن في الشكل حسب زواياه؟" }), "w");
     expect(flags.some((f) => f.level === "error" && /references a figure/.test(f.msg))).toBe(true);
   });
 
@@ -376,9 +373,9 @@ describe("classifyOption — meta-options & 'none' calque", () => {
   });
 
   it("does NOT flag a long quotation that merely contains 'كلّ ما سبق'", () => {
-    expect(
-      classifyOption("«ونستنتج من كلّ ما سبق أنّ الحرّية والمسؤولية وجهان لعملة واحدة.»"),
-    ).toBe(null);
+    expect(classifyOption("«ونستنتج من كلّ ما سبق أنّ الحرّية والمسؤولية وجهان لعملة واحدة.»")).toBe(
+      null,
+    );
   });
 
   it("surfaces the meta/calque finding through auditQuestion as a warning", () => {

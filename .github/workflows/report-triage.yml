@@ -96,7 +96,7 @@ jobs:
 
       - name: Checkout (full history for branch/PR context)
         if: steps.guard.outputs.configured == 'true'
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
           # Push as a collaborator: a fix branch pushed as `github-actions[bot]` opens a
@@ -107,7 +107,7 @@ jobs:
 
       - name: Setup Node
         if: steps.guard.outputs.configured == 'true'
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24
           cache: npm
@@ -201,7 +201,7 @@ jobs:
           steps.guard.outputs.configured == 'true' &&
           steps.pregate.outputs.open != '0' &&
           (steps.pregate.outputs.skip != 'true' || github.event_name != 'schedule')
-        uses: anthropics/claude-code-action@af0559ee4f514d1ef21826982bed13f7edc3c35e # v1
+        uses: anthropics/claude-code-action@eb56b6666facdbd501035f4a0269d8caee2e7a8b # v1.0.289
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           # PAT first — see the checkout step above for why a bot identity gates the PR.
@@ -321,7 +321,7 @@ jobs:
       # label, never one per run, or the cron turns into a spam cannon at 6/day.
       - name: Track a red run in an issue (and close it when green again)
         if: ${{ always() && steps.guard.outputs.configured == 'true' }}
-        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
           JOB_STATUS: ${{ job.status }}
         with:
