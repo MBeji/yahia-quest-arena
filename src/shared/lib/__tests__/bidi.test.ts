@@ -417,9 +417,7 @@ describe("isolateLtrRuns", () => {
       `طوله ${LRI}12 cm${PDI} وسرعته ${LRI}60 km/h${PDI} تقريبًا`,
     );
     // `37 °C` se dessinait `C° 37` : le symbole lui-même coupé en deux.
-    expect(isolateLtrRuns("حرارة الجسم 37 °C تقريبًا")).toBe(
-      `حرارة الجسم ${LRI}37 °C${PDI} تقريبًا`,
-    );
+    expect(isolateLtrRuns("حرارة الجسم 37 °C تقريبًا")).toBe(`حرارة الجسم ${LRI}37 °C${PDI} تقريبًا`);
     for (const quantity of [
       "250 mL",
       "3,5 kg",
@@ -566,9 +564,7 @@ describe("isolateLtrRunsHtml", () => {
   // pour sa ligne. Dans le HTML d'un cours, une formule courte ne se coupe plus.
   it("rend insécable une formule courte, et laisse sécable une longue chaîne de calcul", () => {
     const short = isolateLtrRunsHtml("<p>قلب سلسلة الاحتواء، فيُكتب ℚ ⊂ ℝ. السلسلة تسير</p>");
-    expect(short).toBe(
-      `<p>قلب سلسلة الاحتواء، فيُكتب ${LRI}${nb("ℚ ⊂ ℝ")}${PDI}. السلسلة تسير</p>`,
-    );
+    expect(short).toBe(`<p>قلب سلسلة الاحتواء، فيُكتب ${LRI}${nb("ℚ ⊂ ℝ")}${PDI}. السلسلة تسير</p>`);
     // Les espaces HORS de l'isolat restent ordinaires : c'est là que la ligne se coupe.
     expect(short).toContain(`فيُكتب ${LRI}`);
 
@@ -742,9 +738,7 @@ describe("splitMathRuns — une équation ne se coupe jamais en deux lignes", ()
       "12 + 8√2 = 5√2",
     ]);
     expect(parenthetical[parenthetical.length - 1].text.startsWith(" (")).toBe(true);
-    expect(rebuild("لأنّ 12 + 8√2 = 5√2 (تقريبًا) دائمًا")).toBe(
-      "لأنّ 12 + 8√2 = 5√2 (تقريبًا) دائمًا",
-    );
+    expect(rebuild("لأنّ 12 + 8√2 = 5√2 (تقريبًا) دائمًا")).toBe("لأنّ 12 + 8√2 = 5√2 (تقريبًا) دائمًا");
   });
 
   // Même parité pour la coche finale : elle reste dans la prose, avec l'espace qui la précède.

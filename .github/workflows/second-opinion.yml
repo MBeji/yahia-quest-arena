@@ -76,7 +76,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           # Full history so the scope pre-gate can diff base...head for the PR's files.
           fetch-depth: 0
@@ -121,7 +121,7 @@ jobs:
 
       - name: Cross-family review
         if: steps.guard.outputs.armed == 'true' && steps.scope.outputs.run == 'true'
-        uses: openai/codex-action@52fe01ec70a42f454c9d2ebd47598f9fd6893d56 # v1
+        uses: openai/codex-action@306c6a196a99dcc6582530c396a19d2672d5e9ec # v1.14
         with:
           openai_api_key: ${{ secrets.OPENAI_API_KEY }}
           model: ${{ steps.guard.outputs.model }}

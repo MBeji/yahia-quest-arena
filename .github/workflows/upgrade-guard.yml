@@ -119,7 +119,7 @@ jobs:
 
       - name: Checkout main (full history for branch/diff context)
         if: steps.cadence.outputs.run == 'true'
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
           # Persisted credentials for the branch push below. GITHUB_TOKEN pushes as
@@ -133,7 +133,7 @@ jobs:
 
       - name: Setup Node
         if: steps.cadence.outputs.run == 'true'
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24
           cache: npm
@@ -313,7 +313,7 @@ jobs:
       - name: Run the upgrade-guard agent (majors + repair only)
         id: agent
         if: steps.token.outputs.configured == 'true' && steps.agentwork.outputs.needed == 'true'
-        uses: anthropics/claude-code-action@af0559ee4f514d1ef21826982bed13f7edc3c35e # v1
+        uses: anthropics/claude-code-action@4411a9e9b0283becf4b924f7bce360fd7756c78c # v1.0.290
         env:
           # The skill writes its machine-readable verdict here; the next step merges it
           # with the deterministic outputs.
