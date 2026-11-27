@@ -64,12 +64,15 @@ const BUDGETS = {
   // des chunks paresseux (`bilan-`, `study-report-view-`, `study-plan-card-`, `i18n-study-`).
   // `vendor-react-` est à 188,68 KB : le KB vient de sa marge, pas d'un relèvement. La règle
   // d'au-dessus tient toujours — la prochaine route devra d'abord rendre de la place ici.
-  "index-": 243 * 1024,
-  // `react` + `react-dom` + `scheduler`, et rien d'autre. 188,68 KB mesurés. La marge
-  // (25 KB) est la part du plafond commun que `index-` ne prend pas ; `react` 19.3 en
-  // demande 28 (docs/dependency-maintenance.md) : il la dépassera de 3 KB, et c'est à ce
-  // moment-là, chiffres en main, que la somme des deux plafonds se rediscute — pas avant.
-  "vendor-react-": 213 * 1024,
+  //
+  // 2026-11-27 — REACT 19.3 ENTRÉ (lot patch/minor), redistribution 456 → 458 (+ 2 KB).
+  // Mesuré le jour de l'upgrade : index- 243,82 KB (249 672 octets), vendor-react- 213,79 KB
+  // (218 917 octets). Plafonds ramenés « près du réel » comme annoncé ci-dessus :
+  // 243 → 244 (184 octets de marge) et 213 → 214 (219 octets de marge).
+  // La règle d'au-dessus tient : index- ne grossit que si une route rend de la place.
+  "index-": 244 * 1024,
+  // `react` + `react-dom` + `scheduler`, et rien d'autre.
+  "vendor-react-": 214 * 1024,
   // ---------------------------------------------------------------------------
   // Catalogues i18n. DEUX budgets depuis le 2026-08-26, parce que le catalogue
   // n'est plus monolithique :
